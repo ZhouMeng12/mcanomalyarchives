@@ -1,0 +1,11 @@
+{
+  "mappings": {
+    "default": {
+      "name": "default",
+      "map": {
+        "0": "textureblack",
+        "1": "texturegray"
+      }
+    }
+  }
+}

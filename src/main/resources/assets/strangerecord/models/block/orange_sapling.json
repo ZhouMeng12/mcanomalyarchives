@@ -1,0 +1,8 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "strangerecord:block/orangesapling",
+    "particle": "strangerecord:block/orangesapling"
+  },
+  "render_type": "cutout"
+}

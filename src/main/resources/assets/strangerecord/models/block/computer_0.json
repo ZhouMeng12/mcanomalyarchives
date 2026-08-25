@@ -1,0 +1,9 @@
+{
+  "parent": "strangerecord:custom/computerclose",
+  "textures": {
+    "all": "strangerecord:block/texturecomputer2",
+    "particle": "strangerecord:block/texturecomputer",
+    "1": "strangerecord:block/texturecomputer2"
+  },
+  "render_type": "solid"
+}

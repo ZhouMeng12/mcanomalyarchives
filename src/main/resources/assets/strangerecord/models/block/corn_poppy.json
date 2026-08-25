@@ -1,0 +1,8 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "minecraft:block/poppy",
+    "particle": "minecraft:block/poppy"
+  },
+  "render_type": "cutout_mipped"
+}

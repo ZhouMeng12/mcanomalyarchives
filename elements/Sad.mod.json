@@ -1,0 +1,24 @@
+{
+  "_fv": 85,
+  "_type": "potioneffect",
+  "definition": {
+    "effectName": "Sad",
+    "icon": "invicon_poppy",
+    "color": {
+      "value": -16744193,
+      "falpha": 0.0
+    },
+    "particle": {
+      "value": "DRIP_WATER"
+    },
+    "onAddedSound": {
+      "value": ""
+    },
+    "isInstant": false,
+    "mobEffectCategory": "HARMFUL",
+    "renderStatusInInventory": true,
+    "renderStatusInHUD": true,
+    "isCuredbyHoney": false,
+    "modifiers": []
+  }
+}

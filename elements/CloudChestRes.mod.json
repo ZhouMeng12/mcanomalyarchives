@@ -1,0 +1,29 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Smithing",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "unlockingItems": [],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "smithingInputStack": {
+      "value": "Items.DIAMOND_CHESTPLATE"
+    },
+    "smithingInputAdditionStack": {
+      "value": "CUSTOM:CloudIngot"
+    },
+    "smithingInputTemplateStack": {
+      "value": "CUSTOM:CloudUpgrade"
+    },
+    "smithingReturnStack": {
+      "value": "CUSTOM:CloudArmor.body"
+    },
+    "name": "cloud_chest_res",
+    "namespace": "mod"
+  }
+}

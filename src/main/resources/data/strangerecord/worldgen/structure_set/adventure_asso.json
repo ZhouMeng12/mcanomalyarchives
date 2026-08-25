@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "strangerecord:adventure_asso",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 196,
+    "separation": 128,
+    "salt": 220989625
+  }
+}

@@ -1,0 +1,15 @@
+* text=auto
+*.png binary
+*.jpg binary
+*.ogg binary
+*.mp3 binary
+*.ttf binary
+*.jar binary
+*.zip binary
+*.psd binary
+*.java text
+*.json text
+*.gradle text
+*.toml text
+*.md text
+*.txt text

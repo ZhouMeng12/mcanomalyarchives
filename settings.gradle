@@ -1,0 +1,34 @@
+pluginManagement {
+    repositories {
+        mavenLocal()
+        gradlePluginPortal()
+        maven { url = 'https://maven.neoforged.net/releases' }
+        maven { url = 'https://maven.blamejared.com' }
+        maven { url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+    }
+}
+
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '1.0.0'
+}
+
+dependencyResolutionManagement {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url = 'https://maven.neoforged.net/releases' }
+        maven { url = 'https://maven.blamejared.com' }
+        maven { url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+    }
+}
+
+gradle.beforeProject { project ->
+    project.plugins.withId('net.neoforged.moddev') {
+        project.repositories {
+            maven { url = 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+        }
+        project.dependencies {
+            implementation 'software.bernie.geckolib:geckolib-neoforge-1.21.1:4.6.6'
+        }
+    }
+}

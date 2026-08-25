@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "strangerecord:block/orangetreeleaves",
+    "particle": "strangerecord:block/orangetreeleaves"
+  }
+}

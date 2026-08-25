@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "strangerecord:strange_fishing_rod"
+    },
+    "title": {
+      "translate": "advancements.whatthe.title"
+    },
+    "description": {
+      "translate": "advancements.whatthe.descr"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "whatthe_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "strangerecord:shangyu"
+}

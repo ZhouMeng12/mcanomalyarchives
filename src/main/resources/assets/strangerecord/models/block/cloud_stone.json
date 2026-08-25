@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "strangerecord:block/cloudstone",
+    "up": "strangerecord:block/cloudstone",
+    "north": "strangerecord:block/cloudstone",
+    "east": "strangerecord:block/cloudstone",
+    "south": "strangerecord:block/cloudstone",
+    "west": "strangerecord:block/cloudstone",
+    "particle": "strangerecord:block/cloudstone"
+  },
+  "render_type": "solid"
+}

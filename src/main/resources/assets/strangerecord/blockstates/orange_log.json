@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "strangerecord:block/orange_log",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "strangerecord:block/orange_log"
+    },
+    "axis=z": {
+      "model": "strangerecord:block/orange_log",
+      "x": 90
+    }
+  }
+}

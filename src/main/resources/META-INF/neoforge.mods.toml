@@ -1,0 +1,49 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="GNU General Public License version 3 (GPLv3)"
+
+[[mods]]
+modId="strangerecord"
+version="1.1.7.1"
+displayName="MC\u8BE1\u5F02\u89C1\u95FB\u5F55"
+displayURL="https://mcreator.net"
+logoFile="logo.png"
+credits="\u4F7F\u7528 MCreator\uFF0C\u5185\u5BB9\u6E90\u4E8EB\u7AD9up\u4E3BSvenTheOrangeBoy\uFF0C\u611F\u8C22\u7FA4\u53CB\u661F\u9645\u6D77\u76D7\u9000\u4F11\u4E2D\u63D0\u4F9B\u7684\u6A21\u578B\uFF01"
+authors="\u4E00\u53EA\u5C0F\u6050\u9F99"
+description="MC\u8BE1\u5F02\u89C1\u95FB\u5F55\u7684\u540C\u4EBA\u6A21\u7EC4"
+
+# Start of user code block mod configuration
+# End of user code block mod configuration
+
+
+# Start of user code block custom mixins
+[[mixins]]
+config="strangerecord.mixins.json"
+side="CLIENT"
+# End of user code block custom mixins
+
+[[dependencies.strangerecord]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.190,)"
+ordering="AFTER"
+side="BOTH"
+
+[[dependencies.strangerecord]]
+modId="minecraft"
+type="required"
+versionRange="[1.21.1]"
+ordering="AFTER"
+side="BOTH"
+
+
+
+
+# Start of user code block dependencies configuration
+[[dependencies.strangerecord]]
+modId="geckolib"
+type="required"
+versionRange="[4,)"
+ordering="AFTER"
+side="BOTH"
+# End of user code block dependencies configuration

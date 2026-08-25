@@ -1,0 +1,76 @@
+# ===== Gradle / 构建产物 =====
+build/
+out/
+.gradle/
+*.class
+
+# ===== MCreator 运行数据（含世界存档、日志、模组 jar）=====
+run/
+logs/
+crash-reports/
+crash-*.txt
+*.log
+latest_crash.log
+
+# ===== MCreator 本地元数据 / 备份 =====
+.mcreator/
+backup/
+*.bak
+
+# ===== IDE / 编辑器 =====
+.vscode/
+.idea/
+*.iml
+.eclipse/
+.trae/
+
+# ===== 第三方解包/参考源码（不属本项目）=====
+.geckolib_src/
+software/
+net/
+GuiGraphics_source.java
+Screen_source.java
+
+# ===== 根目录散落的旧备份/重复文件（src/ 里已有正式版本）=====
+CornPoppyAngryListener.java
+CornPoppyBlock.java
+CornPoppyDebugCommand.java
+PlayerLookAtCornPoppyListener.java
+StangeCloudEntity.java
+PurplehandItem.java.bak
+Invicon_Poppy.png
+anbulacat.png
+playerslimmodel.geo.json
+BACKUP_README.md
+
+# ===== 构建/崩溃日志 =====
+build_errors.txt
+build_output.txt
+builderror.txt
+
+# ===== 设计稿 / 预览 / 截图 =====
+QQ20260719-203930.png
+purplegui2.psd
+purplegui2.png
+noise-demo.html
+sanity-noise-preview.html
+purple-monster-gui-editor.html
+purple-monster-gui-editor-phase1.html
+purple-monster-gui-editor-phase4.html
+purple-monster-gui-preview.html
+
+# ===== 音频/字体源文件（转换后的副本已在 src/main/resources 里）=====
+黑.mp3
+黑.ogg
+5_Minecraft AE(支持中文).ttf
+
+# ===== TACZ 提取物：第三方模组资产，涉及版权，勿公开提交 =====
+tacz_shotgun_export/
+tacz_shotgun_export.sh
+
+# ===== 素材（个人素材，不公开）=====
+素材/
+
+# ===== 系统文件 =====
+.DS_Store
+Thumbs.db

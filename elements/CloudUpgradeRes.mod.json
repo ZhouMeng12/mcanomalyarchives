@@ -1,0 +1,49 @@
+{
+  "_fv": 85,
+  "_type": "recipe",
+  "definition": {
+    "recipeType": "Crafting",
+    "recipeRetstackSize": 1,
+    "group": "",
+    "unlockingItems": [],
+    "cookingBookCategory": "MISC",
+    "xpReward": 0.0,
+    "cookingTime": 200,
+    "craftingBookCategory": "MISC",
+    "recipeShapeless": false,
+    "recipeSlots": [
+      {
+        "value": "CUSTOM:CloudStone"
+      },
+      {
+        "value": "CUSTOM:CloudIngot"
+      },
+      {
+        "value": "CUSTOM:CloudStone"
+      },
+      {
+        "value": "CUSTOM:CloudStone"
+      },
+      {
+        "value": "Items.NETHERITE_UPGRADE"
+      },
+      {
+        "value": "CUSTOM:CloudStone"
+      },
+      {
+        "value": "CUSTOM:CloudStone"
+      },
+      {
+        "value": "CUSTOM:CloudStone"
+      },
+      {
+        "value": "CUSTOM:CloudStone"
+      }
+    ],
+    "recipeReturnStack": {
+      "value": "CUSTOM:CloudUpgrade"
+    },
+    "name": "cloud_upgrade_res",
+    "namespace": "mod"
+  }
+}

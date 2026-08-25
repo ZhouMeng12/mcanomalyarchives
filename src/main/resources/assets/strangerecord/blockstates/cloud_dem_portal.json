@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "axis=z": {
+      "model": "strangerecord:block/cloud_dem_portal_ew"
+    },
+    "axis=x": {
+      "model": "strangerecord:block/cloud_dem_portal_ns"
+    }
+  }
+}

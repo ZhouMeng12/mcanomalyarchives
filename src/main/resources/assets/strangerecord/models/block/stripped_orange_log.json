@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "strangerecord:block/strippedoreangelog",
+    "up": "strangerecord:block/strippedoreangelog",
+    "north": "strangerecord:block/strippedoreangelogside",
+    "east": "strangerecord:block/strippedoreangelogside",
+    "south": "strangerecord:block/strippedoreangelogside",
+    "west": "strangerecord:block/strippedoreangelogside",
+    "particle": "strangerecord:block/strippedoreangelog"
+  },
+  "render_type": "cutout_mipped"
+}

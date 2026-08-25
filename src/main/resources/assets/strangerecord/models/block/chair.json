@@ -1,0 +1,10 @@
+{
+  "parent": "strangerecord:custom/chair",
+  "textures": {
+    "all": "strangerecord:block/textureblack",
+    "particle": "strangerecord:block/textureblack",
+    "0": "strangerecord:block/textureblack",
+    "1": "strangerecord:block/texturegray"
+  },
+  "render_type": "solid"
+}

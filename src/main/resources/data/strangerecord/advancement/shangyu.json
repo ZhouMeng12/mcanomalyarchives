@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "strangerecord:strange_fishing_rod"
+    },
+    "title": {
+      "translate": "advancements.shangyu.title"
+    },
+    "description": {
+      "translate": "advancements.shangyu.descr"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "shangyu_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "strangerecord:welcome"
+}

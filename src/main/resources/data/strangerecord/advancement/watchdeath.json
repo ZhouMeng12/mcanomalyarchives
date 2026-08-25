@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "strangerecord:corn_poppy"
+    },
+    "title": {
+      "translate": "advancements.watchdeath.title"
+    },
+    "description": {
+      "translate": "advancements.watchdeath.descr"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "watchdeath_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "strangerecord:sobeautiful"
+}

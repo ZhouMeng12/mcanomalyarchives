@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "strangerecord:garden",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 196,
+    "separation": 128,
+    "salt": 862006662
+  }
+}

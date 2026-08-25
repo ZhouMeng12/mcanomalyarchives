@@ -1,0 +1,11 @@
+{
+  "_fv": 85,
+  "_type": "tab",
+  "definition": {
+    "name": "Strange Record",
+    "icon": {
+      "value": "CUSTOM:Icon"
+    },
+    "showSearch": false
+  }
+}
