@@ -102,5 +102,7 @@
   "advancements.purplehandadv.title": "A Hand?",
   "advancements.purplehandadv.descr": "Get the purple hand",
   "block.strangerecord.strangetreelog": "Strangetreelog",
-  "block.strangerecord.strangetreeleaves": "Strangetreeleaves"
+  "block.strangerecord.strangetreeleaves": "Strangetreeleaves",
+  "item.strangerecord.strange_tree_spawn_egg": "Strange Tree Spawn Egg",
+  "entity.strangerecord.strange_tree": "Strange Tree"
 }

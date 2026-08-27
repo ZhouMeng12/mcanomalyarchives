@@ -1,14 +1,14 @@
 {
   "structures": [
     {
-      "structure": "strangerecord:garden",
+      "structure": "strangerecord:str_tree",
       "weight": 1
     }
   ],
   "placement": {
     "type": "minecraft:random_spread",
     "spacing": 128,
-    "separation": 64,
-    "salt": 862006662
+    "separation": 32,
+    "salt": 493950269
   }
 }

@@ -101,6 +101,8 @@
   "advancements.cloudarmadv.descr": "获得全套云锭套装",
   "advancements.purplehandadv.title": "一只手？",
   "advancements.purplehandadv.descr": "获得紫怪触手",
-  "block.strangerecord.strangetreelog": "Strangetreelog",
-  "block.strangerecord.strangetreeleaves": "Strangetreeleaves"
+  "block.strangerecord.strangetreelog": "怪树树干",
+  "block.strangerecord.strangetreeleaves": "怪树树叶",
+  "item.strangerecord.strange_tree_spawn_egg": "怪树刷怪蛋",
+  "entity.strangerecord.strange_tree": "怪树"
 }

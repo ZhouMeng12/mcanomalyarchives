@@ -2,7 +2,7 @@
   "_fv": 85,
   "_type": "structure",
   "definition": {
-    "structure": "garden",
+    "structure": "strtree",
     "projection": "rigid",
     "ignoredBlocks": [
       {
@@ -10,10 +10,10 @@
       }
     ],
     "spacing": 128,
-    "separation": 64,
+    "separation": 32,
     "restrictionBiomes": [
       {
-        "value": "#minecraft:is_overworld"
+        "value": "#minecraft:is_forest"
       }
     ],
     "terrainAdaptation": "beard_thin",

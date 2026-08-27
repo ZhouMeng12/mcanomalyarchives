@@ -1377,45 +1377,31 @@
       "path": "~/Strangetree"
     },
     {
-      "name": "StrangetreeleavesFangKuaiBeiBaoZhaPoPiShi",
-      "type": "procedure",
+      "name": "StrangeTree",
+      "type": "livingentity",
       "compiles": true,
-      "locked_code": false,
-      "registry_name": "strangetreeleaves_fang_kuai_bei_bao_zha_po_pi_shi",
+      "locked_code": true,
+      "registry_name": "strange_tree",
       "metadata": {
-        "dependencies": [
-          {
-            "name": "x",
-            "type": "number"
-          },
-          {
-            "name": "y",
-            "type": "number"
-          },
-          {
-            "name": "z",
-            "type": "number"
-          },
-          {
-            "name": "world",
-            "type": "world"
-          }
-        ],
         "files": [
-          "src/main/java/net/mcreator/strangerecord/procedures/StrangetreeleavesFangKuaiBeiBaoZhaPoPiShiProcedure.java"
+          "src/main/java/net/mcreator/strangerecord/entity/StrangeTreeEntity.java",
+          "src/main/java/net/mcreator/strangerecord/client/renderer/StrangeTreeRenderer.java",
+          "src/main/resources/assets/strangerecord/models/item/strange_tree_spawn_egg.json"
         ]
       },
       "path": "~/Strangetree"
     },
     {
-      "name": "Strangetreetree",
-      "type": "feature",
+      "name": "StrTree",
+      "type": "structure",
       "compiles": true,
       "locked_code": false,
-      "registry_name": "strangetreetree",
+      "registry_name": "str_tree",
       "metadata": {
         "files": [
-          "src/main/resources/data/strangerecord/worldgen/configured_feature/strangetreetree.json"
+          "src/main/resources/data/strangerecord/worldgen/structure_set/str_tree.json",
+          "src/main/resources/data/strangerecord/worldgen/template_pool/str_tree.json",
+          "src/main/resources/data/strangerecord/worldgen/structure/str_tree.json"
         ]
       },
       "path": "~/Strangetree"
@@ -1501,6 +1487,8 @@
       "OrangeTreeLeaves",
       "Orange",
       "Purplehand",
+      "Strangetreelog",
+      "Strangetreeleaves",
       "StangeCloud",
       "PurpleMonster",
       "Prisoner",
@@ -1510,11 +1498,10 @@
       "David",
       "Potter",
       "Qu",
+      "StrangeTree",
       "Chair",
       "Computer",
-      "Detecter",
-      "Strangetreelog",
-      "Strangetreeleaves"
+      "Detecter"
     ]
   },
   "language_map": {
@@ -1622,7 +1609,9 @@
       "advancements.purplehandadv.title": "A Hand?",
       "advancements.purplehandadv.descr": "Get the purple hand",
       "block.strangerecord.strangetreelog": "Strangetreelog",
-      "block.strangerecord.strangetreeleaves": "Strangetreeleaves"
+      "block.strangerecord.strangetreeleaves": "Strangetreeleaves",
+      "item.strangerecord.strange_tree_spawn_egg": "Strange Tree Spawn Egg",
+      "entity.strangerecord.strange_tree": "Strange Tree"
     },
     "zh_cn": {
       "entity.strangerecord.stange_cloud": "伪云",
@@ -1727,8 +1716,10 @@
       "advancements.cloudarmadv.descr": "获得全套云锭套装",
       "advancements.purplehandadv.title": "一只手？",
       "advancements.purplehandadv.descr": "获得紫怪触手",
-      "block.strangerecord.strangetreelog": "Strangetreelog",
-      "block.strangerecord.strangetreeleaves": "Strangetreeleaves"
+      "block.strangerecord.strangetreelog": "怪树树干",
+      "block.strangerecord.strangetreeleaves": "怪树树叶",
+      "item.strangerecord.strange_tree_spawn_egg": "怪树刷怪蛋",
+      "entity.strangerecord.strange_tree": "怪树"
     }
   },
   "metadata": {
@@ -1816,7 +1807,7 @@
   "workspaceSettings": {
     "modid": "strangerecord",
     "modName": "MC诡异见闻录",
-    "version": "1.1.7.1",
+    "version": "1.1.8",
     "description": "MC诡异见闻录的同人模组",
     "author": "一只小恐龙",
     "websiteURL": "https://mcreator.net",
