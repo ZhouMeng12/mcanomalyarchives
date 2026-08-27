@@ -104,5 +104,7 @@
   "block.strangerecord.strangetreelog": "Strangetreelog",
   "block.strangerecord.strangetreeleaves": "Strangetreeleaves",
   "item.strangerecord.strange_tree_spawn_egg": "Strange Tree Spawn Egg",
-  "entity.strangerecord.strange_tree": "Strange Tree"
+  "entity.strangerecord.strange_tree": "Strange Tree",
+  "death.attack.waistcut": "%1$s was cut in half",
+  "death.attack.waistcut.player": "%1$s was cut in half by %2$s"
 }

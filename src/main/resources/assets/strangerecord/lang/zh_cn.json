@@ -104,5 +104,7 @@
   "block.strangerecord.strangetreelog": "怪树树干",
   "block.strangerecord.strangetreeleaves": "怪树树叶",
   "item.strangerecord.strange_tree_spawn_egg": "怪树刷怪蛋",
-  "entity.strangerecord.strange_tree": "怪树"
+  "entity.strangerecord.strange_tree": "怪树",
+  "death.attack.waistcut": "%1$s被腰斩了",
+  "death.attack.waistcut.player": "%1$s被%2$s腰斩了"
 }
