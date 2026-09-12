@@ -39,21 +39,26 @@ Write-Host ""
 Write-Host "开始构建..." -ForegroundColor Cyan
 Push-Location $root
 try {
-    & (Join-Path $root 'gradlew.bat') build --console=plain
+    # 捕获输出自己判断成败：gradlew 在只有 javac 警告时会以 1 退出（stderr 有警告），
+    # 直接看退出码会把"构建成功但有警告"误判成失败。
+    $log = & (Join-Path $root 'gradlew.bat') build --console=plain 2>&1
     $code = $LASTEXITCODE
 }
 finally {
     Pop-Location
 }
 
-if ($code -eq 0) {
+$log | Where-Object { $_ -match 'error:|错误:|FAILED|BUILD |Task :compileJava' } | ForEach-Object { Write-Host "  $_" }
+
+if ($log -match 'BUILD SUCCESSFUL') {
     Write-Host ""
-    Write-Host "构建完成：build\libs\" -ForegroundColor Green
+    Write-Host "构建成功：build\libs\" -ForegroundColor Green
     Get-ChildItem (Join-Path $root 'build\libs') -Filter *.jar | ForEach-Object {
         Write-Host ("  {0}  ({1:N2} MB, {2})" -f $_.Name, ($_.Length / 1MB), $_.LastWriteTime)
     }
+    exit 0
 }
-else {
-    Write-Host "构建失败（gradle 退出码 $code）。注意：gradlew 在有 javac 警告时会以 1 退出，请确认上面是否出现 BUILD SUCCESSFUL。" -ForegroundColor Yellow
-}
-exit $code
+
+Write-Host ""
+Write-Host "构建失败（gradle 退出码 $code）：没有出现 BUILD SUCCESSFUL。" -ForegroundColor Red
+exit 1

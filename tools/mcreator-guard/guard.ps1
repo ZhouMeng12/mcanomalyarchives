@@ -209,6 +209,11 @@ switch ($Action) {
         Write-Host ""
         Write-Host "MCreator 生成区守卫 · 快照 (root: $Root)" -ForegroundColor Cyan
         if (-not (Test-Path $canonicalDir)) { New-Item -ItemType Directory -Path $canonicalDir -Force | Out-Null }
+        # 只允许用『检查通过』的状态刷新基线。
+        # 否则会出现最坑的情况：MCreator 刚把注册表改回 MONSTER，snapshot 把这份坏状态存成基线，
+        # 之后 apply 反而"忠实地"还原成坏的（本脚本 2026-09-12 真的踩过一次）。
+        $statusById = @{}
+        foreach ($r in $results) { $statusById[$r.Id] = $r.Status }
         foreach ($item in $manifest.items) {
             if ($item.kind -ne 'full' -and $item.kind -ne 'block') {
                 Write-Host ("  [----] {0} ({1})：不参与快照" -f $item.id, $item.kind) -ForegroundColor DarkGray
@@ -216,13 +221,22 @@ switch ($Action) {
             }
             $src = Resolve-WorkPath $item.path
             if (-not (Test-Path $src)) { Write-Host ("  [SKIP] {0}: 文件不存在" -f $item.id) -ForegroundColor Red; continue }
+            $target = Join-Path $canonicalDir $item.canonical
+            $itemStatus = $statusById[$item.id]
+            if ($itemStatus -ne 'ok' -and (Test-Path $target)) {
+                Write-Host ("  [拒绝] {0}: 当前状态检查不通过，不用它覆盖已有基线（先 -Action apply 还原）" -f $item.id) -ForegroundColor Red
+                continue
+            }
+            if ($itemStatus -ne 'ok') {
+                Write-Host ("  [警告] {0}: 首次建立基线，但当前状态检查不通过，请确认这是你要的状态" -f $item.id) -ForegroundColor Yellow
+            }
             if ($item.kind -eq 'full') {
-                Copy-Item -Path $src -Destination (Join-Path $canonicalDir $item.canonical) -Force
+                Copy-Item -Path $src -Destination $target -Force
             }
             else {
                 $block = Get-Block (Read-Text $src) $item.startAnchor $item.endAnchor
                 if ($null -eq $block) { Write-Host ("  [SKIP] {0}: 找不到锚点" -f $item.id) -ForegroundColor Red; continue }
-                Write-Text (Join-Path $canonicalDir $item.canonical) $block.Text
+                Write-Text $target $block.Text
             }
             Write-Host ("  [SNAP] {0} -> canonical/{1}" -f $item.id, $item.canonical) -ForegroundColor Green
         }

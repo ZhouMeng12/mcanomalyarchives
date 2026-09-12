@@ -1,6 +1,7 @@
 package net.mcreator.mcanomalyarchives.events;
 
 import net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepMechanics;
+import net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepMeteor;
 import net.mcreator.mcanomalyarchives.entity.PinkSheepEntity;
 
 import net.minecraft.core.particles.ParticleTypes;
@@ -118,6 +119,8 @@ public class PinkSheepCalamityHandler {
 	// ===== 距离分档触发 =====
 	@SubscribeEvent
 	public static void onServerTick(ServerTickEvent.Post event) {
+		// 在途陨石每 tick 推进（先于 gamerule 判断：已经砸下来的陨石不该因为中途关规则而消失）
+		PinkSheepMeteor.tick(event.getServer());
 		ServerLevel level = event.getServer().overworld();
 		if (level == null)
 			return;
@@ -173,6 +176,12 @@ public class PinkSheepCalamityHandler {
 	public static void onProjectileImpact(ProjectileImpactEvent event) {
 		HitResult hit = event.getRayTraceResult();
 		Projectile projectile = event.getProjectile();
+		// 陨石（大火球）撞到地形/实体：取消原版 1 级小爆炸，立刻按陨石规则引爆（12 格 + 保底 200）
+		if (PinkSheepMeteor.isMeteor(projectile)) {
+			event.setCanceled(true);
+			PinkSheepMeteor.onMeteorImpact(projectile);
+			return;
+		}
 		if (!(hit instanceof net.minecraft.world.phys.EntityHitResult entityHit))
 			return;
 		if (!(entityHit.getEntity() instanceof PinkSheepEntity sheep))
@@ -320,23 +329,12 @@ public class PinkSheepCalamityHandler {
 	}
 
 	// ---- Lv3（直接击杀档）----
+	/**
+	 * 陨石雨：3 颗冒火石头从斜上方砸向玩家，落地 12 格爆炸 + 保底 200 伤害 + 附近震屏。
+	 * 具体实现见 {@link net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepMeteor}。
+	 */
 	private static void meteorStrike(ServerPlayer player, ServerLevel level) {
-		// 2 颗陨石（大型火球）斜落玩家头顶；用 EntityType.create 避免 owner 为空 NPE
-		for (int i = 0; i < 2; i++) {
-			double dx = (player.getRandom().nextDouble() - 0.5) * 8;
-			double dz = (player.getRandom().nextDouble() - 0.5) * 8;
-			double sx = player.getX() + dx;
-			double sz = player.getZ() + dz;
-			double sy = player.getY() + 40;
-			var fireball = net.minecraft.world.entity.EntityType.FIREBALL.create(level);
-			if (fireball == null) continue;
-			fireball.setPos(sx, sy, sz);
-			fireball.setDeltaMovement(new Vec3(
-					(player.getX() - sx) / 40.0,
-					(player.getY() - sy) / 40.0,
-					(player.getZ() - sz) / 40.0));
-			level.addFreshEntity(fireball);
-		}
+		PinkSheepMeteor.strike(player, level);
 	}
 
 	private static void orbitalArrowRain(ServerPlayer player, ServerLevel level) {

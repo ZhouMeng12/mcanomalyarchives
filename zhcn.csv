@@ -46,7 +46,7 @@ item.mcanomalyarchives.prisoner_spawn_egg,死刑犯刷怪蛋,Prisoner Spawn Egg
 entity.mcanomalyarchives.prisoner,死刑犯,Prisoner
 subtitles.anbula_berserk,[黑],[black]
 item.mcanomalyarchives.chair,椅子,Chair
-entity.mcanomalyarchives.sitting_enity,,Sitting Enity
+entity.mcanomalyarchives.sitting_enity,端坐者,Sitting Enity
 item.mcanomalyarchives.computer,电脑,Computer
 entity.mcanomalyarchives.svan,斯万,Svan
 item.mcanomalyarchives.svan_spawn_egg,斯万刷怪蛋,Svan Spawn Egg
@@ -113,3 +113,5 @@ block.mcanomalyarchives.cloud_dem_portal,云室传送门,Cloud Dem Portal
 entity.mcanomalyarchives.purple_arrow,紫箭,Purple Arrow
 entity.mcanomalyarchives.pink_sheep,幸运粉羊,Pink Sheep
 item.mcanomalyarchives.pink_sheep_spawn_egg,幸运粉羊刷怪蛋,Pink Sheep Spawn Egg
+death.attack.meteor_strike,%1$s被陨石砸成了坑,%1$s was obliterated by a meteor
+item_group.mcanomalyarchives.strange_record,MC诡异见闻录,MC Anomaly Archives

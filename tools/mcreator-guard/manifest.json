@@ -84,6 +84,70 @@
       "glob": "*.java",
       "searchRoot": "src/main/java",
       "pattern": "net\\.mcreator\\.strangerecord|strangerecord:"
+    },
+    {
+      "id": "pink-sheep-renderer-registration",
+      "kind": "contains",
+      "why": "渲染器注册表行（init 包，生成区）：MCreator 重写后粉羊会失去羊模型渲染",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModEntityRenderers.java",
+      "fixHint": "补回 event.registerEntityRenderer(McanomalyarchivesModEntities.PINK_SHEEP.get(), PinkSheepRenderer::new);",
+      "mustContain": [
+        "PINK_SHEEP.get(), PinkSheepRenderer::new"
+      ]
+    },
+    {
+      "id": "pink-sheep-entity-hooks",
+      "kind": "contains",
+      "why": "实体注册表里的 init/属性钩子调用（生成区）：丢了粉羊就没有血量与生成规则",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModEntities.java",
+      "fixHint": "补回 PinkSheepEntity.init(event); 与 event.put(PINK_SHEEP.get(), PinkSheepEntity.createAttributes().build());",
+      "mustContain": [
+        "PinkSheepEntity.init(event);",
+        "PinkSheepEntity.createAttributes().build()"
+      ]
+    },
+    {
+      "id": "meteor-damage-type",
+      "kind": "full",
+      "why": "陨石保底 200 伤害用的自定义伤害类型；丢了会让伤害退回可被护甲减免的类型",
+      "path": "src/main/resources/data/mcanomalyarchives/damage_type/meteor_strike.json",
+      "canonical": "meteor_strike.json",
+      "expectAll": [
+        "\"message_id\": \"meteor_strike\""
+      ]
+    },
+    {
+      "id": "meteor-bypass-tags",
+      "kind": "exists",
+      "why": "5 个 bypasses_* 标签把 meteor_strike 拉进『无视减伤』集合（护甲/保护附魔/抗性药水/盾牌/无敌帧）",
+      "fixHint": "重建 data/minecraft/tags/damage_type/<标签>.json，内容 {\"replace\": false, \"values\": [\"mcanomalyarchives:meteor_strike\"]}",
+      "exists": [
+        "src/main/resources/data/minecraft/tags/damage_type/bypasses_armor.json",
+        "src/main/resources/data/minecraft/tags/damage_type/bypasses_enchantments.json",
+        "src/main/resources/data/minecraft/tags/damage_type/bypasses_resistance.json",
+        "src/main/resources/data/minecraft/tags/damage_type/bypasses_shield.json",
+        "src/main/resources/data/minecraft/tags/damage_type/bypasses_cooldown.json"
+      ]
+    },
+    {
+      "id": "meteor-lang-zh",
+      "kind": "contains",
+      "why": "陨石死亡信息（中文）；MCreator 重新生成 lang 会把它冲掉",
+      "path": "src/main/resources/assets/mcanomalyarchives/lang/zh_cn.json",
+      "fixHint": "补回 \"death.attack.meteor_strike\": \"%1$s被陨石砸成了坑\"",
+      "mustContain": [
+        "death.attack.meteor_strike"
+      ]
+    },
+    {
+      "id": "meteor-lang-en",
+      "kind": "contains",
+      "why": "陨石死亡信息（英文）",
+      "path": "src/main/resources/assets/mcanomalyarchives/lang/en_us.json",
+      "fixHint": "补回 \"death.attack.meteor_strike\": \"%1$s was obliterated by a meteor\"",
+      "mustContain": [
+        "death.attack.meteor_strike"
+      ]
     }
   ]
 }

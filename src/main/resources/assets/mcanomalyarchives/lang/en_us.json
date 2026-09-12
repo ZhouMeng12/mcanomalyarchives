@@ -112,5 +112,6 @@
   "item_group.mcanomalyarchives.strange_record": "MC Anomaly Archives",
   "subtitles.anbula_berserk": "[black]",
   "item.mcanomalyarchives.pink_sheep_spawn_egg": "Pink Sheep Spawn Egg",
-  "entity.mcanomalyarchives.pink_sheep": "Pink Sheep"
+  "entity.mcanomalyarchives.pink_sheep": "Pink Sheep",
+  "death.attack.meteor_strike": "%1$s was obliterated by a meteor"
 }
