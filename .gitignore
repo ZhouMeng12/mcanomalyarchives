@@ -5,8 +5,8 @@ out/
 *.class
 
 # ===== MCreator 运行数据（含世界存档、日志、模组 jar）=====
-run/
-logs/
+/run/
+/logs/
 crash-reports/
 crash-*.txt
 *.log
@@ -14,7 +14,7 @@ latest_crash.log
 
 # ===== MCreator 本地元数据 / 备份 =====
 .mcreator/
-backup/
+/backup/
 *.bak
 
 # ===== IDE / 编辑器 =====
@@ -25,9 +25,11 @@ backup/
 .trae/
 
 # ===== 第三方解包/参考源码（不属本项目）=====
-.geckolib_src/
-software/
-net/
+# 注意：以下路径必须锚定到仓库根（前导 /），否则 net/ 会连 src/main/java/net/ 一起忽略，
+# 导致整个 Java 源码树进不了版本控制（这正是之前源码一直没被 git 跟踪的原因）。
+/.geckolib_src/
+/software/
+/net/
 GuiGraphics_source.java
 Screen_source.java
 
