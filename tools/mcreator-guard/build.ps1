@@ -38,13 +38,17 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host ""
 Write-Host "开始构建..." -ForegroundColor Cyan
 Push-Location $root
+# gradlew 会把中文 javac 警告写到 stderr；在 $ErrorActionPreference='Stop' 下
+# PowerShell 会把原生命令的 stderr 当成终止错误，脚本会直接在调用处死掉。
+# 所以这里临时切回 Continue，只用输出内容判断成败。
+$prevEap = $ErrorActionPreference
+$ErrorActionPreference = 'Continue'
 try {
-    # 捕获输出自己判断成败：gradlew 在只有 javac 警告时会以 1 退出（stderr 有警告），
-    # 直接看退出码会把"构建成功但有警告"误判成失败。
     $log = & (Join-Path $root 'gradlew.bat') build --console=plain 2>&1
     $code = $LASTEXITCODE
 }
 finally {
+    $ErrorActionPreference = $prevEap
     Pop-Location
 }
 

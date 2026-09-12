@@ -1,0 +1,2 @@
+  "item.mcanomalyarchives.pink_sheep_spawn_egg": "幸运粉羊刷怪蛋",
+  "entity.mcanomalyarchives.pink_sheep": "幸运粉羊",

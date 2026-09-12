@@ -1,0 +1,3 @@
+  "entity.mcanomalyarchives.sitting_enity": "端坐者",
+  "item_group.mcanomalyarchives.strange_record": "MC诡异见闻录",
+  "death.attack.meteor_strike": "%1$s被陨石砸成了坑",

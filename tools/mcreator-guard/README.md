@@ -63,18 +63,50 @@ powershell -ExecutionPolicy Bypass -File tools/mcreator-guard/guard.ps1 -Action 
 | `pink-sheep-registration` | 代码块 | 注册退回 `MobCategory.MONSTER` + `sized(0.6f, 1.8f)`（1.8 格高的怪物判定） |
 | `pink-sheep-biome-modifier` | 整文件 | 自然刷怪权重文件被改写，与结构式生成器冲突 |
 | `mod-init-hooks` | 内容检查 | 主类 `user code block mod init` 里的 5 行 `init()` 丢失 → 整个粉羊机制不生效 |
-| `mechanics-package` | 存在检查 | `anomaly/pinksheep/` 两个文件丢失（可用 `git checkout` 恢复） |
+| `mechanics-package` | 存在检查 | `anomaly/pinksheep/` 文件丢失（可用 `git checkout` 恢复） |
 | `no-stale-prefix` | 反向检查 | 出现旧模组名 `strangerecord` 残留 → 注册名/网络通道不一致（会导致联机掉线） |
+| `pink-sheep-renderer-registration` | 内容检查 | 渲染器注册行丢失 → 粉羊退回默认渲染 |
+| `pink-sheep-entity-hooks` | 内容检查 | 实体 init/属性钩子调用丢失 → 粉羊没血量、没生成规则 |
+| `meteor-damage-type` | 整文件 | 陨石伤害类型丢了 → 保底 200 变成可被护甲减免 |
+| `meteor-bypass-tags` | 存在检查 | 5 个 bypasses_* 标签丢了 → 保底 200 名存实亡 |
+| `lang-zh-pink-sheep` | 代码块 | 粉羊词条被写成英文（workspace 里没中文） |
+| `lang-zh-extra` / `lang-en-extra` | 插入式 | 自定义词条（端坐者/创造标签页/陨石死亡信息）被整文件重写冲掉 |
 
 `contains` / `exists` / `noMatch` 三类**不会**被 `apply` 自动改（改动位置不确定），只在报告里给出 `fixHint`。
+
+规则类型一览（`manifest.json` 的 `kind`）：
+
+| kind | 检查方式 | 能否自动还原 |
+|---|---|---|
+| `full` | 整文件标记检查（`expectAll`） | ✅ 字节级复制 canonical |
+| `block` | 锚点区间内的标记检查 | ✅ 只替换该区间，其余不动 |
+| `insertBefore` | 文件里是否含这些键 | ✅ 只把**缺失的键**插到锚点行（通常是结尾 `}`）之前，自动处理 JSON 逗号 |
+| `contains` | 文件里是否含指定文本 | ❌（给 fixHint） |
+| `exists` | 文件是否存在 | ❌（给 fixHint） |
+| `noMatch` | 反向：不应出现的文本 | ❌（给 fixHint） |
+
+`insertBefore` 是为 lang 这类"MCreator 整文件重写、我们的词条在末尾"的场景准备的：
+逐行比对键名，只插缺的那几条，所以幂等、不会产生重复键（重复键会让 lang 解析炸掉），
+也会自动给上一行补逗号、给最后一条去掉逗号。
 
 ## 还原精度
 
 - 整文件项：`Copy-Item` 字节级复制，编码与行尾（LF/CRLF）原样保持；
-- 代码块项：按锚点定位后只替换该段，其余部分（包括 CRLF 文件的行尾风格）不动。
+- 代码块 / 插入项：按锚点定位后只改该段，其余部分（包括 CRLF 文件的行尾风格）不动。
 
-自测记录：模拟"实体类被还原成怪物模板 + 注册表被还原成 MONSTER/0.6×1.8"，
-`check` 正确报 2 项漂移；`apply` 后注册表文件 SHA256 与漂移前**完全一致**（`1ADE44EE7AB3…`）。
+自测记录（都是真实发生过的故障场景）：
+
+1. 实体类被还原成怪物模板 + 注册表被还原成 `MONSTER`/`0.6×1.8` →
+   `check` 报 2 项漂移；`apply` 后注册表 SHA256 与漂移前**完全一致**（`1ADE44EE7AB3…`）。
+2. MCreator 重写整个 lang（删掉自定义词条 + 粉羊词条回英文）→
+   `check` 报 3 项漂移；`apply` 后 JSON 依然合法、无重复键，词条全部回来。
+3. **基线保护**：曾出现 `snapshot` 把 MCreator 刚改坏的注册表存成"好基线"，
+   之后 `apply` 反而忠实还原成坏的。现在检查不通过的项**拒绝覆盖已有基线**。
+
+> ⚠️ 如果你在 MCreator 里点了「重新生成代码」，先跑一次 `-Action apply` 再继续写代码，
+> 否则你手上的工作副本是"已经被改坏"的状态。重建 MCreator 工作区时它还会重写
+> `mcanomalyarchives.mcreator` 里的 language_map —— 那里没有中文词条，
+> 所以每次重生成都需要守卫把 lang 补回来（或直接在 MCreator 界面里给元素填中文名）。
 
 ## 版本控制
 

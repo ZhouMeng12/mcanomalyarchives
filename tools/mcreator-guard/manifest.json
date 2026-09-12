@@ -130,23 +130,39 @@
       ]
     },
     {
-      "id": "meteor-lang-zh",
-      "kind": "contains",
-      "why": "陨石死亡信息（中文）；MCreator 重新生成 lang 会把它冲掉",
+      "id": "lang-zh-pink-sheep",
+      "kind": "block",
+      "why": "MCreator 生成 lang 时粉羊两词条只写英文（workspace language_map 里没有对应中文），必须改回中文",
       "path": "src/main/resources/assets/mcanomalyarchives/lang/zh_cn.json",
-      "fixHint": "补回 \"death.attack.meteor_strike\": \"%1$s被陨石砸成了坑\"",
-      "mustContain": [
-        "death.attack.meteor_strike"
+      "canonical": "zh_cn.pink_sheep.txt",
+      "startAnchor": "\"item.mcanomalyarchives.pink_sheep_spawn_egg\"",
+      "endAnchor": "\"entity.mcanomalyarchives.pink_sheep\"",
+      "expectAll": [
+        "幸运粉羊"
       ]
     },
     {
-      "id": "meteor-lang-en",
-      "kind": "contains",
-      "why": "陨石死亡信息（英文）",
+      "id": "lang-zh-extra",
+      "kind": "insertBefore",
+      "why": "MCreator 重写整个 lang 会删掉这些自定义中文词条（端坐者/创造标签页/陨石死亡信息）",
+      "path": "src/main/resources/assets/mcanomalyarchives/lang/zh_cn.json",
+      "canonical": "zh_cn.extra.txt",
+      "anchor": "}",
+      "expectAll": [
+        "\"entity.mcanomalyarchives.sitting_enity\"",
+        "\"item_group.mcanomalyarchives.strange_record\"",
+        "\"death.attack.meteor_strike\""
+      ]
+    },
+    {
+      "id": "lang-en-extra",
+      "kind": "insertBefore",
+      "why": "同上（英文侧）：陨石死亡信息会被重生成删掉",
       "path": "src/main/resources/assets/mcanomalyarchives/lang/en_us.json",
-      "fixHint": "补回 \"death.attack.meteor_strike\": \"%1$s was obliterated by a meteor\"",
-      "mustContain": [
-        "death.attack.meteor_strike"
+      "canonical": "en_us.extra.txt",
+      "anchor": "}",
+      "expectAll": [
+        "\"death.attack.meteor_strike\""
       ]
     }
   ]

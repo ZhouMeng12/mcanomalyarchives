@@ -1,0 +1,1 @@
+  "death.attack.meteor_strike": "%1$s was obliterated by a meteor",

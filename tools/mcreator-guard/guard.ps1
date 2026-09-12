@@ -110,6 +110,12 @@ function Test-Item($item) {
             $missing = @($item.exists | Where-Object { -not (Test-Path (Resolve-WorkPath $_)) })
             if ($missing.Count) { $r.Status = 'missing'; $r.Detail = '缺少文件: ' + ($missing -join ' | ') }
         }
+        'insertBefore' {
+            # 自定义词条：MCreator 重写整个 lang 后，这些键必须还能在（还原时插入回去）
+            $text = Read-Text $path
+            $missing = @($item.expectAll | Where-Object { -not $text.Contains($_) })
+            if ($missing.Count) { $r.Status = 'drift'; $r.Detail = '缺少词条: ' + ($missing -join ' | ') }
+        }
         'noMatch' {
             $searchRoot = Resolve-WorkPath $item.searchRoot
             if (-not (Test-Path $searchRoot)) { $r.Status = 'missing'; $r.Detail = '搜索目录不存在' }
@@ -132,7 +138,8 @@ function Test-Item($item) {
 # ---------- 还原 ----------
 
 function Repair-Item($item) {
-    if ($item.kind -ne 'full' -and $item.kind -ne 'block') { return $false } # contains/exists/noMatch 交给 fixHint
+    # contains / exists / noMatch 不改文件，交给 fixHint
+    if ($item.kind -ne 'full' -and $item.kind -ne 'block' -and $item.kind -ne 'insertBefore') { return $false }
     $src = Join-Path $canonicalDir $item.canonical
     if (-not (Test-Path $src)) { throw "缺少快照: $src（先运行 -Action snapshot）" }
     $dst = Resolve-WorkPath $item.path
@@ -140,6 +147,38 @@ function Repair-Item($item) {
         $dir = Split-Path $dst -Parent
         if (-not (Test-Path $dir)) { New-Item -ItemType Directory -Path $dir -Force | Out-Null }
         Copy-Item -Path $src -Destination $dst -Force      # 字节级复制，编码/行尾原样
+        return $true
+    }
+    if ($item.kind -eq 'insertBefore') {
+        # 把 canonical 里【文件里还没有的键】插到锚点行（通常是结尾的 "}"）之前。
+        # 只插缺失的键 → 幂等，且不会产生重复键（重复键会让 lang 解析炸掉）。
+        $text = Read-Text $dst
+        $info = Get-TextInfo $text
+        $anchorIdx = -1
+        for ($i = 0; $i -lt $info.Lines.Count; $i++) {
+            if ($info.Lines[$i].Contains($item.anchor)) { $anchorIdx = $i; break }
+        }
+        if ($anchorIdx -lt 0) { throw "找不到插入锚点 '$($item.anchor)': $($item.path)" }
+        $insert = @()
+        foreach ($line in ((Read-Text $src) -split "`r?`n")) {
+            $line = $line.TrimEnd()
+            if ($line.Length -eq 0) { continue }
+            $m = [regex]::Match($line, '^\s*"([^"]+)"')
+            if ($m.Success -and $text.Contains('"' + $m.Groups[1].Value + '"')) { continue }  # 已有这个键，跳过
+            $insert += $line
+        }
+        if ($insert.Count -eq 0) { return $true }
+        $lines = @($info.Lines)
+        $prev = $anchorIdx - 1
+        if ($prev -ge 0 -and $lines[$prev].TrimEnd().Length -gt 0 -and -not $lines[$prev].TrimEnd().EndsWith(',')) {
+            $lines[$prev] = $lines[$prev].TrimEnd() + ','          # 给它补上 JSON 逗号
+        }
+        $insert[$insert.Count - 1] = $insert[$insert.Count - 1].TrimEnd(',').TrimEnd()  # 最后一条成为末项，去掉逗号
+        $newLines = @()
+        if ($anchorIdx -gt 0) { $newLines += @($lines[0..($anchorIdx - 1)]) }
+        $newLines += $insert
+        $newLines += @($lines[$anchorIdx..($lines.Count - 1)])
+        Write-Text $dst ($newLines -join $info.Sep)
         return $true
     }
     $block = Get-Block (Read-Text $dst) $item.startAnchor $item.endAnchor
