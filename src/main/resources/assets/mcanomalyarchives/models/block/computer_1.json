@@ -1,0 +1,9 @@
+{
+  "parent": "mcanomalyarchives:custom/computer",
+  "textures": {
+    "all": "mcanomalyarchives:block/texturecomputer",
+    "particle": "mcanomalyarchives:block/texturecomputer",
+    "4": "mcanomalyarchives:block/texturecomputer"
+  },
+  "render_type": "solid"
+}

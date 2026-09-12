@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "mcanomalyarchives:orange_log"
+    }
+  ],
+  "result": {
+    "id": "mcanomalyarchives:orange_plank",
+    "count": 4
+  }
+}

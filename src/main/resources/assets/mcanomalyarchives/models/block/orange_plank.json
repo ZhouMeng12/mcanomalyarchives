@@ -1,0 +1,8 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "mcanomalyarchives:block/orangewood",
+    "particle": "mcanomalyarchives:block/orangewood"
+  },
+  "render_type": "solid"
+}

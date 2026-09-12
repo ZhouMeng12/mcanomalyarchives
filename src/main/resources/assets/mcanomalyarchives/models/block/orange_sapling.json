@@ -1,0 +1,8 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "mcanomalyarchives:block/orangesapling",
+    "particle": "mcanomalyarchives:block/orangesapling"
+  },
+  "render_type": "cutout"
+}

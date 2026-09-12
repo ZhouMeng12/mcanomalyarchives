@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "axis=z": {
+      "model": "mcanomalyarchives:block/cloud_dem_portal_ew"
+    },
+    "axis=x": {
+      "model": "mcanomalyarchives:block/cloud_dem_portal_ns"
+    }
+  }
+}

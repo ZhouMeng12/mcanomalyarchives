@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "mcanomalyarchives:block/chair"
+    },
+    "facing=east": {
+      "model": "mcanomalyarchives:block/chair",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "mcanomalyarchives:block/chair",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "mcanomalyarchives:block/chair",
+      "y": 270
+    }
+  }
+}

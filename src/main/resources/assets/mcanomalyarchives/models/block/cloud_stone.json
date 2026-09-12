@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "mcanomalyarchives:block/cloudstone",
+    "up": "mcanomalyarchives:block/cloudstone",
+    "north": "mcanomalyarchives:block/cloudstone",
+    "east": "mcanomalyarchives:block/cloudstone",
+    "south": "mcanomalyarchives:block/cloudstone",
+    "west": "mcanomalyarchives:block/cloudstone",
+    "particle": "mcanomalyarchives:block/cloudstone"
+  },
+  "render_type": "solid"
+}

@@ -1,0 +1,10 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": [
+    "forest",
+    "flower_forest",
+    "plains"
+  ],
+  "features": "mcanomalyarchives:oreange_tree",
+  "step": "surface_structures"
+}

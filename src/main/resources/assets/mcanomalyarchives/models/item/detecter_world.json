@@ -1,0 +1,15 @@
+{
+  "parent": "mcanomalyarchives:custom/detecter",
+  "textures": {
+    "0": "mcanomalyarchives:block/detector",
+    "particle": "mcanomalyarchives:block/detector"
+  },
+  "display": {
+    "firstperson_righthand": {
+      "translation": [0, 7, 0]
+    },
+    "thirdperson_righthand": {
+      "translation": [0, 7, 0]
+    }
+  }
+}

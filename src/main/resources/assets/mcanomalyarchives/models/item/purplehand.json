@@ -1,0 +1,7 @@
+{
+  "gui_light": "front",
+  "parent": "builtin/entity",
+  "textures": {
+    "layer0": "mcanomalyarchives:item/qq20260728-194647"
+  }
+}

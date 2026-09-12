@@ -77,3 +77,12 @@ UO-011*
 # ===== 系统文件 =====
 .DS_Store
 Thumbs.db
+
+# ===== 视频研读缓存（封面/弹幕原稿/逐帧截图，体积大不进仓库；结论写在 md 里）=====
+docs/video-research/covers/
+docs/video-research/raw/
+docs/video-research/frames/
+
+# ===== 参考用的 NeoForge/原版 jar（25MB 二进制，不入仓库）=====
+1.21.1-NeoForge_21.1.248.jar
+*.jar

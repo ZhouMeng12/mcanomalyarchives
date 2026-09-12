@@ -1,0 +1,8 @@
+{
+  "parent": "block/cross",
+  "textures": {
+    "cross": "mcanomalyarchives:block/invicon_poppy",
+    "particle": "mcanomalyarchives:block/invicon_poppy"
+  },
+  "render_type": "cutout_mipped"
+}

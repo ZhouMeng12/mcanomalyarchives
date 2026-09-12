@@ -1,0 +1,10 @@
+{
+  "parent": "mcanomalyarchives:custom/chair",
+  "textures": {
+    "all": "mcanomalyarchives:block/textureblack",
+    "particle": "mcanomalyarchives:block/textureblack",
+    "0": "mcanomalyarchives:block/textureblack",
+    "1": "mcanomalyarchives:block/texturegray"
+  },
+  "render_type": "solid"
+}

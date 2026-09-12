@@ -1,0 +1,26 @@
+{
+  "model": {
+    "type": "minecraft:select",
+    "property": "minecraft:display_context",
+    "cases": [
+      {
+        "when": "gui",
+        "model": {
+          "type": "minecraft:model",
+          "model": "mcanomalyarchives:item/detecter_gui"
+        }
+      },
+      {
+        "when": "head",
+        "model": {
+          "type": "minecraft:model",
+          "model": "mcanomalyarchives:item/detecter_head"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "mcanomalyarchives:item/detecter_world"
+    }
+  }
+}

@@ -1,0 +1,115 @@
+SEP=,
+Translation key (DON'T EDIT),TRANSLATION IN zh_cn - EDIT THIS COLUMN,English text (DON'T EDIT - reference only)
+entity.mcanomalyarchives.stange_cloud,伪云,Stange Cloud
+item.mcanomalyarchives.stange_cloud_spawn_egg,伪云刷怪蛋,Stange Cloud Spawn Egg
+item.mcanomalyarchives.cloud_stone,云石,Cloud Stone
+item.mcanomalyarchives.cloud_dem,云石打火机,Cloud Stone snd Steel
+item.mcanomalyarchives.cloud_water_bucket,云水桶,Cloud Water Bucket
+fluid.mcanomalyarchives.cloud_water,云水,Cloud Water
+fluid_type.mcanomalyarchives.cloud_water,云水,Cloud Water
+block.mcanomalyarchives.cloud_water,云水,Cloud Water
+effect.mcanomalyarchives.clouding,云化,Clouding
+item.mcanomalyarchives.cloud_water_bottle,云水瓶,Cloud Water Bottle
+advancements.strange_stone.title,奇怪的石头?,Strange Stone?
+advancements.strange_stone.descr,获得一块奇怪的石头,Get a strange stone
+advancements.strange_water.title,奇怪的水?,Strange Water?
+advancements.strange_water.descr,获得一瓶奇怪的水,Get a strange water
+advancements.return_home_1.descr,喝下云水,Drink the cloud water
+advancements.return_home_1.title,归乡,Return Home
+advancements.return_home_2.title,归乡。,Return Home.
+advancements.return_home_2.descr,欢迎回家。,Welcome Home.
+item.mcanomalyarchives.corn_poppy,虞美人？,Corn Poppy
+effect.mcanomalyarchives.addicte,上瘾,Addicte
+effect.mcanomalyarchives.sad,悲伤,Sad
+item.mcanomalyarchives.icon,图标,Icon
+item_group.mcanomalyarchives.anomaly_archives,诡异见闻录,MC Anomaly Archives
+advancements.welcome.title,欢迎来到诡异见闻录！,Welcome to mc anomaly archives!
+advancements.welcome.descr,欢迎来到诡异见闻录！,Welcome to mc anomaly archives!
+entity.mcanomalyarchives.anbula,安布拉,Anbula
+item.mcanomalyarchives.anbula_spawn_egg,安布拉刷怪蛋,Anbula Spawn Egg
+advancements.gettogarden.descr,一个美丽的花园,A beautiful garden
+advancements.gettogarden.title,到达花园,Arrive at the garden
+death.attack.braindamage.item,%1$s 因为 %2$s 用 %3$s 而脑死亡,%1$s is brain dead by %2$s using %3$s
+death.attack.braindamage,%1$s 脑死亡,%1$s is brain dead
+death.attack.braindamage.player,%1$s 在逃离 %2$s 时脑死亡,%1$s is brain dead whilst trying to escape %2$s
+item.mcanomalyarchives.sadicon,伤心图标,Sadicon
+item.mcanomalyarchives.hearticon,爱心图标,Hearticon
+advancements.sobeautiful.title,多么美丽！,So beautiful
+advancements.sobeautiful.descr,观赏花朵,Watch the flower
+advancements.watchdeath.title,已腐烂,Rotted
+advancements.watchdeath.descr,观赏花朵直到死亡,Watch the flower until death
+advancements.whyletmesad.title,为什么要让我心碎！,Why do you break my heart?
+advancements.whyletmesad.descr,停止看花一段时间,Stop watching for a long time
+item.mcanomalyarchives.sad_poppy,悲伤的虞美人,Sad Poppy
+item.mcanomalyarchives.dead_poppy,死亡的虞美人,Dead Poppy
+item.mcanomalyarchives.prisoner_spawn_egg,死刑犯刷怪蛋,Prisoner Spawn Egg
+entity.mcanomalyarchives.prisoner,死刑犯,Prisoner
+subtitles.anbula_berserk,[黑],[black]
+item.mcanomalyarchives.chair,椅子,Chair
+entity.mcanomalyarchives.sitting_enity,,Sitting Enity
+item.mcanomalyarchives.computer,电脑,Computer
+entity.mcanomalyarchives.svan,斯万,Svan
+item.mcanomalyarchives.svan_spawn_egg,斯万刷怪蛋,Svan Spawn Egg
+item.mcanomalyarchives.stripped_orange_log,去皮橘树原木,Stripped Orange Log
+item.mcanomalyarchives.orange_log,橘树原木,Orange Log
+item.mcanomalyarchives.orange_leaves,橘树树叶,Orange Tree Leaves
+item.mcanomalyarchives.orange_sapling,橘树树苗,Orange Sapling
+item.mcanomalyarchives.orange,橘子,Orange
+item.mcanomalyarchives.orange_plank,橘树木板,Orange Wood
+item.mcanomalyarchives.qu_spawn_egg,区刷怪蛋,Qu Spawn Egg
+entity.mcanomalyarchives.qu,区,Qu
+item.mcanomalyarchives.strange_fishing_rod,跨维钓竿,Strange Fishing Rod
+item.mcanomalyarchives.detecter,神经监测仪,Detecter
+item.mcanomalyarchives.purple_monster_spawn_egg,紫怪刷怪蛋,Purple Monster Spawn Egg
+entity.mcanomalyarchives.purple_monster,紫怪,Purple Monster
+entity.mcanomalyarchives.purple_dog,紫狗,Purple Dog
+item.mcanomalyarchives.purplehand,紫怪触手,Purplehand
+block.mcanomalyarchives.cloud_stone,云石,Cloud Stone
+block.mcanomalyarchives.dead_poppy,死亡的虞美人,Dead Poppy
+block.mcanomalyarchives.chair,椅子,Chair
+block.mcanomalyarchives.computer,电脑,Computer
+block.mcanomalyarchives.orange_log,橘树原木,Orange Log
+block.mcanomalyarchives.orange_leaves,橘树树叶,Orange Tree Leaves
+block.mcanomalyarchives.stripped_orange_log,去皮橘树原木,Stripped Orange Log
+block.mcanomalyarchives.orange_plank,橘树原木,Orange Wood
+block.mcanomalyarchives.orange_sapling,橘树树苗,Orange Sapling
+advancements.shangyu.descr,使用跨维钓竿钓鱼,Fish by strange fishing rod
+advancements.shangyu.title,钓鱼？,Fishing
+advancements.whatthe.descr,钓出奇怪的东西,Fish something strange
+advancements.whatthe.title,什么鬼,What the hell
+item.mcanomalyarchives.cloud_rock,云岩,Cloud Rock
+biome.mcanomalyarchives.cloudroom,云室,Cloudroom
+item.mcanomalyarchives.cloud_ore,云矿,Cloud Ore
+item.mcanomalyarchives.cloud_ingot,云锭,Cloud Ingot
+item.mcanomalyarchives.cloud_upgrade,云锭升级,Cloud Upgrade
+item.mcanomalyarchives.cloud_armor_chestplate,云锭胸甲,Cloud Chestplate
+item.mcanomalyarchives.cloud_armor_helmet,云锭头盔,Cloud Helmet
+item.mcanomalyarchives.cloud_armor_leggings,云锭护腿,Cloud Legging
+item.mcanomalyarchives.cloud_armor_boots,云锭靴子,Cloud Boots
+item.mcanomalyarchives.cloud_scrap,云锭碎片,Cloud Scrap
+block.mcanomalyarchives.cloud_rock,云岩,Cloud Rock
+block.mcanomalyarchives.cloud_ore,云矿,Cloud Ore
+gamerule.cornPoppySad.description,虞美人将有”花之泣“效果,Corn poppy can have "Flower Tear" Effect
+gamerule.cornPoppySad,花之泣,Corn poppy sad
+block.mcanomalyarchives.corn_poppy,虞美人？,Corn Poppy
+item.mcanomalyarchives.yifulin_spawn_egg,伊芙琳刷怪蛋,Yifulin Spawn Egg
+entity.mcanomalyarchives.yifulin,伊芙琳,Yifulin
+item.mcanomalyarchives.david_spawn_egg,大卫刷怪蛋,David Spawn Egg
+entity.mcanomalyarchives.david,大卫,David
+item.mcanomalyarchives.potter_spawn_egg,波特刷怪蛋,Potter Spawn Egg
+entity.mcanomalyarchives.potter,波特,Potter
+advancements.cloudarmadv.title,云雾缠身,Cloud armor on body
+advancements.cloudarmadv.descr,获得全套云锭套装,get
+advancements.purplehandadv.title,一只手？,A Hand?
+advancements.purplehandadv.descr,获得紫怪触手,Get the purple hand
+block.mcanomalyarchives.strangetreelog,怪树树干,Strangetreelog
+block.mcanomalyarchives.strangetreeleaves,怪树树叶,Strangetreeleaves
+item.mcanomalyarchives.strange_tree_spawn_egg,怪树刷怪蛋,Strange Tree Spawn Egg
+entity.mcanomalyarchives.strange_tree,怪树,Strange Tree
+death.attack.waistcut,%1$s被腰斩了,%1$s was cut in half
+death.attack.waistcut.player,%1$s被%2$s腰斩了,%1$s was cut in half by %2$s
+block.mcanomalyarchives.sad_poppy,悲伤的虞美人,Sad Poppy
+block.mcanomalyarchives.cloud_dem_portal,云室传送门,Cloud Dem Portal
+entity.mcanomalyarchives.purple_arrow,紫箭,Purple Arrow
+entity.mcanomalyarchives.pink_sheep,幸运粉羊,Pink Sheep
+item.mcanomalyarchives.pink_sheep_spawn_egg,幸运粉羊刷怪蛋,Pink Sheep Spawn Egg

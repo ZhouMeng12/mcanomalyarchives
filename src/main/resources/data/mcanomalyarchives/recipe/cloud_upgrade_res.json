@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "aba",
+    "aca",
+    "aaa"
+  ],
+  "key": {
+    "a": {
+      "item": "mcanomalyarchives:cloud_stone"
+    },
+    "b": {
+      "item": "mcanomalyarchives:cloud_ingot"
+    },
+    "c": {
+      "item": "minecraft:netherite_upgrade_smithing_template"
+    }
+  },
+  "result": {
+    "id": "mcanomalyarchives:cloud_upgrade",
+    "count": 1
+  }
+}

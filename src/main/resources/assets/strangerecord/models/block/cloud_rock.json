@@ -1,8 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "strangerecord:block/blocksprite_stone",
-    "particle": "strangerecord:block/blocksprite_stone"
-  },
-  "render_type": "solid"
-}

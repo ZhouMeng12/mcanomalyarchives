@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "mcanomalyarchives:block/orangetreelogup",
+    "up": "mcanomalyarchives:block/orangetreelogup",
+    "north": "mcanomalyarchives:block/orangetreelogside",
+    "east": "mcanomalyarchives:block/orangetreelogside",
+    "south": "mcanomalyarchives:block/orangetreelogside",
+    "west": "mcanomalyarchives:block/orangetreelogside",
+    "particle": "mcanomalyarchives:block/orangetreelogup"
+  },
+  "render_type": "cutout_mipped"
+}

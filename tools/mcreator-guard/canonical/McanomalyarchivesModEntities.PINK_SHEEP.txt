@@ -1,0 +1,4 @@
+	public static final DeferredHolder<EntityType<?>, EntityType<PinkSheepEntity>> PINK_SHEEP = register("pink_sheep",
+			EntityType.Builder.<PinkSheepEntity>of(PinkSheepEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
+
+					.ridingOffset(-0.6f).sized(0.9f, 1.3f));

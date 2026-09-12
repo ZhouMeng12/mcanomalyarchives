@@ -1,8 +1,0 @@
-{
-  "parent": "block/tinted_cross",
-  "textures": {
-    "cross": "strangerecord:block/invicon_poppy",
-    "particle": "strangerecord:block/invicon_poppy"
-  },
-  "render_type": "cutout"
-}

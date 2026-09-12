@@ -3,7 +3,7 @@ loaderVersion="[4,)"
 license="GNU General Public License version 3 (GPLv3)"
 
 [[mods]]
-modId="strangerecord"
+modId="mcanomalyarchives"
 version="1.1.8"
 displayName="MC\u8BE1\u5F02\u89C1\u95FB\u5F55"
 displayURL="https://mcreator.net"
@@ -18,18 +18,18 @@ description="MC\u8BE1\u5F02\u89C1\u95FB\u5F55\u7684\u540C\u4EBA\u6A21\u7EC4"
 
 # Start of user code block custom mixins
 [[mixins]]
-config="strangerecord.mixins.json"
+config="mcanomalyarchives.mixins.json"
 side="CLIENT"
 # End of user code block custom mixins
 
-[[dependencies.strangerecord]]
+[[dependencies.mcanomalyarchives]]
 modId="neoforge"
 type="required"
 versionRange="[21.1.190,)"
 ordering="AFTER"
 side="BOTH"
 
-[[dependencies.strangerecord]]
+[[dependencies.mcanomalyarchives]]
 modId="minecraft"
 type="required"
 versionRange="[1.21.1]"
@@ -40,7 +40,7 @@ side="BOTH"
 
 
 # Start of user code block dependencies configuration
-[[dependencies.strangerecord]]
+[[dependencies.mcanomalyarchives]]
 modId="geckolib"
 type="required"
 versionRange="[4,)"

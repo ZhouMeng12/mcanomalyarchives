@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=north,open=false": {
+      "model": "mcanomalyarchives:block/computer_0"
+    },
+    "facing=north,open=true": {
+      "model": "mcanomalyarchives:block/computer_1"
+    },
+    "facing=east,open=false": {
+      "model": "mcanomalyarchives:block/computer_0",
+      "y": 90
+    },
+    "facing=east,open=true": {
+      "model": "mcanomalyarchives:block/computer_1",
+      "y": 90
+    },
+    "facing=south,open=false": {
+      "model": "mcanomalyarchives:block/computer_0",
+      "y": 180
+    },
+    "facing=south,open=true": {
+      "model": "mcanomalyarchives:block/computer_1",
+      "y": 180
+    },
+    "facing=west,open=false": {
+      "model": "mcanomalyarchives:block/computer_0",
+      "y": 270
+    },
+    "facing=west,open=true": {
+      "model": "mcanomalyarchives:block/computer_1",
+      "y": 270
+    }
+  }
+}

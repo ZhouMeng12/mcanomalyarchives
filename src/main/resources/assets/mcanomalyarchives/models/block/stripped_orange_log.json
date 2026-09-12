@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "mcanomalyarchives:block/strippedoreangelog",
+    "up": "mcanomalyarchives:block/strippedoreangelog",
+    "north": "mcanomalyarchives:block/strippedoreangelogside",
+    "east": "mcanomalyarchives:block/strippedoreangelogside",
+    "south": "mcanomalyarchives:block/strippedoreangelogside",
+    "west": "mcanomalyarchives:block/strippedoreangelogside",
+    "particle": "mcanomalyarchives:block/strippedoreangelog"
+  },
+  "render_type": "cutout_mipped"
+}

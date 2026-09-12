@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": {
+    "item": "mcanomalyarchives:cloud_upgrade"
+  },
+  "base": {
+    "item": "minecraft:diamond_chestplate"
+  },
+  "addition": {
+    "item": "mcanomalyarchives:cloud_ingot"
+  },
+  "result": {
+    "id": "mcanomalyarchives:cloud_armor_chestplate"
+  }
+}

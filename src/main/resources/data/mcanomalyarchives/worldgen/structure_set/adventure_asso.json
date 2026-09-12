@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "mcanomalyarchives:adventure_asso",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 186,
+    "separation": 64,
+    "salt": 220989625
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "mcanomalyarchives:item/cloud_stone_and_steel"
+  }
+}

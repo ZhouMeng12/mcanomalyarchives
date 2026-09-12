@@ -1,7 +1,0 @@
-{
-  "gui_light": "front",
-  "parent": "builtin/entity",
-  "textures": {
-    "layer0": "strangerecord:item/qq20260728-194647"
-  }
-}

@@ -1,8 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "strangerecord:block/orangewood",
-    "particle": "strangerecord:block/orangewood"
-  },
-  "render_type": "solid"
-}

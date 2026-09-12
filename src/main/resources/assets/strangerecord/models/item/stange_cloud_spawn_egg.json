@@ -1,6 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "strangerecord:item/stange_cloud_spawn_egg_generated"
-  }
-}

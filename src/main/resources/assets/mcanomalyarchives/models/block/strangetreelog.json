@@ -1,0 +1,13 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "mcanomalyarchives:block/log2",
+    "up": "mcanomalyarchives:block/log2",
+    "north": "mcanomalyarchives:block/log1",
+    "east": "mcanomalyarchives:block/log1",
+    "south": "mcanomalyarchives:block/log1",
+    "west": "mcanomalyarchives:block/log1",
+    "particle": "mcanomalyarchives:block/log2"
+  },
+  "render_type": "solid"
+}

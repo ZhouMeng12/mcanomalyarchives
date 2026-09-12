@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "description": "MCreator 生成区守卫清单：记录粉羊玩法对『生成文件』做过的全部改动。MCreator 重新生成代码后用 guard.ps1 -Action apply 一键还原。",
+  "note": "canonical/ 下的文件是『已知良好版本』，由 guard.ps1 -Action snapshot 从当前工作副本刷新。改完机制、确认编译通过后再 snapshot 一次即可。",
+  "items": [
+    {
+      "id": "pink-sheep-entity",
+      "kind": "full",
+      "why": "粉羊薄壳：MCreator 重生成会还原成 Monster 模板（非 Sheep → 无羊模型/无粉色/无剪毛）",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/PinkSheepEntity.java",
+      "canonical": "PinkSheepEntity.java",
+      "expectAll": [
+        "extends Sheep",
+        "protected void registerGoals()",
+        "protected void customServerAiStep()",
+        "public static AttributeSupplier.Builder createAttributes()",
+        "public static void init(RegisterSpawnPlacementsEvent event)"
+      ]
+    },
+    {
+      "id": "pink-sheep-renderer",
+      "kind": "full",
+      "why": "渲染沿用原版羊模型+羊毛层；MCreator 重生成会还原成默认人形/Humanoid 渲染",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/PinkSheepRenderer.java",
+      "canonical": "PinkSheepRenderer.java",
+      "expectAll": [
+        "extends MobRenderer<Sheep, SheepModel<Sheep>>",
+        "new SheepFurLayer(",
+        "ModelLayers.SHEEP"
+      ]
+    },
+    {
+      "id": "pink-sheep-registration",
+      "kind": "block",
+      "why": "实体注册被还原成 MobCategory.MONSTER + sized(0.6f,1.8f)（巨型怪物判定）",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModEntities.java",
+      "canonical": "McanomalyarchivesModEntities.PINK_SHEEP.txt",
+      "startAnchor": "EntityType<PinkSheepEntity>> PINK_SHEEP = register(",
+      "endAnchor": ".sized(",
+      "expectAll": [
+        "MobCategory.CREATURE",
+        "sized(0.9f, 1.3f)"
+      ]
+    },
+    {
+      "id": "pink-sheep-biome-modifier",
+      "kind": "full",
+      "why": "刷怪权重文件；实际刷怪由结构式生成器接管，这里保持原样避免二次自然刷怪",
+      "path": "src/main/resources/data/mcanomalyarchives/neoforge/biome_modifier/pink_sheep_biome_modifier.json",
+      "canonical": "pink_sheep_biome_modifier.json",
+      "expectAll": [
+        "mcanomalyarchives:pink_sheep"
+      ]
+    },
+    {
+      "id": "mod-init-hooks",
+      "kind": "contains",
+      "why": "MCreator 的 user code block 一般能保住；万一丢了事件处理器就完全不生效",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/McanomalyarchivesMod.java",
+      "fixHint": "手动加回 McanomalyarchivesMod.java 的 '// Start of user code block mod init' 区块内",
+      "mustContain": [
+        "PinkSheepLookHandler.init();",
+        "PinkSheepLuckyHandler.init();",
+        "PinkSheepCalamityHandler.init();",
+        "PinkSheepStructureSpawnHandler.init();",
+        "BlinkClientHandler.init();"
+      ]
+    },
+    {
+      "id": "mechanics-package",
+      "kind": "exists",
+      "why": "机制归属区（非生成区）：这两个文件丢了说明有人把它挪回了生成区",
+      "fixHint": "从 git 恢复：git checkout -- src/main/java/net/mcreator/mcanomalyarchives/anomaly/",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/pinksheep/PinkSheepMechanics.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/pinksheep/PinkSheepHabitat.java"
+      ]
+    },
+    {
+      "id": "no-stale-prefix",
+      "kind": "noMatch",
+      "why": "旧模组名 strangerecord 残留会导致注册名/网络通道不一致（联机掉线）",
+      "fixHint": "搜索并改回 mcanomalyarchives",
+      "glob": "*.java",
+      "searchRoot": "src/main/java",
+      "pattern": "net\\.mcreator\\.strangerecord|strangerecord:"
+    }
+  ]
+}
