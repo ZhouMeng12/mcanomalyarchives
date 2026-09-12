@@ -1710,8 +1710,8 @@
       "item.mcanomalyarchives.yifulin_spawn_egg": "伊芙琳刷怪蛋",
       "item_group.mcanomalyarchives.anomaly_archives": "诡异见闻录",
       "subtitles.anbula_berserk": "[黑]",
-      "item.mcanomalyarchives.pink_sheep_spawn_egg": "Pink Sheep Spawn Egg",
-      "entity.mcanomalyarchives.pink_sheep": "Pink Sheep"
+      "item.mcanomalyarchives.pink_sheep_spawn_egg": "幸运粉羊刷怪蛋",
+      "entity.mcanomalyarchives.pink_sheep": "幸运粉羊"
     }
   },
   "metadata": {
@@ -1803,7 +1803,7 @@
   "workspaceSettings": {
     "modid": "mcanomalyarchives",
     "modName": "MC诡异见闻录",
-    "version": "1.1.8",
+    "version": "1.1.8.5",
     "description": "MC诡异见闻录的同人模组",
     "author": "一只小恐龙",
     "websiteURL": "https://mcreator.net",

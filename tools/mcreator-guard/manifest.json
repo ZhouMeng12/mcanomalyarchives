@@ -107,6 +107,25 @@
       ]
     },
     {
+      "id": "structure-nbt-namespace",
+      "kind": "nbtNoMatch",
+      "why": "结构模板 .nbt 是 gzip 二进制，改名时的批量文本替换扫不到：里面残留 strangerecord 会让结构生成时方块变空气、实体不生成，而编译/构建毫无报错",
+      "fixHint": "python tools/structure-fix/fix_structure_nbt.py fix --apply 然后 verify",
+      "path": "src/main/resources/data/mcanomalyarchives/structure",
+      "glob": "*.nbt",
+      "pattern": "strangerecord:"
+    },
+    {
+      "id": "structure-jigsaw-refs",
+      "kind": "contains",
+      "why": "拼图池/结构 JSON 指向的模板与结构名（改名后必须同步）",
+      "path": "src/main/resources/data/mcanomalyarchives/worldgen/template_pool/garden.json",
+      "fixHint": "确认 location 指向 mcanomalyarchives:garden 且 structure/*.nbt 存在",
+      "mustContain": [
+        "mcanomalyarchives:garden"
+      ]
+    },
+    {
       "id": "meteor-damage-type",
       "kind": "full",
       "why": "陨石保底 200 伤害用的自定义伤害类型；丢了会让伤害退回可被护甲减免的类型",

@@ -84,6 +84,7 @@ powershell -ExecutionPolicy Bypass -File tools/mcreator-guard/guard.ps1 -Action 
 | `contains` | 文件里是否含指定文本 | ❌（给 fixHint） |
 | `exists` | 文件是否存在 | ❌（给 fixHint） |
 | `noMatch` | 反向：不应出现的文本 | ❌（给 fixHint） |
+| `nbtNoMatch` | 反向：结构 `.nbt` **解压后**不应出现的文本 | ❌（用 tools/structure-fix 修） |
 
 `insertBefore` 是为 lang 这类"MCreator 整文件重写、我们的词条在末尾"的场景准备的：
 逐行比对键名，只插缺的那几条，所以幂等、不会产生重复键（重复键会让 lang 解析炸掉），
@@ -107,6 +108,32 @@ powershell -ExecutionPolicy Bypass -File tools/mcreator-guard/guard.ps1 -Action 
 > 否则你手上的工作副本是"已经被改坏"的状态。重建 MCreator 工作区时它还会重写
 > `mcanomalyarchives.mcreator` 里的 language_map —— 那里没有中文词条，
 > 所以每次重生成都需要守卫把 lang 补回来（或直接在 MCreator 界面里给元素填中文名）。
+
+## 结构模板（.nbt）为什么需要单独的工具
+
+模组从 `strangerecord` 改名成 `mcanomalyarchives` 时，`src/main/resources` 下的 JSON
+（worldgen / template_pool / loot_table / advancement）用文本替换就能全部改完，
+**但结构模板 `.nbt` 是 gzip 压缩的二进制，文本搜索扫不到里面**：
+`adass.nbt` 的调色板里写着 `strangerecord:chair` / `strangerecord:computer`，
+实体列表里写着 `strangerecord:anbula` / `david` / `potter` / `prisoner` / `svan` / `yifulin`；
+`strtree.nbt` 里是 `strangerecord:strange_tree` + 两个方块。
+
+后果：编译、构建全部正常，**只有进游戏才会发现**——结构生成出来方块变空气、实体不生成。
+
+```powershell
+python tools/structure-fix/fix_structure_nbt.py dump            # 列出每个结构里的方块/实体
+python tools/structure-fix/fix_structure_nbt.py fix --apply     # 修复（写入前自动备份 + 自检）
+python tools/structure-fix/fix_structure_nbt.py verify          # 校验引用的 ID 在模组里真实存在
+```
+
+工具只做**字节级补丁**：NBT 字符串是「2 字节长度前缀 + UTF-8 内容」，改名后长度会变，
+所以同步改长度前缀，其余字节一个都不动。之所以不"解析成对象再序列化回去"，
+是因为那样标量类型会被反推（TAG_Byte/TAG_Short/TAG_Float 可能被写成 TAG_Int/TAG_Double），
+而 MC 读 NBT 是按类型查的（`CompoundTag.getByte` 类型不符就返回 0）—— 这种静默漂移
+比原名更难查。脚本在写回前会做反向补丁自检：还原结果必须与原始字节逐字节相同。
+
+守卫里的 `structure-nbt-namespace` 项会在每次 `check` 时解压这些 `.nbt` 反查旧命名空间，
+所以这个问题不会再悄悄溜进构建产物。
 
 ## 版本控制
 

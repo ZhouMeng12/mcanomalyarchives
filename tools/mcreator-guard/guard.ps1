@@ -116,6 +116,36 @@ function Test-Item($item) {
             $missing = @($item.expectAll | Where-Object { -not $text.Contains($_) })
             if ($missing.Count) { $r.Status = 'drift'; $r.Detail = '缺少词条: ' + ($missing -join ' | ') }
         }
+        'nbtNoMatch' {
+            # 结构模板 .nbt 是 gzip 压缩的二进制：普通文本搜索扫不到里面的方块/实体 ID。
+            # 残留旧命名空间时编译与构建全都正常，只有进游戏才会发现"结构生成不出方块 / 实体不生成"。
+            $hits = @()
+            foreach ($file in Get-ChildItem -Path $path -Filter $item.glob -File) {
+                try {
+                    $raw = [System.IO.File]::ReadAllBytes($file.FullName)
+                    $ms = New-Object System.IO.MemoryStream(, $raw)
+                    $gz = New-Object System.IO.Compression.GZipStream($ms, [System.IO.Compression.CompressionMode]::Decompress)
+                    $out = New-Object System.IO.MemoryStream
+                    $gz.CopyTo($out)
+                    $gz.Dispose()
+                    $data = $out.ToArray()
+                    $needle = [System.Text.Encoding]::ASCII.GetBytes([string]$item.pattern)
+                    for ($i = 0; $i -le $data.Length - $needle.Length; $i++) {
+                        if ($data[$i] -ne $needle[0]) { continue }
+                        $ok = $true
+                        for ($j = 1; $j -lt $needle.Length; $j++) {
+                            if ($data[$i + $j] -ne $needle[$j]) { $ok = $false; break }
+                        }
+                        if ($ok) { $hits += $file.Name; break }
+                    }
+                }
+                catch { $hits += ($file.Name + '(解压失败)') }
+            }
+            if ($hits.Count) {
+                $r.Status = 'drift'
+                $r.Detail = '结构模板里残留 ' + ($hits -join ', ') + '（进游戏才会暴露：方块变空气/实体不生成）'
+            }
+        }
         'noMatch' {
             $searchRoot = Resolve-WorkPath $item.searchRoot
             if (-not (Test-Path $searchRoot)) { $r.Status = 'missing'; $r.Detail = '搜索目录不存在' }
