@@ -126,6 +126,29 @@
       ]
     },
     {
+      "id": "stange-cloud-registration",
+      "kind": "block",
+      "why": "伪云碰撞箱：渲染时模型被 visualScale 放大 20 倍（30×5×15 格），而碰撞箱只有 0.6×1.8 —— 视锥剔除按碰撞箱判断，导致看云边缘时整朵云被剔掉（看不见）。碰撞箱必须覆盖模型",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModEntities.java",
+      "canonical": "StangeCloud.registration.txt",
+      "startAnchor": "EntityType<StangeCloudEntity>> STANGE_CLOUD = register(",
+      "endAnchor": ".sized(",
+      "expectAll": [
+        "sized(30f, 5f)"
+      ]
+    },
+    {
+      "id": "stange-cloud-element-hitbox",
+      "kind": "contains",
+      "why": "MCreator 元素的碰撞箱字段（modelWidth/modelHeight）是生成 .sized() 的源头：不改这里，下次重新生成又会变回 0.6×1.8",
+      "path": "elements/StangeCloud.mod.json",
+      "fixHint": "把 modelWidth 改成 30.0、modelHeight 改成 5.0（对应渲染放大 20 倍后的模型尺寸）",
+      "mustContain": [
+        "\"modelWidth\": 30.0",
+        "\"modelHeight\": 5.0"
+      ]
+    },
+    {
       "id": "meteor-damage-type",
       "kind": "full",
       "why": "陨石保底 200 伤害用的自定义伤害类型；丢了会让伤害退回可被护甲减免的类型",

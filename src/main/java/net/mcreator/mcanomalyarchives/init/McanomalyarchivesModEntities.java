@@ -24,7 +24,7 @@ public class McanomalyarchivesModEntities {
 	public static final DeferredHolder<EntityType<?>, EntityType<StangeCloudEntity>> STANGE_CLOUD = register("stange_cloud",
 			EntityType.Builder.<StangeCloudEntity>of(StangeCloudEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).fireImmune()
 
-					.sized(0.6f, 1.8f));
+					.sized(30f, 5f));
 	public static final DeferredHolder<EntityType<?>, EntityType<AnbulaEntity>> ANBULA = register("anbula",
 			EntityType.Builder.<AnbulaEntity>of(AnbulaEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 

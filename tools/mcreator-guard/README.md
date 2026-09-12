@@ -71,6 +71,17 @@ powershell -ExecutionPolicy Bypass -File tools/mcreator-guard/guard.ps1 -Action 
 | `meteor-bypass-tags` | 存在检查 | 5 个 bypasses_* 标签丢了 → 保底 200 名存实亡 |
 | `lang-zh-pink-sheep` | 代码块 | 粉羊词条被写成英文（workspace 里没中文） |
 | `lang-zh-extra` / `lang-en-extra` | 插入式 | 自定义词条（端坐者/创造标签页/陨石死亡信息）被整文件重写冲掉 |
+| `structure-nbt-namespace` | NBT 反向检查 | 结构模板里残留旧命名空间 → 结构生成时方块变空气、实体不生成 |
+| `structure-jigsaw-refs` | 内容检查 | 拼图池指向的模板名被改坏 |
+| `stange-cloud-registration` | 代码块 | 伪云碰撞箱被改回 0.6×1.8 → 模型 30 格宽被视锥剔除，看云边缘时整朵云消失 |
+| `stange-cloud-element-hitbox` | 内容检查 | MCreator 元素里的碰撞箱字段（生成 `.sized()` 的源头）被改回 |
+
+> 伪云为什么要 30×5 的碰撞箱：渲染器 `poseStack.scale(20f,20f,20f)` 把模型放大了 20 倍，
+> 模型本体 `addBox(-12,-4,-6, 24,4,12)` + `PartPose.offset(0,24,0)` 换算成方块是
+> **30 宽 × 5 高 × 15 深**（底面正好贴脚底）。而碰撞箱只有 0.6×1.8 ——
+> **视锥剔除用的是碰撞箱**，所以看云边缘时那 0.6 格的小盒子出了屏幕，整朵云就被剔除掉了。
+> 碰撞箱覆盖模型后就不会再被误剔除（实体是 `setPos` 直移 + 免疫 IN_WALL，放大碰撞箱不会卡地形）。
+> 因为实体转向会交换长宽方向（30×15 ↔ 15×30），而 AABB 不能旋转，所以取 30×30 的正方形覆盖面。
 
 `contains` / `exists` / `noMatch` 三类**不会**被 `apply` 自动改（改动位置不确定），只在报告里给出 `fixHint`。
 
