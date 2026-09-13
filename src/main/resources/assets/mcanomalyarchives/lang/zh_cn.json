@@ -205,5 +205,6 @@
   "nametag.mcanomalyarchives.draining": "它正从四周抽取%s",
   "nametag.mcanomalyarchives.dry": "附近找不到它能抽取的东西",
   "nametag.mcanomalyarchives.tooltip": "命名：%s · 剩余 %s 次",
-  "nametag.mcanomalyarchives.egg": "%s蛋"
+  "nametag.mcanomalyarchives.egg": "%s蛋",
+  "nametag.mcanomalyarchives.tag_hint": "先在铁砧里给它写上名字：对生物右键，或与物品一起放进铁砧"
 }

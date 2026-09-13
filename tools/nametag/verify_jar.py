@@ -53,8 +53,10 @@ with zipfile.ZipFile(jar) as zf:
     print("\n=== 语言词条 ===")
     for lg, keys in (
         ("zh_cn", ["item.mcanomalyarchives.baibian_name_tag", "nametag.mcanomalyarchives.tooltip",
-                   "nametag.mcanomalyarchives.unknown", "codex.mcanomalyarchives.uo008.info"]),
-        ("en_us", ["item.mcanomalyarchives.baibian_name_tag", "nametag.mcanomalyarchives.tooltip"]),
+                   "nametag.mcanomalyarchives.tag_hint", "nametag.mcanomalyarchives.unknown",
+                   "codex.mcanomalyarchives.uo008.info"]),
+        ("en_us", ["item.mcanomalyarchives.baibian_name_tag", "nametag.mcanomalyarchives.tooltip",
+                   "nametag.mcanomalyarchives.tag_hint"]),
     ):
         path = "assets/mcanomalyarchives/lang/%s.json" % lg
         data = json.loads(zf.read(path).decode("utf-8"))

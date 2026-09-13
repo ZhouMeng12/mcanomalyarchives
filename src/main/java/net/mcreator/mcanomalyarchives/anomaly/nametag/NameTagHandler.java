@@ -351,6 +351,13 @@ public final class NameTagHandler {
 	@SubscribeEvent
 	public static void onTooltip(ItemTooltipEvent event) {
 		ItemStack stack = event.getItemStack();
+		if (isOurTag(stack)) {
+			// 这张牌本身没有"怎么用"的暗示，玩家不看文档不会知道要先过铁砧
+			if (stack.get(DataComponents.CUSTOM_NAME) == null) {
+				event.getToolTip().add(Component.translatable(NameTagNotifier.TAG_HINT));
+			}
+			return;
+		}
 		if (NamedState.isUnstable(stack)) {
 			event.getToolTip().add(Component.translatable(NameTagNotifier.UNSTABLE));
 			return;

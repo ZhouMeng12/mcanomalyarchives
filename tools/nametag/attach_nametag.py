@@ -42,6 +42,7 @@ NEW_LANG = {
         ("nametag.mcanomalyarchives.draining", "它正从四周抽取%s"),
         ("nametag.mcanomalyarchives.dry", "附近找不到它能抽取的东西"),
         ("nametag.mcanomalyarchives.tooltip", "命名：%s · 剩余 %s 次"),
+        ("nametag.mcanomalyarchives.tag_hint", "先在铁砧里给它写上名字：对生物右键，或与物品一起放进铁砧"),
         ("nametag.mcanomalyarchives.egg", "%s蛋"),
     ],
     "en_us": [
@@ -59,6 +60,7 @@ NEW_LANG = {
         ("nametag.mcanomalyarchives.draining", "It is draining %s from its surroundings"),
         ("nametag.mcanomalyarchives.dry", "Nothing nearby can be drained"),
         ("nametag.mcanomalyarchives.tooltip", "Named: %s - %s uses left"),
+        ("nametag.mcanomalyarchives.tag_hint", "Rename it in an anvil first: right-click a mob, or place it beside an item in the anvil"),
         ("nametag.mcanomalyarchives.egg", "%s Egg"),
     ],
 }

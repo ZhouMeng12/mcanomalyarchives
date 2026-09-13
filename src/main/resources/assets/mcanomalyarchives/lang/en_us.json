@@ -205,5 +205,6 @@
   "nametag.mcanomalyarchives.draining": "It is draining %s from its surroundings",
   "nametag.mcanomalyarchives.dry": "Nothing nearby can be drained",
   "nametag.mcanomalyarchives.tooltip": "Named: %s - %s uses left",
-  "nametag.mcanomalyarchives.egg": "%s Egg"
+  "nametag.mcanomalyarchives.egg": "%s Egg",
+  "nametag.mcanomalyarchives.tag_hint": "Rename it in an anvil first: right-click a mob, or place it beside an item in the anvil"
 }
