@@ -98,6 +98,14 @@ public abstract class ControllableMonster extends Monster {
 			// 非Shift：手持物品 → 赠送礼物；空手 → 打招呼对话
 			ItemStack heldItem = player.getItemInHand(hand);
 			if (!heldItem.isEmpty()) {
+				// 斯万 + 手里拿着书 → 见闻录剧情（拿书换《见闻录》，见 codex/CodexOriginStory）
+				if (this instanceof net.mcreator.mcanomalyarchives.entity.SvanEntity
+						&& player instanceof net.minecraft.server.level.ServerPlayer serverPlayer
+						&& net.mcreator.mcanomalyarchives.codex.CodexOriginStory.isBlankBook(heldItem)) {
+					if (net.mcreator.mcanomalyarchives.codex.CodexOriginStory.tryStart(serverPlayer, this)) {
+						return InteractionResult.SUCCESS;
+					}
+				}
 				return tryGiveGift(player, heldItem);
 			}
 			if (canInteract()) {
