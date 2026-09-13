@@ -110,6 +110,8 @@ public class McanomalyarchivesMod {
 		net.mcreator.mcanomalyarchives.client.BlinkClientHandler.init();
 		net.mcreator.mcanomalyarchives.codex.CodexScanner.init(); // 见闻录：周期扫描解锁
 		net.mcreator.mcanomalyarchives.codex.CodexItemHandler.init(); // 见闻录：右键打开
+		net.mcreator.mcanomalyarchives.anomaly.nametag.NameTagHandler.init(); // 百变命名牌：右键实体 / 铁砧命名
+		net.mcreator.mcanomalyarchives.anomaly.nametag.NameTagTicker.init(); // 百变命名牌：行为覆盖层
 		// End of user code block mod init
 	}
 

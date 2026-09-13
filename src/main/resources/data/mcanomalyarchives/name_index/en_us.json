@@ -1,0 +1,4979 @@
+{
+ "Acacia Boat": [
+  "item:minecraft:acacia_boat"
+ ],
+ "Acacia Boat with Chest": [
+  "item:minecraft:acacia_chest_boat"
+ ],
+ "Acacia Button": [
+  "block:minecraft:acacia_button"
+ ],
+ "Acacia Door": [
+  "block:minecraft:acacia_door"
+ ],
+ "Acacia Fence": [
+  "block:minecraft:acacia_fence"
+ ],
+ "Acacia Fence Gate": [
+  "block:minecraft:acacia_fence_gate"
+ ],
+ "Acacia Hanging Sign": [
+  "block:minecraft:acacia_hanging_sign"
+ ],
+ "Acacia Leaves": [
+  "block:minecraft:acacia_leaves"
+ ],
+ "Acacia Log": [
+  "block:minecraft:acacia_log"
+ ],
+ "Acacia Planks": [
+  "block:minecraft:acacia_planks"
+ ],
+ "Acacia Pressure Plate": [
+  "block:minecraft:acacia_pressure_plate"
+ ],
+ "Acacia Sapling": [
+  "block:minecraft:acacia_sapling"
+ ],
+ "Acacia Sign": [
+  "block:minecraft:acacia_sign"
+ ],
+ "Acacia Slab": [
+  "block:minecraft:acacia_slab"
+ ],
+ "Acacia Stairs": [
+  "block:minecraft:acacia_stairs"
+ ],
+ "Acacia Trapdoor": [
+  "block:minecraft:acacia_trapdoor"
+ ],
+ "Acacia Wall Hanging Sign": [
+  "block:minecraft:acacia_wall_hanging_sign"
+ ],
+ "Acacia Wall Sign": [
+  "block:minecraft:acacia_wall_sign"
+ ],
+ "Acacia Wood": [
+  "block:minecraft:acacia_wood"
+ ],
+ "Activator Rail": [
+  "block:minecraft:activator_rail"
+ ],
+ "Air": [
+  "block:minecraft:air"
+ ],
+ "Allay": [
+  "entity:minecraft:allay"
+ ],
+ "Allay Spawn Egg": [
+  "item:minecraft:allay_spawn_egg"
+ ],
+ "Allium": [
+  "block:minecraft:allium"
+ ],
+ "Amethyst Cluster": [
+  "block:minecraft:amethyst_cluster"
+ ],
+ "Amethyst Shard": [
+  "item:minecraft:amethyst_shard"
+ ],
+ "Anbula": [
+  "entity:mcanomalyarchives:anbula"
+ ],
+ "Anbula Spawn Egg": [
+  "item:mcanomalyarchives:anbula_spawn_egg"
+ ],
+ "Ancient Debris": [
+  "block:minecraft:ancient_debris"
+ ],
+ "Andesite": [
+  "block:minecraft:andesite"
+ ],
+ "Andesite Slab": [
+  "block:minecraft:andesite_slab"
+ ],
+ "Andesite Stairs": [
+  "block:minecraft:andesite_stairs"
+ ],
+ "Andesite Wall": [
+  "block:minecraft:andesite_wall"
+ ],
+ "Angler Pottery Shard": [
+  "item:minecraft:angler_pottery_shard"
+ ],
+ "Angler Pottery Sherd": [
+  "item:minecraft:angler_pottery_sherd"
+ ],
+ "Anvil": [
+  "block:minecraft:anvil"
+ ],
+ "Apple": [
+  "item:minecraft:apple"
+ ],
+ "Archer Pottery Shard": [
+  "item:minecraft:archer_pottery_shard",
+  "item:minecraft:pottery_shard_archer"
+ ],
+ "Archer Pottery Sherd": [
+  "item:minecraft:archer_pottery_sherd"
+ ],
+ "Area Effect Cloud": [
+  "entity:minecraft:area_effect_cloud"
+ ],
+ "Armadillo": [
+  "entity:minecraft:armadillo"
+ ],
+ "Armadillo Scute": [
+  "item:minecraft:armadillo_scute"
+ ],
+ "Armadillo Spawn Egg": [
+  "item:minecraft:armadillo_spawn_egg"
+ ],
+ "Armor Stand": [
+  "item:minecraft:armor_stand",
+  "entity:minecraft:armor_stand"
+ ],
+ "Arms Up Pottery Shard": [
+  "item:minecraft:arms_up_pottery_shard",
+  "item:minecraft:pottery_shard_arms_up"
+ ],
+ "Arms Up Pottery Sherd": [
+  "item:minecraft:arms_up_pottery_sherd"
+ ],
+ "Arrow": [
+  "item:minecraft:arrow",
+  "entity:minecraft:arrow"
+ ],
+ "Attached Melon Stem": [
+  "block:minecraft:attached_melon_stem"
+ ],
+ "Attached Pumpkin Stem": [
+  "block:minecraft:attached_pumpkin_stem"
+ ],
+ "Axolotl": [
+  "entity:minecraft:axolotl"
+ ],
+ "Axolotl Spawn Egg": [
+  "item:minecraft:axolotl_spawn_egg"
+ ],
+ "Azalea": [
+  "block:minecraft:azalea"
+ ],
+ "Azalea Leaves": [
+  "block:minecraft:azalea_leaves"
+ ],
+ "Azure Bluet": [
+  "block:minecraft:azure_bluet"
+ ],
+ "Baked Potato": [
+  "item:minecraft:baked_potato"
+ ],
+ "Bamboo": [
+  "block:minecraft:bamboo"
+ ],
+ "Bamboo Button": [
+  "block:minecraft:bamboo_button"
+ ],
+ "Bamboo Door": [
+  "block:minecraft:bamboo_door"
+ ],
+ "Bamboo Fence": [
+  "block:minecraft:bamboo_fence"
+ ],
+ "Bamboo Fence Gate": [
+  "block:minecraft:bamboo_fence_gate"
+ ],
+ "Bamboo Hanging Sign": [
+  "block:minecraft:bamboo_hanging_sign"
+ ],
+ "Bamboo Mosaic": [
+  "block:minecraft:bamboo_mosaic"
+ ],
+ "Bamboo Mosaic Slab": [
+  "block:minecraft:bamboo_mosaic_slab"
+ ],
+ "Bamboo Mosaic Stairs": [
+  "block:minecraft:bamboo_mosaic_stairs"
+ ],
+ "Bamboo Planks": [
+  "block:minecraft:bamboo_planks"
+ ],
+ "Bamboo Pressure Plate": [
+  "block:minecraft:bamboo_pressure_plate"
+ ],
+ "Bamboo Raft": [
+  "item:minecraft:bamboo_raft"
+ ],
+ "Bamboo Raft with Chest": [
+  "item:minecraft:bamboo_chest_raft"
+ ],
+ "Bamboo Shoot": [
+  "block:minecraft:bamboo_sapling"
+ ],
+ "Bamboo Sign": [
+  "block:minecraft:bamboo_sign"
+ ],
+ "Bamboo Slab": [
+  "block:minecraft:bamboo_slab"
+ ],
+ "Bamboo Stairs": [
+  "block:minecraft:bamboo_stairs"
+ ],
+ "Bamboo Trapdoor": [
+  "block:minecraft:bamboo_trapdoor"
+ ],
+ "Bamboo Wall Hanging Sign": [
+  "block:minecraft:bamboo_wall_hanging_sign"
+ ],
+ "Bamboo Wall Sign": [
+  "block:minecraft:bamboo_wall_sign"
+ ],
+ "Banner Pattern": [
+  "item:minecraft:creeper_banner_pattern",
+  "item:minecraft:flow_banner_pattern",
+  "item:minecraft:flower_banner_pattern",
+  "item:minecraft:globe_banner_pattern",
+  "item:minecraft:guster_banner_pattern",
+  "item:minecraft:mojang_banner_pattern",
+  "item:minecraft:piglin_banner_pattern",
+  "item:minecraft:skull_banner_pattern"
+ ],
+ "Barrel": [
+  "block:minecraft:barrel"
+ ],
+ "Barrier": [
+  "block:minecraft:barrier"
+ ],
+ "Basalt": [
+  "block:minecraft:basalt"
+ ],
+ "Bat": [
+  "entity:minecraft:bat"
+ ],
+ "Bat Spawn Egg": [
+  "item:minecraft:bat_spawn_egg"
+ ],
+ "Beacon": [
+  "block:minecraft:beacon"
+ ],
+ "Bedrock": [
+  "block:minecraft:bedrock"
+ ],
+ "Bee": [
+  "entity:minecraft:bee"
+ ],
+ "Bee Nest": [
+  "block:minecraft:bee_nest"
+ ],
+ "Bee Spawn Egg": [
+  "item:minecraft:bee_spawn_egg"
+ ],
+ "Beehive": [
+  "block:minecraft:beehive"
+ ],
+ "Beetroot": [
+  "item:minecraft:beetroot"
+ ],
+ "Beetroot Seeds": [
+  "item:minecraft:beetroot_seeds"
+ ],
+ "Beetroot Soup": [
+  "item:minecraft:beetroot_soup"
+ ],
+ "Beetroots": [
+  "block:minecraft:beetroots"
+ ],
+ "Bell": [
+  "block:minecraft:bell"
+ ],
+ "Big Dripleaf": [
+  "block:minecraft:big_dripleaf"
+ ],
+ "Big Dripleaf Stem": [
+  "block:minecraft:big_dripleaf_stem"
+ ],
+ "Birch Boat": [
+  "item:minecraft:birch_boat"
+ ],
+ "Birch Boat with Chest": [
+  "item:minecraft:birch_chest_boat"
+ ],
+ "Birch Button": [
+  "block:minecraft:birch_button"
+ ],
+ "Birch Door": [
+  "block:minecraft:birch_door"
+ ],
+ "Birch Fence": [
+  "block:minecraft:birch_fence"
+ ],
+ "Birch Fence Gate": [
+  "block:minecraft:birch_fence_gate"
+ ],
+ "Birch Hanging Sign": [
+  "block:minecraft:birch_hanging_sign"
+ ],
+ "Birch Leaves": [
+  "block:minecraft:birch_leaves"
+ ],
+ "Birch Log": [
+  "block:minecraft:birch_log"
+ ],
+ "Birch Planks": [
+  "block:minecraft:birch_planks"
+ ],
+ "Birch Pressure Plate": [
+  "block:minecraft:birch_pressure_plate"
+ ],
+ "Birch Sapling": [
+  "block:minecraft:birch_sapling"
+ ],
+ "Birch Sign": [
+  "block:minecraft:birch_sign"
+ ],
+ "Birch Slab": [
+  "block:minecraft:birch_slab"
+ ],
+ "Birch Stairs": [
+  "block:minecraft:birch_stairs"
+ ],
+ "Birch Trapdoor": [
+  "block:minecraft:birch_trapdoor"
+ ],
+ "Birch Wall Hanging Sign": [
+  "block:minecraft:birch_wall_hanging_sign"
+ ],
+ "Birch Wall Sign": [
+  "block:minecraft:birch_wall_sign"
+ ],
+ "Birch Wood": [
+  "block:minecraft:birch_wood"
+ ],
+ "Black Banner": [
+  "block:minecraft:black_banner"
+ ],
+ "Black Bed": [
+  "block:minecraft:black_bed"
+ ],
+ "Black Candle": [
+  "block:minecraft:black_candle"
+ ],
+ "Black Carpet": [
+  "block:minecraft:black_carpet"
+ ],
+ "Black Concrete": [
+  "block:minecraft:black_concrete"
+ ],
+ "Black Concrete Powder": [
+  "block:minecraft:black_concrete_powder"
+ ],
+ "Black Dye": [
+  "item:minecraft:black_dye"
+ ],
+ "Black Glazed Terracotta": [
+  "block:minecraft:black_glazed_terracotta"
+ ],
+ "Black Shulker Box": [
+  "block:minecraft:black_shulker_box"
+ ],
+ "Black Stained Glass": [
+  "block:minecraft:black_stained_glass"
+ ],
+ "Black Stained Glass Pane": [
+  "block:minecraft:black_stained_glass_pane"
+ ],
+ "Black Terracotta": [
+  "block:minecraft:black_terracotta"
+ ],
+ "Black Wool": [
+  "block:minecraft:black_wool"
+ ],
+ "Blackstone": [
+  "block:minecraft:blackstone"
+ ],
+ "Blackstone Slab": [
+  "block:minecraft:blackstone_slab"
+ ],
+ "Blackstone Stairs": [
+  "block:minecraft:blackstone_stairs"
+ ],
+ "Blackstone Wall": [
+  "block:minecraft:blackstone_wall"
+ ],
+ "Blade Pottery Shard": [
+  "item:minecraft:blade_pottery_shard"
+ ],
+ "Blade Pottery Sherd": [
+  "item:minecraft:blade_pottery_sherd"
+ ],
+ "Blast Furnace": [
+  "block:minecraft:blast_furnace"
+ ],
+ "Blaze": [
+  "entity:minecraft:blaze"
+ ],
+ "Blaze Powder": [
+  "item:minecraft:blaze_powder"
+ ],
+ "Blaze Rod": [
+  "item:minecraft:blaze_rod"
+ ],
+ "Blaze Spawn Egg": [
+  "item:minecraft:blaze_spawn_egg"
+ ],
+ "Block Display": [
+  "entity:minecraft:block_display"
+ ],
+ "Block of Amethyst": [
+  "block:minecraft:amethyst_block"
+ ],
+ "Block of Bamboo": [
+  "block:minecraft:bamboo_block"
+ ],
+ "Block of Coal": [
+  "block:minecraft:coal_block"
+ ],
+ "Block of Copper": [
+  "block:minecraft:copper_block"
+ ],
+ "Block of Diamond": [
+  "block:minecraft:diamond_block"
+ ],
+ "Block of Emerald": [
+  "block:minecraft:emerald_block"
+ ],
+ "Block of Gold": [
+  "block:minecraft:gold_block"
+ ],
+ "Block of Iron": [
+  "block:minecraft:iron_block"
+ ],
+ "Block of Lapis Lazuli": [
+  "block:minecraft:lapis_block"
+ ],
+ "Block of Netherite": [
+  "block:minecraft:netherite_block"
+ ],
+ "Block of Quartz": [
+  "block:minecraft:quartz_block"
+ ],
+ "Block of Raw Copper": [
+  "block:minecraft:raw_copper_block"
+ ],
+ "Block of Raw Gold": [
+  "block:minecraft:raw_gold_block"
+ ],
+ "Block of Raw Iron": [
+  "block:minecraft:raw_iron_block"
+ ],
+ "Block of Redstone": [
+  "block:minecraft:redstone_block"
+ ],
+ "Block of Stripped Bamboo": [
+  "block:minecraft:stripped_bamboo_block"
+ ],
+ "Blue Banner": [
+  "block:minecraft:blue_banner"
+ ],
+ "Blue Bed": [
+  "block:minecraft:blue_bed"
+ ],
+ "Blue Candle": [
+  "block:minecraft:blue_candle"
+ ],
+ "Blue Carpet": [
+  "block:minecraft:blue_carpet"
+ ],
+ "Blue Concrete": [
+  "block:minecraft:blue_concrete"
+ ],
+ "Blue Concrete Powder": [
+  "block:minecraft:blue_concrete_powder"
+ ],
+ "Blue Dye": [
+  "item:minecraft:blue_dye"
+ ],
+ "Blue Glazed Terracotta": [
+  "block:minecraft:blue_glazed_terracotta"
+ ],
+ "Blue Ice": [
+  "block:minecraft:blue_ice"
+ ],
+ "Blue Orchid": [
+  "block:minecraft:blue_orchid"
+ ],
+ "Blue Shulker Box": [
+  "block:minecraft:blue_shulker_box"
+ ],
+ "Blue Stained Glass": [
+  "block:minecraft:blue_stained_glass"
+ ],
+ "Blue Stained Glass Pane": [
+  "block:minecraft:blue_stained_glass_pane"
+ ],
+ "Blue Terracotta": [
+  "block:minecraft:blue_terracotta"
+ ],
+ "Blue Wool": [
+  "block:minecraft:blue_wool"
+ ],
+ "Boat": [
+  "entity:minecraft:boat"
+ ],
+ "Boat with Chest": [
+  "entity:minecraft:chest_boat"
+ ],
+ "Bogged": [
+  "entity:minecraft:bogged"
+ ],
+ "Bogged Spawn Egg": [
+  "item:minecraft:bogged_spawn_egg"
+ ],
+ "Bone": [
+  "item:minecraft:bone"
+ ],
+ "Bone Block": [
+  "block:minecraft:bone_block"
+ ],
+ "Bone Meal": [
+  "item:minecraft:bone_meal"
+ ],
+ "Book": [
+  "item:minecraft:book"
+ ],
+ "Book and Quill": [
+  "item:minecraft:writable_book"
+ ],
+ "Bookshelf": [
+  "block:minecraft:bookshelf"
+ ],
+ "Bottle o' Enchanting": [
+  "item:minecraft:experience_bottle"
+ ],
+ "Bow": [
+  "item:minecraft:bow"
+ ],
+ "Bowl": [
+  "item:minecraft:bowl"
+ ],
+ "Brain Coral": [
+  "block:minecraft:brain_coral"
+ ],
+ "Brain Coral Block": [
+  "block:minecraft:brain_coral_block"
+ ],
+ "Brain Coral Fan": [
+  "block:minecraft:brain_coral_fan"
+ ],
+ "Brain Coral Wall Fan": [
+  "block:minecraft:brain_coral_wall_fan"
+ ],
+ "Bread": [
+  "item:minecraft:bread"
+ ],
+ "Breeze": [
+  "entity:minecraft:breeze"
+ ],
+ "Breeze Rod": [
+  "item:minecraft:breeze_rod"
+ ],
+ "Breeze Spawn Egg": [
+  "item:minecraft:breeze_spawn_egg"
+ ],
+ "Brewer Pottery Shard": [
+  "item:minecraft:brewer_pottery_shard"
+ ],
+ "Brewer Pottery Sherd": [
+  "item:minecraft:brewer_pottery_sherd"
+ ],
+ "Brewing Stand": [
+  "item:minecraft:brewing_stand",
+  "block:minecraft:brewing_stand"
+ ],
+ "Brick": [
+  "item:minecraft:brick"
+ ],
+ "Brick Slab": [
+  "block:minecraft:brick_slab"
+ ],
+ "Brick Stairs": [
+  "block:minecraft:brick_stairs"
+ ],
+ "Brick Wall": [
+  "block:minecraft:brick_wall"
+ ],
+ "Bricks": [
+  "block:minecraft:bricks"
+ ],
+ "Brown Banner": [
+  "block:minecraft:brown_banner"
+ ],
+ "Brown Bed": [
+  "block:minecraft:brown_bed"
+ ],
+ "Brown Candle": [
+  "block:minecraft:brown_candle"
+ ],
+ "Brown Carpet": [
+  "block:minecraft:brown_carpet"
+ ],
+ "Brown Concrete": [
+  "block:minecraft:brown_concrete"
+ ],
+ "Brown Concrete Powder": [
+  "block:minecraft:brown_concrete_powder"
+ ],
+ "Brown Dye": [
+  "item:minecraft:brown_dye"
+ ],
+ "Brown Glazed Terracotta": [
+  "block:minecraft:brown_glazed_terracotta"
+ ],
+ "Brown Mushroom": [
+  "block:minecraft:brown_mushroom"
+ ],
+ "Brown Mushroom Block": [
+  "block:minecraft:brown_mushroom_block"
+ ],
+ "Brown Shulker Box": [
+  "block:minecraft:brown_shulker_box"
+ ],
+ "Brown Stained Glass": [
+  "block:minecraft:brown_stained_glass"
+ ],
+ "Brown Stained Glass Pane": [
+  "block:minecraft:brown_stained_glass_pane"
+ ],
+ "Brown Terracotta": [
+  "block:minecraft:brown_terracotta"
+ ],
+ "Brown Wool": [
+  "block:minecraft:brown_wool"
+ ],
+ "Brush": [
+  "item:minecraft:brush"
+ ],
+ "Bubble Column": [
+  "block:minecraft:bubble_column"
+ ],
+ "Bubble Coral": [
+  "block:minecraft:bubble_coral"
+ ],
+ "Bubble Coral Block": [
+  "block:minecraft:bubble_coral_block"
+ ],
+ "Bubble Coral Fan": [
+  "block:minecraft:bubble_coral_fan"
+ ],
+ "Bubble Coral Wall Fan": [
+  "block:minecraft:bubble_coral_wall_fan"
+ ],
+ "Bucket": [
+  "item:minecraft:bucket"
+ ],
+ "Bucket of Axolotl": [
+  "item:minecraft:axolotl_bucket"
+ ],
+ "Bucket of Cod": [
+  "item:minecraft:cod_bucket"
+ ],
+ "Bucket of Pufferfish": [
+  "item:minecraft:pufferfish_bucket"
+ ],
+ "Bucket of Salmon": [
+  "item:minecraft:salmon_bucket"
+ ],
+ "Bucket of Tadpole": [
+  "item:minecraft:tadpole_bucket"
+ ],
+ "Bucket of Tropical Fish": [
+  "item:minecraft:tropical_fish_bucket"
+ ],
+ "Budding Amethyst": [
+  "block:minecraft:budding_amethyst"
+ ],
+ "Bundle": [
+  "item:minecraft:bundle"
+ ],
+ "Burn Pottery Shard": [
+  "item:minecraft:burn_pottery_shard"
+ ],
+ "Burn Pottery Sherd": [
+  "item:minecraft:burn_pottery_sherd"
+ ],
+ "Cactus": [
+  "block:minecraft:cactus"
+ ],
+ "Cake": [
+  "block:minecraft:cake"
+ ],
+ "Cake with Black Candle": [
+  "block:minecraft:black_candle_cake"
+ ],
+ "Cake with Blue Candle": [
+  "block:minecraft:blue_candle_cake"
+ ],
+ "Cake with Brown Candle": [
+  "block:minecraft:brown_candle_cake"
+ ],
+ "Cake with Candle": [
+  "block:minecraft:candle_cake"
+ ],
+ "Cake with Cyan Candle": [
+  "block:minecraft:cyan_candle_cake"
+ ],
+ "Cake with Gray Candle": [
+  "block:minecraft:gray_candle_cake"
+ ],
+ "Cake with Green Candle": [
+  "block:minecraft:green_candle_cake"
+ ],
+ "Cake with Light Blue Candle": [
+  "block:minecraft:light_blue_candle_cake"
+ ],
+ "Cake with Light Gray Candle": [
+  "block:minecraft:light_gray_candle_cake"
+ ],
+ "Cake with Lime Candle": [
+  "block:minecraft:lime_candle_cake"
+ ],
+ "Cake with Magenta Candle": [
+  "block:minecraft:magenta_candle_cake"
+ ],
+ "Cake with Orange Candle": [
+  "block:minecraft:orange_candle_cake"
+ ],
+ "Cake with Pink Candle": [
+  "block:minecraft:pink_candle_cake"
+ ],
+ "Cake with Purple Candle": [
+  "block:minecraft:purple_candle_cake"
+ ],
+ "Cake with Red Candle": [
+  "block:minecraft:red_candle_cake"
+ ],
+ "Cake with White Candle": [
+  "block:minecraft:white_candle_cake"
+ ],
+ "Cake with Yellow Candle": [
+  "block:minecraft:yellow_candle_cake"
+ ],
+ "Calcite": [
+  "block:minecraft:calcite"
+ ],
+ "Calibrated Sculk Sensor": [
+  "block:minecraft:calibrated_sculk_sensor"
+ ],
+ "Camel": [
+  "entity:minecraft:camel"
+ ],
+ "Camel Spawn Egg": [
+  "item:minecraft:camel_spawn_egg"
+ ],
+ "Campfire": [
+  "block:minecraft:campfire"
+ ],
+ "Candle": [
+  "block:minecraft:candle"
+ ],
+ "Carrot": [
+  "item:minecraft:carrot"
+ ],
+ "Carrot on a Stick": [
+  "item:minecraft:carrot_on_a_stick"
+ ],
+ "Carrots": [
+  "block:minecraft:carrots"
+ ],
+ "Cartography Table": [
+  "block:minecraft:cartography_table"
+ ],
+ "Carved Pumpkin": [
+  "block:minecraft:carved_pumpkin"
+ ],
+ "Cat": [
+  "entity:minecraft:cat"
+ ],
+ "Cat Spawn Egg": [
+  "item:minecraft:cat_spawn_egg"
+ ],
+ "Cauldron": [
+  "item:minecraft:cauldron",
+  "block:minecraft:cauldron"
+ ],
+ "Cave Air": [
+  "block:minecraft:cave_air"
+ ],
+ "Cave Spider": [
+  "entity:minecraft:cave_spider"
+ ],
+ "Cave Spider Spawn Egg": [
+  "item:minecraft:cave_spider_spawn_egg"
+ ],
+ "Cave Vines": [
+  "block:minecraft:cave_vines"
+ ],
+ "Cave Vines Plant": [
+  "block:minecraft:cave_vines_plant"
+ ],
+ "Chain": [
+  "block:minecraft:chain"
+ ],
+ "Chain Command Block": [
+  "block:minecraft:chain_command_block"
+ ],
+ "Chainmail Boots": [
+  "item:minecraft:chainmail_boots"
+ ],
+ "Chainmail Chestplate": [
+  "item:minecraft:chainmail_chestplate"
+ ],
+ "Chainmail Helmet": [
+  "item:minecraft:chainmail_helmet"
+ ],
+ "Chainmail Leggings": [
+  "item:minecraft:chainmail_leggings"
+ ],
+ "Chair": [
+  "item:mcanomalyarchives:chair",
+  "block:mcanomalyarchives:chair"
+ ],
+ "Charcoal": [
+  "item:minecraft:charcoal"
+ ],
+ "Cherry Boat": [
+  "item:minecraft:cherry_boat"
+ ],
+ "Cherry Boat with Chest": [
+  "item:minecraft:cherry_chest_boat"
+ ],
+ "Cherry Button": [
+  "block:minecraft:cherry_button"
+ ],
+ "Cherry Door": [
+  "block:minecraft:cherry_door"
+ ],
+ "Cherry Fence": [
+  "block:minecraft:cherry_fence"
+ ],
+ "Cherry Fence Gate": [
+  "block:minecraft:cherry_fence_gate"
+ ],
+ "Cherry Hanging Sign": [
+  "block:minecraft:cherry_hanging_sign"
+ ],
+ "Cherry Leaves": [
+  "block:minecraft:cherry_leaves"
+ ],
+ "Cherry Log": [
+  "block:minecraft:cherry_log"
+ ],
+ "Cherry Planks": [
+  "block:minecraft:cherry_planks"
+ ],
+ "Cherry Pressure Plate": [
+  "block:minecraft:cherry_pressure_plate"
+ ],
+ "Cherry Sapling": [
+  "block:minecraft:cherry_sapling"
+ ],
+ "Cherry Sign": [
+  "block:minecraft:cherry_sign"
+ ],
+ "Cherry Slab": [
+  "block:minecraft:cherry_slab"
+ ],
+ "Cherry Stairs": [
+  "block:minecraft:cherry_stairs"
+ ],
+ "Cherry Trapdoor": [
+  "block:minecraft:cherry_trapdoor"
+ ],
+ "Cherry Wall Hanging Sign": [
+  "block:minecraft:cherry_wall_hanging_sign"
+ ],
+ "Cherry Wall Sign": [
+  "block:minecraft:cherry_wall_sign"
+ ],
+ "Cherry Wood": [
+  "block:minecraft:cherry_wood"
+ ],
+ "Chest": [
+  "block:minecraft:chest"
+ ],
+ "Chicken": [
+  "entity:minecraft:chicken"
+ ],
+ "Chicken Spawn Egg": [
+  "item:minecraft:chicken_spawn_egg"
+ ],
+ "Chipped Anvil": [
+  "block:minecraft:chipped_anvil"
+ ],
+ "Chiseled Bookshelf": [
+  "block:minecraft:chiseled_bookshelf"
+ ],
+ "Chiseled Copper": [
+  "block:minecraft:chiseled_copper"
+ ],
+ "Chiseled Deepslate": [
+  "block:minecraft:chiseled_deepslate"
+ ],
+ "Chiseled Nether Bricks": [
+  "block:minecraft:chiseled_nether_bricks"
+ ],
+ "Chiseled Polished Blackstone": [
+  "block:minecraft:chiseled_polished_blackstone"
+ ],
+ "Chiseled Quartz Block": [
+  "block:minecraft:chiseled_quartz_block"
+ ],
+ "Chiseled Red Sandstone": [
+  "block:minecraft:chiseled_red_sandstone"
+ ],
+ "Chiseled Sandstone": [
+  "block:minecraft:chiseled_sandstone"
+ ],
+ "Chiseled Stone Bricks": [
+  "block:minecraft:chiseled_stone_bricks"
+ ],
+ "Chiseled Tuff": [
+  "block:minecraft:chiseled_tuff"
+ ],
+ "Chiseled Tuff Bricks": [
+  "block:minecraft:chiseled_tuff_bricks"
+ ],
+ "Chorus Flower": [
+  "block:minecraft:chorus_flower"
+ ],
+ "Chorus Fruit": [
+  "item:minecraft:chorus_fruit"
+ ],
+ "Chorus Plant": [
+  "block:minecraft:chorus_plant"
+ ],
+ "Clay": [
+  "block:minecraft:clay"
+ ],
+ "Clay Ball": [
+  "item:minecraft:clay_ball"
+ ],
+ "Clock": [
+  "item:minecraft:clock"
+ ],
+ "Cloud Boots": [
+  "item:mcanomalyarchives:cloud_armor_boots"
+ ],
+ "Cloud Chestplate": [
+  "item:mcanomalyarchives:cloud_armor_chestplate"
+ ],
+ "Cloud Dem Portal": [
+  "block:mcanomalyarchives:cloud_dem_portal"
+ ],
+ "Cloud Helmet": [
+  "item:mcanomalyarchives:cloud_armor_helmet"
+ ],
+ "Cloud Ingot": [
+  "item:mcanomalyarchives:cloud_ingot"
+ ],
+ "Cloud Legging": [
+  "item:mcanomalyarchives:cloud_armor_leggings"
+ ],
+ "Cloud Ore": [
+  "item:mcanomalyarchives:cloud_ore",
+  "block:mcanomalyarchives:cloud_ore"
+ ],
+ "Cloud Rock": [
+  "item:mcanomalyarchives:cloud_rock",
+  "block:mcanomalyarchives:cloud_rock"
+ ],
+ "Cloud Scrap": [
+  "item:mcanomalyarchives:cloud_scrap"
+ ],
+ "Cloud Stone": [
+  "item:mcanomalyarchives:cloud_stone",
+  "block:mcanomalyarchives:cloud_stone"
+ ],
+ "Cloud Stone snd Steel": [
+  "item:mcanomalyarchives:cloud_dem"
+ ],
+ "Cloud Upgrade": [
+  "item:mcanomalyarchives:cloud_upgrade"
+ ],
+ "Cloud Water": [
+  "block:mcanomalyarchives:cloud_water"
+ ],
+ "Cloud Water Bottle": [
+  "item:mcanomalyarchives:cloud_water_bottle"
+ ],
+ "Cloud Water Bucket": [
+  "item:mcanomalyarchives:cloud_water_bucket"
+ ],
+ "Coal": [
+  "item:minecraft:coal"
+ ],
+ "Coal Ore": [
+  "block:minecraft:coal_ore"
+ ],
+ "Coarse Dirt": [
+  "block:minecraft:coarse_dirt"
+ ],
+ "Cobbled Deepslate": [
+  "block:minecraft:cobbled_deepslate"
+ ],
+ "Cobbled Deepslate Slab": [
+  "block:minecraft:cobbled_deepslate_slab"
+ ],
+ "Cobbled Deepslate Stairs": [
+  "block:minecraft:cobbled_deepslate_stairs"
+ ],
+ "Cobbled Deepslate Wall": [
+  "block:minecraft:cobbled_deepslate_wall"
+ ],
+ "Cobblestone": [
+  "block:minecraft:cobblestone"
+ ],
+ "Cobblestone Slab": [
+  "block:minecraft:cobblestone_slab"
+ ],
+ "Cobblestone Stairs": [
+  "block:minecraft:cobblestone_stairs"
+ ],
+ "Cobblestone Wall": [
+  "block:minecraft:cobblestone_wall"
+ ],
+ "Cobweb": [
+  "block:minecraft:cobweb"
+ ],
+ "Cocoa": [
+  "block:minecraft:cocoa"
+ ],
+ "Cocoa Beans": [
+  "item:minecraft:cocoa_beans"
+ ],
+ "Cod": [
+  "entity:minecraft:cod"
+ ],
+ "Cod Spawn Egg": [
+  "item:minecraft:cod_spawn_egg"
+ ],
+ "Command Block": [
+  "block:minecraft:command_block"
+ ],
+ "Compass": [
+  "item:minecraft:compass"
+ ],
+ "Composter": [
+  "block:minecraft:composter"
+ ],
+ "Computer": [
+  "item:mcanomalyarchives:computer",
+  "block:mcanomalyarchives:computer"
+ ],
+ "Conduit": [
+  "block:minecraft:conduit"
+ ],
+ "Cooked Chicken": [
+  "item:minecraft:cooked_chicken"
+ ],
+ "Cooked Cod": [
+  "item:minecraft:cooked_cod"
+ ],
+ "Cooked Mutton": [
+  "item:minecraft:cooked_mutton"
+ ],
+ "Cooked Porkchop": [
+  "item:minecraft:cooked_porkchop"
+ ],
+ "Cooked Rabbit": [
+  "item:minecraft:cooked_rabbit"
+ ],
+ "Cooked Salmon": [
+  "item:minecraft:cooked_salmon"
+ ],
+ "Cookie": [
+  "item:minecraft:cookie"
+ ],
+ "Copper Bulb": [
+  "block:minecraft:copper_bulb"
+ ],
+ "Copper Door": [
+  "block:minecraft:copper_door"
+ ],
+ "Copper Grate": [
+  "block:minecraft:copper_grate"
+ ],
+ "Copper Ingot": [
+  "item:minecraft:copper_ingot"
+ ],
+ "Copper Ore": [
+  "block:minecraft:copper_ore"
+ ],
+ "Copper Trapdoor": [
+  "block:minecraft:copper_trapdoor"
+ ],
+ "Corn Poppy": [
+  "item:mcanomalyarchives:corn_poppy",
+  "block:mcanomalyarchives:corn_poppy"
+ ],
+ "Cornflower": [
+  "block:minecraft:cornflower"
+ ],
+ "Cow": [
+  "entity:minecraft:cow"
+ ],
+ "Cow Spawn Egg": [
+  "item:minecraft:cow_spawn_egg"
+ ],
+ "Cracked Deepslate Bricks": [
+  "block:minecraft:cracked_deepslate_bricks"
+ ],
+ "Cracked Deepslate Tiles": [
+  "block:minecraft:cracked_deepslate_tiles"
+ ],
+ "Cracked Nether Bricks": [
+  "block:minecraft:cracked_nether_bricks"
+ ],
+ "Cracked Polished Blackstone Bricks": [
+  "block:minecraft:cracked_polished_blackstone_bricks"
+ ],
+ "Cracked Stone Bricks": [
+  "block:minecraft:cracked_stone_bricks"
+ ],
+ "Crafter": [
+  "block:minecraft:crafter"
+ ],
+ "Crafting Table": [
+  "block:minecraft:crafting_table"
+ ],
+ "Creeper": [
+  "entity:minecraft:creeper"
+ ],
+ "Creeper Head": [
+  "block:minecraft:creeper_head"
+ ],
+ "Creeper Spawn Egg": [
+  "item:minecraft:creeper_spawn_egg"
+ ],
+ "Creeper Wall Head": [
+  "block:minecraft:creeper_wall_head"
+ ],
+ "Crimson Button": [
+  "block:minecraft:crimson_button"
+ ],
+ "Crimson Door": [
+  "block:minecraft:crimson_door"
+ ],
+ "Crimson Fence": [
+  "block:minecraft:crimson_fence"
+ ],
+ "Crimson Fence Gate": [
+  "block:minecraft:crimson_fence_gate"
+ ],
+ "Crimson Fungus": [
+  "block:minecraft:crimson_fungus"
+ ],
+ "Crimson Hanging Sign": [
+  "block:minecraft:crimson_hanging_sign"
+ ],
+ "Crimson Hyphae": [
+  "block:minecraft:crimson_hyphae"
+ ],
+ "Crimson Nylium": [
+  "block:minecraft:crimson_nylium"
+ ],
+ "Crimson Planks": [
+  "block:minecraft:crimson_planks"
+ ],
+ "Crimson Pressure Plate": [
+  "block:minecraft:crimson_pressure_plate"
+ ],
+ "Crimson Roots": [
+  "block:minecraft:crimson_roots"
+ ],
+ "Crimson Sign": [
+  "block:minecraft:crimson_sign"
+ ],
+ "Crimson Slab": [
+  "block:minecraft:crimson_slab"
+ ],
+ "Crimson Stairs": [
+  "block:minecraft:crimson_stairs"
+ ],
+ "Crimson Stem": [
+  "block:minecraft:crimson_stem"
+ ],
+ "Crimson Trapdoor": [
+  "block:minecraft:crimson_trapdoor"
+ ],
+ "Crimson Wall Hanging Sign": [
+  "block:minecraft:crimson_wall_hanging_sign"
+ ],
+ "Crimson Wall Sign": [
+  "block:minecraft:crimson_wall_sign"
+ ],
+ "Crossbow": [
+  "item:minecraft:crossbow"
+ ],
+ "Crying Obsidian": [
+  "block:minecraft:crying_obsidian"
+ ],
+ "Cut Copper": [
+  "block:minecraft:cut_copper"
+ ],
+ "Cut Copper Slab": [
+  "block:minecraft:cut_copper_slab"
+ ],
+ "Cut Copper Stairs": [
+  "block:minecraft:cut_copper_stairs"
+ ],
+ "Cut Red Sandstone": [
+  "block:minecraft:cut_red_sandstone"
+ ],
+ "Cut Red Sandstone Slab": [
+  "block:minecraft:cut_red_sandstone_slab"
+ ],
+ "Cut Sandstone": [
+  "block:minecraft:cut_sandstone"
+ ],
+ "Cut Sandstone Slab": [
+  "block:minecraft:cut_sandstone_slab"
+ ],
+ "Cyan Banner": [
+  "block:minecraft:cyan_banner"
+ ],
+ "Cyan Bed": [
+  "block:minecraft:cyan_bed"
+ ],
+ "Cyan Candle": [
+  "block:minecraft:cyan_candle"
+ ],
+ "Cyan Carpet": [
+  "block:minecraft:cyan_carpet"
+ ],
+ "Cyan Concrete": [
+  "block:minecraft:cyan_concrete"
+ ],
+ "Cyan Concrete Powder": [
+  "block:minecraft:cyan_concrete_powder"
+ ],
+ "Cyan Dye": [
+  "item:minecraft:cyan_dye"
+ ],
+ "Cyan Glazed Terracotta": [
+  "block:minecraft:cyan_glazed_terracotta"
+ ],
+ "Cyan Shulker Box": [
+  "block:minecraft:cyan_shulker_box"
+ ],
+ "Cyan Stained Glass": [
+  "block:minecraft:cyan_stained_glass"
+ ],
+ "Cyan Stained Glass Pane": [
+  "block:minecraft:cyan_stained_glass_pane"
+ ],
+ "Cyan Terracotta": [
+  "block:minecraft:cyan_terracotta"
+ ],
+ "Cyan Wool": [
+  "block:minecraft:cyan_wool"
+ ],
+ "Damaged Anvil": [
+  "block:minecraft:damaged_anvil"
+ ],
+ "Dandelion": [
+  "block:minecraft:dandelion"
+ ],
+ "Danger Pottery Shard": [
+  "item:minecraft:danger_pottery_shard"
+ ],
+ "Danger Pottery Sherd": [
+  "item:minecraft:danger_pottery_sherd"
+ ],
+ "Dark Oak Boat": [
+  "item:minecraft:dark_oak_boat"
+ ],
+ "Dark Oak Boat with Chest": [
+  "item:minecraft:dark_oak_chest_boat"
+ ],
+ "Dark Oak Button": [
+  "block:minecraft:dark_oak_button"
+ ],
+ "Dark Oak Door": [
+  "block:minecraft:dark_oak_door"
+ ],
+ "Dark Oak Fence": [
+  "block:minecraft:dark_oak_fence"
+ ],
+ "Dark Oak Fence Gate": [
+  "block:minecraft:dark_oak_fence_gate"
+ ],
+ "Dark Oak Hanging Sign": [
+  "block:minecraft:dark_oak_hanging_sign"
+ ],
+ "Dark Oak Leaves": [
+  "block:minecraft:dark_oak_leaves"
+ ],
+ "Dark Oak Log": [
+  "block:minecraft:dark_oak_log"
+ ],
+ "Dark Oak Planks": [
+  "block:minecraft:dark_oak_planks"
+ ],
+ "Dark Oak Pressure Plate": [
+  "block:minecraft:dark_oak_pressure_plate"
+ ],
+ "Dark Oak Sapling": [
+  "block:minecraft:dark_oak_sapling"
+ ],
+ "Dark Oak Sign": [
+  "block:minecraft:dark_oak_sign"
+ ],
+ "Dark Oak Slab": [
+  "block:minecraft:dark_oak_slab"
+ ],
+ "Dark Oak Stairs": [
+  "block:minecraft:dark_oak_stairs"
+ ],
+ "Dark Oak Trapdoor": [
+  "block:minecraft:dark_oak_trapdoor"
+ ],
+ "Dark Oak Wall Hanging Sign": [
+  "block:minecraft:dark_oak_wall_hanging_sign"
+ ],
+ "Dark Oak Wall Sign": [
+  "block:minecraft:dark_oak_wall_sign"
+ ],
+ "Dark Oak Wood": [
+  "block:minecraft:dark_oak_wood"
+ ],
+ "Dark Prismarine": [
+  "block:minecraft:dark_prismarine"
+ ],
+ "Dark Prismarine Slab": [
+  "block:minecraft:dark_prismarine_slab"
+ ],
+ "Dark Prismarine Stairs": [
+  "block:minecraft:dark_prismarine_stairs"
+ ],
+ "David": [
+  "entity:mcanomalyarchives:david"
+ ],
+ "David Spawn Egg": [
+  "item:mcanomalyarchives:david_spawn_egg"
+ ],
+ "Daylight Detector": [
+  "block:minecraft:daylight_detector"
+ ],
+ "Dead Brain Coral": [
+  "block:minecraft:dead_brain_coral"
+ ],
+ "Dead Brain Coral Block": [
+  "block:minecraft:dead_brain_coral_block"
+ ],
+ "Dead Brain Coral Fan": [
+  "block:minecraft:dead_brain_coral_fan"
+ ],
+ "Dead Brain Coral Wall Fan": [
+  "block:minecraft:dead_brain_coral_wall_fan"
+ ],
+ "Dead Bubble Coral": [
+  "block:minecraft:dead_bubble_coral"
+ ],
+ "Dead Bubble Coral Block": [
+  "block:minecraft:dead_bubble_coral_block"
+ ],
+ "Dead Bubble Coral Fan": [
+  "block:minecraft:dead_bubble_coral_fan"
+ ],
+ "Dead Bubble Coral Wall Fan": [
+  "block:minecraft:dead_bubble_coral_wall_fan"
+ ],
+ "Dead Bush": [
+  "block:minecraft:dead_bush"
+ ],
+ "Dead Fire Coral": [
+  "block:minecraft:dead_fire_coral"
+ ],
+ "Dead Fire Coral Block": [
+  "block:minecraft:dead_fire_coral_block"
+ ],
+ "Dead Fire Coral Fan": [
+  "block:minecraft:dead_fire_coral_fan"
+ ],
+ "Dead Fire Coral Wall Fan": [
+  "block:minecraft:dead_fire_coral_wall_fan"
+ ],
+ "Dead Horn Coral": [
+  "block:minecraft:dead_horn_coral"
+ ],
+ "Dead Horn Coral Block": [
+  "block:minecraft:dead_horn_coral_block"
+ ],
+ "Dead Horn Coral Fan": [
+  "block:minecraft:dead_horn_coral_fan"
+ ],
+ "Dead Horn Coral Wall Fan": [
+  "block:minecraft:dead_horn_coral_wall_fan"
+ ],
+ "Dead Poppy": [
+  "item:mcanomalyarchives:dead_poppy",
+  "block:mcanomalyarchives:dead_poppy"
+ ],
+ "Dead Tube Coral": [
+  "block:minecraft:dead_tube_coral"
+ ],
+ "Dead Tube Coral Block": [
+  "block:minecraft:dead_tube_coral_block"
+ ],
+ "Dead Tube Coral Fan": [
+  "block:minecraft:dead_tube_coral_fan"
+ ],
+ "Dead Tube Coral Wall Fan": [
+  "block:minecraft:dead_tube_coral_wall_fan"
+ ],
+ "Debug Stick": [
+  "item:minecraft:debug_stick"
+ ],
+ "Decorated Pot": [
+  "block:minecraft:decorated_pot"
+ ],
+ "Deepslate": [
+  "block:minecraft:deepslate"
+ ],
+ "Deepslate Brick Slab": [
+  "block:minecraft:deepslate_brick_slab"
+ ],
+ "Deepslate Brick Stairs": [
+  "block:minecraft:deepslate_brick_stairs"
+ ],
+ "Deepslate Brick Wall": [
+  "block:minecraft:deepslate_brick_wall"
+ ],
+ "Deepslate Bricks": [
+  "block:minecraft:deepslate_bricks"
+ ],
+ "Deepslate Coal Ore": [
+  "block:minecraft:deepslate_coal_ore"
+ ],
+ "Deepslate Copper Ore": [
+  "block:minecraft:deepslate_copper_ore"
+ ],
+ "Deepslate Diamond Ore": [
+  "block:minecraft:deepslate_diamond_ore"
+ ],
+ "Deepslate Emerald Ore": [
+  "block:minecraft:deepslate_emerald_ore"
+ ],
+ "Deepslate Gold Ore": [
+  "block:minecraft:deepslate_gold_ore"
+ ],
+ "Deepslate Iron Ore": [
+  "block:minecraft:deepslate_iron_ore"
+ ],
+ "Deepslate Lapis Lazuli Ore": [
+  "block:minecraft:deepslate_lapis_ore"
+ ],
+ "Deepslate Redstone Ore": [
+  "block:minecraft:deepslate_redstone_ore"
+ ],
+ "Deepslate Tile Slab": [
+  "block:minecraft:deepslate_tile_slab"
+ ],
+ "Deepslate Tile Stairs": [
+  "block:minecraft:deepslate_tile_stairs"
+ ],
+ "Deepslate Tile Wall": [
+  "block:minecraft:deepslate_tile_wall"
+ ],
+ "Deepslate Tiles": [
+  "block:minecraft:deepslate_tiles"
+ ],
+ "Detecter": [
+  "item:mcanomalyarchives:detecter"
+ ],
+ "Detector Rail": [
+  "block:minecraft:detector_rail"
+ ],
+ "Diamond": [
+  "item:minecraft:diamond"
+ ],
+ "Diamond Axe": [
+  "item:minecraft:diamond_axe"
+ ],
+ "Diamond Boots": [
+  "item:minecraft:diamond_boots"
+ ],
+ "Diamond Chestplate": [
+  "item:minecraft:diamond_chestplate"
+ ],
+ "Diamond Helmet": [
+  "item:minecraft:diamond_helmet"
+ ],
+ "Diamond Hoe": [
+  "item:minecraft:diamond_hoe"
+ ],
+ "Diamond Horse Armor": [
+  "item:minecraft:diamond_horse_armor"
+ ],
+ "Diamond Leggings": [
+  "item:minecraft:diamond_leggings"
+ ],
+ "Diamond Ore": [
+  "block:minecraft:diamond_ore"
+ ],
+ "Diamond Pickaxe": [
+  "item:minecraft:diamond_pickaxe"
+ ],
+ "Diamond Shovel": [
+  "item:minecraft:diamond_shovel"
+ ],
+ "Diamond Sword": [
+  "item:minecraft:diamond_sword"
+ ],
+ "Diorite": [
+  "block:minecraft:diorite"
+ ],
+ "Diorite Slab": [
+  "block:minecraft:diorite_slab"
+ ],
+ "Diorite Stairs": [
+  "block:minecraft:diorite_stairs"
+ ],
+ "Diorite Wall": [
+  "block:minecraft:diorite_wall"
+ ],
+ "Dirt": [
+  "block:minecraft:dirt"
+ ],
+ "Dirt Path": [
+  "block:minecraft:dirt_path"
+ ],
+ "Disc Fragment": [
+  "item:minecraft:disc_fragment_5"
+ ],
+ "Dispenser": [
+  "block:minecraft:dispenser"
+ ],
+ "Dolphin": [
+  "entity:minecraft:dolphin"
+ ],
+ "Dolphin Spawn Egg": [
+  "item:minecraft:dolphin_spawn_egg"
+ ],
+ "Donkey": [
+  "entity:minecraft:donkey"
+ ],
+ "Donkey Spawn Egg": [
+  "item:minecraft:donkey_spawn_egg"
+ ],
+ "Dragon Egg": [
+  "block:minecraft:dragon_egg"
+ ],
+ "Dragon Fireball": [
+  "entity:minecraft:dragon_fireball"
+ ],
+ "Dragon Head": [
+  "block:minecraft:dragon_head"
+ ],
+ "Dragon Wall Head": [
+  "block:minecraft:dragon_wall_head"
+ ],
+ "Dragon's Breath": [
+  "item:minecraft:dragon_breath"
+ ],
+ "Dried Kelp": [
+  "item:minecraft:dried_kelp"
+ ],
+ "Dried Kelp Block": [
+  "block:minecraft:dried_kelp_block"
+ ],
+ "Dripstone Block": [
+  "block:minecraft:dripstone_block"
+ ],
+ "Dropper": [
+  "block:minecraft:dropper"
+ ],
+ "Drowned": [
+  "entity:minecraft:drowned"
+ ],
+ "Drowned Spawn Egg": [
+  "item:minecraft:drowned_spawn_egg"
+ ],
+ "Echo Shard": [
+  "item:minecraft:echo_shard"
+ ],
+ "Egg": [
+  "item:minecraft:egg"
+ ],
+ "Elder Guardian": [
+  "entity:minecraft:elder_guardian"
+ ],
+ "Elder Guardian Spawn Egg": [
+  "item:minecraft:elder_guardian_spawn_egg"
+ ],
+ "Elytra": [
+  "item:minecraft:elytra"
+ ],
+ "Emerald": [
+  "item:minecraft:emerald"
+ ],
+ "Emerald Ore": [
+  "block:minecraft:emerald_ore"
+ ],
+ "Empty Map": [
+  "item:minecraft:map"
+ ],
+ "Enchanted Book": [
+  "item:minecraft:enchanted_book"
+ ],
+ "Enchanted Golden Apple": [
+  "item:minecraft:enchanted_golden_apple"
+ ],
+ "Enchanting Table": [
+  "block:minecraft:enchanting_table"
+ ],
+ "End Crystal": [
+  "item:minecraft:end_crystal",
+  "entity:minecraft:end_crystal"
+ ],
+ "End Gateway": [
+  "block:minecraft:end_gateway"
+ ],
+ "End Portal": [
+  "block:minecraft:end_portal"
+ ],
+ "End Portal Frame": [
+  "block:minecraft:end_portal_frame"
+ ],
+ "End Rod": [
+  "block:minecraft:end_rod"
+ ],
+ "End Stone": [
+  "block:minecraft:end_stone"
+ ],
+ "End Stone Brick Slab": [
+  "block:minecraft:end_stone_brick_slab"
+ ],
+ "End Stone Brick Stairs": [
+  "block:minecraft:end_stone_brick_stairs"
+ ],
+ "End Stone Brick Wall": [
+  "block:minecraft:end_stone_brick_wall"
+ ],
+ "End Stone Bricks": [
+  "block:minecraft:end_stone_bricks"
+ ],
+ "Ender Chest": [
+  "block:minecraft:ender_chest"
+ ],
+ "Ender Dragon": [
+  "entity:minecraft:ender_dragon"
+ ],
+ "Ender Dragon Spawn Egg": [
+  "item:minecraft:ender_dragon_spawn_egg"
+ ],
+ "Ender Pearl": [
+  "item:minecraft:ender_pearl"
+ ],
+ "Enderman": [
+  "entity:minecraft:enderman"
+ ],
+ "Enderman Spawn Egg": [
+  "item:minecraft:enderman_spawn_egg"
+ ],
+ "Endermite": [
+  "entity:minecraft:endermite"
+ ],
+ "Endermite Spawn Egg": [
+  "item:minecraft:endermite_spawn_egg"
+ ],
+ "Evoker": [
+  "entity:minecraft:evoker"
+ ],
+ "Evoker Fangs": [
+  "entity:minecraft:evoker_fangs"
+ ],
+ "Evoker Spawn Egg": [
+  "item:minecraft:evoker_spawn_egg"
+ ],
+ "Experience Orb": [
+  "entity:minecraft:experience_orb"
+ ],
+ "Explorer Pottery Shard": [
+  "item:minecraft:explorer_pottery_shard"
+ ],
+ "Explorer Pottery Sherd": [
+  "item:minecraft:explorer_pottery_sherd"
+ ],
+ "Exposed Chiseled Copper": [
+  "block:minecraft:exposed_chiseled_copper"
+ ],
+ "Exposed Copper": [
+  "block:minecraft:exposed_copper"
+ ],
+ "Exposed Copper Bulb": [
+  "block:minecraft:exposed_copper_bulb"
+ ],
+ "Exposed Copper Door": [
+  "block:minecraft:exposed_copper_door"
+ ],
+ "Exposed Copper Grate": [
+  "block:minecraft:exposed_copper_grate"
+ ],
+ "Exposed Copper Trapdoor": [
+  "block:minecraft:exposed_copper_trapdoor"
+ ],
+ "Exposed Cut Copper": [
+  "block:minecraft:exposed_cut_copper"
+ ],
+ "Exposed Cut Copper Slab": [
+  "block:minecraft:exposed_cut_copper_slab"
+ ],
+ "Exposed Cut Copper Stairs": [
+  "block:minecraft:exposed_cut_copper_stairs"
+ ],
+ "Eye of Ender": [
+  "item:minecraft:ender_eye",
+  "entity:minecraft:eye_of_ender"
+ ],
+ "Falling Block": [
+  "entity:minecraft:falling_block"
+ ],
+ "Farmland": [
+  "block:minecraft:farmland"
+ ],
+ "Feather": [
+  "item:minecraft:feather"
+ ],
+ "Fermented Spider Eye": [
+  "item:minecraft:fermented_spider_eye"
+ ],
+ "Fern": [
+  "block:minecraft:fern"
+ ],
+ "Fire": [
+  "block:minecraft:fire"
+ ],
+ "Fire Charge": [
+  "item:minecraft:fire_charge"
+ ],
+ "Fire Coral": [
+  "block:minecraft:fire_coral"
+ ],
+ "Fire Coral Block": [
+  "block:minecraft:fire_coral_block"
+ ],
+ "Fire Coral Fan": [
+  "block:minecraft:fire_coral_fan"
+ ],
+ "Fire Coral Wall Fan": [
+  "block:minecraft:fire_coral_wall_fan"
+ ],
+ "Fireball": [
+  "entity:minecraft:fireball"
+ ],
+ "Firework Rocket": [
+  "item:minecraft:firework_rocket",
+  "entity:minecraft:firework_rocket"
+ ],
+ "Firework Star": [
+  "item:minecraft:firework_star"
+ ],
+ "Fishing Bobber": [
+  "entity:minecraft:fishing_bobber"
+ ],
+ "Fishing Rod": [
+  "item:minecraft:fishing_rod"
+ ],
+ "Fletching Table": [
+  "block:minecraft:fletching_table"
+ ],
+ "Flint": [
+  "item:minecraft:flint"
+ ],
+ "Flint and Steel": [
+  "item:minecraft:flint_and_steel"
+ ],
+ "Flow Pottery Sherd": [
+  "item:minecraft:flow_pottery_sherd"
+ ],
+ "Flower Pot": [
+  "item:minecraft:flower_pot",
+  "block:minecraft:flower_pot"
+ ],
+ "Flowering Azalea": [
+  "block:minecraft:flowering_azalea"
+ ],
+ "Flowering Azalea Leaves": [
+  "block:minecraft:flowering_azalea_leaves"
+ ],
+ "Fox": [
+  "entity:minecraft:fox"
+ ],
+ "Fox Spawn Egg": [
+  "item:minecraft:fox_spawn_egg"
+ ],
+ "Friend Pottery Shard": [
+  "item:minecraft:friend_pottery_shard"
+ ],
+ "Friend Pottery Sherd": [
+  "item:minecraft:friend_pottery_sherd"
+ ],
+ "Frog": [
+  "entity:minecraft:frog"
+ ],
+ "Frog Spawn Egg": [
+  "item:minecraft:frog_spawn_egg"
+ ],
+ "Frogspawn": [
+  "block:minecraft:frogspawn"
+ ],
+ "Frosted Ice": [
+  "block:minecraft:frosted_ice"
+ ],
+ "Furnace": [
+  "block:minecraft:furnace"
+ ],
+ "Ghast": [
+  "entity:minecraft:ghast"
+ ],
+ "Ghast Spawn Egg": [
+  "item:minecraft:ghast_spawn_egg"
+ ],
+ "Ghast Tear": [
+  "item:minecraft:ghast_tear"
+ ],
+ "Giant": [
+  "entity:minecraft:giant"
+ ],
+ "Gilded Blackstone": [
+  "block:minecraft:gilded_blackstone"
+ ],
+ "Glass": [
+  "block:minecraft:glass"
+ ],
+ "Glass Bottle": [
+  "item:minecraft:glass_bottle"
+ ],
+ "Glass Pane": [
+  "block:minecraft:glass_pane"
+ ],
+ "Glistering Melon Slice": [
+  "item:minecraft:glistering_melon_slice"
+ ],
+ "Glow Berries": [
+  "item:minecraft:glow_berries"
+ ],
+ "Glow Ink Sac": [
+  "item:minecraft:glow_ink_sac"
+ ],
+ "Glow Item Frame": [
+  "item:minecraft:glow_item_frame",
+  "entity:minecraft:glow_item_frame"
+ ],
+ "Glow Lichen": [
+  "block:minecraft:glow_lichen"
+ ],
+ "Glow Squid": [
+  "entity:minecraft:glow_squid"
+ ],
+ "Glow Squid Spawn Egg": [
+  "item:minecraft:glow_squid_spawn_egg"
+ ],
+ "Glowstone": [
+  "block:minecraft:glowstone"
+ ],
+ "Glowstone Dust": [
+  "item:minecraft:glowstone_dust"
+ ],
+ "Goat": [
+  "entity:minecraft:goat"
+ ],
+ "Goat Horn": [
+  "item:minecraft:goat_horn"
+ ],
+ "Goat Spawn Egg": [
+  "item:minecraft:goat_spawn_egg"
+ ],
+ "Gold Ingot": [
+  "item:minecraft:gold_ingot"
+ ],
+ "Gold Nugget": [
+  "item:minecraft:gold_nugget"
+ ],
+ "Gold Ore": [
+  "block:minecraft:gold_ore"
+ ],
+ "Golden Apple": [
+  "item:minecraft:golden_apple"
+ ],
+ "Golden Axe": [
+  "item:minecraft:golden_axe"
+ ],
+ "Golden Boots": [
+  "item:minecraft:golden_boots"
+ ],
+ "Golden Carrot": [
+  "item:minecraft:golden_carrot"
+ ],
+ "Golden Chestplate": [
+  "item:minecraft:golden_chestplate"
+ ],
+ "Golden Helmet": [
+  "item:minecraft:golden_helmet"
+ ],
+ "Golden Hoe": [
+  "item:minecraft:golden_hoe"
+ ],
+ "Golden Horse Armor": [
+  "item:minecraft:golden_horse_armor"
+ ],
+ "Golden Leggings": [
+  "item:minecraft:golden_leggings"
+ ],
+ "Golden Pickaxe": [
+  "item:minecraft:golden_pickaxe"
+ ],
+ "Golden Shovel": [
+  "item:minecraft:golden_shovel"
+ ],
+ "Golden Sword": [
+  "item:minecraft:golden_sword"
+ ],
+ "Granite": [
+  "block:minecraft:granite"
+ ],
+ "Granite Slab": [
+  "block:minecraft:granite_slab"
+ ],
+ "Granite Stairs": [
+  "block:minecraft:granite_stairs"
+ ],
+ "Granite Wall": [
+  "block:minecraft:granite_wall"
+ ],
+ "Grass": [
+  "block:minecraft:grass"
+ ],
+ "Grass Block": [
+  "block:minecraft:grass_block"
+ ],
+ "Gravel": [
+  "block:minecraft:gravel"
+ ],
+ "Gray Banner": [
+  "block:minecraft:gray_banner"
+ ],
+ "Gray Bed": [
+  "block:minecraft:gray_bed"
+ ],
+ "Gray Candle": [
+  "block:minecraft:gray_candle"
+ ],
+ "Gray Carpet": [
+  "block:minecraft:gray_carpet"
+ ],
+ "Gray Concrete": [
+  "block:minecraft:gray_concrete"
+ ],
+ "Gray Concrete Powder": [
+  "block:minecraft:gray_concrete_powder"
+ ],
+ "Gray Dye": [
+  "item:minecraft:gray_dye"
+ ],
+ "Gray Glazed Terracotta": [
+  "block:minecraft:gray_glazed_terracotta"
+ ],
+ "Gray Shulker Box": [
+  "block:minecraft:gray_shulker_box"
+ ],
+ "Gray Stained Glass": [
+  "block:minecraft:gray_stained_glass"
+ ],
+ "Gray Stained Glass Pane": [
+  "block:minecraft:gray_stained_glass_pane"
+ ],
+ "Gray Terracotta": [
+  "block:minecraft:gray_terracotta"
+ ],
+ "Gray Wool": [
+  "block:minecraft:gray_wool"
+ ],
+ "Green Banner": [
+  "block:minecraft:green_banner"
+ ],
+ "Green Bed": [
+  "block:minecraft:green_bed"
+ ],
+ "Green Candle": [
+  "block:minecraft:green_candle"
+ ],
+ "Green Carpet": [
+  "block:minecraft:green_carpet"
+ ],
+ "Green Concrete": [
+  "block:minecraft:green_concrete"
+ ],
+ "Green Concrete Powder": [
+  "block:minecraft:green_concrete_powder"
+ ],
+ "Green Dye": [
+  "item:minecraft:green_dye"
+ ],
+ "Green Glazed Terracotta": [
+  "block:minecraft:green_glazed_terracotta"
+ ],
+ "Green Shulker Box": [
+  "block:minecraft:green_shulker_box"
+ ],
+ "Green Stained Glass": [
+  "block:minecraft:green_stained_glass"
+ ],
+ "Green Stained Glass Pane": [
+  "block:minecraft:green_stained_glass_pane"
+ ],
+ "Green Terracotta": [
+  "block:minecraft:green_terracotta"
+ ],
+ "Green Wool": [
+  "block:minecraft:green_wool"
+ ],
+ "Grindstone": [
+  "block:minecraft:grindstone"
+ ],
+ "Guardian": [
+  "entity:minecraft:guardian"
+ ],
+ "Guardian Spawn Egg": [
+  "item:minecraft:guardian_spawn_egg"
+ ],
+ "Gunpowder": [
+  "item:minecraft:gunpowder"
+ ],
+ "Guster Pottery Sherd": [
+  "item:minecraft:guster_pottery_sherd"
+ ],
+ "Hanging Roots": [
+  "block:minecraft:hanging_roots"
+ ],
+ "Hay Bale": [
+  "block:minecraft:hay_block"
+ ],
+ "Heart Pottery Shard": [
+  "item:minecraft:heart_pottery_shard"
+ ],
+ "Heart Pottery Sherd": [
+  "item:minecraft:heart_pottery_sherd"
+ ],
+ "Heart of the Sea": [
+  "item:minecraft:heart_of_the_sea"
+ ],
+ "Heartbreak Pottery Shard": [
+  "item:minecraft:heartbreak_pottery_shard"
+ ],
+ "Heartbreak Pottery Sherd": [
+  "item:minecraft:heartbreak_pottery_sherd"
+ ],
+ "Hearticon": [
+  "item:mcanomalyarchives:hearticon"
+ ],
+ "Heavy Core": [
+  "block:minecraft:heavy_core"
+ ],
+ "Heavy Weighted Pressure Plate": [
+  "block:minecraft:heavy_weighted_pressure_plate"
+ ],
+ "Hoglin": [
+  "entity:minecraft:hoglin"
+ ],
+ "Hoglin Spawn Egg": [
+  "item:minecraft:hoglin_spawn_egg"
+ ],
+ "Honey Block": [
+  "block:minecraft:honey_block"
+ ],
+ "Honey Bottle": [
+  "item:minecraft:honey_bottle"
+ ],
+ "Honeycomb": [
+  "item:minecraft:honeycomb"
+ ],
+ "Honeycomb Block": [
+  "block:minecraft:honeycomb_block"
+ ],
+ "Hopper": [
+  "block:minecraft:hopper"
+ ],
+ "Horn Coral": [
+  "block:minecraft:horn_coral"
+ ],
+ "Horn Coral Block": [
+  "block:minecraft:horn_coral_block"
+ ],
+ "Horn Coral Fan": [
+  "block:minecraft:horn_coral_fan"
+ ],
+ "Horn Coral Wall Fan": [
+  "block:minecraft:horn_coral_wall_fan"
+ ],
+ "Horse": [
+  "entity:minecraft:horse"
+ ],
+ "Horse Spawn Egg": [
+  "item:minecraft:horse_spawn_egg"
+ ],
+ "Howl Pottery Shard": [
+  "item:minecraft:howl_pottery_shard"
+ ],
+ "Howl Pottery Sherd": [
+  "item:minecraft:howl_pottery_sherd"
+ ],
+ "Husk": [
+  "entity:minecraft:husk"
+ ],
+ "Husk Spawn Egg": [
+  "item:minecraft:husk_spawn_egg"
+ ],
+ "Ice": [
+  "block:minecraft:ice"
+ ],
+ "Icon": [
+  "item:mcanomalyarchives:icon"
+ ],
+ "Illusioner": [
+  "entity:minecraft:illusioner"
+ ],
+ "Infested Chiseled Stone Bricks": [
+  "block:minecraft:infested_chiseled_stone_bricks"
+ ],
+ "Infested Cobblestone": [
+  "block:minecraft:infested_cobblestone"
+ ],
+ "Infested Cracked Stone Bricks": [
+  "block:minecraft:infested_cracked_stone_bricks"
+ ],
+ "Infested Deepslate": [
+  "block:minecraft:infested_deepslate"
+ ],
+ "Infested Mossy Stone Bricks": [
+  "block:minecraft:infested_mossy_stone_bricks"
+ ],
+ "Infested Stone": [
+  "block:minecraft:infested_stone"
+ ],
+ "Infested Stone Bricks": [
+  "block:minecraft:infested_stone_bricks"
+ ],
+ "Ink Sac": [
+  "item:minecraft:ink_sac"
+ ],
+ "Interaction": [
+  "entity:minecraft:interaction"
+ ],
+ "Iron Axe": [
+  "item:minecraft:iron_axe"
+ ],
+ "Iron Bars": [
+  "block:minecraft:iron_bars"
+ ],
+ "Iron Boots": [
+  "item:minecraft:iron_boots"
+ ],
+ "Iron Chestplate": [
+  "item:minecraft:iron_chestplate"
+ ],
+ "Iron Door": [
+  "block:minecraft:iron_door"
+ ],
+ "Iron Golem": [
+  "entity:minecraft:iron_golem"
+ ],
+ "Iron Golem Spawn Egg": [
+  "item:minecraft:iron_golem_spawn_egg"
+ ],
+ "Iron Helmet": [
+  "item:minecraft:iron_helmet"
+ ],
+ "Iron Hoe": [
+  "item:minecraft:iron_hoe"
+ ],
+ "Iron Horse Armor": [
+  "item:minecraft:iron_horse_armor"
+ ],
+ "Iron Ingot": [
+  "item:minecraft:iron_ingot"
+ ],
+ "Iron Leggings": [
+  "item:minecraft:iron_leggings"
+ ],
+ "Iron Nugget": [
+  "item:minecraft:iron_nugget"
+ ],
+ "Iron Ore": [
+  "block:minecraft:iron_ore"
+ ],
+ "Iron Pickaxe": [
+  "item:minecraft:iron_pickaxe"
+ ],
+ "Iron Shovel": [
+  "item:minecraft:iron_shovel"
+ ],
+ "Iron Sword": [
+  "item:minecraft:iron_sword"
+ ],
+ "Iron Trapdoor": [
+  "block:minecraft:iron_trapdoor"
+ ],
+ "Item": [
+  "entity:minecraft:item"
+ ],
+ "Item Display": [
+  "entity:minecraft:item_display"
+ ],
+ "Item Frame": [
+  "item:minecraft:item_frame",
+  "entity:minecraft:item_frame"
+ ],
+ "Jack o'Lantern": [
+  "block:minecraft:jack_o_lantern"
+ ],
+ "Jigsaw Block": [
+  "block:minecraft:jigsaw"
+ ],
+ "Jukebox": [
+  "block:minecraft:jukebox"
+ ],
+ "Jungle Boat": [
+  "item:minecraft:jungle_boat"
+ ],
+ "Jungle Boat with Chest": [
+  "item:minecraft:jungle_chest_boat"
+ ],
+ "Jungle Button": [
+  "block:minecraft:jungle_button"
+ ],
+ "Jungle Door": [
+  "block:minecraft:jungle_door"
+ ],
+ "Jungle Fence": [
+  "block:minecraft:jungle_fence"
+ ],
+ "Jungle Fence Gate": [
+  "block:minecraft:jungle_fence_gate"
+ ],
+ "Jungle Hanging Sign": [
+  "block:minecraft:jungle_hanging_sign"
+ ],
+ "Jungle Leaves": [
+  "block:minecraft:jungle_leaves"
+ ],
+ "Jungle Log": [
+  "block:minecraft:jungle_log"
+ ],
+ "Jungle Planks": [
+  "block:minecraft:jungle_planks"
+ ],
+ "Jungle Pressure Plate": [
+  "block:minecraft:jungle_pressure_plate"
+ ],
+ "Jungle Sapling": [
+  "block:minecraft:jungle_sapling"
+ ],
+ "Jungle Sign": [
+  "block:minecraft:jungle_sign"
+ ],
+ "Jungle Slab": [
+  "block:minecraft:jungle_slab"
+ ],
+ "Jungle Stairs": [
+  "block:minecraft:jungle_stairs"
+ ],
+ "Jungle Trapdoor": [
+  "block:minecraft:jungle_trapdoor"
+ ],
+ "Jungle Wall Hanging Sign": [
+  "block:minecraft:jungle_wall_hanging_sign"
+ ],
+ "Jungle Wall Sign": [
+  "block:minecraft:jungle_wall_sign"
+ ],
+ "Jungle Wood": [
+  "block:minecraft:jungle_wood"
+ ],
+ "Kelp": [
+  "block:minecraft:kelp"
+ ],
+ "Kelp Plant": [
+  "block:minecraft:kelp_plant"
+ ],
+ "Knowledge Book": [
+  "item:minecraft:knowledge_book"
+ ],
+ "Ladder": [
+  "block:minecraft:ladder"
+ ],
+ "Lantern": [
+  "block:minecraft:lantern"
+ ],
+ "Lapis Lazuli": [
+  "item:minecraft:lapis_lazuli"
+ ],
+ "Lapis Lazuli Ore": [
+  "block:minecraft:lapis_ore"
+ ],
+ "Large Amethyst Bud": [
+  "block:minecraft:large_amethyst_bud"
+ ],
+ "Large Fern": [
+  "block:minecraft:large_fern"
+ ],
+ "Lava": [
+  "block:minecraft:lava"
+ ],
+ "Lava Bucket": [
+  "item:minecraft:lava_bucket"
+ ],
+ "Lava Cauldron": [
+  "block:minecraft:lava_cauldron"
+ ],
+ "Lead": [
+  "item:minecraft:lead"
+ ],
+ "Leash Knot": [
+  "entity:minecraft:leash_knot"
+ ],
+ "Leather": [
+  "item:minecraft:leather"
+ ],
+ "Leather Boots": [
+  "item:minecraft:leather_boots"
+ ],
+ "Leather Cap": [
+  "item:minecraft:leather_helmet"
+ ],
+ "Leather Horse Armor": [
+  "item:minecraft:leather_horse_armor"
+ ],
+ "Leather Pants": [
+  "item:minecraft:leather_leggings"
+ ],
+ "Leather Tunic": [
+  "item:minecraft:leather_chestplate"
+ ],
+ "Lectern": [
+  "block:minecraft:lectern"
+ ],
+ "Lever": [
+  "block:minecraft:lever"
+ ],
+ "Light": [
+  "block:minecraft:light"
+ ],
+ "Light Blue Banner": [
+  "block:minecraft:light_blue_banner"
+ ],
+ "Light Blue Bed": [
+  "block:minecraft:light_blue_bed"
+ ],
+ "Light Blue Candle": [
+  "block:minecraft:light_blue_candle"
+ ],
+ "Light Blue Carpet": [
+  "block:minecraft:light_blue_carpet"
+ ],
+ "Light Blue Concrete": [
+  "block:minecraft:light_blue_concrete"
+ ],
+ "Light Blue Concrete Powder": [
+  "block:minecraft:light_blue_concrete_powder"
+ ],
+ "Light Blue Dye": [
+  "item:minecraft:light_blue_dye"
+ ],
+ "Light Blue Glazed Terracotta": [
+  "block:minecraft:light_blue_glazed_terracotta"
+ ],
+ "Light Blue Shulker Box": [
+  "block:minecraft:light_blue_shulker_box"
+ ],
+ "Light Blue Stained Glass": [
+  "block:minecraft:light_blue_stained_glass"
+ ],
+ "Light Blue Stained Glass Pane": [
+  "block:minecraft:light_blue_stained_glass_pane"
+ ],
+ "Light Blue Terracotta": [
+  "block:minecraft:light_blue_terracotta"
+ ],
+ "Light Blue Wool": [
+  "block:minecraft:light_blue_wool"
+ ],
+ "Light Gray Banner": [
+  "block:minecraft:light_gray_banner"
+ ],
+ "Light Gray Bed": [
+  "block:minecraft:light_gray_bed"
+ ],
+ "Light Gray Candle": [
+  "block:minecraft:light_gray_candle"
+ ],
+ "Light Gray Carpet": [
+  "block:minecraft:light_gray_carpet"
+ ],
+ "Light Gray Concrete": [
+  "block:minecraft:light_gray_concrete"
+ ],
+ "Light Gray Concrete Powder": [
+  "block:minecraft:light_gray_concrete_powder"
+ ],
+ "Light Gray Dye": [
+  "item:minecraft:light_gray_dye"
+ ],
+ "Light Gray Glazed Terracotta": [
+  "block:minecraft:light_gray_glazed_terracotta"
+ ],
+ "Light Gray Shulker Box": [
+  "block:minecraft:light_gray_shulker_box"
+ ],
+ "Light Gray Stained Glass": [
+  "block:minecraft:light_gray_stained_glass"
+ ],
+ "Light Gray Stained Glass Pane": [
+  "block:minecraft:light_gray_stained_glass_pane"
+ ],
+ "Light Gray Terracotta": [
+  "block:minecraft:light_gray_terracotta"
+ ],
+ "Light Gray Wool": [
+  "block:minecraft:light_gray_wool"
+ ],
+ "Light Weighted Pressure Plate": [
+  "block:minecraft:light_weighted_pressure_plate"
+ ],
+ "Lightning Bolt": [
+  "entity:minecraft:lightning_bolt"
+ ],
+ "Lightning Rod": [
+  "block:minecraft:lightning_rod"
+ ],
+ "Lilac": [
+  "block:minecraft:lilac"
+ ],
+ "Lily Pad": [
+  "block:minecraft:lily_pad"
+ ],
+ "Lily of the Valley": [
+  "block:minecraft:lily_of_the_valley"
+ ],
+ "Lime Banner": [
+  "block:minecraft:lime_banner"
+ ],
+ "Lime Bed": [
+  "block:minecraft:lime_bed"
+ ],
+ "Lime Candle": [
+  "block:minecraft:lime_candle"
+ ],
+ "Lime Carpet": [
+  "block:minecraft:lime_carpet"
+ ],
+ "Lime Concrete": [
+  "block:minecraft:lime_concrete"
+ ],
+ "Lime Concrete Powder": [
+  "block:minecraft:lime_concrete_powder"
+ ],
+ "Lime Dye": [
+  "item:minecraft:lime_dye"
+ ],
+ "Lime Glazed Terracotta": [
+  "block:minecraft:lime_glazed_terracotta"
+ ],
+ "Lime Shulker Box": [
+  "block:minecraft:lime_shulker_box"
+ ],
+ "Lime Stained Glass": [
+  "block:minecraft:lime_stained_glass"
+ ],
+ "Lime Stained Glass Pane": [
+  "block:minecraft:lime_stained_glass_pane"
+ ],
+ "Lime Terracotta": [
+  "block:minecraft:lime_terracotta"
+ ],
+ "Lime Wool": [
+  "block:minecraft:lime_wool"
+ ],
+ "Lingering Potion": [
+  "item:minecraft:lingering_potion"
+ ],
+ "Llama": [
+  "entity:minecraft:llama"
+ ],
+ "Llama Spawn Egg": [
+  "item:minecraft:llama_spawn_egg"
+ ],
+ "Llama Spit": [
+  "entity:minecraft:llama_spit"
+ ],
+ "Lodestone": [
+  "block:minecraft:lodestone"
+ ],
+ "Lodestone Compass": [
+  "item:minecraft:lodestone_compass"
+ ],
+ "Loom": [
+  "block:minecraft:loom"
+ ],
+ "Mace": [
+  "item:minecraft:mace"
+ ],
+ "Magenta Banner": [
+  "block:minecraft:magenta_banner"
+ ],
+ "Magenta Bed": [
+  "block:minecraft:magenta_bed"
+ ],
+ "Magenta Candle": [
+  "block:minecraft:magenta_candle"
+ ],
+ "Magenta Carpet": [
+  "block:minecraft:magenta_carpet"
+ ],
+ "Magenta Concrete": [
+  "block:minecraft:magenta_concrete"
+ ],
+ "Magenta Concrete Powder": [
+  "block:minecraft:magenta_concrete_powder"
+ ],
+ "Magenta Dye": [
+  "item:minecraft:magenta_dye"
+ ],
+ "Magenta Glazed Terracotta": [
+  "block:minecraft:magenta_glazed_terracotta"
+ ],
+ "Magenta Shulker Box": [
+  "block:minecraft:magenta_shulker_box"
+ ],
+ "Magenta Stained Glass": [
+  "block:minecraft:magenta_stained_glass"
+ ],
+ "Magenta Stained Glass Pane": [
+  "block:minecraft:magenta_stained_glass_pane"
+ ],
+ "Magenta Terracotta": [
+  "block:minecraft:magenta_terracotta"
+ ],
+ "Magenta Wool": [
+  "block:minecraft:magenta_wool"
+ ],
+ "Magma Block": [
+  "block:minecraft:magma_block"
+ ],
+ "Magma Cream": [
+  "item:minecraft:magma_cream"
+ ],
+ "Magma Cube": [
+  "entity:minecraft:magma_cube"
+ ],
+ "Magma Cube Spawn Egg": [
+  "item:minecraft:magma_cube_spawn_egg"
+ ],
+ "Mangrove Boat": [
+  "item:minecraft:mangrove_boat"
+ ],
+ "Mangrove Boat with Chest": [
+  "item:minecraft:mangrove_chest_boat"
+ ],
+ "Mangrove Button": [
+  "block:minecraft:mangrove_button"
+ ],
+ "Mangrove Door": [
+  "block:minecraft:mangrove_door"
+ ],
+ "Mangrove Fence": [
+  "block:minecraft:mangrove_fence"
+ ],
+ "Mangrove Fence Gate": [
+  "block:minecraft:mangrove_fence_gate"
+ ],
+ "Mangrove Hanging Sign": [
+  "block:minecraft:mangrove_hanging_sign"
+ ],
+ "Mangrove Leaves": [
+  "block:minecraft:mangrove_leaves"
+ ],
+ "Mangrove Log": [
+  "block:minecraft:mangrove_log"
+ ],
+ "Mangrove Planks": [
+  "block:minecraft:mangrove_planks"
+ ],
+ "Mangrove Pressure Plate": [
+  "block:minecraft:mangrove_pressure_plate"
+ ],
+ "Mangrove Propagule": [
+  "block:minecraft:mangrove_propagule"
+ ],
+ "Mangrove Roots": [
+  "block:minecraft:mangrove_roots"
+ ],
+ "Mangrove Sign": [
+  "block:minecraft:mangrove_sign"
+ ],
+ "Mangrove Slab": [
+  "block:minecraft:mangrove_slab"
+ ],
+ "Mangrove Stairs": [
+  "block:minecraft:mangrove_stairs"
+ ],
+ "Mangrove Trapdoor": [
+  "block:minecraft:mangrove_trapdoor"
+ ],
+ "Mangrove Wall Hanging Sign": [
+  "block:minecraft:mangrove_wall_hanging_sign"
+ ],
+ "Mangrove Wall Sign": [
+  "block:minecraft:mangrove_wall_sign"
+ ],
+ "Mangrove Wood": [
+  "block:minecraft:mangrove_wood"
+ ],
+ "Map": [
+  "item:minecraft:filled_map"
+ ],
+ "Marker": [
+  "entity:minecraft:marker"
+ ],
+ "Medium Amethyst Bud": [
+  "block:minecraft:medium_amethyst_bud"
+ ],
+ "Melon": [
+  "block:minecraft:melon"
+ ],
+ "Melon Seeds": [
+  "item:minecraft:melon_seeds"
+ ],
+ "Melon Slice": [
+  "item:minecraft:melon_slice"
+ ],
+ "Melon Stem": [
+  "block:minecraft:melon_stem"
+ ],
+ "Milk Bucket": [
+  "item:minecraft:milk_bucket"
+ ],
+ "Minecart": [
+  "item:minecraft:minecart",
+  "entity:minecraft:minecart"
+ ],
+ "Minecart with Chest": [
+  "item:minecraft:chest_minecart",
+  "entity:minecraft:chest_minecart"
+ ],
+ "Minecart with Command Block": [
+  "item:minecraft:command_block_minecart",
+  "entity:minecraft:command_block_minecart"
+ ],
+ "Minecart with Furnace": [
+  "item:minecraft:furnace_minecart",
+  "entity:minecraft:furnace_minecart"
+ ],
+ "Minecart with Hopper": [
+  "item:minecraft:hopper_minecart",
+  "entity:minecraft:hopper_minecart"
+ ],
+ "Minecart with Monster Spawner": [
+  "entity:minecraft:spawner_minecart"
+ ],
+ "Minecart with TNT": [
+  "item:minecraft:tnt_minecart",
+  "entity:minecraft:tnt_minecart"
+ ],
+ "Miner Pottery Shard": [
+  "item:minecraft:miner_pottery_shard"
+ ],
+ "Miner Pottery Sherd": [
+  "item:minecraft:miner_pottery_sherd"
+ ],
+ "Monster Spawner": [
+  "block:minecraft:spawner"
+ ],
+ "Mooshroom": [
+  "entity:minecraft:mooshroom"
+ ],
+ "Mooshroom Spawn Egg": [
+  "item:minecraft:mooshroom_spawn_egg"
+ ],
+ "Moss Block": [
+  "block:minecraft:moss_block"
+ ],
+ "Moss Carpet": [
+  "block:minecraft:moss_carpet"
+ ],
+ "Mossy Cobblestone": [
+  "block:minecraft:mossy_cobblestone"
+ ],
+ "Mossy Cobblestone Slab": [
+  "block:minecraft:mossy_cobblestone_slab"
+ ],
+ "Mossy Cobblestone Stairs": [
+  "block:minecraft:mossy_cobblestone_stairs"
+ ],
+ "Mossy Cobblestone Wall": [
+  "block:minecraft:mossy_cobblestone_wall"
+ ],
+ "Mossy Stone Brick Slab": [
+  "block:minecraft:mossy_stone_brick_slab"
+ ],
+ "Mossy Stone Brick Stairs": [
+  "block:minecraft:mossy_stone_brick_stairs"
+ ],
+ "Mossy Stone Brick Wall": [
+  "block:minecraft:mossy_stone_brick_wall"
+ ],
+ "Mossy Stone Bricks": [
+  "block:minecraft:mossy_stone_bricks"
+ ],
+ "Mourner Pottery Shard": [
+  "item:minecraft:mourner_pottery_shard"
+ ],
+ "Mourner Pottery Sherd": [
+  "item:minecraft:mourner_pottery_sherd"
+ ],
+ "Moving Piston": [
+  "block:minecraft:moving_piston"
+ ],
+ "Mud": [
+  "block:minecraft:mud"
+ ],
+ "Mud Brick Slab": [
+  "block:minecraft:mud_brick_slab"
+ ],
+ "Mud Brick Stairs": [
+  "block:minecraft:mud_brick_stairs"
+ ],
+ "Mud Brick Wall": [
+  "block:minecraft:mud_brick_wall"
+ ],
+ "Mud Bricks": [
+  "block:minecraft:mud_bricks"
+ ],
+ "Muddy Mangrove Roots": [
+  "block:minecraft:muddy_mangrove_roots"
+ ],
+ "Mule": [
+  "entity:minecraft:mule"
+ ],
+ "Mule Spawn Egg": [
+  "item:minecraft:mule_spawn_egg"
+ ],
+ "Mushroom Stem": [
+  "block:minecraft:mushroom_stem"
+ ],
+ "Mushroom Stew": [
+  "item:minecraft:mushroom_stew"
+ ],
+ "Music Disc": [
+  "item:minecraft:music_disc_11",
+  "item:minecraft:music_disc_13",
+  "item:minecraft:music_disc_5",
+  "item:minecraft:music_disc_blocks",
+  "item:minecraft:music_disc_cat",
+  "item:minecraft:music_disc_chirp",
+  "item:minecraft:music_disc_creator",
+  "item:minecraft:music_disc_creator_music_box",
+  "item:minecraft:music_disc_far",
+  "item:minecraft:music_disc_mall",
+  "item:minecraft:music_disc_mellohi",
+  "item:minecraft:music_disc_otherside",
+  "item:minecraft:music_disc_pigstep",
+  "item:minecraft:music_disc_precipice",
+  "item:minecraft:music_disc_relic",
+  "item:minecraft:music_disc_stal",
+  "item:minecraft:music_disc_strad",
+  "item:minecraft:music_disc_wait",
+  "item:minecraft:music_disc_ward"
+ ],
+ "Mycelium": [
+  "block:minecraft:mycelium"
+ ],
+ "Name Tag": [
+  "item:minecraft:name_tag"
+ ],
+ "Nautilus Shell": [
+  "item:minecraft:nautilus_shell"
+ ],
+ "Nether Brick": [
+  "item:minecraft:nether_brick"
+ ],
+ "Nether Brick Fence": [
+  "block:minecraft:nether_brick_fence"
+ ],
+ "Nether Brick Slab": [
+  "block:minecraft:nether_brick_slab"
+ ],
+ "Nether Brick Stairs": [
+  "block:minecraft:nether_brick_stairs"
+ ],
+ "Nether Brick Wall": [
+  "block:minecraft:nether_brick_wall"
+ ],
+ "Nether Bricks": [
+  "block:minecraft:nether_bricks"
+ ],
+ "Nether Gold Ore": [
+  "block:minecraft:nether_gold_ore"
+ ],
+ "Nether Portal": [
+  "block:minecraft:nether_portal"
+ ],
+ "Nether Quartz": [
+  "item:minecraft:quartz"
+ ],
+ "Nether Quartz Ore": [
+  "block:minecraft:nether_quartz_ore"
+ ],
+ "Nether Sprouts": [
+  "block:minecraft:nether_sprouts"
+ ],
+ "Nether Star": [
+  "item:minecraft:nether_star"
+ ],
+ "Nether Wart": [
+  "item:minecraft:nether_wart",
+  "block:minecraft:nether_wart"
+ ],
+ "Nether Wart Block": [
+  "block:minecraft:nether_wart_block"
+ ],
+ "Netherite Axe": [
+  "item:minecraft:netherite_axe"
+ ],
+ "Netherite Boots": [
+  "item:minecraft:netherite_boots"
+ ],
+ "Netherite Chestplate": [
+  "item:minecraft:netherite_chestplate"
+ ],
+ "Netherite Helmet": [
+  "item:minecraft:netherite_helmet"
+ ],
+ "Netherite Hoe": [
+  "item:minecraft:netherite_hoe"
+ ],
+ "Netherite Ingot": [
+  "item:minecraft:netherite_ingot"
+ ],
+ "Netherite Leggings": [
+  "item:minecraft:netherite_leggings"
+ ],
+ "Netherite Pickaxe": [
+  "item:minecraft:netherite_pickaxe"
+ ],
+ "Netherite Scrap": [
+  "item:minecraft:netherite_scrap"
+ ],
+ "Netherite Shovel": [
+  "item:minecraft:netherite_shovel"
+ ],
+ "Netherite Sword": [
+  "item:minecraft:netherite_sword"
+ ],
+ "Netherrack": [
+  "block:minecraft:netherrack"
+ ],
+ "Note Block": [
+  "block:minecraft:note_block"
+ ],
+ "Oak Boat": [
+  "item:minecraft:oak_boat"
+ ],
+ "Oak Boat with Chest": [
+  "item:minecraft:oak_chest_boat"
+ ],
+ "Oak Button": [
+  "block:minecraft:oak_button"
+ ],
+ "Oak Door": [
+  "block:minecraft:oak_door"
+ ],
+ "Oak Fence": [
+  "block:minecraft:oak_fence"
+ ],
+ "Oak Fence Gate": [
+  "block:minecraft:oak_fence_gate"
+ ],
+ "Oak Hanging Sign": [
+  "block:minecraft:oak_hanging_sign"
+ ],
+ "Oak Leaves": [
+  "block:minecraft:oak_leaves"
+ ],
+ "Oak Log": [
+  "block:minecraft:oak_log"
+ ],
+ "Oak Planks": [
+  "block:minecraft:oak_planks"
+ ],
+ "Oak Pressure Plate": [
+  "block:minecraft:oak_pressure_plate"
+ ],
+ "Oak Sapling": [
+  "block:minecraft:oak_sapling"
+ ],
+ "Oak Sign": [
+  "block:minecraft:oak_sign"
+ ],
+ "Oak Slab": [
+  "block:minecraft:oak_slab"
+ ],
+ "Oak Stairs": [
+  "block:minecraft:oak_stairs"
+ ],
+ "Oak Trapdoor": [
+  "block:minecraft:oak_trapdoor"
+ ],
+ "Oak Wall Hanging Sign": [
+  "block:minecraft:oak_wall_hanging_sign"
+ ],
+ "Oak Wall Sign": [
+  "block:minecraft:oak_wall_sign"
+ ],
+ "Oak Wood": [
+  "block:minecraft:oak_wood"
+ ],
+ "Observer": [
+  "block:minecraft:observer"
+ ],
+ "Obsidian": [
+  "block:minecraft:obsidian"
+ ],
+ "Ocelot": [
+  "entity:minecraft:ocelot"
+ ],
+ "Ocelot Spawn Egg": [
+  "item:minecraft:ocelot_spawn_egg"
+ ],
+ "Ochre Froglight": [
+  "block:minecraft:ochre_froglight"
+ ],
+ "Ominous Banner": [
+  "block:minecraft:ominous_banner"
+ ],
+ "Ominous Bottle": [
+  "item:minecraft:ominous_bottle"
+ ],
+ "Ominous Item Spawner": [
+  "entity:minecraft:ominous_item_spawner"
+ ],
+ "Ominous Trial Key": [
+  "item:minecraft:ominous_trial_key"
+ ],
+ "Orange": [
+  "item:mcanomalyarchives:orange"
+ ],
+ "Orange Banner": [
+  "block:minecraft:orange_banner"
+ ],
+ "Orange Bed": [
+  "block:minecraft:orange_bed"
+ ],
+ "Orange Candle": [
+  "block:minecraft:orange_candle"
+ ],
+ "Orange Carpet": [
+  "block:minecraft:orange_carpet"
+ ],
+ "Orange Concrete": [
+  "block:minecraft:orange_concrete"
+ ],
+ "Orange Concrete Powder": [
+  "block:minecraft:orange_concrete_powder"
+ ],
+ "Orange Dye": [
+  "item:minecraft:orange_dye"
+ ],
+ "Orange Glazed Terracotta": [
+  "block:minecraft:orange_glazed_terracotta"
+ ],
+ "Orange Log": [
+  "item:mcanomalyarchives:orange_log",
+  "block:mcanomalyarchives:orange_log"
+ ],
+ "Orange Sapling": [
+  "item:mcanomalyarchives:orange_sapling",
+  "block:mcanomalyarchives:orange_sapling"
+ ],
+ "Orange Shulker Box": [
+  "block:minecraft:orange_shulker_box"
+ ],
+ "Orange Stained Glass": [
+  "block:minecraft:orange_stained_glass"
+ ],
+ "Orange Stained Glass Pane": [
+  "block:minecraft:orange_stained_glass_pane"
+ ],
+ "Orange Terracotta": [
+  "block:minecraft:orange_terracotta"
+ ],
+ "Orange Tree Leaves": [
+  "item:mcanomalyarchives:orange_leaves",
+  "block:mcanomalyarchives:orange_leaves"
+ ],
+ "Orange Tulip": [
+  "block:minecraft:orange_tulip"
+ ],
+ "Orange Wood": [
+  "item:mcanomalyarchives:orange_plank",
+  "block:mcanomalyarchives:orange_plank"
+ ],
+ "Orange Wool": [
+  "block:minecraft:orange_wool"
+ ],
+ "Oxeye Daisy": [
+  "block:minecraft:oxeye_daisy"
+ ],
+ "Oxidized Chiseled Copper": [
+  "block:minecraft:oxidized_chiseled_copper"
+ ],
+ "Oxidized Copper": [
+  "block:minecraft:oxidized_copper"
+ ],
+ "Oxidized Copper Bulb": [
+  "block:minecraft:oxidized_copper_bulb"
+ ],
+ "Oxidized Copper Door": [
+  "block:minecraft:oxidized_copper_door"
+ ],
+ "Oxidized Copper Grate": [
+  "block:minecraft:oxidized_copper_grate"
+ ],
+ "Oxidized Copper Trapdoor": [
+  "block:minecraft:oxidized_copper_trapdoor"
+ ],
+ "Oxidized Cut Copper": [
+  "block:minecraft:oxidized_cut_copper"
+ ],
+ "Oxidized Cut Copper Slab": [
+  "block:minecraft:oxidized_cut_copper_slab"
+ ],
+ "Oxidized Cut Copper Stairs": [
+  "block:minecraft:oxidized_cut_copper_stairs"
+ ],
+ "Packed Ice": [
+  "block:minecraft:packed_ice"
+ ],
+ "Packed Mud": [
+  "block:minecraft:packed_mud"
+ ],
+ "Painting": [
+  "item:minecraft:painting",
+  "entity:minecraft:painting"
+ ],
+ "Panda": [
+  "entity:minecraft:panda"
+ ],
+ "Panda Spawn Egg": [
+  "item:minecraft:panda_spawn_egg"
+ ],
+ "Paper": [
+  "item:minecraft:paper"
+ ],
+ "Parrot": [
+  "entity:minecraft:parrot"
+ ],
+ "Parrot Spawn Egg": [
+  "item:minecraft:parrot_spawn_egg"
+ ],
+ "Pearlescent Froglight": [
+  "block:minecraft:pearlescent_froglight"
+ ],
+ "Peony": [
+  "block:minecraft:peony"
+ ],
+ "Petrified Oak Slab": [
+  "block:minecraft:petrified_oak_slab"
+ ],
+ "Phantom": [
+  "entity:minecraft:phantom"
+ ],
+ "Phantom Membrane": [
+  "item:minecraft:phantom_membrane"
+ ],
+ "Phantom Spawn Egg": [
+  "item:minecraft:phantom_spawn_egg"
+ ],
+ "Pig": [
+  "entity:minecraft:pig"
+ ],
+ "Pig Spawn Egg": [
+  "item:minecraft:pig_spawn_egg"
+ ],
+ "Piglin": [
+  "entity:minecraft:piglin"
+ ],
+ "Piglin Brute": [
+  "entity:minecraft:piglin_brute"
+ ],
+ "Piglin Brute Spawn Egg": [
+  "item:minecraft:piglin_brute_spawn_egg"
+ ],
+ "Piglin Head": [
+  "block:minecraft:piglin_head"
+ ],
+ "Piglin Spawn Egg": [
+  "item:minecraft:piglin_spawn_egg"
+ ],
+ "Piglin Wall Head": [
+  "block:minecraft:piglin_wall_head"
+ ],
+ "Pillager": [
+  "entity:minecraft:pillager"
+ ],
+ "Pillager Spawn Egg": [
+  "item:minecraft:pillager_spawn_egg"
+ ],
+ "Pink Banner": [
+  "block:minecraft:pink_banner"
+ ],
+ "Pink Bed": [
+  "block:minecraft:pink_bed"
+ ],
+ "Pink Candle": [
+  "block:minecraft:pink_candle"
+ ],
+ "Pink Carpet": [
+  "block:minecraft:pink_carpet"
+ ],
+ "Pink Concrete": [
+  "block:minecraft:pink_concrete"
+ ],
+ "Pink Concrete Powder": [
+  "block:minecraft:pink_concrete_powder"
+ ],
+ "Pink Dye": [
+  "item:minecraft:pink_dye"
+ ],
+ "Pink Glazed Terracotta": [
+  "block:minecraft:pink_glazed_terracotta"
+ ],
+ "Pink Petals": [
+  "block:minecraft:pink_petals"
+ ],
+ "Pink Sheep": [
+  "entity:mcanomalyarchives:pink_sheep"
+ ],
+ "Pink Sheep Spawn Egg": [
+  "item:mcanomalyarchives:pink_sheep_spawn_egg"
+ ],
+ "Pink Sheep's Gift": [
+  "entity:mcanomalyarchives:pink_sheep_gift"
+ ],
+ "Pink Shulker Box": [
+  "block:minecraft:pink_shulker_box"
+ ],
+ "Pink Stained Glass": [
+  "block:minecraft:pink_stained_glass"
+ ],
+ "Pink Stained Glass Pane": [
+  "block:minecraft:pink_stained_glass_pane"
+ ],
+ "Pink Terracotta": [
+  "block:minecraft:pink_terracotta"
+ ],
+ "Pink Tulip": [
+  "block:minecraft:pink_tulip"
+ ],
+ "Pink Wool": [
+  "block:minecraft:pink_wool"
+ ],
+ "Piston": [
+  "block:minecraft:piston"
+ ],
+ "Piston Head": [
+  "block:minecraft:piston_head"
+ ],
+ "Pitcher Crop": [
+  "block:minecraft:pitcher_crop"
+ ],
+ "Pitcher Plant": [
+  "item:minecraft:pitcher_plant",
+  "block:minecraft:pitcher_plant"
+ ],
+ "Pitcher Pod": [
+  "item:minecraft:pitcher_pod"
+ ],
+ "Player": [
+  "entity:minecraft:player"
+ ],
+ "Player Head": [
+  "block:minecraft:player_head"
+ ],
+ "Player Wall Head": [
+  "block:minecraft:player_wall_head"
+ ],
+ "Plenty Pottery Shard": [
+  "item:minecraft:plenty_pottery_shard"
+ ],
+ "Plenty Pottery Sherd": [
+  "item:minecraft:plenty_pottery_sherd"
+ ],
+ "Podzol": [
+  "block:minecraft:podzol"
+ ],
+ "Pointed Dripstone": [
+  "block:minecraft:pointed_dripstone"
+ ],
+ "Poisonous Potato": [
+  "item:minecraft:poisonous_potato"
+ ],
+ "Polar Bear": [
+  "entity:minecraft:polar_bear"
+ ],
+ "Polar Bear Spawn Egg": [
+  "item:minecraft:polar_bear_spawn_egg"
+ ],
+ "Polished Andesite": [
+  "block:minecraft:polished_andesite"
+ ],
+ "Polished Andesite Slab": [
+  "block:minecraft:polished_andesite_slab"
+ ],
+ "Polished Andesite Stairs": [
+  "block:minecraft:polished_andesite_stairs"
+ ],
+ "Polished Basalt": [
+  "block:minecraft:polished_basalt"
+ ],
+ "Polished Blackstone": [
+  "block:minecraft:polished_blackstone"
+ ],
+ "Polished Blackstone Brick Slab": [
+  "block:minecraft:polished_blackstone_brick_slab"
+ ],
+ "Polished Blackstone Brick Stairs": [
+  "block:minecraft:polished_blackstone_brick_stairs"
+ ],
+ "Polished Blackstone Brick Wall": [
+  "block:minecraft:polished_blackstone_brick_wall"
+ ],
+ "Polished Blackstone Bricks": [
+  "block:minecraft:polished_blackstone_bricks"
+ ],
+ "Polished Blackstone Button": [
+  "block:minecraft:polished_blackstone_button"
+ ],
+ "Polished Blackstone Pressure Plate": [
+  "block:minecraft:polished_blackstone_pressure_plate"
+ ],
+ "Polished Blackstone Slab": [
+  "block:minecraft:polished_blackstone_slab"
+ ],
+ "Polished Blackstone Stairs": [
+  "block:minecraft:polished_blackstone_stairs"
+ ],
+ "Polished Blackstone Wall": [
+  "block:minecraft:polished_blackstone_wall"
+ ],
+ "Polished Deepslate": [
+  "block:minecraft:polished_deepslate"
+ ],
+ "Polished Deepslate Slab": [
+  "block:minecraft:polished_deepslate_slab"
+ ],
+ "Polished Deepslate Stairs": [
+  "block:minecraft:polished_deepslate_stairs"
+ ],
+ "Polished Deepslate Wall": [
+  "block:minecraft:polished_deepslate_wall"
+ ],
+ "Polished Diorite": [
+  "block:minecraft:polished_diorite"
+ ],
+ "Polished Diorite Slab": [
+  "block:minecraft:polished_diorite_slab"
+ ],
+ "Polished Diorite Stairs": [
+  "block:minecraft:polished_diorite_stairs"
+ ],
+ "Polished Granite": [
+  "block:minecraft:polished_granite"
+ ],
+ "Polished Granite Slab": [
+  "block:minecraft:polished_granite_slab"
+ ],
+ "Polished Granite Stairs": [
+  "block:minecraft:polished_granite_stairs"
+ ],
+ "Polished Tuff": [
+  "block:minecraft:polished_tuff"
+ ],
+ "Polished Tuff Slab": [
+  "block:minecraft:polished_tuff_slab"
+ ],
+ "Polished Tuff Stairs": [
+  "block:minecraft:polished_tuff_stairs"
+ ],
+ "Polished Tuff Wall": [
+  "block:minecraft:polished_tuff_wall"
+ ],
+ "Popped Chorus Fruit": [
+  "item:minecraft:popped_chorus_fruit"
+ ],
+ "Poppy": [
+  "block:minecraft:poppy"
+ ],
+ "Potato": [
+  "item:minecraft:potato"
+ ],
+ "Potatoes": [
+  "block:minecraft:potatoes"
+ ],
+ "Potion": [
+  "item:minecraft:potion",
+  "entity:minecraft:potion"
+ ],
+ "Potted Acacia Sapling": [
+  "block:minecraft:potted_acacia_sapling"
+ ],
+ "Potted Allium": [
+  "block:minecraft:potted_allium"
+ ],
+ "Potted Azalea": [
+  "block:minecraft:potted_azalea_bush"
+ ],
+ "Potted Azure Bluet": [
+  "block:minecraft:potted_azure_bluet"
+ ],
+ "Potted Bamboo": [
+  "block:minecraft:potted_bamboo"
+ ],
+ "Potted Birch Sapling": [
+  "block:minecraft:potted_birch_sapling"
+ ],
+ "Potted Blue Orchid": [
+  "block:minecraft:potted_blue_orchid"
+ ],
+ "Potted Brown Mushroom": [
+  "block:minecraft:potted_brown_mushroom"
+ ],
+ "Potted Cactus": [
+  "block:minecraft:potted_cactus"
+ ],
+ "Potted Cherry Sapling": [
+  "block:minecraft:potted_cherry_sapling"
+ ],
+ "Potted Cornflower": [
+  "block:minecraft:potted_cornflower"
+ ],
+ "Potted Crimson Fungus": [
+  "block:minecraft:potted_crimson_fungus"
+ ],
+ "Potted Crimson Roots": [
+  "block:minecraft:potted_crimson_roots"
+ ],
+ "Potted Dandelion": [
+  "block:minecraft:potted_dandelion"
+ ],
+ "Potted Dark Oak Sapling": [
+  "block:minecraft:potted_dark_oak_sapling"
+ ],
+ "Potted Dead Bush": [
+  "block:minecraft:potted_dead_bush"
+ ],
+ "Potted Fern": [
+  "block:minecraft:potted_fern"
+ ],
+ "Potted Flowering Azalea": [
+  "block:minecraft:potted_flowering_azalea_bush"
+ ],
+ "Potted Jungle Sapling": [
+  "block:minecraft:potted_jungle_sapling"
+ ],
+ "Potted Lily of the Valley": [
+  "block:minecraft:potted_lily_of_the_valley"
+ ],
+ "Potted Mangrove Propagule": [
+  "block:minecraft:potted_mangrove_propagule"
+ ],
+ "Potted Oak Sapling": [
+  "block:minecraft:potted_oak_sapling"
+ ],
+ "Potted Orange Tulip": [
+  "block:minecraft:potted_orange_tulip"
+ ],
+ "Potted Oxeye Daisy": [
+  "block:minecraft:potted_oxeye_daisy"
+ ],
+ "Potted Pink Tulip": [
+  "block:minecraft:potted_pink_tulip"
+ ],
+ "Potted Poppy": [
+  "block:minecraft:potted_poppy"
+ ],
+ "Potted Red Mushroom": [
+  "block:minecraft:potted_red_mushroom"
+ ],
+ "Potted Red Tulip": [
+  "block:minecraft:potted_red_tulip"
+ ],
+ "Potted Spruce Sapling": [
+  "block:minecraft:potted_spruce_sapling"
+ ],
+ "Potted Torchflower": [
+  "block:minecraft:potted_torchflower"
+ ],
+ "Potted Warped Fungus": [
+  "block:minecraft:potted_warped_fungus"
+ ],
+ "Potted Warped Roots": [
+  "block:minecraft:potted_warped_roots"
+ ],
+ "Potted White Tulip": [
+  "block:minecraft:potted_white_tulip"
+ ],
+ "Potted Wither Rose": [
+  "block:minecraft:potted_wither_rose"
+ ],
+ "Potter": [
+  "entity:mcanomalyarchives:potter"
+ ],
+ "Potter Spawn Egg": [
+  "item:mcanomalyarchives:potter_spawn_egg"
+ ],
+ "Powder Snow": [
+  "block:minecraft:powder_snow"
+ ],
+ "Powder Snow Bucket": [
+  "item:minecraft:powder_snow_bucket"
+ ],
+ "Powder Snow Cauldron": [
+  "block:minecraft:powder_snow_cauldron"
+ ],
+ "Powered Rail": [
+  "block:minecraft:powered_rail"
+ ],
+ "Primed TNT": [
+  "entity:minecraft:tnt"
+ ],
+ "Prismarine": [
+  "block:minecraft:prismarine"
+ ],
+ "Prismarine Brick Slab": [
+  "block:minecraft:prismarine_brick_slab"
+ ],
+ "Prismarine Brick Stairs": [
+  "block:minecraft:prismarine_brick_stairs"
+ ],
+ "Prismarine Bricks": [
+  "block:minecraft:prismarine_bricks"
+ ],
+ "Prismarine Crystals": [
+  "item:minecraft:prismarine_crystals"
+ ],
+ "Prismarine Shard": [
+  "item:minecraft:prismarine_shard"
+ ],
+ "Prismarine Slab": [
+  "block:minecraft:prismarine_slab"
+ ],
+ "Prismarine Stairs": [
+  "block:minecraft:prismarine_stairs"
+ ],
+ "Prismarine Wall": [
+  "block:minecraft:prismarine_wall"
+ ],
+ "Prisoner": [
+  "entity:mcanomalyarchives:prisoner"
+ ],
+ "Prisoner Spawn Egg": [
+  "item:mcanomalyarchives:prisoner_spawn_egg"
+ ],
+ "Prize Pottery Shard": [
+  "item:minecraft:pottery_shard_prize",
+  "item:minecraft:prize_pottery_shard"
+ ],
+ "Prize Pottery Sherd": [
+  "item:minecraft:prize_pottery_sherd"
+ ],
+ "Pufferfish": [
+  "item:minecraft:pufferfish",
+  "entity:minecraft:pufferfish"
+ ],
+ "Pufferfish Spawn Egg": [
+  "item:minecraft:pufferfish_spawn_egg"
+ ],
+ "Pumpkin": [
+  "block:minecraft:pumpkin"
+ ],
+ "Pumpkin Pie": [
+  "item:minecraft:pumpkin_pie"
+ ],
+ "Pumpkin Seeds": [
+  "item:minecraft:pumpkin_seeds"
+ ],
+ "Pumpkin Stem": [
+  "block:minecraft:pumpkin_stem"
+ ],
+ "Purple Arrow": [
+  "entity:mcanomalyarchives:purple_arrow"
+ ],
+ "Purple Banner": [
+  "block:minecraft:purple_banner"
+ ],
+ "Purple Bed": [
+  "block:minecraft:purple_bed"
+ ],
+ "Purple Candle": [
+  "block:minecraft:purple_candle"
+ ],
+ "Purple Carpet": [
+  "block:minecraft:purple_carpet"
+ ],
+ "Purple Concrete": [
+  "block:minecraft:purple_concrete"
+ ],
+ "Purple Concrete Powder": [
+  "block:minecraft:purple_concrete_powder"
+ ],
+ "Purple Dog": [
+  "entity:mcanomalyarchives:purple_dog"
+ ],
+ "Purple Dye": [
+  "item:minecraft:purple_dye"
+ ],
+ "Purple Glazed Terracotta": [
+  "block:minecraft:purple_glazed_terracotta"
+ ],
+ "Purple Monster": [
+  "entity:mcanomalyarchives:purple_monster"
+ ],
+ "Purple Monster Spawn Egg": [
+  "item:mcanomalyarchives:purple_monster_spawn_egg"
+ ],
+ "Purple Shulker Box": [
+  "block:minecraft:purple_shulker_box"
+ ],
+ "Purple Stained Glass": [
+  "block:minecraft:purple_stained_glass"
+ ],
+ "Purple Stained Glass Pane": [
+  "block:minecraft:purple_stained_glass_pane"
+ ],
+ "Purple Terracotta": [
+  "block:minecraft:purple_terracotta"
+ ],
+ "Purple Wool": [
+  "block:minecraft:purple_wool"
+ ],
+ "Purplehand": [
+  "item:mcanomalyarchives:purplehand"
+ ],
+ "Purpur Block": [
+  "block:minecraft:purpur_block"
+ ],
+ "Purpur Pillar": [
+  "block:minecraft:purpur_pillar"
+ ],
+ "Purpur Slab": [
+  "block:minecraft:purpur_slab"
+ ],
+ "Purpur Stairs": [
+  "block:minecraft:purpur_stairs"
+ ],
+ "Qu": [
+  "entity:mcanomalyarchives:qu"
+ ],
+ "Qu Spawn Egg": [
+  "item:mcanomalyarchives:qu_spawn_egg"
+ ],
+ "Quartz Bricks": [
+  "block:minecraft:quartz_bricks"
+ ],
+ "Quartz Pillar": [
+  "block:minecraft:quartz_pillar"
+ ],
+ "Quartz Slab": [
+  "block:minecraft:quartz_slab"
+ ],
+ "Quartz Stairs": [
+  "block:minecraft:quartz_stairs"
+ ],
+ "Rabbit": [
+  "entity:minecraft:rabbit"
+ ],
+ "Rabbit Hide": [
+  "item:minecraft:rabbit_hide"
+ ],
+ "Rabbit Spawn Egg": [
+  "item:minecraft:rabbit_spawn_egg"
+ ],
+ "Rabbit Stew": [
+  "item:minecraft:rabbit_stew"
+ ],
+ "Rabbit's Foot": [
+  "item:minecraft:rabbit_foot"
+ ],
+ "Rail": [
+  "block:minecraft:rail"
+ ],
+ "Ravager": [
+  "entity:minecraft:ravager"
+ ],
+ "Ravager Spawn Egg": [
+  "item:minecraft:ravager_spawn_egg"
+ ],
+ "Raw Beef": [
+  "item:minecraft:beef"
+ ],
+ "Raw Chicken": [
+  "item:minecraft:chicken"
+ ],
+ "Raw Cod": [
+  "item:minecraft:cod"
+ ],
+ "Raw Copper": [
+  "item:minecraft:raw_copper"
+ ],
+ "Raw Gold": [
+  "item:minecraft:raw_gold"
+ ],
+ "Raw Iron": [
+  "item:minecraft:raw_iron"
+ ],
+ "Raw Mutton": [
+  "item:minecraft:mutton"
+ ],
+ "Raw Porkchop": [
+  "item:minecraft:porkchop"
+ ],
+ "Raw Rabbit": [
+  "item:minecraft:rabbit"
+ ],
+ "Raw Salmon": [
+  "item:minecraft:salmon"
+ ],
+ "Recovery Compass": [
+  "item:minecraft:recovery_compass"
+ ],
+ "Red Banner": [
+  "block:minecraft:red_banner"
+ ],
+ "Red Bed": [
+  "block:minecraft:red_bed"
+ ],
+ "Red Candle": [
+  "block:minecraft:red_candle"
+ ],
+ "Red Carpet": [
+  "block:minecraft:red_carpet"
+ ],
+ "Red Concrete": [
+  "block:minecraft:red_concrete"
+ ],
+ "Red Concrete Powder": [
+  "block:minecraft:red_concrete_powder"
+ ],
+ "Red Dye": [
+  "item:minecraft:red_dye"
+ ],
+ "Red Glazed Terracotta": [
+  "block:minecraft:red_glazed_terracotta"
+ ],
+ "Red Mushroom": [
+  "block:minecraft:red_mushroom"
+ ],
+ "Red Mushroom Block": [
+  "block:minecraft:red_mushroom_block"
+ ],
+ "Red Nether Brick Slab": [
+  "block:minecraft:red_nether_brick_slab"
+ ],
+ "Red Nether Brick Stairs": [
+  "block:minecraft:red_nether_brick_stairs"
+ ],
+ "Red Nether Brick Wall": [
+  "block:minecraft:red_nether_brick_wall"
+ ],
+ "Red Nether Bricks": [
+  "block:minecraft:red_nether_bricks"
+ ],
+ "Red Sand": [
+  "block:minecraft:red_sand"
+ ],
+ "Red Sandstone": [
+  "block:minecraft:red_sandstone"
+ ],
+ "Red Sandstone Slab": [
+  "block:minecraft:red_sandstone_slab"
+ ],
+ "Red Sandstone Stairs": [
+  "block:minecraft:red_sandstone_stairs"
+ ],
+ "Red Sandstone Wall": [
+  "block:minecraft:red_sandstone_wall"
+ ],
+ "Red Shulker Box": [
+  "block:minecraft:red_shulker_box"
+ ],
+ "Red Stained Glass": [
+  "block:minecraft:red_stained_glass"
+ ],
+ "Red Stained Glass Pane": [
+  "block:minecraft:red_stained_glass_pane"
+ ],
+ "Red Terracotta": [
+  "block:minecraft:red_terracotta"
+ ],
+ "Red Tulip": [
+  "block:minecraft:red_tulip"
+ ],
+ "Red Wool": [
+  "block:minecraft:red_wool"
+ ],
+ "Redstone Comparator": [
+  "block:minecraft:comparator"
+ ],
+ "Redstone Dust": [
+  "item:minecraft:redstone"
+ ],
+ "Redstone Lamp": [
+  "block:minecraft:redstone_lamp"
+ ],
+ "Redstone Ore": [
+  "block:minecraft:redstone_ore"
+ ],
+ "Redstone Repeater": [
+  "block:minecraft:repeater"
+ ],
+ "Redstone Torch": [
+  "block:minecraft:redstone_torch"
+ ],
+ "Redstone Wall Torch": [
+  "block:minecraft:redstone_wall_torch"
+ ],
+ "Redstone Wire": [
+  "block:minecraft:redstone_wire"
+ ],
+ "Reinforced Deepslate": [
+  "block:minecraft:reinforced_deepslate"
+ ],
+ "Repeating Command Block": [
+  "block:minecraft:repeating_command_block"
+ ],
+ "Respawn Anchor": [
+  "block:minecraft:respawn_anchor"
+ ],
+ "Respawn point set": [
+  "block:minecraft:set_spawn"
+ ],
+ "Rooted Dirt": [
+  "block:minecraft:rooted_dirt"
+ ],
+ "Rose Bush": [
+  "block:minecraft:rose_bush"
+ ],
+ "Rotten Flesh": [
+  "item:minecraft:rotten_flesh"
+ ],
+ "Sad Poppy": [
+  "item:mcanomalyarchives:sad_poppy",
+  "block:mcanomalyarchives:sad_poppy"
+ ],
+ "Saddle": [
+  "item:minecraft:saddle"
+ ],
+ "Sadicon": [
+  "item:mcanomalyarchives:sadicon"
+ ],
+ "Salmon": [
+  "entity:minecraft:salmon"
+ ],
+ "Salmon Spawn Egg": [
+  "item:minecraft:salmon_spawn_egg"
+ ],
+ "Sand": [
+  "block:minecraft:sand"
+ ],
+ "Sandstone": [
+  "block:minecraft:sandstone"
+ ],
+ "Sandstone Slab": [
+  "block:minecraft:sandstone_slab"
+ ],
+ "Sandstone Stairs": [
+  "block:minecraft:sandstone_stairs"
+ ],
+ "Sandstone Wall": [
+  "block:minecraft:sandstone_wall"
+ ],
+ "Scaffolding": [
+  "block:minecraft:scaffolding"
+ ],
+ "Scrape Pottery Sherd": [
+  "item:minecraft:scrape_pottery_sherd"
+ ],
+ "Sculk": [
+  "block:minecraft:sculk"
+ ],
+ "Sculk Catalyst": [
+  "block:minecraft:sculk_catalyst"
+ ],
+ "Sculk Sensor": [
+  "block:minecraft:sculk_sensor"
+ ],
+ "Sculk Shrieker": [
+  "block:minecraft:sculk_shrieker"
+ ],
+ "Sculk Vein": [
+  "block:minecraft:sculk_vein"
+ ],
+ "Scute": [
+  "item:minecraft:scute"
+ ],
+ "Sea Lantern": [
+  "block:minecraft:sea_lantern"
+ ],
+ "Sea Pickle": [
+  "block:minecraft:sea_pickle"
+ ],
+ "Seagrass": [
+  "block:minecraft:seagrass"
+ ],
+ "Sheaf Pottery Shard": [
+  "item:minecraft:sheaf_pottery_shard"
+ ],
+ "Sheaf Pottery Sherd": [
+  "item:minecraft:sheaf_pottery_sherd"
+ ],
+ "Shears": [
+  "item:minecraft:shears"
+ ],
+ "Sheep": [
+  "entity:minecraft:sheep"
+ ],
+ "Sheep Spawn Egg": [
+  "item:minecraft:sheep_spawn_egg"
+ ],
+ "Shelter Pottery Shard": [
+  "item:minecraft:shelter_pottery_shard"
+ ],
+ "Shelter Pottery Sherd": [
+  "item:minecraft:shelter_pottery_sherd"
+ ],
+ "Shield": [
+  "item:minecraft:shield"
+ ],
+ "Short Grass": [
+  "block:minecraft:short_grass"
+ ],
+ "Shroomlight": [
+  "block:minecraft:shroomlight"
+ ],
+ "Shulker": [
+  "entity:minecraft:shulker"
+ ],
+ "Shulker Box": [
+  "block:minecraft:shulker_box"
+ ],
+ "Shulker Bullet": [
+  "entity:minecraft:shulker_bullet"
+ ],
+ "Shulker Shell": [
+  "item:minecraft:shulker_shell"
+ ],
+ "Shulker Spawn Egg": [
+  "item:minecraft:shulker_spawn_egg"
+ ],
+ "Sign": [
+  "item:minecraft:sign"
+ ],
+ "Silverfish": [
+  "entity:minecraft:silverfish"
+ ],
+ "Silverfish Spawn Egg": [
+  "item:minecraft:silverfish_spawn_egg"
+ ],
+ "Sitting Enity": [
+  "entity:mcanomalyarchives:sitting_enity"
+ ],
+ "Skeleton": [
+  "entity:minecraft:skeleton"
+ ],
+ "Skeleton Horse": [
+  "entity:minecraft:skeleton_horse"
+ ],
+ "Skeleton Horse Spawn Egg": [
+  "item:minecraft:skeleton_horse_spawn_egg"
+ ],
+ "Skeleton Skull": [
+  "block:minecraft:skeleton_skull"
+ ],
+ "Skeleton Spawn Egg": [
+  "item:minecraft:skeleton_spawn_egg"
+ ],
+ "Skeleton Wall Skull": [
+  "block:minecraft:skeleton_wall_skull"
+ ],
+ "Skull Pottery Shard": [
+  "item:minecraft:pottery_shard_skull",
+  "item:minecraft:skull_pottery_shard"
+ ],
+ "Skull Pottery Sherd": [
+  "item:minecraft:skull_pottery_sherd"
+ ],
+ "Slime": [
+  "entity:minecraft:slime"
+ ],
+ "Slime Block": [
+  "block:minecraft:slime_block"
+ ],
+ "Slime Spawn Egg": [
+  "item:minecraft:slime_spawn_egg"
+ ],
+ "Slimeball": [
+  "item:minecraft:slime_ball"
+ ],
+ "Small Amethyst Bud": [
+  "block:minecraft:small_amethyst_bud"
+ ],
+ "Small Dripleaf": [
+  "block:minecraft:small_dripleaf"
+ ],
+ "Small Fireball": [
+  "entity:minecraft:small_fireball"
+ ],
+ "Smithing Table": [
+  "block:minecraft:smithing_table"
+ ],
+ "Smithing Template": [
+  "item:minecraft:bolt_armor_trim_smithing_template",
+  "item:minecraft:coast_armor_trim_smithing_template",
+  "item:minecraft:dune_armor_trim_smithing_template",
+  "item:minecraft:eye_armor_trim_smithing_template",
+  "item:minecraft:flow_armor_trim_smithing_template",
+  "item:minecraft:host_armor_trim_smithing_template",
+  "item:minecraft:netherite_upgrade_smithing_template",
+  "item:minecraft:raiser_armor_trim_smithing_template",
+  "item:minecraft:rib_armor_trim_smithing_template",
+  "item:minecraft:sentry_armor_trim_smithing_template",
+  "item:minecraft:shaper_armor_trim_smithing_template",
+  "item:minecraft:silence_armor_trim_smithing_template",
+  "item:minecraft:smithing_template",
+  "item:minecraft:snout_armor_trim_smithing_template",
+  "item:minecraft:spire_armor_trim_smithing_template",
+  "item:minecraft:tide_armor_trim_smithing_template",
+  "item:minecraft:vex_armor_trim_smithing_template",
+  "item:minecraft:ward_armor_trim_smithing_template",
+  "item:minecraft:wayfinder_armor_trim_smithing_template",
+  "item:minecraft:wild_armor_trim_smithing_template"
+ ],
+ "Smoker": [
+  "block:minecraft:smoker"
+ ],
+ "Smooth Basalt": [
+  "block:minecraft:smooth_basalt"
+ ],
+ "Smooth Quartz Block": [
+  "block:minecraft:smooth_quartz"
+ ],
+ "Smooth Quartz Slab": [
+  "block:minecraft:smooth_quartz_slab"
+ ],
+ "Smooth Quartz Stairs": [
+  "block:minecraft:smooth_quartz_stairs"
+ ],
+ "Smooth Red Sandstone": [
+  "block:minecraft:smooth_red_sandstone"
+ ],
+ "Smooth Red Sandstone Slab": [
+  "block:minecraft:smooth_red_sandstone_slab"
+ ],
+ "Smooth Red Sandstone Stairs": [
+  "block:minecraft:smooth_red_sandstone_stairs"
+ ],
+ "Smooth Sandstone": [
+  "block:minecraft:smooth_sandstone"
+ ],
+ "Smooth Sandstone Slab": [
+  "block:minecraft:smooth_sandstone_slab"
+ ],
+ "Smooth Sandstone Stairs": [
+  "block:minecraft:smooth_sandstone_stairs"
+ ],
+ "Smooth Stone": [
+  "block:minecraft:smooth_stone"
+ ],
+ "Smooth Stone Slab": [
+  "block:minecraft:smooth_stone_slab"
+ ],
+ "Sniffer": [
+  "entity:minecraft:sniffer"
+ ],
+ "Sniffer Egg": [
+  "block:minecraft:sniffer_egg"
+ ],
+ "Sniffer Spawn Egg": [
+  "item:minecraft:sniffer_spawn_egg"
+ ],
+ "Snort Pottery Shard": [
+  "item:minecraft:snort_pottery_shard"
+ ],
+ "Snort Pottery Sherd": [
+  "item:minecraft:snort_pottery_sherd"
+ ],
+ "Snow": [
+  "block:minecraft:snow"
+ ],
+ "Snow Block": [
+  "block:minecraft:snow_block"
+ ],
+ "Snow Golem": [
+  "entity:minecraft:snow_golem"
+ ],
+ "Snow Golem Spawn Egg": [
+  "item:minecraft:snow_golem_spawn_egg"
+ ],
+ "Snowball": [
+  "item:minecraft:snowball",
+  "entity:minecraft:snowball"
+ ],
+ "Soul Campfire": [
+  "block:minecraft:soul_campfire"
+ ],
+ "Soul Fire": [
+  "block:minecraft:soul_fire"
+ ],
+ "Soul Lantern": [
+  "block:minecraft:soul_lantern"
+ ],
+ "Soul Sand": [
+  "block:minecraft:soul_sand"
+ ],
+ "Soul Soil": [
+  "block:minecraft:soul_soil"
+ ],
+ "Soul Torch": [
+  "block:minecraft:soul_torch"
+ ],
+ "Soul Wall Torch": [
+  "block:minecraft:soul_wall_torch"
+ ],
+ "Spectral Arrow": [
+  "item:minecraft:spectral_arrow",
+  "entity:minecraft:spectral_arrow"
+ ],
+ "Spider": [
+  "entity:minecraft:spider"
+ ],
+ "Spider Eye": [
+  "item:minecraft:spider_eye"
+ ],
+ "Spider Spawn Egg": [
+  "item:minecraft:spider_spawn_egg"
+ ],
+ "Splash Potion": [
+  "item:minecraft:splash_potion"
+ ],
+ "Sponge": [
+  "block:minecraft:sponge"
+ ],
+ "Spore Blossom": [
+  "block:minecraft:spore_blossom"
+ ],
+ "Spruce Boat": [
+  "item:minecraft:spruce_boat"
+ ],
+ "Spruce Boat with Chest": [
+  "item:minecraft:spruce_chest_boat"
+ ],
+ "Spruce Button": [
+  "block:minecraft:spruce_button"
+ ],
+ "Spruce Door": [
+  "block:minecraft:spruce_door"
+ ],
+ "Spruce Fence": [
+  "block:minecraft:spruce_fence"
+ ],
+ "Spruce Fence Gate": [
+  "block:minecraft:spruce_fence_gate"
+ ],
+ "Spruce Hanging Sign": [
+  "block:minecraft:spruce_hanging_sign"
+ ],
+ "Spruce Leaves": [
+  "block:minecraft:spruce_leaves"
+ ],
+ "Spruce Log": [
+  "block:minecraft:spruce_log"
+ ],
+ "Spruce Planks": [
+  "block:minecraft:spruce_planks"
+ ],
+ "Spruce Pressure Plate": [
+  "block:minecraft:spruce_pressure_plate"
+ ],
+ "Spruce Sapling": [
+  "block:minecraft:spruce_sapling"
+ ],
+ "Spruce Sign": [
+  "block:minecraft:spruce_sign"
+ ],
+ "Spruce Slab": [
+  "block:minecraft:spruce_slab"
+ ],
+ "Spruce Stairs": [
+  "block:minecraft:spruce_stairs"
+ ],
+ "Spruce Trapdoor": [
+  "block:minecraft:spruce_trapdoor"
+ ],
+ "Spruce Wall Hanging Sign": [
+  "block:minecraft:spruce_wall_hanging_sign"
+ ],
+ "Spruce Wall Sign": [
+  "block:minecraft:spruce_wall_sign"
+ ],
+ "Spruce Wood": [
+  "block:minecraft:spruce_wood"
+ ],
+ "Spyglass": [
+  "item:minecraft:spyglass"
+ ],
+ "Squid": [
+  "entity:minecraft:squid"
+ ],
+ "Squid Spawn Egg": [
+  "item:minecraft:squid_spawn_egg"
+ ],
+ "Stange Cloud": [
+  "entity:mcanomalyarchives:stange_cloud"
+ ],
+ "Stange Cloud Spawn Egg": [
+  "item:mcanomalyarchives:stange_cloud_spawn_egg"
+ ],
+ "Steak": [
+  "item:minecraft:cooked_beef"
+ ],
+ "Stick": [
+  "item:minecraft:stick"
+ ],
+ "Sticky Piston": [
+  "block:minecraft:sticky_piston"
+ ],
+ "Stone": [
+  "block:minecraft:stone"
+ ],
+ "Stone Axe": [
+  "item:minecraft:stone_axe"
+ ],
+ "Stone Brick Slab": [
+  "block:minecraft:stone_brick_slab"
+ ],
+ "Stone Brick Stairs": [
+  "block:minecraft:stone_brick_stairs"
+ ],
+ "Stone Brick Wall": [
+  "block:minecraft:stone_brick_wall"
+ ],
+ "Stone Bricks": [
+  "block:minecraft:stone_bricks"
+ ],
+ "Stone Button": [
+  "block:minecraft:stone_button"
+ ],
+ "Stone Hoe": [
+  "item:minecraft:stone_hoe"
+ ],
+ "Stone Pickaxe": [
+  "item:minecraft:stone_pickaxe"
+ ],
+ "Stone Pressure Plate": [
+  "block:minecraft:stone_pressure_plate"
+ ],
+ "Stone Shovel": [
+  "item:minecraft:stone_shovel"
+ ],
+ "Stone Slab": [
+  "block:minecraft:stone_slab"
+ ],
+ "Stone Stairs": [
+  "block:minecraft:stone_stairs"
+ ],
+ "Stone Sword": [
+  "item:minecraft:stone_sword"
+ ],
+ "Stonecutter": [
+  "block:minecraft:stonecutter"
+ ],
+ "Strange Fishing Rod": [
+  "item:mcanomalyarchives:strange_fishing_rod"
+ ],
+ "Strange Tree": [
+  "entity:mcanomalyarchives:strange_tree"
+ ],
+ "Strange Tree Spawn Egg": [
+  "item:mcanomalyarchives:strange_tree_spawn_egg"
+ ],
+ "Strangetreeleaves": [
+  "block:mcanomalyarchives:strangetreeleaves"
+ ],
+ "Strangetreelog": [
+  "block:mcanomalyarchives:strangetreelog"
+ ],
+ "Stray": [
+  "entity:minecraft:stray"
+ ],
+ "Stray Spawn Egg": [
+  "item:minecraft:stray_spawn_egg"
+ ],
+ "Strider": [
+  "entity:minecraft:strider"
+ ],
+ "Strider Spawn Egg": [
+  "item:minecraft:strider_spawn_egg"
+ ],
+ "String": [
+  "item:minecraft:string"
+ ],
+ "Stripped Acacia Log": [
+  "block:minecraft:stripped_acacia_log"
+ ],
+ "Stripped Acacia Wood": [
+  "block:minecraft:stripped_acacia_wood"
+ ],
+ "Stripped Birch Log": [
+  "block:minecraft:stripped_birch_log"
+ ],
+ "Stripped Birch Wood": [
+  "block:minecraft:stripped_birch_wood"
+ ],
+ "Stripped Cherry Log": [
+  "block:minecraft:stripped_cherry_log"
+ ],
+ "Stripped Cherry Wood": [
+  "block:minecraft:stripped_cherry_wood"
+ ],
+ "Stripped Crimson Hyphae": [
+  "block:minecraft:stripped_crimson_hyphae"
+ ],
+ "Stripped Crimson Stem": [
+  "block:minecraft:stripped_crimson_stem"
+ ],
+ "Stripped Dark Oak Log": [
+  "block:minecraft:stripped_dark_oak_log"
+ ],
+ "Stripped Dark Oak Wood": [
+  "block:minecraft:stripped_dark_oak_wood"
+ ],
+ "Stripped Jungle Log": [
+  "block:minecraft:stripped_jungle_log"
+ ],
+ "Stripped Jungle Wood": [
+  "block:minecraft:stripped_jungle_wood"
+ ],
+ "Stripped Mangrove Log": [
+  "block:minecraft:stripped_mangrove_log"
+ ],
+ "Stripped Mangrove Wood": [
+  "block:minecraft:stripped_mangrove_wood"
+ ],
+ "Stripped Oak Log": [
+  "block:minecraft:stripped_oak_log"
+ ],
+ "Stripped Oak Wood": [
+  "block:minecraft:stripped_oak_wood"
+ ],
+ "Stripped Orange Log": [
+  "item:mcanomalyarchives:stripped_orange_log",
+  "block:mcanomalyarchives:stripped_orange_log"
+ ],
+ "Stripped Spruce Log": [
+  "block:minecraft:stripped_spruce_log"
+ ],
+ "Stripped Spruce Wood": [
+  "block:minecraft:stripped_spruce_wood"
+ ],
+ "Stripped Warped Hyphae": [
+  "block:minecraft:stripped_warped_hyphae"
+ ],
+ "Stripped Warped Stem": [
+  "block:minecraft:stripped_warped_stem"
+ ],
+ "Structure Block": [
+  "block:minecraft:structure_block"
+ ],
+ "Structure Void": [
+  "block:minecraft:structure_void"
+ ],
+ "Sugar": [
+  "item:minecraft:sugar"
+ ],
+ "Sugar Cane": [
+  "block:minecraft:sugar_cane"
+ ],
+ "Sunflower": [
+  "block:minecraft:sunflower"
+ ],
+ "Suspicious Gravel": [
+  "block:minecraft:suspicious_gravel"
+ ],
+ "Suspicious Sand": [
+  "block:minecraft:suspicious_sand"
+ ],
+ "Suspicious Stew": [
+  "item:minecraft:suspicious_stew"
+ ],
+ "Svan": [
+  "entity:mcanomalyarchives:svan"
+ ],
+ "Svan Spawn Egg": [
+  "item:mcanomalyarchives:svan_spawn_egg"
+ ],
+ "Sweet Berries": [
+  "item:minecraft:sweet_berries"
+ ],
+ "Sweet Berry Bush": [
+  "block:minecraft:sweet_berry_bush"
+ ],
+ "TNT": [
+  "block:minecraft:tnt"
+ ],
+ "Tadpole": [
+  "entity:minecraft:tadpole"
+ ],
+ "Tadpole Spawn Egg": [
+  "item:minecraft:tadpole_spawn_egg"
+ ],
+ "Tall Grass": [
+  "block:minecraft:tall_grass"
+ ],
+ "Tall Seagrass": [
+  "block:minecraft:tall_seagrass"
+ ],
+ "Target": [
+  "block:minecraft:target"
+ ],
+ "Terracotta": [
+  "block:minecraft:terracotta"
+ ],
+ "Text Display": [
+  "entity:minecraft:text_display"
+ ],
+ "The Archive": [
+  "item:mcanomalyarchives:anomaly_codex"
+ ],
+ "The Killer Bunny": [
+  "entity:minecraft:killer_bunny"
+ ],
+ "Thrown Bottle o' Enchanting": [
+  "entity:minecraft:experience_bottle"
+ ],
+ "Thrown Egg": [
+  "entity:minecraft:egg"
+ ],
+ "Thrown Ender Pearl": [
+  "entity:minecraft:ender_pearl"
+ ],
+ "Tinted Glass": [
+  "block:minecraft:tinted_glass"
+ ],
+ "Tipped Arrow": [
+  "item:minecraft:tipped_arrow"
+ ],
+ "Torch": [
+  "block:minecraft:torch"
+ ],
+ "Torchflower": [
+  "block:minecraft:torchflower"
+ ],
+ "Torchflower Crop": [
+  "block:minecraft:torchflower_crop"
+ ],
+ "Torchflower Seeds": [
+  "item:minecraft:torchflower_seeds"
+ ],
+ "Totem of Undying": [
+  "item:minecraft:totem_of_undying"
+ ],
+ "Trader Llama": [
+  "entity:minecraft:trader_llama"
+ ],
+ "Trader Llama Spawn Egg": [
+  "item:minecraft:trader_llama_spawn_egg"
+ ],
+ "Trapped Chest": [
+  "block:minecraft:trapped_chest"
+ ],
+ "Trial Key": [
+  "item:minecraft:trial_key"
+ ],
+ "Trial Spawner": [
+  "block:minecraft:trial_spawner"
+ ],
+ "Trident": [
+  "item:minecraft:trident",
+  "entity:minecraft:trident"
+ ],
+ "Tripwire": [
+  "block:minecraft:tripwire"
+ ],
+ "Tripwire Hook": [
+  "block:minecraft:tripwire_hook"
+ ],
+ "Tropical Fish": [
+  "item:minecraft:tropical_fish",
+  "entity:minecraft:tropical_fish"
+ ],
+ "Tropical Fish Spawn Egg": [
+  "item:minecraft:tropical_fish_spawn_egg"
+ ],
+ "Tube Coral": [
+  "block:minecraft:tube_coral"
+ ],
+ "Tube Coral Block": [
+  "block:minecraft:tube_coral_block"
+ ],
+ "Tube Coral Fan": [
+  "block:minecraft:tube_coral_fan"
+ ],
+ "Tube Coral Wall Fan": [
+  "block:minecraft:tube_coral_wall_fan"
+ ],
+ "Tuff": [
+  "block:minecraft:tuff"
+ ],
+ "Tuff Brick Slab": [
+  "block:minecraft:tuff_brick_slab"
+ ],
+ "Tuff Brick Stairs": [
+  "block:minecraft:tuff_brick_stairs"
+ ],
+ "Tuff Brick Wall": [
+  "block:minecraft:tuff_brick_wall"
+ ],
+ "Tuff Bricks": [
+  "block:minecraft:tuff_bricks"
+ ],
+ "Tuff Slab": [
+  "block:minecraft:tuff_slab"
+ ],
+ "Tuff Stairs": [
+  "block:minecraft:tuff_stairs"
+ ],
+ "Tuff Wall": [
+  "block:minecraft:tuff_wall"
+ ],
+ "Turtle": [
+  "entity:minecraft:turtle"
+ ],
+ "Turtle Egg": [
+  "block:minecraft:turtle_egg"
+ ],
+ "Turtle Scute": [
+  "item:minecraft:turtle_scute"
+ ],
+ "Turtle Shell": [
+  "item:minecraft:turtle_helmet"
+ ],
+ "Turtle Spawn Egg": [
+  "item:minecraft:turtle_spawn_egg"
+ ],
+ "Twisting Vines": [
+  "block:minecraft:twisting_vines"
+ ],
+ "Twisting Vines Plant": [
+  "block:minecraft:twisting_vines_plant"
+ ],
+ "Unknown": [
+  "item:canUse:unknown"
+ ],
+ "Vault": [
+  "block:minecraft:vault"
+ ],
+ "Verdant Froglight": [
+  "block:minecraft:verdant_froglight"
+ ],
+ "Vex": [
+  "entity:minecraft:vex"
+ ],
+ "Vex Spawn Egg": [
+  "item:minecraft:vex_spawn_egg"
+ ],
+ "Villager": [
+  "entity:minecraft:villager"
+ ],
+ "Villager Spawn Egg": [
+  "item:minecraft:villager_spawn_egg"
+ ],
+ "Vindicator": [
+  "entity:minecraft:vindicator"
+ ],
+ "Vindicator Spawn Egg": [
+  "item:minecraft:vindicator_spawn_egg"
+ ],
+ "Vines": [
+  "block:minecraft:vine"
+ ],
+ "Void Air": [
+  "block:minecraft:void_air"
+ ],
+ "Wall Torch": [
+  "block:minecraft:wall_torch"
+ ],
+ "Wandering Trader": [
+  "entity:minecraft:wandering_trader"
+ ],
+ "Wandering Trader Spawn Egg": [
+  "item:minecraft:wandering_trader_spawn_egg"
+ ],
+ "Warden": [
+  "entity:minecraft:warden"
+ ],
+ "Warden Spawn Egg": [
+  "item:minecraft:warden_spawn_egg"
+ ],
+ "Warped Button": [
+  "block:minecraft:warped_button"
+ ],
+ "Warped Door": [
+  "block:minecraft:warped_door"
+ ],
+ "Warped Fence": [
+  "block:minecraft:warped_fence"
+ ],
+ "Warped Fence Gate": [
+  "block:minecraft:warped_fence_gate"
+ ],
+ "Warped Fungus": [
+  "block:minecraft:warped_fungus"
+ ],
+ "Warped Fungus on a Stick": [
+  "item:minecraft:warped_fungus_on_a_stick"
+ ],
+ "Warped Hanging Sign": [
+  "block:minecraft:warped_hanging_sign"
+ ],
+ "Warped Hyphae": [
+  "block:minecraft:warped_hyphae"
+ ],
+ "Warped Nylium": [
+  "block:minecraft:warped_nylium"
+ ],
+ "Warped Planks": [
+  "block:minecraft:warped_planks"
+ ],
+ "Warped Pressure Plate": [
+  "block:minecraft:warped_pressure_plate"
+ ],
+ "Warped Roots": [
+  "block:minecraft:warped_roots"
+ ],
+ "Warped Sign": [
+  "block:minecraft:warped_sign"
+ ],
+ "Warped Slab": [
+  "block:minecraft:warped_slab"
+ ],
+ "Warped Stairs": [
+  "block:minecraft:warped_stairs"
+ ],
+ "Warped Stem": [
+  "block:minecraft:warped_stem"
+ ],
+ "Warped Trapdoor": [
+  "block:minecraft:warped_trapdoor"
+ ],
+ "Warped Wall Hanging Sign": [
+  "block:minecraft:warped_wall_hanging_sign"
+ ],
+ "Warped Wall Sign": [
+  "block:minecraft:warped_wall_sign"
+ ],
+ "Warped Wart Block": [
+  "block:minecraft:warped_wart_block"
+ ],
+ "Water": [
+  "block:minecraft:water"
+ ],
+ "Water Bucket": [
+  "item:minecraft:water_bucket"
+ ],
+ "Water Cauldron": [
+  "block:minecraft:water_cauldron"
+ ],
+ "Waxed Block of Copper": [
+  "block:minecraft:waxed_copper_block"
+ ],
+ "Waxed Chiseled Copper": [
+  "block:minecraft:waxed_chiseled_copper"
+ ],
+ "Waxed Copper Bulb": [
+  "block:minecraft:waxed_copper_bulb"
+ ],
+ "Waxed Copper Door": [
+  "block:minecraft:waxed_copper_door"
+ ],
+ "Waxed Copper Grate": [
+  "block:minecraft:waxed_copper_grate"
+ ],
+ "Waxed Copper Trapdoor": [
+  "block:minecraft:waxed_copper_trapdoor"
+ ],
+ "Waxed Cut Copper": [
+  "block:minecraft:waxed_cut_copper"
+ ],
+ "Waxed Cut Copper Slab": [
+  "block:minecraft:waxed_cut_copper_slab"
+ ],
+ "Waxed Cut Copper Stairs": [
+  "block:minecraft:waxed_cut_copper_stairs"
+ ],
+ "Waxed Exposed Chiseled Copper": [
+  "block:minecraft:waxed_exposed_chiseled_copper"
+ ],
+ "Waxed Exposed Copper": [
+  "block:minecraft:waxed_exposed_copper"
+ ],
+ "Waxed Exposed Copper Bulb": [
+  "block:minecraft:waxed_exposed_copper_bulb"
+ ],
+ "Waxed Exposed Copper Door": [
+  "block:minecraft:waxed_exposed_copper_door"
+ ],
+ "Waxed Exposed Copper Grate": [
+  "block:minecraft:waxed_exposed_copper_grate"
+ ],
+ "Waxed Exposed Copper Trapdoor": [
+  "block:minecraft:waxed_exposed_copper_trapdoor"
+ ],
+ "Waxed Exposed Cut Copper": [
+  "block:minecraft:waxed_exposed_cut_copper"
+ ],
+ "Waxed Exposed Cut Copper Slab": [
+  "block:minecraft:waxed_exposed_cut_copper_slab"
+ ],
+ "Waxed Exposed Cut Copper Stairs": [
+  "block:minecraft:waxed_exposed_cut_copper_stairs"
+ ],
+ "Waxed Oxidized Chiseled Copper": [
+  "block:minecraft:waxed_oxidized_chiseled_copper"
+ ],
+ "Waxed Oxidized Copper": [
+  "block:minecraft:waxed_oxidized_copper"
+ ],
+ "Waxed Oxidized Copper Bulb": [
+  "block:minecraft:waxed_oxidized_copper_bulb"
+ ],
+ "Waxed Oxidized Copper Door": [
+  "block:minecraft:waxed_oxidized_copper_door"
+ ],
+ "Waxed Oxidized Copper Grate": [
+  "block:minecraft:waxed_oxidized_copper_grate"
+ ],
+ "Waxed Oxidized Copper Trapdoor": [
+  "block:minecraft:waxed_oxidized_copper_trapdoor"
+ ],
+ "Waxed Oxidized Cut Copper": [
+  "block:minecraft:waxed_oxidized_cut_copper"
+ ],
+ "Waxed Oxidized Cut Copper Slab": [
+  "block:minecraft:waxed_oxidized_cut_copper_slab"
+ ],
+ "Waxed Oxidized Cut Copper Stairs": [
+  "block:minecraft:waxed_oxidized_cut_copper_stairs"
+ ],
+ "Waxed Weathered Chiseled Copper": [
+  "block:minecraft:waxed_weathered_chiseled_copper"
+ ],
+ "Waxed Weathered Copper": [
+  "block:minecraft:waxed_weathered_copper"
+ ],
+ "Waxed Weathered Copper Bulb": [
+  "block:minecraft:waxed_weathered_copper_bulb"
+ ],
+ "Waxed Weathered Copper Door": [
+  "block:minecraft:waxed_weathered_copper_door"
+ ],
+ "Waxed Weathered Copper Grate": [
+  "block:minecraft:waxed_weathered_copper_grate"
+ ],
+ "Waxed Weathered Copper Trapdoor": [
+  "block:minecraft:waxed_weathered_copper_trapdoor"
+ ],
+ "Waxed Weathered Cut Copper": [
+  "block:minecraft:waxed_weathered_cut_copper"
+ ],
+ "Waxed Weathered Cut Copper Slab": [
+  "block:minecraft:waxed_weathered_cut_copper_slab"
+ ],
+ "Waxed Weathered Cut Copper Stairs": [
+  "block:minecraft:waxed_weathered_cut_copper_stairs"
+ ],
+ "Weathered Chiseled Copper": [
+  "block:minecraft:weathered_chiseled_copper"
+ ],
+ "Weathered Copper": [
+  "block:minecraft:weathered_copper"
+ ],
+ "Weathered Copper Bulb": [
+  "block:minecraft:weathered_copper_bulb"
+ ],
+ "Weathered Copper Door": [
+  "block:minecraft:weathered_copper_door"
+ ],
+ "Weathered Copper Grate": [
+  "block:minecraft:weathered_copper_grate"
+ ],
+ "Weathered Copper Trapdoor": [
+  "block:minecraft:weathered_copper_trapdoor"
+ ],
+ "Weathered Cut Copper": [
+  "block:minecraft:weathered_cut_copper"
+ ],
+ "Weathered Cut Copper Slab": [
+  "block:minecraft:weathered_cut_copper_slab"
+ ],
+ "Weathered Cut Copper Stairs": [
+  "block:minecraft:weathered_cut_copper_stairs"
+ ],
+ "Weeping Vines": [
+  "block:minecraft:weeping_vines"
+ ],
+ "Weeping Vines Plant": [
+  "block:minecraft:weeping_vines_plant"
+ ],
+ "Wet Sponge": [
+  "block:minecraft:wet_sponge"
+ ],
+ "Wheat": [
+  "item:minecraft:wheat"
+ ],
+ "Wheat Crops": [
+  "block:minecraft:wheat"
+ ],
+ "Wheat Seeds": [
+  "item:minecraft:wheat_seeds"
+ ],
+ "When equipped:": [
+  "item:modifiers:any",
+  "item:modifiers:body"
+ ],
+ "When held:": [
+  "item:modifiers:hand"
+ ],
+ "When in Main Hand:": [
+  "item:modifiers:mainhand"
+ ],
+ "When in Off Hand:": [
+  "item:modifiers:offhand"
+ ],
+ "When on Body:": [
+  "item:modifiers:chest"
+ ],
+ "When on Feet:": [
+  "item:modifiers:feet"
+ ],
+ "When on Head:": [
+  "item:modifiers:head"
+ ],
+ "When on Legs:": [
+  "item:modifiers:legs"
+ ],
+ "When worn:": [
+  "item:modifiers:armor"
+ ],
+ "White Banner": [
+  "block:minecraft:white_banner"
+ ],
+ "White Bed": [
+  "block:minecraft:white_bed"
+ ],
+ "White Candle": [
+  "block:minecraft:white_candle"
+ ],
+ "White Carpet": [
+  "block:minecraft:white_carpet"
+ ],
+ "White Concrete": [
+  "block:minecraft:white_concrete"
+ ],
+ "White Concrete Powder": [
+  "block:minecraft:white_concrete_powder"
+ ],
+ "White Dye": [
+  "item:minecraft:white_dye"
+ ],
+ "White Glazed Terracotta": [
+  "block:minecraft:white_glazed_terracotta"
+ ],
+ "White Shulker Box": [
+  "block:minecraft:white_shulker_box"
+ ],
+ "White Stained Glass": [
+  "block:minecraft:white_stained_glass"
+ ],
+ "White Stained Glass Pane": [
+  "block:minecraft:white_stained_glass_pane"
+ ],
+ "White Terracotta": [
+  "block:minecraft:white_terracotta"
+ ],
+ "White Tulip": [
+  "block:minecraft:white_tulip"
+ ],
+ "White Wool": [
+  "block:minecraft:white_wool"
+ ],
+ "Wind Charge": [
+  "item:minecraft:wind_charge",
+  "entity:minecraft:breeze_wind_charge",
+  "entity:minecraft:wind_charge"
+ ],
+ "Witch": [
+  "entity:minecraft:witch"
+ ],
+ "Witch Spawn Egg": [
+  "item:minecraft:witch_spawn_egg"
+ ],
+ "Wither": [
+  "entity:minecraft:wither"
+ ],
+ "Wither Rose": [
+  "block:minecraft:wither_rose"
+ ],
+ "Wither Skeleton": [
+  "entity:minecraft:wither_skeleton"
+ ],
+ "Wither Skeleton Skull": [
+  "block:minecraft:wither_skeleton_skull"
+ ],
+ "Wither Skeleton Spawn Egg": [
+  "item:minecraft:wither_skeleton_spawn_egg"
+ ],
+ "Wither Skeleton Wall Skull": [
+  "block:minecraft:wither_skeleton_wall_skull"
+ ],
+ "Wither Skull": [
+  "entity:minecraft:wither_skull"
+ ],
+ "Wither Spawn Egg": [
+  "item:minecraft:wither_spawn_egg"
+ ],
+ "Wolf": [
+  "entity:minecraft:wolf"
+ ],
+ "Wolf Armor": [
+  "item:minecraft:wolf_armor"
+ ],
+ "Wolf Spawn Egg": [
+  "item:minecraft:wolf_spawn_egg"
+ ],
+ "Wooden Axe": [
+  "item:minecraft:wooden_axe"
+ ],
+ "Wooden Hoe": [
+  "item:minecraft:wooden_hoe"
+ ],
+ "Wooden Pickaxe": [
+  "item:minecraft:wooden_pickaxe"
+ ],
+ "Wooden Shovel": [
+  "item:minecraft:wooden_shovel"
+ ],
+ "Wooden Sword": [
+  "item:minecraft:wooden_sword"
+ ],
+ "Written Book": [
+  "item:minecraft:written_book"
+ ],
+ "Yellow Banner": [
+  "block:minecraft:yellow_banner"
+ ],
+ "Yellow Bed": [
+  "block:minecraft:yellow_bed"
+ ],
+ "Yellow Candle": [
+  "block:minecraft:yellow_candle"
+ ],
+ "Yellow Carpet": [
+  "block:minecraft:yellow_carpet"
+ ],
+ "Yellow Concrete": [
+  "block:minecraft:yellow_concrete"
+ ],
+ "Yellow Concrete Powder": [
+  "block:minecraft:yellow_concrete_powder"
+ ],
+ "Yellow Dye": [
+  "item:minecraft:yellow_dye"
+ ],
+ "Yellow Glazed Terracotta": [
+  "block:minecraft:yellow_glazed_terracotta"
+ ],
+ "Yellow Shulker Box": [
+  "block:minecraft:yellow_shulker_box"
+ ],
+ "Yellow Stained Glass": [
+  "block:minecraft:yellow_stained_glass"
+ ],
+ "Yellow Stained Glass Pane": [
+  "block:minecraft:yellow_stained_glass_pane"
+ ],
+ "Yellow Terracotta": [
+  "block:minecraft:yellow_terracotta"
+ ],
+ "Yellow Wool": [
+  "block:minecraft:yellow_wool"
+ ],
+ "Yifulin": [
+  "entity:mcanomalyarchives:yifulin"
+ ],
+ "Yifulin Spawn Egg": [
+  "item:mcanomalyarchives:yifulin_spawn_egg"
+ ],
+ "Zoglin": [
+  "entity:minecraft:zoglin"
+ ],
+ "Zoglin Spawn Egg": [
+  "item:minecraft:zoglin_spawn_egg"
+ ],
+ "Zombie": [
+  "entity:minecraft:zombie"
+ ],
+ "Zombie Head": [
+  "block:minecraft:zombie_head"
+ ],
+ "Zombie Horse": [
+  "entity:minecraft:zombie_horse"
+ ],
+ "Zombie Horse Spawn Egg": [
+  "item:minecraft:zombie_horse_spawn_egg"
+ ],
+ "Zombie Spawn Egg": [
+  "item:minecraft:zombie_spawn_egg"
+ ],
+ "Zombie Villager": [
+  "entity:minecraft:zombie_villager"
+ ],
+ "Zombie Villager Spawn Egg": [
+  "item:minecraft:zombie_villager_spawn_egg"
+ ],
+ "Zombie Wall Head": [
+  "block:minecraft:zombie_wall_head"
+ ],
+ "Zombified Piglin": [
+  "entity:minecraft:zombified_piglin"
+ ],
+ "Zombified Piglin Spawn Egg": [
+  "item:minecraft:zombified_piglin_spawn_egg"
+ ],
+ "__meta": {
+  "count": 1628,
+  "source": "neoforge-21.1.190-client-extra-aka-minecraft-resources.jar + mc_vanilla_zhcn_idx29_d08b7239 + mcanomalyarchives mod lang"
+ }
+}

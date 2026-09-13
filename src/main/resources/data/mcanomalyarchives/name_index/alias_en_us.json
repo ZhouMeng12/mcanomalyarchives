@@ -1,0 +1,19 @@
+{
+  "__meta": {
+    "note": "Colloquial English aliases that are not vanilla display names.",
+    "source": "hand maintained"
+  },
+  "dog": ["entity:minecraft:wolf"],
+  "puppy": ["entity:minecraft:wolf"],
+  "kitty": ["entity:minecraft:cat"],
+  "piggy": ["entity:minecraft:pig"],
+  "gold": ["item:minecraft:gold_ingot", "block:minecraft:gold_block"],
+  "iron": ["item:minecraft:iron_ingot", "block:minecraft:iron_block"],
+  "diamond block": ["block:minecraft:diamond_block"],
+  "netherite": ["item:minecraft:netherite_ingot", "block:minecraft:netherite_block"],
+  "pickaxe": ["item:minecraft:diamond_pickaxe"],
+  "log": ["block:minecraft:oak_log"],
+  "planks": ["block:minecraft:oak_planks"],
+  "grass": ["block:minecraft:grass_block"],
+  "dirt": ["block:minecraft:dirt"]
+}

@@ -67,6 +67,7 @@ public class McanomalyarchivesModItems {
 	public static final DeferredItem<Item> STRANGE_TREE_SPAWN_EGG;
 	public static final DeferredItem<Item> PINK_SHEEP_SPAWN_EGG;
 	public static final DeferredItem<Item> ANOMALY_CODEX;
+	public static final DeferredItem<Item> BAIBIAN_NAME_TAG;
 	static {
 		STANGE_CLOUD_SPAWN_EGG = REGISTRY.register("stange_cloud_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.STANGE_CLOUD, -1, -1, new Item.Properties()));
 		CLOUD_STONE = block(McanomalyarchivesModBlocks.CLOUD_STONE);
@@ -112,6 +113,7 @@ public class McanomalyarchivesModItems {
 		STRANGE_TREE_SPAWN_EGG = REGISTRY.register("strange_tree_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.STRANGE_TREE, -14803684, -15593199, new Item.Properties()));
 		PINK_SHEEP_SPAWN_EGG = REGISTRY.register("pink_sheep_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.PINK_SHEEP, -1, -26164, new Item.Properties()));
 		ANOMALY_CODEX = REGISTRY.register("anomaly_codex", AnomalyCodexItem::new);
+		BAIBIAN_NAME_TAG = REGISTRY.register("baibian_name_tag", BaibianNameTagItem::new);
 	}
 
 	// Start of user code block custom items

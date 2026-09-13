@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:chest",
+  "random_sequence": "mcanomalyarchives:nametag/mineshaft_inject",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "mcanomalyarchives:baibian_name_tag"
+        }
+      ]
+    }
+  ]
+}

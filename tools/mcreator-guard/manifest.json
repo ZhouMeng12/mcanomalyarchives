@@ -63,7 +63,9 @@
         "PinkSheepLuckyHandler.init();",
         "PinkSheepCalamityHandler.init();",
         "PinkSheepStructureSpawnHandler.init();",
-        "BlinkClientHandler.init();"
+        "BlinkClientHandler.init();",
+        "NameTagHandler.init();",
+        "NameTagTicker.init();"
       ]
     },
     {
@@ -73,7 +75,16 @@
       "fixHint": "从 git 恢复：git checkout -- src/main/java/net/mcreator/mcanomalyarchives/anomaly/",
       "exists": [
         "src/main/java/net/mcreator/mcanomalyarchives/anomaly/pinksheep/PinkSheepMechanics.java",
-        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/pinksheep/PinkSheepHabitat.java"
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/pinksheep/PinkSheepHabitat.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagHandler.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagTicker.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameResolver.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameRules.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NamedState.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/MaterialUnits.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagCosts.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/effects/ItemNaming.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/effects/EntityNaming.java"
       ]
     },
     {
@@ -242,11 +253,14 @@
         "\"advancements.pink_sheep_sighting.title\"",
         "\"codex.mcanomalyarchives.title\"",
         "\"codex.mcanomalyarchives.uo001.name\"",
+        "\"codex.mcanomalyarchives.uo008.trait\"",
         "\"codex.mcanomalyarchives.uo012.trait\"",
         "\"death.attack.meteor_strike\"",
         "\"entity.mcanomalyarchives.pink_sheep_gift\"",
         "\"entity.mcanomalyarchives.sitting_enity\"",
         "\"item.mcanomalyarchives.anomaly_codex\"",
+        "\"item.mcanomalyarchives.baibian_name_tag\"",
+        "\"nametag.mcanomalyarchives.tooltip\"",
         "\"item_group.mcanomalyarchives.strange_record\""
       ]
     },
@@ -261,9 +275,12 @@
         "\"advancements.pink_sheep_calamity.descr\"",
         "\"advancements.pink_sheep_sighting.title\"",
         "\"codex.mcanomalyarchives.title\"",
+        "\"codex.mcanomalyarchives.uo008.info\"",
         "\"codex.mcanomalyarchives.uo012.trait\"",
         "\"death.attack.meteor_strike\"",
-        "\"entity.mcanomalyarchives.pink_sheep_gift\""
+        "\"entity.mcanomalyarchives.pink_sheep_gift\"",
+        "\"item.mcanomalyarchives.baibian_name_tag\"",
+        "\"nametag.mcanomalyarchives.tooltip\""
       ]
     },
     {
@@ -379,6 +396,80 @@
       "mustContain": [
         "[label: start]",
         "[give_codex]"
+      ]
+    },
+    {
+      "id": "nametag-item-class",
+      "kind": "full",
+      "why": "百变命名牌的薄壳物品类（生成区）：MCreator 重生成会把它还原成默认堆叠/普通稀有度",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/item/BaibianNameTagItem.java",
+      "canonical": "BaibianNameTagItem.java",
+      "expectAll": [
+        "extends Item",
+        "stacksTo(16)",
+        "Rarity.RARE"
+      ]
+    },
+    {
+      "id": "nametag-item-registration",
+      "kind": "contains",
+      "why": "百变命名牌在生成区注册表里的注册行（元素已挂进 workspace，MCreator 重生成会自己产出；这条防它被改坏）",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModItems.java",
+      "fixHint": "确认 elements/BaibianNameTag.mod.json 在 workspace 里，然后让 MCreator 重新生成代码",
+      "mustContain": [
+        "BAIBIAN_NAME_TAG = REGISTRY.register(\"baibian_name_tag\", BaibianNameTagItem::new);"
+      ]
+    },
+    {
+      "id": "nametag-item-model",
+      "kind": "contains",
+      "why": "物品模型贴图指向（生成区）：指丢了物品会变成紫黑方块",
+      "path": "src/main/resources/assets/mcanomalyarchives/models/item/baibian_name_tag.json",
+      "fixHint": "把所有 layer0 改回 mcanomalyarchives:item/baibiannametag",
+      "mustContain": [
+        "mcanomalyarchives:item/baibiannametag"
+      ]
+    },
+    {
+      "id": "nametag-workspace-element",
+      "kind": "contains",
+      "why": "工作区里的元素登记（locked_code）：丢了 MCreator 会按默认模板重写这个物品",
+      "path": "mcanomalyarchives.mcreator",
+      "fixHint": "重跑 python tools/nametag/attach_nametag.py",
+      "mustContain": [
+        "\"name\": \"BaibianNameTag\"",
+        "\"registry_name\": \"baibian_name_tag\""
+      ]
+    },
+    {
+      "id": "nametag-loot-injection",
+      "kind": "contains",
+      "why": "矿井矿车宝藏的战利品注入（正片：命名牌均来自一处矿井内的矿车宝藏）",
+      "path": "src/main/resources/data/neoforge/loot_modifiers/global_loot_modifiers.json",
+      "fixHint": "补回 mcanomalyarchives:mineshaft_name_tag 这一条",
+      "mustContain": [
+        "mcanomalyarchives:mineshaft_name_tag"
+      ]
+    },
+    {
+      "id": "nametag-name-index",
+      "kind": "exists",
+      "why": "名字索引是离线生成的静态产物，丢了整个玩法解析不出任何名字",
+      "fixHint": "重跑 python tools/nametag/gen_name_index.py <客户端资源 jar>",
+      "exists": [
+        "src/main/resources/data/mcanomalyarchives/name_index/zh_cn.json",
+        "src/main/resources/data/mcanomalyarchives/name_index/en_us.json",
+        "src/main/resources/data/mcanomalyarchives/name_index/alias_zh_cn.json"
+      ]
+    },
+    {
+      "id": "codex-uo008-item-entry",
+      "kind": "contains",
+      "why": "图鉴 UO-008 必须挂在命名牌物品上解锁（曾经是 PLANNED 占位）",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/codex/AnomalyCodex.java",
+      "fixHint": "把 UO-008 那行改回 Unlock.ITEM, \"mcanomalyarchives:baibian_name_tag\"",
+      "mustContain": [
+        "Unlock.ITEM, \"mcanomalyarchives:baibian_name_tag\""
       ]
     }
   ]

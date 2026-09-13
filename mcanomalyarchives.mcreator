@@ -1472,6 +1472,20 @@
           "src/main/resources/assets/mcanomalyarchives/models/item/anomaly_codex.json"
         ]
       }
+    },
+    {
+      "name": "BaibianNameTag",
+      "type": "item",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "baibian_name_tag",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/mcanomalyarchives/item/BaibianNameTagItem.java",
+          "src/main/resources/assets/mcanomalyarchives/models/item/baibian_name_tag.json"
+        ]
+      },
+      "path": "~/StrangeRecord"
     }
   ],
   "variable_elements": [],
@@ -1701,8 +1715,8 @@
       "codex.mcanomalyarchives.uo007.level": "R0",
       "codex.mcanomalyarchives.uo007.protocol": "B",
       "codex.mcanomalyarchives.uo008.name": "Shapeshifting Name Tag",
-      "codex.mcanomalyarchives.uo008.info": "A fragmentary file: all that is known is its link to radiation-contaminated name tags.",
-      "codex.mcanomalyarchives.uo008.trait": "Class R1, protocol A · Cover story: mine and name tag radiation contamination · The original document is still under construction",
+      "codex.mcanomalyarchives.uo008.info": "A dark brown anomalous name tag recovered from a minecart cache inside a mineshaft. It inverts the causality of naming: a thing is not named after its properties - its properties are rewritten to match the name.",
+      "codex.mcanomalyarchives.uo008.trait": "Changes the core, never the shell - Items and blocks must be named through an anvil - Item durability equals the number of characters in the name - Naming is irreversible; ordinary name tags cannot overwrite it - Cross-category conversion obeys material conservation and pays any deficit with an explosion - The number of extant tags is [DATA EXPUNGED]",
       "codex.mcanomalyarchives.uo008.level": "R1",
       "codex.mcanomalyarchives.uo008.protocol": "A",
       "codex.mcanomalyarchives.uo009.name": "The False Sun",
@@ -1727,6 +1741,22 @@
       "codex.mcanomalyarchives.uo012.protocol": "B",
       "death.attack.meteor_strike": "%1$s was obliterated by a meteor",
       "entity.mcanomalyarchives.pink_sheep_gift": "Pink Sheep\u0027s Gift"
+    ,
+      "item.mcanomalyarchives.baibian_name_tag": "Baibian Name Tag",
+      "nametag.mcanomalyarchives.need_name": "This tag has nothing written on it - rename it in an anvil first",
+      "nametag.mcanomalyarchives.unknown": "The Association has no record of \"%s\" (it only accepts common names)",
+      "nametag.mcanomalyarchives.applied": "Named: %s",
+      "nametag.mcanomalyarchives.locked": "This name is already fixed - it cannot be changed back",
+      "nametag.mcanomalyarchives.erased": "...nothing was left behind",
+      "nametag.mcanomalyarchives.planned": "This record has not been deciphered by the Association yet",
+      "nametag.mcanomalyarchives.unstable": "It cannot hold this name - do not place it down",
+      "nametag.mcanomalyarchives.exploded": "The deficit was repaid as an explosion",
+      "nametag.mcanomalyarchives.not_for_player": "The tag has no effect on players",
+      "nametag.mcanomalyarchives.no_output": "A rewritten existence no longer yields what it used to",
+      "nametag.mcanomalyarchives.draining": "It is draining %s from its surroundings",
+      "nametag.mcanomalyarchives.dry": "Nothing nearby can be drained",
+      "nametag.mcanomalyarchives.tooltip": "Named: %s - %s uses left",
+      "nametag.mcanomalyarchives.egg": "%s Egg"
     },
     "zh_cn": {
       "advancements.cloudarmadv.descr": "获得全套云锭套装",
@@ -1893,8 +1923,8 @@
       "codex.mcanomalyarchives.uo007.level": "R0",
       "codex.mcanomalyarchives.uo007.protocol": "B",
       "codex.mcanomalyarchives.uo008.name": "百变命名牌",
-      "codex.mcanomalyarchives.uo008.info": "档案残缺：目前只知它与受到辐射污染的命名牌有关，其余记录缺失。",
-      "codex.mcanomalyarchives.uo008.trait": "项目等级 R1、保密协议 A · 对外解释：矿井与命名牌受到辐射污染 · 原始档案正文仍在施工",
+      "codex.mcanomalyarchives.uo008.info": "深褐色的异常命名牌，出自一处矿井里的矿车宝藏。它倒置了命名的因果——不是按特性起名，而是按名字赋予特性。",
+      "codex.mcanomalyarchives.uo008.trait": "只改内核、不改外壳 · 物品与方块必须过铁砧才能命名 · 物品耐久等于名字字数 · 命名不可逆，普通命名牌覆盖无效 · 跨类转化遵循质料守恒，撑不住就以爆炸偿付 · 现存数量被协会[数据删除]",
       "codex.mcanomalyarchives.uo008.level": "R1",
       "codex.mcanomalyarchives.uo008.protocol": "A",
       "codex.mcanomalyarchives.uo009.name": "假太阳",
@@ -1921,6 +1951,22 @@
       "item_group.mcanomalyarchives.strange_record": "MC诡异见闻录",
       "death.attack.meteor_strike": "%1$s被陨石砸成了坑",
       "entity.mcanomalyarchives.pink_sheep_gift": "粉羊的礼物"
+    ,
+      "item.mcanomalyarchives.baibian_name_tag": "百变命名牌",
+      "nametag.mcanomalyarchives.need_name": "这张命名牌还没写字——先放进铁砧改名",
+      "nametag.mcanomalyarchives.unknown": "协会的档案里没有「%s」这个名字（它只认主流叫法）",
+      "nametag.mcanomalyarchives.applied": "已命名：%s",
+      "nametag.mcanomalyarchives.locked": "这个名字已经写死了——改不回来",
+      "nametag.mcanomalyarchives.erased": "……什么都没留下",
+      "nametag.mcanomalyarchives.planned": "该档案尚未被协会解明",
+      "nametag.mcanomalyarchives.unstable": "它撑不住这个名字——别放到地上",
+      "nametag.mcanomalyarchives.exploded": "差额用爆炸还了回来",
+      "nametag.mcanomalyarchives.not_for_player": "命名牌对玩家不起作用",
+      "nametag.mcanomalyarchives.no_output": "被改写的存在已经产不出原来的东西了",
+      "nametag.mcanomalyarchives.draining": "它正从四周抽取%s",
+      "nametag.mcanomalyarchives.dry": "附近找不到它能抽取的东西",
+      "nametag.mcanomalyarchives.tooltip": "命名：%s · 剩余 %s 次",
+      "nametag.mcanomalyarchives.egg": "%s蛋"
     }
   },
   "metadata": {

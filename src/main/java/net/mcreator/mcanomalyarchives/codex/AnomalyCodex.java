@@ -81,7 +81,7 @@ public final class AnomalyCodex {
 			new Entry("UO-007", key("uo007.name"), key("uo007.info"), key("uo007.trait"), key("uo007.level"),
 					key("uo007.protocol"), Unlock.PLANNED, ""),
 			new Entry("UO-008", key("uo008.name"), key("uo008.info"), key("uo008.trait"), key("uo008.level"),
-					key("uo008.protocol"), Unlock.PLANNED, ""),
+					key("uo008.protocol"), Unlock.ITEM, "mcanomalyarchives:baibian_name_tag"),
 			new Entry("UO-009", key("uo009.name"), key("uo009.info"), key("uo009.trait"), key("uo009.level"),
 					key("uo009.protocol"), Unlock.PLANNED, ""),
 			new Entry("UO-010", key("uo010.name"), key("uo010.info"), key("uo010.trait"), key("uo010.level"),
