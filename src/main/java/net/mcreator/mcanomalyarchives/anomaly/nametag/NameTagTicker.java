@@ -124,6 +124,14 @@ public final class NameTagTicker {
 			// 名字就是它自己（牛→"牛"）：什么都没变
 			return;
 		}
+		long now = level.getGameTime();
+		// 被命名成别的生物的，活一段时间之后**力竭而死**（作者 2026-09-13 定的规则）
+		if (!NameTagTransform.isTransforming(living)) {
+			NameTagTransform.start(living, now, NameTagCosts.NAMED_ENTITY_LIFESPAN_TICKS);
+		} else if (NameTagTransform.progressOf(living, now) >= 1.0f) {
+			dieOfExhaustion(level, living);
+			return;
+		}
 		if (is(target.id(), "minecraft:chicken") && living.tickCount % EGG_INTERVAL == 0) {
 			// 正片：牛被命名成"鸡"后开始下出深褐色的牛蛋，牛蛋可以孵出正常的牛幼仔
 			layEgg(level, living);
@@ -141,9 +149,17 @@ public final class NameTagTicker {
 		}
 	}
 
+	/** 力竭而死：先抽搐一下再倒下（正片：牛"在痛苦的挣扎中猝死"）。 */
+	private static void dieOfExhaustion(ServerLevel level, LivingEntity living) {
+		level.sendParticles(ParticleTypes.SMOKE, living.getX(), living.getY() + living.getBbHeight() * 0.5,
+				living.getZ(), 12, 0.3, 0.4, 0.3, 0.02);
+		level.playSound(null, living.blockPosition(), SoundEvents.GENERIC_DEATH, SoundSource.NEUTRAL, 0.8f, 0.7f);
+		living.hurt(living.damageSources().genericKill(), Float.MAX_VALUE);
+	}
+
 	/**
 	 * 复刻原版 {@code Mob.isSunBurnTick()} —— 它是 protected，外面调不到，所以照着抄一份。
-	 * 判断条件：白天、亮度够、能看见天空、且身上没水（没在水/雨/气泡/细雪里）。
+	 * 判断条件：白天、亮度够、能看见天空、且身上没水（没在水/雨/气泡里）。
 	 */
 	private static boolean isSunBurnTick(LivingEntity living) {
 		if (!living.level().isDay() || living.level().isClientSide()) {
@@ -213,12 +229,26 @@ public final class NameTagTicker {
 
 	// ===== 具体动作 =====
 
-	/** 下一个"蛋"：名字跟着原生物走（牛 → 牛蛋），正片里这些蛋能孵出正常的牛幼仔。 */
+	/**
+	 * 下一个"蛋"：名字跟着原生物走（牛 → 牛蛋），并且**记住是谁下的**。
+	 *
+	 * 正片：【旁白 1:42-1:46】牛被命名成"鸡"后开始下出深褐色的牛蛋，
+	 * "**这些牛蛋可以孵出正常的牛幼仔**" —— 所以蛋砸出来的是**下蛋那只生物的幼体**，
+	 * 而不是原版蛋孵出来的小鸡。这里把物种写进物品的 CUSTOM_DATA，
+	 * 由 {@code NameTagHandler.onEggThrow} 在右键投掷时按它生成。
+	 */
 	private static void layEgg(ServerLevel level, LivingEntity living) {
 		ItemStack egg = new ItemStack(Items.EGG);
 		String original = living.getType().getDescription().getString();
 		egg.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME,
 				Component.translatable(NameTagNotifier.EGG, original));
+		ResourceLocation species = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(living.getType());
+		if (species != null) {
+			net.minecraft.nbt.CompoundTag tag = new net.minecraft.nbt.CompoundTag();
+			tag.putString(NameTagNotifier.EGG_SPECIES_KEY, species.toString());
+			egg.set(net.minecraft.core.component.DataComponents.CUSTOM_DATA,
+					net.minecraft.world.item.component.CustomData.of(tag));
+		}
 		ItemEntity drop = new ItemEntity(level, living.getX(), living.getY() + 0.3, living.getZ(), egg);
 		drop.setDeltaMovement(0.0, 0.1, 0.0);
 		level.addFreshEntity(drop);

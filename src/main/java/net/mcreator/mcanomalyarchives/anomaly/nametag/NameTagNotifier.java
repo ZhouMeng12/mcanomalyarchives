@@ -24,6 +24,14 @@ public final class NameTagNotifier {
 	public static final String DRY = "nametag.mcanomalyarchives.dry";
 	public static final String EGG = "nametag.mcanomalyarchives.egg";
 
+	/**
+	 * 蛋物品里记"这是谁下的"用的键（写进物品的 CUSTOM_DATA）。
+	 *
+	 * 正片【1:42-1:46】：牛被命名成"鸡"后下的牛蛋"可以孵出正常的牛幼仔"。
+	 * 所以蛋必须记得下蛋那只生物的物种，砸出来才是它的幼体而不是小鸡。
+	 */
+	public static final String EGG_SPECIES_KEY = "McanomalyEggOf";
+
 	private NameTagNotifier() {
 	}
 

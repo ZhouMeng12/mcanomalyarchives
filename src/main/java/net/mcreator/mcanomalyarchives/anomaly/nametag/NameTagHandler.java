@@ -7,6 +7,7 @@ import net.mcreator.mcanomalyarchives.network.NamedTransformPacket;
 
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
@@ -482,6 +483,61 @@ public final class NameTagHandler {
 		} finally {
 			INVERTING.remove(entity.getId());
 		}
+	}
+
+	// ==================== 牛蛋：砸出来的是下蛋那只生物的幼体 ====================
+
+	/**
+	 * 正片【旁白 1:42-1:46】：牛被命名成"鸡"后下的牛蛋，"**这些牛蛋可以孵出正常的牛幼仔**"。
+	 *
+	 * 原版蛋砸出来是**小鸡**，所以要拦掉：右键投掷时直接生成**下蛋那只生物的幼体**
+	 * （{@code AgeableMob.setBaby}）；那只生物要是没有幼体形态（僵尸、末影人这类），
+	 * 就生成它本身。所以一只叫"鸡"的牛下的"牛蛋"，砸出来是**牛犊**。
+	 */
+	@SubscribeEvent
+	public static void onEggThrow(PlayerInteractEvent.RightClickItem event) {
+		if (!(event.getEntity() instanceof ServerPlayer player)) {
+			return;
+		}
+		ItemStack stack = event.getItemStack();
+		ResourceLocation species = eggSpecies(stack);
+		if (species == null || !(player.level() instanceof ServerLevel level)) {
+			return;
+		}
+		net.minecraft.world.entity.EntityType<?> type =
+				net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.get(species);
+		Entity spawned = type == null ? null : type.create(level);
+		if (spawned == null) {
+			return;
+		}
+		event.setCanceled(true);
+		event.setCancellationResult(InteractionResult.SUCCESS);
+
+		spawned.moveTo(player.getX(), player.getEyeY() - 0.4, player.getZ(), player.getYRot(), 0.0f);
+		if (spawned instanceof net.minecraft.world.entity.AgeableMob ageable) {
+			ageable.setBaby(true); // 幼体
+		}
+		// 往视线方向弹出去一点，像刚孵出来
+		spawned.setDeltaMovement(player.getLookAngle().scale(0.25).add(0.0, 0.2, 0.0));
+		level.addFreshEntity(spawned);
+		level.playSound(null, player.blockPosition(), net.minecraft.sounds.SoundEvents.CHICKEN_EGG,
+				net.minecraft.sounds.SoundSource.NEUTRAL, 1.0f, 1.2f);
+		if (!player.hasInfiniteMaterials()) {
+			stack.shrink(1);
+		}
+		player.getCooldowns().addCooldown(stack.getItem(), 10);
+	}
+
+	/** 这张蛋是"谁下的"；不是我们标记过的蛋就返回 null（原版蛋照旧孵小鸡）。 */
+	private static ResourceLocation eggSpecies(ItemStack stack) {
+		if (stack.isEmpty() || !stack.is(Items.EGG)) {
+			return null;
+		}
+		net.minecraft.world.item.component.CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+		if (data == null || !data.contains(NameTagNotifier.EGG_SPECIES_KEY)) {
+			return null;
+		}
+		return ResourceLocation.tryParse(data.copyTag().getString(NameTagNotifier.EGG_SPECIES_KEY));
 	}
 
 	// ==================== 变成物品的那一支：右键拿起 ====================

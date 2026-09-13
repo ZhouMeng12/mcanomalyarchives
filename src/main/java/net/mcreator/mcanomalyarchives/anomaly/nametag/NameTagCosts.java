@@ -53,6 +53,17 @@ public final class NameTagCosts {
 	/** 同一次命名行为的冷却，防连点。 */
 	public static final int USE_COOLDOWN_TICKS = 20;
 
+	/**
+	 * 被命名成别的生物的个体，**活多久之后力竭而死**。
+	 *
+	 * 作者 2026-09-13："变成实体的生物将在一段时间后死亡。"
+	 * 正片也是这么演的：牛在被命名成"鸡"、产了几次蛋之后"在痛苦的挣扎中猝死"（【旁白 1:56-2:00】），
+	 * 猪被命名成"钻石镐"之后也是"啃咬不久后很快就力竭死亡"（【旁白 4:52-4:54】）。
+	 *
+	 * 60 秒。想长一点/短一点就改这一个数。
+	 */
+	public static final int NAMED_ENTITY_LIFESPAN_TICKS = 1200;
+
 	private NameTagCosts() {
 	}
 

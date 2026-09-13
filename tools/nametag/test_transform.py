@@ -140,6 +140,46 @@ for label, each, available, want_taken in (
     if not ok:
         FAILED.append("夺取上限 %s：期望吞 %d 个，实得 %d 个" % (label, want_taken, taken))
 
+print("=== 6. 两条新规则的接线自检 ===")
+import io
+import os
+import re
+
+ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+if not os.path.isdir(os.path.join(ROOT, "src")):
+    ROOT = os.getcwd()
+
+
+def read(rel):
+    return io.open(os.path.join(ROOT, rel), encoding="utf-8").read()
+
+
+ticker = read("src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagTicker.java")
+handler = read("src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagHandler.java")
+notifier = read("src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagNotifier.java")
+costs = read("src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagCosts.java")
+
+# ① 蛋要记住"谁下的"：写和读必须是同一个常量，不能有一边写成裸字符串
+ok = "EGG_SPECIES_KEY = " in notifier
+print("  [%s] 蛋的物种键在 NameTagNotifier 里定义了" % ("OK " if ok else "FAIL"))
+if not ok:
+    FAILED.append("NameTagNotifier 里没有 EGG_SPECIES_KEY")
+for label, text, expect in (("put（下蛋时写）", ticker, "putString(NameTagNotifier.EGG_SPECIES_KEY"),
+                            ("contains（砸蛋时读）", handler, "contains(NameTagNotifier.EGG_SPECIES_KEY)"),
+                            ("String（砸蛋时读）", handler, "getString(NameTagNotifier.EGG_SPECIES_KEY)")):
+    ok = expect in text
+    print("  [%s] %-18s 用的是常量而不是裸字符串" % ("OK " if ok else "FAIL", label))
+    if not ok:
+        FAILED.append("蛋的物种键 %s 处没用常量（写读不一致会静默失效）" % label)
+
+# ② 变实体的生物要在一段时间后死亡
+m = re.search(r"NAMED_ENTITY_LIFESPAN_TICKS\s*=\s*(\d+)", costs)
+ticks = int(m.group(1)) if m else 0
+ok = ticks > 0 and "NAMED_ENTITY_LIFESPAN_TICKS" in ticker and "dieOfExhaustion" in ticker
+print("  [%s] 变实体的寿命 = %d tick（%.0f 秒）且 tick 层会执行死亡" % ("OK " if ok else "FAIL", ticks, ticks / 20.0))
+if not ok:
+    FAILED.append("寿命常量或死亡逻辑没接上")
+
 print()
 if FAILED:
     print("自检失败 %d 项：" % len(FAILED))
