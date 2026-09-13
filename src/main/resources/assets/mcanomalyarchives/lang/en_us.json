@@ -134,7 +134,7 @@
   "codex.mcanomalyarchives.uo001.trait": "Arrows pass through, then it flees faster · Glass cages cannot hold it · Animals inside suffocate · Water and lava stain grey-blue · Black individuals erase nearby blocks on contact",
   "codex.mcanomalyarchives.uo001.level": "R4",
   "codex.mcanomalyarchives.uo001.protocol": "B",
-  "codex.mcanomalyarchives.uo002.name": "The Village That Isn't",
+  "codex.mcanomalyarchives.uo002.name": "The Village That Isn\u0027t",
   "codex.mcanomalyarchives.uo002.info": "An inverted-colour village that only exists inside a specific rectangle of coordinates. Its villagers keep staring at you.",
   "codex.mcanomalyarchives.uo002.trait": "Invisible from outside the zone · Inverted colours, wrong materials · Villagers have no recognisable face · Trespassers turn inverted · The 「disaster」 traded from them makes the buyer vanish",
   "codex.mcanomalyarchives.uo002.level": "R1",
@@ -146,7 +146,7 @@
   "codex.mcanomalyarchives.uo003.protocol": "B",
   "codex.mcanomalyarchives.uo004.name": "Dimensional Fishing Rod",
   "codex.mcanomalyarchives.uo004.info": "Looks like an ordinary rod, yet it can pull things from outside the Overworld ashore.",
-  "codex.mcanomalyarchives.uo004.trait": "Durability cap around 8.98x10^17, one point per cast · The further you cast, the stranger the catch · Catches are inedible or dangerous · A black fisherman's shadow keeps appearing nearby",
+  "codex.mcanomalyarchives.uo004.trait": "Durability cap around 8.98x10^17, one point per cast · The further you cast, the stranger the catch · Catches are inedible or dangerous · A black fisherman\u0027s shadow keeps appearing nearby",
   "codex.mcanomalyarchives.uo004.level": "R0",
   "codex.mcanomalyarchives.uo004.protocol": "B",
   "codex.mcanomalyarchives.uo005.name": "Purple Monster",
@@ -170,8 +170,8 @@
   "codex.mcanomalyarchives.uo008.level": "R1",
   "codex.mcanomalyarchives.uo008.protocol": "A",
   "codex.mcanomalyarchives.uo009.name": "The False Sun",
-  "codex.mcanomalyarchives.uo009.info": "A higher-dimensional projected body, visible only to the mentally ill. It anchors to reality through gaze and magnifies the watcher's desire.",
-  "codex.mcanomalyarchives.uo009.trait": "Visible only to the mentally ill · Anchors to reality by being watched; focus sharpens it · Magnifies inner desire, then brings calm · Its form follows the watcher's illness · Can rewrite collective perception",
+  "codex.mcanomalyarchives.uo009.info": "A higher-dimensional projected body, visible only to the mentally ill. It anchors to reality through gaze and magnifies the watcher\u0027s desire.",
+  "codex.mcanomalyarchives.uo009.trait": "Visible only to the mentally ill · Anchors to reality by being watched; focus sharpens it · Magnifies inner desire, then brings calm · Its form follows the watcher\u0027s illness · Can rewrite collective perception",
   "codex.mcanomalyarchives.uo009.level": "R4",
   "codex.mcanomalyarchives.uo009.protocol": "A",
   "codex.mcanomalyarchives.uo010.name": "Dimensional Spyglass",
@@ -190,5 +190,5 @@
   "codex.mcanomalyarchives.uo012.level": "R4",
   "codex.mcanomalyarchives.uo012.protocol": "B",
   "death.attack.meteor_strike": "%1$s was obliterated by a meteor",
-  "entity.mcanomalyarchives.pink_sheep_gift": "Pink Sheep's Gift"
+  "entity.mcanomalyarchives.pink_sheep_gift": "Pink Sheep\u0027s Gift"
 }
