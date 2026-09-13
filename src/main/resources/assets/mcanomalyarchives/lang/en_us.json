@@ -115,9 +115,9 @@
   "entity.mcanomalyarchives.pink_sheep": "Pink Sheep",
   "advancements.pink_sheep_sighting.title": "Lucky Pink Sheep",
   "advancements.pink_sheep_sighting.descr": "Witness the pink sheep and receive its luck",
-  "death.attack.meteor_strike": "%1$s was obliterated by a meteor",
-  "advancements.pink_sheep_blink.title": "Blink of an Eye",
+  "advancements.pink_sheep_calamity.descr": "Provoke the pink sheep into its highest calamity",
+  "advancements.pink_sheep_calamity.title": "Wonder of U",
   "advancements.pink_sheep_blink.descr": "Stare at the pink sheep until it vanishes between two blinks",
-  "advancements.pink_sheep_calamity.title": "Meteor Greeting",
-  "advancements.pink_sheep_calamity.descr": "Provoke the pink sheep into its highest calamity"
+  "advancements.pink_sheep_blink.title": "Blink of an Eye",
+  "death.attack.meteor_strike": "%1$s was obliterated by a meteor"
 }

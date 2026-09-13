@@ -5,7 +5,7 @@
     "achievementName": "Lucky Pink Sheep",
     "achievementDescription": "Witness the pink sheep and receive its luck",
     "achievementIcon": {
-      "value": "CUSTOM:Hearticon"
+      "value": "Blocks.WOOL#6"
     },
     "background": "Default",
     "disableDisplay": false,

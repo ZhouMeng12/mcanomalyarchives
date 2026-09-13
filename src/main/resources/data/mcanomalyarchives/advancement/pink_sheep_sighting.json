@@ -1,7 +1,7 @@
 {
   "display": {
     "icon": {
-      "id": "mcanomalyarchives:hearticon"
+      "id": "minecraft:pink_wool"
     },
     "title": {
       "translate": "advancements.pink_sheep_sighting.title"

@@ -1639,7 +1639,9 @@
       "advancements.pink_sheep_sighting.title": "Lucky Pink Sheep",
       "advancements.pink_sheep_sighting.descr": "Witness the pink sheep and receive its luck",
       "advancements.pink_sheep_calamity.descr": "Provoke the pink sheep into its highest calamity",
-      "advancements.pink_sheep_calamity.title": "Meteor Greeting"
+      "advancements.pink_sheep_calamity.title": "Wonder of U",
+      "advancements.pink_sheep_blink.descr": "Stare at the pink sheep until it vanishes between two blinks",
+      "advancements.pink_sheep_blink.title": "Blink of an Eye"
     },
     "zh_cn": {
       "advancements.cloudarmadv.descr": "获得全套云锭套装",
@@ -1754,10 +1756,12 @@
       "subtitles.anbula_berserk": "[黑]",
       "item.mcanomalyarchives.pink_sheep_spawn_egg": "幸运粉羊刷怪蛋",
       "entity.mcanomalyarchives.pink_sheep": "幸运粉羊",
-      "advancements.pink_sheep_sighting.title": "Lucky Pink Sheep",
-      "advancements.pink_sheep_sighting.descr": "Witness the pink sheep and receive its luck",
-      "advancements.pink_sheep_calamity.descr": "Provoke the pink sheep into its highest calamity",
-      "advancements.pink_sheep_calamity.title": "Meteor Greeting"
+      "advancements.pink_sheep_sighting.title": "幸运粉羊",
+      "advancements.pink_sheep_sighting.descr": "看到粉羊，收获好运",
+      "advancements.pink_sheep_calamity.descr": "触发致命灾厄",
+      "advancements.pink_sheep_calamity.title": "奇迹与你",
+      "advancements.pink_sheep_blink.descr": "盯着粉色羊看，直到它在眨眼之间消失",
+      "advancements.pink_sheep_blink.title": "眨眼"
     }
   },
   "metadata": {

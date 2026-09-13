@@ -1,5 +1,6 @@
 package net.mcreator.mcanomalyarchives.events;
 
+import net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepBlessings;
 import net.mcreator.mcanomalyarchives.entity.PinkSheepEntity;
 
 import net.minecraft.core.BlockPos;
@@ -47,25 +48,46 @@ public class PinkSheepLuckyHandler {
 	}
 
 	// ===== 随机奇遇池（每次 roll 一件）=====
+	/** 概率区间的边界（累加）：越靠后越稀有、越有故事感 */
+	private static final double[] POOL_WEIGHTS = { 0.16, 0.30, 0.41, 0.52, 0.62, 0.71, 0.78, 0.84, 0.90, 0.95 };
+
 	private static void rollFortunateEvent(ServerPlayer player, Level level) {
 		if (!(level instanceof ServerLevel serverLevel))
 			return;
 		double r = player.getRandom().nextDouble();
-		if (r < 0.30) {
+		if (r < POOL_WEIGHTS[0]) {
 			// 飞来正面喷溅药水（随机正面效果）
 			flyingBuffPotion(player, serverLevel);
-		} else if (r < 0.50) {
+		} else if (r < POOL_WEIGHTS[1]) {
 			// 经验雨
 			experienceRain(player, serverLevel);
-		} else if (r < 0.65) {
+		} else if (r < POOL_WEIGHTS[2]) {
 			// 附近作物瞬熟（简化：给玩家短暂急迫+幸运闪光代替，避免大范围改方块）
 			quickGrowFlash(player, serverLevel);
-		} else if (r < 0.80) {
+		} else if (r < POOL_WEIGHTS[3]) {
 			// 附近一只怪物被"天雷"劈中
 			strikeNearbyMonster(player, serverLevel);
-		} else {
+		} else if (r < POOL_WEIGHTS[4]) {
 			// 随机投喂一件小奖励（铁锭/金锭/钻石/青金石/绿宝石）
 			droppedTreasure(player, serverLevel);
+		} else if (r < POOL_WEIGHTS[5]) {
+			// 幸运矿脉：脚下石头里凭空出现一簇矿（只替换石头/深板岩）
+			PinkSheepBlessings.luckyOreVein(player, serverLevel);
+		} else if (r < POOL_WEIGHTS[6]) {
+			// 护身符：吸收 + 抗性提升
+			PinkSheepBlessings.guardianCharm(player, serverLevel);
+		} else if (r < POOL_WEIGHTS[7]) {
+			// 丰饶：饥饿与生命补满 + 熟食
+			PinkSheepBlessings.feast(player, serverLevel);
+		} else if (r < POOL_WEIGHTS[8]) {
+			// 同类聚集：身边冒出一小群羊
+			PinkSheepBlessings.flockOfSheep(player, serverLevel);
+		} else if (r < POOL_WEIGHTS[9]) {
+			// 黎明降临：夜里直接天亮
+			PinkSheepBlessings.dawnBreak(player, serverLevel);
+		} else {
+			// 敌意消解：附近的怪被"变成"羊（最像粉羊作风的一个）
+			PinkSheepBlessings.monstersIntoSheep(player, serverLevel);
 		}
 	}
 
