@@ -182,10 +182,10 @@ public class CodexScreen extends Screen {
 		int[] area = textArea(0);
 		int x = area[0], y = area[1], w = area[2];
 
-		gui.drawString(this.font, this.title.copy().withStyle(ChatFormatting.BOLD), x, y, INK_TITLE);
+		gui.drawString(this.font, this.title, x, y, INK_TITLE, false);
 		Component progress = Component.translatable(key("progress"), Integer.bitCount(CodexClientHandler.mask()),
 				AnomalyCodex.TOTAL);
-		gui.drawString(this.font, progress, x + w - this.font.width(progress), y, INK_DIM);
+		gui.drawString(this.font, progress, x + w - this.font.width(progress), y, INK_DIM, false);
 
 		int rowTop = y + 12;
 		int rowH = Math.min(LINE_H, Math.max(7, (area[3] - 12) / AnomalyCodex.TOTAL));
@@ -202,10 +202,10 @@ public class CodexScreen extends Screen {
 			} else if (hovered) {
 				gui.fill(x - 3, ry - 1, x + w + 3, ry + rowH - 2, HILITE_HOVER);
 			}
-			gui.drawString(this.font, entry.id(), x, ry, unlocked ? INK_ACCENT : INK_DIM);
+			gui.drawString(this.font, entry.id(), x, ry, unlocked ? INK_ACCENT : INK_DIM, false);
 			Component name = unlocked ? Component.translatable(entry.nameKey())
 					: Component.translatable(key("locked"));
-			gui.drawString(this.font, name, x + 42, ry, unlocked ? INK : INK_DIM);
+			gui.drawString(this.font, name, x + 42, ry, unlocked ? INK : INK_DIM, false);
 		}
 	}
 
@@ -228,7 +228,7 @@ public class CodexScreen extends Screen {
 			return out;
 		}
 
-		out.add(Component.translatable(entry.nameKey()).withStyle(ChatFormatting.BOLD).getVisualOrderText());
+		out.add(Component.translatable(entry.nameKey()).getVisualOrderText());
 		out.add(Component.empty().getVisualOrderText());
 		out.addAll(this.font.split(Component.translatable(key("level")).append(" ")
 				.append(Component.translatable(entry.levelKey())).append("    ")
@@ -253,13 +253,13 @@ public class CodexScreen extends Screen {
 
 		int cy = y;
 		for (int i = from; i < to; i++) {
-			gui.drawString(this.font, lines.get(i), x, cy, INK);
+			gui.drawString(this.font, lines.get(i), x, cy, INK, false);
 			cy += LINE_H;
 		}
 
 		// 第一页右上角标编号
 		if (this.page == 0 && unlocked) {
-			gui.drawString(this.font, entry.id(), x + w - this.font.width(entry.id()), y, INK_ACCENT);
+			gui.drawString(this.font, entry.id(), x + w - this.font.width(entry.id()), y, INK_ACCENT, false);
 		}
 	}
 
