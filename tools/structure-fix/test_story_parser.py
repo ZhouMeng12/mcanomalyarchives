@@ -11,18 +11,11 @@ OUT = os.path.join(ROOT, 'build/parsertest')
 PKG = os.path.join(OUT, 'net/mcreator/mcanomalyarchives/dialogue')
 os.makedirs(PKG, exist_ok=True)
 
-# 1) 抠出 Java 文本块里的默认脚本（并按 Java 规则去掉公共缩进）
-loader = io.open(os.path.join(JAVA_SRC, 'StoryLoader.java'), encoding='utf-8').read()
-m = re.search(r'DEFAULT_SVAN_CODEX = """\n(.*?)\n(\s*)""";', loader, re.S)
-if not m:
-    print('!! 找不到默认脚本文本块'); sys.exit(1)
-body, closing_indent = m.group(1), m.group(2)
-lines = []
-for line in body.split('\n'):
-    lines.append(line[len(closing_indent):] if line.startswith(closing_indent) else line.lstrip())
-script = '\n'.join(lines)
-io.open(os.path.join(OUT, 'default.txt'), 'w', encoding='utf-8', newline='\n').write(script + '\n')
-print('默认脚本 %d 行' % len(lines))
+# 1) 直接读模组内置剧本（现在是资源的正式来源）
+src_story = os.path.join(ROOT, 'src/main/resources/data/mcanomalyarchives/story/svan_codex.txt')
+script = io.open(src_story, encoding='utf-8').read()
+io.open(os.path.join(OUT, 'default.txt'), 'w', encoding='utf-8', newline='\n').write(script)
+print('模组内置剧本 %d 行' % len(script.splitlines()))
 
 # 2) 拷贝真正的 Story.java，并写一个不依赖 slf4j 的 DialogueLog
 shutil.copy(os.path.join(JAVA_SRC, 'Story.java'), os.path.join(PKG, 'Story.java'))

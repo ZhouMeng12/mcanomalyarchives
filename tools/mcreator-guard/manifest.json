@@ -360,6 +360,26 @@
         "src/main/java/net/mcreator/mcanomalyarchives/dialogue/StoryPlayer.java",
         "src/main/java/net/mcreator/mcanomalyarchives/dialogue/DialogueLog.java"
       ]
+    },
+    {
+      "id": "story-script-resource",
+      "kind": "exists",
+      "why": "剧本的正式来源（随 jar 发布、进版本控制）。丢了剧情就没有台词可用",
+      "fixHint": "从 git 恢复 src/main/resources/data/mcanomalyarchives/story/",
+      "exists": [
+        "src/main/resources/data/mcanomalyarchives/story/svan_codex.txt"
+      ]
+    },
+    {
+      "id": "story-script-not-empty",
+      "kind": "contains",
+      "why": "防止剧本被清空或改坏到没有起始段落（那样进游戏只会看到剧本缺失）",
+      "path": "src/main/resources/data/mcanomalyarchives/story/svan_codex.txt",
+      "fixHint": "至少要有 [label: start] 与若干台词；语法见文件开头注释",
+      "mustContain": [
+        "[label: start]",
+        "[give_codex]"
+      ]
     }
   ]
 }

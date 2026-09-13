@@ -1,0 +1,76 @@
+# ===================== 《见闻录》：斯万剧情 =====================
+# 这份剧本【存在模组里】（data/mcanomalyarchives/story/svan_codex.txt），
+# 会随 jar 一起发布；改完重新构建即可。
+#
+# 想不进游戏就改、还要立刻看到效果：
+# 把这份文件复制到 config/mcanomalyarchives/stories/svan_codex.txt，
+# 改那一份 —— 它优先级更高，而且游戏里几秒内自动重载（不用重启）。
+# 满意之后再贴回这里（复制回模组资源），这样才会随模组发布出去。
+#
+# 语法：
+#   台词            斯万: 文本
+#   带图的台词      斯万[图:mcanomalyarchives:item/anomalycodex]: 文本
+#   段落标签        [label: 名字]
+#   跳转            -> 名字
+#   选项            [choice]  然后一行 "? 提问"，若干行 "- 选项 -> 目标标签"
+#   停顿 N tick     [wait: 40]
+#   动作            [take_book] 收走一本普通的书
+#                   [give_codex] 给出《见闻录》
+#                   [sound:minecraft:block.enchantment_table.use]
+#                   [unlock:UO-001] 解锁见闻录里的一条档案
+#   结束            [end]
+# ==============================================================
+
+[label: start]
+斯万[图:mcanomalyarchives:item/anomalycodex]: ……你手里那本，是空白的。
+斯万: 你见过它们了，对吧？
+[choice]
+? 你想先听哪一件？
+- 天上那些云 -> cloud
+- 会走路的树 -> tree
+- 那朵花 -> flower
+
+[label: cloud]
+斯万: 那不是云。
+斯万: 它有三副样子：温顺的、会变的，还有一种专挑低处出现。
+斯万: 它不怕你，它怕被记下来。
+-> middle
+
+[label: tree]
+斯万: 山里那棵黑的，是活的。
+斯万: 你砍得越多，它离你越近。
+斯万: 砍一棵，种一棵——这是唯一的规矩。
+-> middle
+
+[label: flower]
+斯万: 虞美人。别直视它。
+斯万: 被它迷住的人，最后死在花边上，脸上还会长出新的花。
+斯万: 看一眼就够，别停。
+-> middle
+
+[label: middle]
+斯万: ……问得好。
+斯万: 但你问到的，都只是碎片。
+斯万: 真正的麻烦不是它们。是没人记得。
+[choice]
+? ……那你打算怎么办？
+- 我来记。 -> remember
+- 记得住又怎样？ -> pointless
+
+[label: remember]
+斯万: 好。
+-> give
+
+[label: pointless]
+斯万: 至少你不会死得不明不白。
+-> give
+
+[label: give]
+斯万: 把你的书给我。
+[take_book]
+[sound:minecraft:block.enchantment_table.use]
+斯万: ……成了。
+斯万[图:mcanomalyarchives:item/anomalycodex]: 《见闻录》。往后你见过什么，它自己会写。
+斯万: 别弄丢了。它不是只给你一个人的。
+[give_codex]
+[end]
