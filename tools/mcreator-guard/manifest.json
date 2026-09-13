@@ -241,7 +241,8 @@
         "\"item_group.mcanomalyarchives.strange_record\"",
         "\"death.attack.meteor_strike\"",
         "\"advancements.pink_sheep_sighting.title\"",
-        "\"advancements.pink_sheep_calamity.descr\""
+        "\"advancements.pink_sheep_calamity.descr\"",
+        "\"entity.mcanomalyarchives.pink_sheep_gift\""
       ]
     },
     {
@@ -254,7 +255,8 @@
       "expectAll": [
         "\"death.attack.meteor_strike\"",
         "\"advancements.pink_sheep_sighting.title\"",
-        "\"advancements.pink_sheep_calamity.descr\""
+        "\"advancements.pink_sheep_calamity.descr\"",
+        "\"entity.mcanomalyarchives.pink_sheep_gift\""
       ]
     }
   ]

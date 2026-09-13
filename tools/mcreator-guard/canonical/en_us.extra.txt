@@ -5,3 +5,4 @@
   "advancements.pink_sheep_blink.descr": "Stare at the pink sheep until it vanishes between two blinks",
   "advancements.pink_sheep_calamity.title": "Meteor Greeting",
   "advancements.pink_sheep_calamity.descr": "Provoke the pink sheep into its highest calamity",
+  "entity.mcanomalyarchives.pink_sheep_gift": "Pink Sheep's Gift",

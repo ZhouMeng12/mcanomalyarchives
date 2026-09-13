@@ -49,7 +49,7 @@ public class PinkSheepLuckyHandler {
 
 	// ===== 随机奇遇池（每次 roll 一件）=====
 	/** 概率区间的边界（累加）：越靠后越稀有、越有故事感 */
-	private static final double[] POOL_WEIGHTS = { 0.16, 0.30, 0.41, 0.52, 0.62, 0.71, 0.78, 0.84, 0.90, 0.95 };
+	private static final double[] POOL_WEIGHTS = { 0.16, 0.30, 0.41, 0.52, 0.62, 0.72, 0.79, 0.86, 0.92, 0.96 };
 
 	private static void rollFortunateEvent(ServerPlayer player, Level level) {
 		if (!(level instanceof ServerLevel serverLevel))
@@ -71,23 +71,23 @@ public class PinkSheepLuckyHandler {
 			// 随机投喂一件小奖励（铁锭/金锭/钻石/青金石/绿宝石）
 			droppedTreasure(player, serverLevel);
 		} else if (r < POOL_WEIGHTS[5]) {
-			// 幸运矿脉：脚下石头里凭空出现一簇矿（只替换石头/深板岩）
+			// 爆破矿脉：脚下第 2/3 格 TNT 炸开地面，掉下去四周全是矿
 			PinkSheepBlessings.luckyOreVein(player, serverLevel);
 		} else if (r < POOL_WEIGHTS[6]) {
-			// 护身符：吸收 + 抗性提升
-			PinkSheepBlessings.guardianCharm(player, serverLevel);
-		} else if (r < POOL_WEIGHTS[7]) {
 			// 丰饶：饥饿与生命补满 + 熟食
 			PinkSheepBlessings.feast(player, serverLevel);
-		} else if (r < POOL_WEIGHTS[8]) {
+		} else if (r < POOL_WEIGHTS[7]) {
 			// 同类聚集：身边冒出一小群羊
 			PinkSheepBlessings.flockOfSheep(player, serverLevel);
-		} else if (r < POOL_WEIGHTS[9]) {
+		} else if (r < POOL_WEIGHTS[8]) {
 			// 黎明降临：夜里直接天亮
 			PinkSheepBlessings.dawnBreak(player, serverLevel);
-		} else {
-			// 敌意消解：附近的怪被"变成"羊（最像粉羊作风的一个）
+		} else if (r < POOL_WEIGHTS[9]) {
+			// 敌意消解：附近的怪被变成羊（最像粉羊作风的一个）
 			PinkSheepBlessings.monstersIntoSheep(player, serverLevel);
+		} else {
+			// 天降箱子矿车：一辆装满矿石的矿车从天上砸下来
+			PinkSheepBlessings.fallingChestMinecart(player, serverLevel);
 		}
 	}
 

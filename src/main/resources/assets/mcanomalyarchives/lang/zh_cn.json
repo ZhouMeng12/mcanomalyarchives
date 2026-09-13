@@ -119,5 +119,6 @@
   "advancements.pink_sheep_blink.title": "眨眼",
   "entity.mcanomalyarchives.sitting_enity": "端坐者",
   "item_group.mcanomalyarchives.strange_record": "MC诡异见闻录",
-  "death.attack.meteor_strike": "%1$s被陨石砸成了坑"
+  "death.attack.meteor_strike": "%1$s被陨石砸成了坑",
+  "entity.mcanomalyarchives.pink_sheep_gift": "粉羊的礼物"
 }

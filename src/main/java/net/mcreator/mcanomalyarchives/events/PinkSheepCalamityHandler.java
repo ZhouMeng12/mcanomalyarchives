@@ -123,6 +123,7 @@ public class PinkSheepCalamityHandler {
 	public static void onServerTick(ServerTickEvent.Post event) {
 		// 在途陨石每 tick 推进（先于 gamerule 判断：已经砸下来的陨石不该因为中途关规则而消失）
 		PinkSheepMeteor.tick(event.getServer());
+		PinkSheepCataclysms.tick(event.getServer()); // 末地水晶错峰引爆队列
 		ServerLevel level = event.getServer().overworld();
 		if (level == null)
 			return;
