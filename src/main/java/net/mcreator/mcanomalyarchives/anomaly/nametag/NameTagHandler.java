@@ -169,15 +169,35 @@ public final class NameTagHandler {
 					NameTagNotifier.actionBar(player, NameTagNotifier.UNKNOWN, raw);
 					return;
 				}
-				// 生物这条路只有一种结局：**慢慢变成**名字所指的东西（作者 2026-09-13 定的机制）。
-				// 行为立刻接管（正片：牛被命名成鸡后马上不能挤奶、马上开始下蛋），
-				// 外形与本体沿时间轴推进（NameTagTicker + NameTagTransform），
-				// 材料不够就停在最后一步之前、持续从周围掠夺（正片羊→金块）——**不爆炸**
-				// （爆炸是"物品被命名"那一支的规则：正片木棍→钻石块）。
-				EntityNaming.apply(living, resolved, raw);
-				NameTagTicker.startTransform(level, living, resolved, level.getGameTime());
-				NamedTransformPacket.sendToWatchers(living);
 				consume(player, held);
+				switch (resolved.kind()) {
+					case ENTITY -> {
+						// 作者定：**瞬间换 AI/类，但模型与材质不变**。
+						// 做法是保留本体、把它整个行为目标换成名字所指生物的那一套（EntityAiSwap），
+						// 所以它的样子一点没变，一动起来却是那只生物。
+						EntityNaming.apply(living, resolved, raw);
+						if (living instanceof net.minecraft.world.entity.PathfinderMob pathfinder) {
+							EntityAiSwap.swap(pathfinder, resolved);
+						}
+						NamedTransformPacket.sendToWatchers(living);
+					}
+					case ITEM -> {
+						// 作者定：命名成物品就直接失去 AI、变成能拿起来用的东西，不换材质。
+						if (resolved.id().equals(net.minecraft.resources.ResourceLocation.withDefaultNamespace("potato"))) {
+							// 正片开场事故：狗被命名成"土豆"后失去活性、遗体长出土豆嫩芽
+							EntityNaming.toPotato(level, living);
+						} else {
+							EntityNaming.convertToMaterial(level, living, resolved);
+						}
+					}
+					case BLOCK -> {
+						// 唯一保留过程的：慢慢变成那个方块（身体材质与方块贴图做真正的交叉溶解）
+						EntityNaming.apply(living, resolved, raw);
+						EntityNaming.loseVitality(living);
+						NameTagTicker.startTransform(level, living, resolved, level.getGameTime());
+						NamedTransformPacket.sendToWatchers(living);
+					}
+				}
 				NameTagNotifier.actionBar(player, NameTagNotifier.APPLIED, resolved.defaultDisplay());
 			}
 		}

@@ -43,10 +43,6 @@ public final class NameTagTicker {
 	private static final int STRIDE = 5;
 	/** 产蛋间隔。 */
 	private static final int EGG_INTERVAL = 120;
-	/** 挖掘的搜索半径。 */
-	private static final int DIG_RADIUS = 10;
-	/** 挖掘判定距离（到目标方块中心）。 */
-	private static final double DIG_REACH_SQR = 6.25;
 
 	private NameTagTicker() {
 	}
@@ -80,31 +76,52 @@ public final class NameTagTicker {
 	}
 
 	private static void tick(ServerLevel level, LivingEntity living, ResolvedName target) {
-		long now = level.getGameTime();
+		if (target.kind() != ResolvedName.Kind.BLOCK) {
+			// 实体 / 物品那两支都是**命名瞬间**就完成的（换 AI / 变成物品），
+			// 这里只补 Goal 换不来的部分——鸡的下蛋计时器写在 aiStep 里，行为目标替换带不过来。
+			tickSpecialBehavior(level, living, target);
+			return;
+		}
+		tickBlockTransform(level, living, target);
+	}
 
-		// 时间轴：走过的存档（或刚被别处贴上标记的）在这里补一条
+	/**
+	 * 变成方块的那一支：唯一保留过程的。
+	 *
+	 * 立刻失去 AI（僵住）→ 沿时间轴推进、身体材质与方块贴图做真正的交叉溶解 →
+	 * 材料够就走完、原地变成那个方块；不够就停在最后一步之前持续从周围掠夺（正片羊→金块）。
+	 */
+	private static void tickBlockTransform(ServerLevel level, LivingEntity living, ResolvedName target) {
+		long now = level.getGameTime();
+		EntityNaming.loseVitality(living);
 		if (!NameTagTransform.isTransforming(living)) {
 			startTransform(level, living, target, now);
 		}
+		tickDrain(level, living, target);
 
-		// 1) 行为接管：立刻生效
-		switch (target.kind()) {
-			case ENTITY -> tickEntityIdentity(level, living, target);
-			case ITEM -> tickItemIdentity(level, living, target);
-			case BLOCK -> tickDrain(level, living, target);
-		}
-
-		// 2) 转化推进
 		float progress = NameTagTransform.progressOf(living, now);
 		int stage = NameTagTransform.stageOf(progress);
 		if (stage > NameTagTransform.lastStage(living)) {
 			NameTagTransform.setLastStage(living, stage);
 			onStage(level, living, target, stage);
 		}
-
-		// 3) 时间走完 + 材料够 → 完成
 		if (progress >= 1.0f && materialReady(living, target)) {
 			complete(level, living, target);
+		}
+	}
+
+	/** Goal 换不来的那点东西：靠我们自己的 tick 层补。 */
+	private static void tickSpecialBehavior(ServerLevel level, LivingEntity living, ResolvedName target) {
+		if (target.kind() != ResolvedName.Kind.ENTITY) {
+			return;
+		}
+		if (EntityNaming.isSelfIdentity(living)) {
+			// 名字就是它自己（牛→"牛"）：什么都没变
+			return;
+		}
+		if (is(target.id(), "minecraft:chicken") && living.tickCount % EGG_INTERVAL == 0) {
+			// 正片：牛被命名成"鸡"后开始下出深褐色的牛蛋，牛蛋可以孵出正常的牛幼仔
+			layEgg(level, living);
 		}
 	}
 
@@ -124,39 +141,9 @@ public final class NameTagTicker {
 		return NamedState.progressOf(living) >= need;
 	}
 
-	// ===== 行为接管（正片里"立刻"发生的那部分） =====
+	// ===== 需要材料：持续从附近抽走目标材料，累积进度 =====
 
-	private static void tickEntityIdentity(ServerLevel level, LivingEntity living, ResolvedName target) {
-		if (EntityNaming.isSelfIdentity(living)) {
-			// 名字就是它自己（牛→"牛"）：身份没被改写，行为照旧，也不该被转化掉
-			return;
-		}
-		ResourceLocation id = target.id();
-		if (is(id, "minecraft:chicken")) {
-			if (living.tickCount % EGG_INTERVAL == 0) {
-				layEgg(level, living);
-			}
-		}
-	}
-
-	private static void tickItemIdentity(ServerLevel level, LivingEntity living, ResolvedName target) {
-		ItemStack model = new ItemStack(BuiltInRegistries.ITEM.get(target.id()));
-		if (model.has(net.minecraft.core.component.DataComponents.TOOL)) {
-			// 有行为的名字（工具）→ 行为移植：正片里猪被命名成"钻石镐"后开始挖矿
-			dig(level, living);
-			return;
-		}
-		if (is(target.id(), "minecraft:potato") || is(target.id(), "minecraft:poisonous_potato")
-				|| is(target.id(), "minecraft:baked_potato")) {
-			// 正片开场事故：宠物狗被命名成"土豆"后瞬间丧失所有动物活性、遗体长出土豆嫩芽
-			EntityNaming.toPotato(level, living);
-		}
-	}
-
-	/** 需要材料：持续从附近抽走目标材料，累积进度。 */
 	private static void tickDrain(ServerLevel level, LivingEntity living, ResolvedName target) {
-		// 变成方块的那一支：**失去 AI**，僵在原地（正片：羊被命名后"躯体僵硬"）
-		EntityNaming.loseVitality(living);
 		if (living.tickCount % NameTagCosts.DRAIN_INTERVAL_TICKS != 0) {
 			return;
 		}
@@ -209,17 +196,9 @@ public final class NameTagTicker {
 
 	// ===== 完成 =====
 
+	/** 变方块这一支的收尾（实体/物品那两支都在命名瞬间就完成了，不走这里）。 */
 	private static void complete(ServerLevel level, LivingEntity living, ResolvedName target) {
-		switch (target.kind()) {
-			case ENTITY -> {
-				if (!EntityNaming.replaceWith(level, living, target.id())) {
-					// 目标不是生物（比如指向了刷怪蛋之类）→ 退化成"析出材料"
-					EntityNaming.convertToMaterial(level, living, target);
-				}
-			}
-			case BLOCK -> EntityNaming.completeBlockConversion(level, living, target);
-			case ITEM -> EntityNaming.convertToMaterial(level, living, target);
-		}
+		EntityNaming.completeBlockConversion(level, living, target);
 	}
 
 	// ===== 具体动作 =====
@@ -234,37 +213,6 @@ public final class NameTagTicker {
 		drop.setDeltaMovement(0.0, 0.1, 0.0);
 		level.addFreshEntity(drop);
 		level.playSound(null, living.blockPosition(), SoundEvents.CHICKEN_EGG, SoundSource.NEUTRAL, 0.7f, 1.0f);
-	}
-
-	/** 走到最近的石头/矿石旁挖掉它——正片里的猪"不顾一切寻找附近的石头和矿石"。 */
-	private static void dig(ServerLevel level, LivingEntity living) {
-		BlockPos pos = findDigTarget(level, living);
-		if (pos == null) {
-			return;
-		}
-		if (living instanceof Mob mob) {
-			mob.getNavigation().moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 1.0);
-		}
-		if (living.position().distanceToSqr(Vec3.atCenterOf(pos)) <= DIG_REACH_SQR) {
-			level.destroyBlock(pos, false); // 正片：它只是挖，不是替你收集
-		}
-	}
-
-	private static BlockPos findDigTarget(ServerLevel level, LivingEntity living) {
-		BlockPos origin = living.blockPosition();
-		BlockPos min = origin.offset(-DIG_RADIUS, -3, -DIG_RADIUS);
-		BlockPos max = origin.offset(DIG_RADIUS, 2, DIG_RADIUS);
-		for (BlockPos pos : BlockPos.betweenClosed(min, max)) {
-			if (!level.isLoaded(pos)) {
-				continue;
-			}
-			Block block = level.getBlockState(pos).getBlock();
-			if (block == Blocks.STONE || block == Blocks.DEEPSLATE || block == Blocks.COBBLESTONE
-					|| block == Blocks.IRON_ORE || block == Blocks.DEEPSLATE_IRON_ORE) {
-				return pos.immutable();
-			}
-		}
-		return null;
 	}
 
 	private static boolean is(ResourceLocation id, String expected) {
