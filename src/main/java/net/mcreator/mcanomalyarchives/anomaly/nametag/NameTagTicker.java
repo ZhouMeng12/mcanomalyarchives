@@ -128,6 +128,39 @@ public final class NameTagTicker {
 			// 正片：牛被命名成"鸡"后开始下出深褐色的牛蛋，牛蛋可以孵出正常的牛幼仔
 			layEgg(level, living);
 		}
+		// ===== 名字带来的固有性质（写在别的类里的那些，Goal 换不来）=====
+		if (living.tickCount % 20 == 0) {
+			if (CreatureTraits.has(living, CreatureTraits.Trait.SUN_BURNS) && isSunBurnTick(living)) {
+				// 亡灵：白天在阳光下着火（原版写在 Zombie.aiStep 里，160 tick = 8 秒）
+				living.igniteForTicks(160);
+			}
+			if (CreatureTraits.has(living, CreatureTraits.Trait.WATER_HURTS) && living.isInWaterRainOrBubble()) {
+				// 烈焰人 / 末影人：碰到水就掉血
+				living.hurt(living.damageSources().drown(), 1.0f);
+			}
+		}
+	}
+
+	/**
+	 * 复刻原版 {@code Mob.isSunBurnTick()} —— 它是 protected，外面调不到，所以照着抄一份。
+	 * 判断条件：白天、亮度够、能看见天空、且身上没水（没在水/雨/气泡/细雪里）。
+	 */
+	private static boolean isSunBurnTick(LivingEntity living) {
+		if (!living.level().isDay() || living.level().isClientSide()) {
+			return false;
+		}
+		float brightness = living.getLightLevelDependentMagicValue();
+		BlockPos eye = BlockPos.containing(living.getX(), living.getEyeY(), living.getZ());
+		if (brightness <= 0.5f) {
+			return false;
+		}
+		if (living.getRandom().nextFloat() * 30.0f >= (brightness - 0.4f) * 2.0f) {
+			return false;
+		}
+		if (living.isInWaterRainOrBubble()) {
+			return false;
+		}
+		return living.level().canSeeSky(eye);
 	}
 
 	public static void startTransform(ServerLevel level, LivingEntity living, ResolvedName target, long now) {

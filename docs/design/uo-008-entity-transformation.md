@@ -294,7 +294,6 @@ durationTicks = clamp(名字字符数 × 100 + 质料差额 × 1, 300, 2400)   /
 
 作者选的是**方案 A：保留本体、把行为目标整套换掉**（`EntityAiSwap`），
 而不是换掉实体本体——因为换本体外观也就跟着变了，而要求是"模型/材质不变"。
-
 - 原版大多数生物的行为就是 `goalSelector` 里那一串 Goal（外加 `targetSelector` 的攻击目标），
   而 `Mob.goalSelector` / `targetSelector` 都是 `public final`，可以直接清空重装。
 - 被动动物按各家的 `registerGoals` 抄了一套模板（0 FloatGoal → 1 PanicGoal(速度) → 2 BreedGoal
@@ -306,6 +305,31 @@ durationTicks = clamp(名字字符数 × 100 + 质料差额 × 1, 300, 2400)   /
   掉落表、繁殖产物仍然是原生物的。下蛋由 `NameTagTicker` 补（正片那头牛就是靠这个下"牛蛋"）。
   要让掉落表也跟名字走，就得换本体，那是方案 B——作者选了"先做 A，不够再上 B"。
 - 只支持 `PathfinderMob`：史莱姆、恶魂这类不走寻路目标的另有一套移动逻辑，Goal 装上去也没用。
+
+### 10.4 掉落物与固有性质也跟着名字走（作者 2026-09-13 补充）
+
+**"变生物的话掉落物也要变，别的性质（会被太阳点燃）也要有。"**
+
+行为目标只能换来"怎么动"；掉落表和写在别的类里的固有性质都得另外补。
+
+**① 掉落物**：`LivingDropsEvent` 里把**名字所指生物的战利品表**掷一遍，
+掷法照抄 `LivingEntity.dropFromLootTable`（含抢夺附魔要用的上下文参数：THIS_ENTITY / ORIGIN /
+DAMAGE_SOURCE / ATTACKING_ENTITY / DIRECT_ATTACKING_ENTITY / LAST_DAMAGE_PLAYER）。
+→ 一只叫"僵尸"的牛掉的是**腐肉**，而不是牛肉皮革。
+
+**② 固有性质**（`CreatureTraits`，一张表 + 两条事件 + tick 层）：
+
+| 性质 | 哪些生物 | 怎么实现 |
+|---|---|---|
+| `SUN_BURNS` 白天在阳光下着火 | 亡灵 14 种（僵尸/骷髅/凋灵骷髅/幻翼/凋灵…） | tick 层复刻 `Mob.isSunBurnTick()`（它是 protected，外面调不到），命中就 `igniteForTicks(160)` |
+| `INVERTED_POTION` 药水反转 | 同上 | `MobEffectEvent.Applicable` → `Result.DO_NOT_APPLY` 拦掉，再 `addEffect` 相反的那瓶（静态集合防死循环） |
+| `FIRE_IMMUNE` 免疫火焰岩浆 | 烈焰人/岩浆怪/炽足兽/僵尸猪灵/凋灵… | `LivingIncomingDamageEvent` 里 `source.is(DamageTypeTags.IS_FIRE)` 就取消 |
+| `WATER_HURTS` 碰到水掉血 | 烈焰人、末影人 | tick 层 `isInWaterRainOrBubble()` 就 `hurt(drown, 1.0)` |
+
+- 表格有离线自检：`tools/nametag/test_traits.py`（直接从 Java 源码解析那三张表再验期望，
+  改完表跑一次就知道有没有写错）。
+- 没做的：经验值仍是原生物的；羊吃草、末影人传送、爬行者自爆这类**写在各自类里、又依赖自身形态**的
+  行为不在表内（要跟就得换本体，那是方案 B）。
 
 ### 10.4 ⚠️ 踩过的崩：给没有攻击力的生物装原版 MeleeAttackGoal
 

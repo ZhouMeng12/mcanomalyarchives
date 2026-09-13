@@ -22,6 +22,8 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AnvilUpdateEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
+import java.util.List;
+
 /**
  * 百变命名牌的全部入口。
  *
@@ -354,12 +356,15 @@ public final class NameTagHandler {
 	// ==================== 转化被打断：掉的不是它原本的东西 ====================
 
 	/**
-	 * 作者 2026-09-13 定的规则：**混到一半把它打死，掉的是它正在变成的那个方块**；
-	 * 如果那是矿物方块，就按"变的百分比"折算成**锭 + 粒**
-	 * （1 方块 = 9 锭 = 81 粒；钻石/煤/红石这类没有粒的按 9 折算）。
+	 * 掉落物也跟着名字走（作者："变生物的话掉落物也要变"）。
 	 *
-	 * <p>所以一只正在变成金块的猪，在 50% 时被打死，掉的是 4 金锭 + 5 金粒，而**不是猪肉**。
-	 * 只有"变成方块"这一支需要处理：另外两支在命名瞬间就完成了，没有"半路"可言。
+	 * <ul>
+	 *   <li><b>变成方块</b>那一支（半路被打断）：掉它正在变成的那个方块，
+	 *       矿物方块按进度折算成锭 + 粒（见 {@link MaterialUnits#dropsFor}）。</li>
+	 *   <li><b>变成生物</b>那一支：把**名字所指生物的战利品表**掷一遍 ——
+	 *       所以一只叫"僵尸"的牛掉的是腐肉，而不是牛肉皮革。
+	 *       掷法与 {@code LivingEntity.dropFromLootTable} 完全一致（含抢夺附魔要用的那些上下文参数）。</li>
+	 * </ul>
 	 */
 	@SubscribeEvent
 	public static void onLivingDrops(net.neoforged.neoforge.event.entity.living.LivingDropsEvent event) {
@@ -367,17 +372,115 @@ public final class NameTagHandler {
 		if (!NamedState.isNamed(entity) || !(entity.level() instanceof ServerLevel level)) {
 			return;
 		}
-		if (!NameTagTransform.isTransforming(entity)) {
-			return;
-		}
 		ResolvedName target = NamedState.targetOf(entity);
-		if (target == null || target.kind() != ResolvedName.Kind.BLOCK) {
+		if (target == null) {
 			return;
 		}
-		float progress = NameTagTransform.progressOf(entity, level.getGameTime());
-		event.getDrops().clear(); // 先把原生物那套掉落（猪肉之类）清掉
-		for (ItemStack stack : MaterialUnits.dropsFor(target, progress)) {
-			event.getDrops().add(new ItemEntity(level, entity.getX(), entity.getY() + 0.5, entity.getZ(), stack));
+		if (target.kind() == ResolvedName.Kind.BLOCK) {
+			if (!NameTagTransform.isTransforming(entity)) {
+				return;
+			}
+			float progress = NameTagTransform.progressOf(entity, level.getGameTime());
+			event.getDrops().clear(); // 先把原生物那套掉落（猪肉之类）清掉
+			for (ItemStack stack : MaterialUnits.dropsFor(target, progress)) {
+				event.getDrops().add(new ItemEntity(level, entity.getX(), entity.getY() + 0.5, entity.getZ(), stack));
+			}
+			return;
+		}
+		if (target.kind() == ResolvedName.Kind.ENTITY) {
+			List<ItemStack> loot = rollLootTableOf(level, entity, target, event.getSource());
+			if (loot == null) {
+				return;
+			}
+			event.getDrops().clear();
+			for (ItemStack stack : loot) {
+				if (!stack.isEmpty()) {
+					event.getDrops().add(new ItemEntity(level, entity.getX(), entity.getY() + 0.5, entity.getZ(), stack));
+				}
+			}
+		}
+	}
+
+	/** 掷一遍"名字所指生物"的战利品表；照抄原版 {@code dropFromLootTable} 的上下文构造。 */
+	private static List<ItemStack> rollLootTableOf(ServerLevel level, LivingEntity dying, ResolvedName target,
+			net.minecraft.world.damagesource.DamageSource source) {
+		net.minecraft.world.entity.EntityType<?> type =
+				net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.get(target.id());
+		if (type == null) {
+			return null;
+		}
+		net.minecraft.world.level.storage.loot.LootTable table =
+				level.getServer().reloadableRegistries().getLootTable(type.getDefaultLootTable());
+		net.minecraft.world.level.storage.loot.LootParams.Builder builder =
+				new net.minecraft.world.level.storage.loot.LootParams.Builder(level)
+						.withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.THIS_ENTITY, dying)
+						.withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN, dying.position())
+						.withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.DAMAGE_SOURCE, source)
+						.withOptionalParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.ATTACKING_ENTITY, source.getEntity())
+						.withOptionalParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.DIRECT_ATTACKING_ENTITY, source.getDirectEntity());
+		if (source.getEntity() instanceof net.minecraft.world.entity.player.Player player) {
+			builder = builder
+					.withOptionalParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.LAST_DAMAGE_PLAYER, player)
+					.withLuck(player.getLuck());
+		}
+		net.minecraft.world.level.storage.loot.LootParams params = builder.create(
+				net.minecraft.world.level.storage.loot.parameters.LootContextParamSets.ENTITY);
+		return new java.util.ArrayList<>(table.getRandomItems(params));
+	}
+
+	// ==================== 名字带来的固有性质 ====================
+
+	/** 免疫火焰与岩浆（烈焰人、岩浆怪、凋灵那类）。 */
+	@SubscribeEvent
+	public static void onIncomingDamage(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event) {
+		LivingEntity entity = event.getEntity();
+		if (!NamedState.isNamed(entity)) {
+			return;
+		}
+		if (!event.getSource().is(net.minecraft.tags.DamageTypeTags.IS_FIRE)) {
+			return;
+		}
+		if (CreatureTraits.has(entity, CreatureTraits.Trait.FIRE_IMMUNE)) {
+			event.setCanceled(true);
+		}
+	}
+
+	/**
+	 * 亡灵：治疗药水伤害它、伤害药水治疗它。
+	 *
+	 * 原版是写在 {@code Mob.isInvertedHealAndHarm()} 里、由药水自己读的，
+	 * 我们换不了那个方法，所以在"药水将要生效"时把它换成相反的那一瓶。
+	 * 用一个静态集合防止相互转换形成死循环。
+	 */
+	private static final java.util.Set<Integer> INVERTING = java.util.concurrent.ConcurrentHashMap.newKeySet();
+
+	@SubscribeEvent
+	public static void onEffectApplicable(
+			net.neoforged.neoforge.event.entity.living.MobEffectEvent.Applicable event) {
+		LivingEntity entity = event.getEntity();
+		if (!NamedState.isNamed(entity) || INVERTING.contains(entity.getId())) {
+			return;
+		}
+		if (!CreatureTraits.has(entity, CreatureTraits.Trait.INVERTED_POTION)) {
+			return;
+		}
+		var instance = event.getEffectInstance();
+		boolean heal = instance.getEffect().is(net.minecraft.world.effect.MobEffects.HEAL);
+		boolean harm = instance.getEffect().is(net.minecraft.world.effect.MobEffects.HARM);
+		if (!heal && !harm) {
+			return;
+		}
+		event.setResult(net.neoforged.neoforge.event.entity.living.MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+		if (!(entity.level() instanceof ServerLevel level)) {
+			return;
+		}
+		INVERTING.add(entity.getId());
+		try {
+			entity.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+					heal ? net.minecraft.world.effect.MobEffects.HARM : net.minecraft.world.effect.MobEffects.HEAL,
+					instance.getDuration(), instance.getAmplifier()));
+		} finally {
+			INVERTING.remove(entity.getId());
 		}
 	}
 
