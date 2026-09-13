@@ -220,15 +220,23 @@ public final class MaterialUnits {
 	 * （金块与金装备直接消除、金矿变成石头），没有就算了、但还是照常换**。
 	 * 所以下面不再是"找一块够用的"，而是按**材料族**把整片区域扫一遍、见到就拿。
 	 */
-	/** 一个材料族：直接消除的方块、要替换成什么的矿石、要没收的物品、以及装备的材质。 */
+	/**
+	 * 一个材料族：直接消除的方块、要替换成什么的矿石、要没收的物品、装备的材质，
+	 * 以及**被打断转化时按进度折算**用的"主单位/粒"（作者 2026-09-13 定的掉落规则）。
+	 */
 	public record Family(java.util.Set<net.minecraft.world.level.block.Block> removes,
 			Map<net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block> replaces,
 			java.util.Set<net.minecraft.world.item.Item> items,
 			@org.jetbrains.annotations.Nullable net.minecraft.world.item.Tier tier,
-			@org.jetbrains.annotations.Nullable net.minecraft.world.item.ArmorMaterial armor) {
+			@org.jetbrains.annotations.Nullable net.minecraft.world.item.ArmorMaterial armor,
+			@org.jetbrains.annotations.Nullable net.minecraft.world.item.Item unit,
+			@org.jetbrains.annotations.Nullable net.minecraft.world.item.Item nugget) {
 	}
 
 	private static final Map<String, Family> FAMILIES = new HashMap<>();
+
+	/** 粗矿块 / 矿石也认到同一个材料族（给羊命名"粗金块"也该按金族算）。 */
+	private static final Map<String, String> FAMILY_ALIAS = new HashMap<>();
 
 	static {
 		RESIDUE.put("minecraft:diamond_block", "minecraft:diamond");
@@ -247,47 +255,75 @@ public final class MaterialUnits {
 				new String[]{"gold_block", "raw_gold_block"},
 				new String[][]{{"gold_ore", "stone"}, {"deepslate_gold_ore", "deepslate"}, {"nether_gold_ore", "netherrack"}},
 				new String[]{"gold_ingot", "gold_nugget", "raw_gold", "golden_horse_armor"},
-				net.minecraft.world.item.Tiers.GOLD, net.minecraft.world.item.ArmorMaterials.GOLD.value());
+				net.minecraft.world.item.Tiers.GOLD, net.minecraft.world.item.ArmorMaterials.GOLD.value(),
+				"gold_ingot", "gold_nugget");
 		family("minecraft:iron_block",
 				new String[]{"iron_block", "raw_iron_block"},
 				new String[][]{{"iron_ore", "stone"}, {"deepslate_iron_ore", "deepslate"}},
 				new String[]{"iron_ingot", "raw_iron", "iron_horse_armor", "iron_bars", "anvil", "cauldron", "hopper"},
-				net.minecraft.world.item.Tiers.IRON, net.minecraft.world.item.ArmorMaterials.IRON.value());
+				net.minecraft.world.item.Tiers.IRON, net.minecraft.world.item.ArmorMaterials.IRON.value(),
+				"iron_ingot", "iron_nugget");
 		family("minecraft:diamond_block",
 				new String[]{"diamond_block"},
 				new String[][]{{"diamond_ore", "stone"}, {"deepslate_diamond_ore", "deepslate"}},
 				new String[]{"diamond", "diamond_horse_armor"},
-				net.minecraft.world.item.Tiers.DIAMOND, net.minecraft.world.item.ArmorMaterials.DIAMOND.value());
+				net.minecraft.world.item.Tiers.DIAMOND, net.minecraft.world.item.ArmorMaterials.DIAMOND.value(),
+				"diamond", null);
 		family("minecraft:netherite_block",
 				new String[]{"netherite_block"},
 				new String[][]{},
 				new String[]{"netherite_ingot", "netherite_scrap"},
-				net.minecraft.world.item.Tiers.NETHERITE, net.minecraft.world.item.ArmorMaterials.NETHERITE.value());
+				net.minecraft.world.item.Tiers.NETHERITE, net.minecraft.world.item.ArmorMaterials.NETHERITE.value(),
+				"netherite_ingot", null);
 		family("minecraft:emerald_block",
 				new String[]{"emerald_block"},
 				new String[][]{{"emerald_ore", "stone"}, {"deepslate_emerald_ore", "deepslate"}},
-				new String[]{"emerald"}, null, null);
+				new String[]{"emerald"}, null, null, "emerald", null);
 		family("minecraft:copper_block",
 				new String[]{"copper_block", "raw_copper_block"},
 				new String[][]{{"copper_ore", "stone"}, {"deepslate_copper_ore", "deepslate"}},
-				new String[]{"copper_ingot", "raw_copper"}, null, null);
+				new String[]{"copper_ingot", "raw_copper"}, null, null, "copper_ingot", null);
 		family("minecraft:coal_block",
 				new String[]{"coal_block"},
 				new String[][]{{"coal_ore", "stone"}, {"deepslate_coal_ore", "deepslate"}},
-				new String[]{"coal"}, null, null);
+				new String[]{"coal"}, null, null, "coal", null);
 		family("minecraft:lapis_block",
 				new String[]{"lapis_block"},
 				new String[][]{{"lapis_ore", "stone"}, {"deepslate_lapis_ore", "deepslate"}},
-				new String[]{"lapis_lazuli"}, null, null);
+				new String[]{"lapis_lazuli"}, null, null, "lapis_lazuli", null);
 		family("minecraft:redstone_block",
 				new String[]{"redstone_block"},
 				new String[][]{{"redstone_ore", "stone"}, {"deepslate_redstone_ore", "deepslate"}},
-				new String[]{"redstone"}, null, null);
+				new String[]{"redstone"}, null, null, "redstone", null);
+
+		// 粗矿块 / 矿石 → 归到同一个材料族
+		FAMILY_ALIAS.put("minecraft:raw_gold_block", "minecraft:gold_block");
+		FAMILY_ALIAS.put("minecraft:gold_ore", "minecraft:gold_block");
+		FAMILY_ALIAS.put("minecraft:deepslate_gold_ore", "minecraft:gold_block");
+		FAMILY_ALIAS.put("minecraft:nether_gold_ore", "minecraft:gold_block");
+		FAMILY_ALIAS.put("minecraft:raw_iron_block", "minecraft:iron_block");
+		FAMILY_ALIAS.put("minecraft:iron_ore", "minecraft:iron_block");
+		FAMILY_ALIAS.put("minecraft:deepslate_iron_ore", "minecraft:iron_block");
+		FAMILY_ALIAS.put("minecraft:diamond_ore", "minecraft:diamond_block");
+		FAMILY_ALIAS.put("minecraft:deepslate_diamond_ore", "minecraft:diamond_block");
+		FAMILY_ALIAS.put("minecraft:emerald_ore", "minecraft:emerald_block");
+		FAMILY_ALIAS.put("minecraft:deepslate_emerald_ore", "minecraft:emerald_block");
+		FAMILY_ALIAS.put("minecraft:raw_copper_block", "minecraft:copper_block");
+		FAMILY_ALIAS.put("minecraft:copper_ore", "minecraft:copper_block");
+		FAMILY_ALIAS.put("minecraft:deepslate_copper_ore", "minecraft:copper_block");
+		FAMILY_ALIAS.put("minecraft:coal_ore", "minecraft:coal_block");
+		FAMILY_ALIAS.put("minecraft:deepslate_coal_ore", "minecraft:coal_block");
+		FAMILY_ALIAS.put("minecraft:lapis_ore", "minecraft:lapis_block");
+		FAMILY_ALIAS.put("minecraft:deepslate_lapis_ore", "minecraft:lapis_block");
+		FAMILY_ALIAS.put("minecraft:redstone_ore", "minecraft:redstone_block");
+		FAMILY_ALIAS.put("minecraft:deepslate_redstone_ore", "minecraft:redstone_block");
 	}
 
 	private static void family(String targetBlock, String[] removes, String[][] replaces, String[] items,
 			@org.jetbrains.annotations.Nullable net.minecraft.world.item.Tier tier,
-			@org.jetbrains.annotations.Nullable net.minecraft.world.item.ArmorMaterial armor) {
+			@org.jetbrains.annotations.Nullable net.minecraft.world.item.ArmorMaterial armor,
+			@org.jetbrains.annotations.Nullable String unit,
+			@org.jetbrains.annotations.Nullable String nugget) {
 		java.util.Set<net.minecraft.world.level.block.Block> removeSet = new java.util.HashSet<>();
 		for (String id : removes) {
 			net.minecraft.world.level.block.Block b = block("minecraft:" + id);
@@ -310,7 +346,9 @@ public final class MaterialUnits {
 				itemSet.add(BuiltInRegistries.ITEM.get(loc));
 			}
 		}
-		FAMILIES.put(targetBlock, new Family(removeSet, replaceMap, itemSet, tier, armor));
+		FAMILIES.put(targetBlock, new Family(removeSet, replaceMap, itemSet, tier, armor,
+				unit == null ? null : BuiltInRegistries.ITEM.get(ResourceLocation.parse("minecraft:" + unit)),
+				nugget == null ? null : BuiltInRegistries.ITEM.get(ResourceLocation.parse("minecraft:" + nugget))));
 	}
 
 	private static net.minecraft.world.level.block.Block block(String id) {
@@ -320,7 +358,57 @@ public final class MaterialUnits {
 
 	/** 名字对应的材料族；不是金属/宝石类方块就返回 null（那就不掠夺，直接换）。 */
 	public static Family familyOf(ResolvedName name) {
-		return name == null || name.kind() != ResolvedName.Kind.BLOCK ? null : FAMILIES.get(name.id().toString());
+		if (name == null || name.kind() != ResolvedName.Kind.BLOCK) {
+			return null;
+		}
+		String id = name.id().toString();
+		Family direct = FAMILIES.get(id);
+		if (direct != null) {
+			return direct;
+		}
+		String alias = FAMILY_ALIAS.get(id);
+		return alias == null ? null : FAMILIES.get(alias);
+	}
+
+	/**
+	 * **转化被打断时的掉落**（作者 2026-09-13 定的规则）。
+	 *
+	 * <p>混到一半把它打死，掉的是它**正在变成的那个方块**；如果那是矿物方块，
+	 * 就按"变的百分比"折算成**锭 + 粒**（1 方块 = 9 锭 = 81 粒；没有粒的矿物按 9 折算）。
+	 * 这样"变了一半的金块"就是 4 锭 5 粒，而不是白赚一整块金。
+	 *
+	 * <p>非矿物方块没有更小的单位，就掉 1 个那个方块。
+	 */
+	public static java.util.List<ItemStack> dropsFor(ResolvedName name, float progress) {
+		java.util.List<ItemStack> out = new java.util.ArrayList<>();
+		if (name == null) {
+			return out;
+		}
+		float p = Math.max(0.0f, Math.min(1.0f, progress));
+		Family family = familyOf(name);
+		if (family == null || family.unit() == null) {
+			ItemStack whole = itemFormOf(name);
+			if (!whole.isEmpty()) {
+				out.add(whole.copyWithCount(1));
+			}
+			return out;
+		}
+		if (family.nugget() != null) {
+			// 1 方块 = 9 锭 = 81 粒
+			int totalNuggets = Math.max(1, Math.round(81.0f * p));
+			int units = totalNuggets / 9;
+			int nuggets = totalNuggets % 9;
+			if (units > 0) {
+				out.add(new ItemStack(family.unit(), units));
+			}
+			if (nuggets > 0) {
+				out.add(new ItemStack(family.nugget(), nuggets));
+			}
+		} else {
+			// 1 方块 = 9 个单位（钻石、煤、红石……没有粒）
+			out.add(new ItemStack(family.unit(), Math.max(1, Math.round(9.0f * p))));
+		}
+		return out;
 	}
 
 	/** 这件物品算不算"要没收的同类材料/装备"。 */

@@ -351,6 +351,36 @@ public final class NameTagHandler {
 	 * 已按作者要求删除：玩法靠玩家自己发现，界面不解释。
 	 */
 
+	// ==================== 转化被打断：掉的不是它原本的东西 ====================
+
+	/**
+	 * 作者 2026-09-13 定的规则：**混到一半把它打死，掉的是它正在变成的那个方块**；
+	 * 如果那是矿物方块，就按"变的百分比"折算成**锭 + 粒**
+	 * （1 方块 = 9 锭 = 81 粒；钻石/煤/红石这类没有粒的按 9 折算）。
+	 *
+	 * <p>所以一只正在变成金块的猪，在 50% 时被打死，掉的是 4 金锭 + 5 金粒，而**不是猪肉**。
+	 * 只有"变成方块"这一支需要处理：另外两支在命名瞬间就完成了，没有"半路"可言。
+	 */
+	@SubscribeEvent
+	public static void onLivingDrops(net.neoforged.neoforge.event.entity.living.LivingDropsEvent event) {
+		LivingEntity entity = event.getEntity();
+		if (!NamedState.isNamed(entity) || !(entity.level() instanceof ServerLevel level)) {
+			return;
+		}
+		if (!NameTagTransform.isTransforming(entity)) {
+			return;
+		}
+		ResolvedName target = NamedState.targetOf(entity);
+		if (target == null || target.kind() != ResolvedName.Kind.BLOCK) {
+			return;
+		}
+		float progress = NameTagTransform.progressOf(entity, level.getGameTime());
+		event.getDrops().clear(); // 先把原生物那套掉落（猪肉之类）清掉
+		for (ItemStack stack : MaterialUnits.dropsFor(target, progress)) {
+			event.getDrops().add(new ItemEntity(level, entity.getX(), entity.getY() + 0.5, entity.getZ(), stack));
+		}
+	}
+
 	// ==================== 变成物品的那一支：右键拿起 ====================
 
 	/**

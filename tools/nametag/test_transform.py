@@ -79,6 +79,38 @@ for name, budget, need in (("鸡", 300, 10), ("绵羊", 300, 100), ("金块", 30
 if duration_ticks("金块", 300, 1200) <= duration_ticks("鸡", 300, 10):
     FAILED.append("更重的名字应该更慢，但金块没有比鸡慢")
 
+print("=== 4. 转化被打断时的掉落（作者 2026-09-13 定的规则）===")
+# Java: Math.round(x) 是四舍五入（.5 进位），Python 的 round() 是银行家舍入，所以这里自己实现
+import math
+
+
+def jround(x):
+    return math.floor(x + 0.5)
+
+
+def drops(has_nugget, p):
+    """返回 (主单位数量, 粒数量)。有粒的按 1 方块 = 9 锭 = 81 粒；没粒的按 9 个单位。"""
+    p = max(0.0, min(1.0, p))
+    if has_nugget:
+        total = max(1, jround(81.0 * p))
+        return total // 9, total % 9
+    return max(1, jround(9.0 * p)), 0
+
+
+for p, want in ((1.0, (9, 0)), (0.5, (4, 5)), (0.25, (2, 2)), (0.1, (0, 8)), (0.01, (0, 1))):
+    got = drops(True, p)
+    ok = got == want
+    print("  [%s] 金块 %5.0f%% -> %d 金锭 + %d 金粒" % ("OK " if ok else "FAIL", p * 100, got[0], got[1]))
+    if not ok:
+        FAILED.append("金块 %.2f 应掉 %s，实得 %s" % (p, want, got))
+
+for p, want in ((1.0, 9), (0.5, 5), (0.1, 1), (0.01, 1)):
+    got = drops(False, p)[0]
+    ok = got == want
+    print("  [%s] 钻石块 %5.0f%% -> %d 钻石" % ("OK " if ok else "FAIL", p * 100, got))
+    if not ok:
+        FAILED.append("钻石块 %.2f 应掉 %d，实得 %d" % (p, want, got))
+
 print()
 if FAILED:
     print("自检失败 %d 项：" % len(FAILED))
