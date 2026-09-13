@@ -91,7 +91,7 @@
 ## 下载 / 安装
 
 发布版放在 [Releases](https://github.com/ZhouMeng12/mcanomalyarchives/releases) 页，
-文件名形如 `strangerecord-<版本>-neoforge-1.21.1.jar`。
+文件名形如 `mcanomalyarchives-<版本>-neoforge-1.21.1.jar`（v1.1.8 及更早叫 `strangerecord-…`）。
 
 1. 装上对应版本的 **NeoForge**（≥ 21.1.190）与 **GeckoLib**（≥ 4，推荐 4.6.6）；TACZ / Curios 可选；
 2. 把 jar 放进 `.minecraft/mods`；
