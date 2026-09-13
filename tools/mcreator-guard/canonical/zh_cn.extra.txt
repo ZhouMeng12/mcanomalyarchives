@@ -68,3 +68,7 @@
   "codex.mcanomalyarchives.uo012.trait": "只在平原等温和开阔群系出现 · 目击满 2 秒获得幸运 · 凝视满 45 秒它会眨眼消失并转移 · 靠得太近或攻击它会招来三档灾厄 · 最高档灾厄没有任何预警",
   "codex.mcanomalyarchives.uo012.level": "R4",
   "codex.mcanomalyarchives.uo012.protocol": "B",
+  "entity.mcanomalyarchives.sitting_enity": "端坐者",
+  "item_group.mcanomalyarchives.strange_record": "MC诡异见闻录",
+  "death.attack.meteor_strike": "%1$s被陨石砸成了坑",
+  "entity.mcanomalyarchives.pink_sheep_gift": "粉羊的礼物",

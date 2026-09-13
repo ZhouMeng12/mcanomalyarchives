@@ -97,7 +97,6 @@ public class McanomalyarchivesModItems {
 		PURPLEHAND = REGISTRY.register("purplehand", PurplehandItem::new);
 		CLOUD_ROCK = block(McanomalyarchivesModBlocks.CLOUD_ROCK);
 		CLOUD_ORE = block(McanomalyarchivesModBlocks.CLOUD_ORE);
-		ANOMALY_CODEX = REGISTRY.register("anomaly_codex", AnomalyCodexItem::new);
 		CLOUD_INGOT = REGISTRY.register("cloud_ingot", CloudIngotItem::new);
 		CLOUD_UPGRADE = REGISTRY.register("cloud_upgrade", CloudUpgradeItem::new);
 		CLOUD_ARMOR_HELMET = REGISTRY.register("cloud_armor_helmet", CloudArmorItem.Helmet::new);
@@ -112,6 +111,7 @@ public class McanomalyarchivesModItems {
 		STRANGETREELEAVES = block(McanomalyarchivesModBlocks.STRANGETREELEAVES);
 		STRANGE_TREE_SPAWN_EGG = REGISTRY.register("strange_tree_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.STRANGE_TREE, -14803684, -15593199, new Item.Properties()));
 		PINK_SHEEP_SPAWN_EGG = REGISTRY.register("pink_sheep_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.PINK_SHEEP, -1, -26164, new Item.Properties()));
+		ANOMALY_CODEX = REGISTRY.register("anomaly_codex", AnomalyCodexItem::new);
 	}
 
 	// Start of user code block custom items

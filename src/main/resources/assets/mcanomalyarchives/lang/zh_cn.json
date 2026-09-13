@@ -117,10 +117,6 @@
   "advancements.pink_sheep_calamity.title": "奇迹与你",
   "advancements.pink_sheep_blink.descr": "盯着粉色羊看，直到它在眨眼之间消失",
   "advancements.pink_sheep_blink.title": "眨眼",
-  "entity.mcanomalyarchives.sitting_enity": "端坐者",
-  "item_group.mcanomalyarchives.strange_record": "MC诡异见闻录",
-  "death.attack.meteor_strike": "%1$s被陨石砸成了坑",
-  "entity.mcanomalyarchives.pink_sheep_gift": "粉羊的礼物",
   "codex.mcanomalyarchives.title": "见闻录",
   "codex.mcanomalyarchives.progress": "已解明 %1$s / %2$s",
   "codex.mcanomalyarchives.locked": "???",
@@ -190,5 +186,9 @@
   "codex.mcanomalyarchives.uo012.info": "平原上静静站着的粉色羊。注视它会得到好运；盯得太久，它会在你眨眼的一瞬间消失。",
   "codex.mcanomalyarchives.uo012.trait": "只在平原等温和开阔群系出现 · 目击满 2 秒获得幸运 · 凝视满 45 秒它会眨眼消失并转移 · 靠得太近或攻击它会招来三档灾厄 · 最高档灾厄没有任何预警",
   "codex.mcanomalyarchives.uo012.level": "R4",
-  "codex.mcanomalyarchives.uo012.protocol": "B"
+  "codex.mcanomalyarchives.uo012.protocol": "B",
+  "entity.mcanomalyarchives.sitting_enity": "端坐者",
+  "item_group.mcanomalyarchives.strange_record": "MC诡异见闻录",
+  "death.attack.meteor_strike": "%1$s被陨石砸成了坑",
+  "entity.mcanomalyarchives.pink_sheep_gift": "粉羊的礼物"
 }

@@ -68,3 +68,7 @@
   "codex.mcanomalyarchives.uo012.trait": "Appears only in plains and similar open temperate biomes · Two seconds of sighting grants luck · Forty-five seconds of staring makes it blink away and relocate · Getting close or attacking triggers three tiers of calamity · The top tier gives no warning at all",
   "codex.mcanomalyarchives.uo012.level": "R4",
   "codex.mcanomalyarchives.uo012.protocol": "B",
+  "entity.mcanomalyarchives.sitting_enity": "Sitting Enity",
+  "item_group.mcanomalyarchives.strange_record": "MC Anomaly Archives",
+  "death.attack.meteor_strike": "%1$s was obliterated by a meteor",
+  "entity.mcanomalyarchives.pink_sheep_gift": "Pink Sheep's Gift",

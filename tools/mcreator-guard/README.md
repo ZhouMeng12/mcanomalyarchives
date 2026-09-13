@@ -188,6 +188,27 @@ UO-012 幸运粉羊是本模组自己实现的、wiki 上暂无页面，等级�
 wiki 原文抓取存放在 `docs/codex-research/`，**已加进 .gitignore**（wiki 内容为 CC BY-SA，
 只作本地研究资料，不随仓库分发）。
 
+## 自定义词条的根因修复：写进工作区 language_map
+
+只往 `lang/*.json` 里插词条的做法**每次都会被 MCreator 冲掉**——它重新生成代码时会拿工作区
+`mcanomalyarchives.mcreator` 里的 `language_map` 重写整个 lang 文件。守卫的 `insertBefore`
+只能事后补，玩家那次运行照样会看到一串原始键名（"文字全变成注册名"就是这么来的）。
+
+正解是把自定义词条**写进 `language_map`**（结构就是 `{"en_us": {key: value}, "zh_cn": {...}}`）：
+
+```powershell
+python tools/structure-fix/inject_language_map.py   # 从 canonical 读词条 → 写进工作区
+```
+
+之后 MCreator 会自己把这些词条生成出来，不必再依赖守卫事后补。
+注入用的是**字符串感知的括号匹配 + 文本插入**，不会重排整个工作区文件（工作区里可能有
+只有大小写不同的重复键，整体 JSON round-trip 会静默丢键）。
+
+> ⚠️ 踩过的坑：`gen_codex_lang.py` 当初**整文件覆盖**了 `canonical/*.extra.txt`，
+> 把之前 4 条自定义键（陨石死亡信息、矿车名、端坐者、创造标签页）从基线里挤掉了——
+> 结果它们既不在工作区也不在基线，守卫只能报 MANUAL 却修不了。
+> 以后生成 canonical 要**追加**，不要覆盖。
+
 ## 版本控制
 
 `.gitignore` 曾有第 30 行 `net/` 未锚定仓库根，git 会把它匹配到任意层级的 `net` 目录，
