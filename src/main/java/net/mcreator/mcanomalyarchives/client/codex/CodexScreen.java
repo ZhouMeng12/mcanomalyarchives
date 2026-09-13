@@ -128,6 +128,8 @@ public class CodexScreen extends Screen {
 				b -> this.turnPage(-1), true));
 		this.forwardButton = this.addRenderableWidget(new PageButton(rightPageX + Math.round(BTN_FORWARD_X * s), y, true,
 				b -> this.turnPage(1), true));
+		// 关掉线性过滤：书页会被放大 0.9~1.6 倍，默认的模糊过滤会让它发虚
+		Minecraft.getInstance().getTextureManager().getTexture(BOOK).setFilter(false, false);
 	}
 
 	private void turnPage(int delta) {
@@ -136,30 +138,40 @@ public class CodexScreen extends Screen {
 
 	// ===== 绘制 =====
 
+	/**
+	 * 背景：世界模糊 + 压暗 + 两页书。
+	 *
+	 * <p>关键：**书页必须画在这里**（原版 BookViewScreen 就是这么做的）。
+	 * {@code Screen.render} 自己会调用本方法，之后才渲染控件；
+	 * 如果在 {@code render()} 里手动再调一次，那层模糊与菜单背景贴图会盖到书页上面 ——
+	 * 之前"模糊出现在页面前面"就是这个原因（而且框架那一次调用还会再糊一遍）。
+	 */
 	@Override
-	public void render(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
-		this.renderBackground(gui, mouseX, mouseY, partialTick);
-
+	public void renderBackground(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
+		this.renderBlurredBackground(partialTick);   // 先把世界糊掉（和开箱子一样）
+		this.renderTransparentBackground(gui);       // 再压暗
 		int bw = pageSize();
 		gui.blit(BOOK, bookX(0), bookY(), bw, bw, 0.0F, 0.0F, BOOK_SIZE, BOOK_SIZE, 256, 256);
 		gui.blit(BOOK, bookX(1), bookY(), bw, bw, 0.0F, 0.0F, BOOK_SIZE, BOOK_SIZE, 256, 256);
+	}
 
-		renderList(gui, mouseX, mouseY);
-
+	@Override
+	public void render(GuiGraphics gui, int mouseX, int mouseY, float partialTick) {
+		// 先把分页算出来并决定按钮显隐，再让 super 去画（否则按钮显隐会慢一帧）
 		List<FormattedCharSequence> lines = buildDetailLines();
 		int perPage = linesPerPage();
 		int pageCount = Math.max(1, (lines.size() + perPage - 1) / perPage);
 		this.page = Mth.clamp(this.page, 0, pageCount - 1);
-
-		renderDetail(gui, lines, perPage, pageCount);
-
-		// 只有内容超过一页才出现翻页按钮（原版就是这样）
 		boolean paged = pageCount > 1;
 		this.backButton.visible = paged && this.page > 0;
 		this.forwardButton.visible = paged && this.page < pageCount - 1;
 
+		// super.render 会：调上面的 renderBackground（画书）→ 再渲染翻页按钮
 		super.render(gui, mouseX, mouseY, partialTick);
 
+		// 书页之上的内容：目录与档案正文
+		renderList(gui, mouseX, mouseY);
+		renderDetail(gui, lines, perPage, pageCount);
 		if (paged) {
 			renderPageIndicator(gui, pageCount);
 		}
