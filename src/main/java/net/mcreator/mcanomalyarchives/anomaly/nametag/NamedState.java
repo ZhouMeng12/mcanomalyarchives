@@ -45,6 +45,8 @@ public final class NamedState {
 	public static final String K_TRANSFORM_START = P + "Start";
 	public static final String K_TRANSFORM_DURATION = P + "Duration";
 	public static final String K_TRANSFORM_STAGE = P + "Stage";
+	/** 掠夺扫描的游标（扫到 64×64 里的第几列了，循环推进）。 */
+	public static final String K_DRAIN_CURSOR = P + "DrainCursor";
 	/**
 	 * 这个物品实体是"某个生物变成的东西"，不是一个普通掉落物。
 	 * 带着它的物品实体：不会自己过期，而且可以被右键拿走。
@@ -98,6 +100,15 @@ public final class NamedState {
 
 	public static void addProgress(Entity entity, int delta) {
 		entity.getPersistentData().putInt(K_PROGRESS, progressOf(entity) + delta);
+	}
+
+	/** 掠夺扫描游标。 */
+	public static int drainCursor(Entity entity) {
+		return entity.getPersistentData().getInt(K_DRAIN_CURSOR);
+	}
+
+	public static void setDrainCursor(Entity entity, int cursor) {
+		entity.getPersistentData().putInt(K_DRAIN_CURSOR, cursor);
 	}
 
 	// ===== 物品 =====

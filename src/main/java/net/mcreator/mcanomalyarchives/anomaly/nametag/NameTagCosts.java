@@ -38,14 +38,17 @@ public final class NameTagCosts {
 	/** 跨类爆炸是否破坏地形（与陨石共用同一个舒适度开关）。 */
 	public static final boolean EXPLOSION_BREAKS_TERRAIN = true;
 
-	/** 掠夺半径（正片：羊从"收容所附近"的含金设备里抽走零件）。 */
-	public static final int DRAIN_RADIUS = 16;
-	/** 掠夺扫描的垂直范围。 */
-	public static final int DRAIN_VERTICAL = 4;
-	/** 每多少次掠夺结算一次（避免每 tick 扫世界；单次最多约 9800 次方块查询，且命中即退出）。 */
-	public static final int DRAIN_INTERVAL_TICKS = 40;
-	/** 抽走一块材料推进多少进度；进度达到需求量即完成转化。 */
-	public static final int DRAIN_PROGRESS_PER_BLOCK = 100;
+	/**
+	 * 掠夺范围：**水平 ±32 格 = 64×64 的面积**（作者要求"周围 64*64 范围内全部"）。
+	 * 逐列推进，不会一次扫完。
+	 */
+	public static final int DRAIN_HALF_EXTENT = 32;
+	/** 掠夺扫描的垂直范围（±24 格）。 */
+	public static final int DRAIN_VERTICAL = 24;
+	/** 每次掠夺结算最多处理多少列（一列 = 一条 49 格高的竖直扫描），控制单 tick 开销。 */
+	public static final int DRAIN_COLUMNS_PER_PASS = 96;
+	/** 每多少次掠夺结算一次。 */
+	public static final int DRAIN_INTERVAL_TICKS = 20;
 
 	/** 同一次命名行为的冷却，防连点。 */
 	public static final int USE_COOLDOWN_TICKS = 20;

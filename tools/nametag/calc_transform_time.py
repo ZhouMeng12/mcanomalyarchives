@@ -94,8 +94,16 @@ for mob in MOBS:
                  "（撞下限）" if t == MIN_TICKS else ("（撞上限）" if t == MAX_TICKS else "")))
     print()
 
-print("注意：时间只是**下限**。走完 100%% 之后还要 materialReady ——")
-print("      即从附近掠夺到的材料 ≥ 方块需求量，否则它停在 100%% 不动，等玩家把材料搬过去。")
-print("      每次掠夺推进 %d 点，每 %s tick 最多抽一块。"
-      % (java_const(read("src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagCosts.java"), "DRAIN_PROGRESS_PER_BLOCK"),
-         java_const(read("src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagCosts.java"), "DRAIN_INTERVAL_TICKS")))
+print("对应关系（作者 2026-09-13 定）：**有就夺、没有就算了、但照样要换** ——")
+print("      所以时间到就一定完成，掠夺只是代价与演出，不再是完成条件。")
+print("      夺取范围：水平 ±%d 格（%d×%d 的面积）、上下 ±%d 格；"
+      % (java_const(read("src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagCosts.java"), "DRAIN_HALF_EXTENT"),
+         java_const(read("src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagCosts.java"), "DRAIN_HALF_EXTENT") * 2,
+         java_const(read("src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagCosts.java"), "DRAIN_HALF_EXTENT") * 2,
+         java_const(read("src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagCosts.java"), "DRAIN_VERTICAL")))
+print("      每 %s tick 扫一趟，每趟 %s 列（一列 %d 格高），%d 列循环一遍。"
+      % (java_const(read("src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagCosts.java"), "DRAIN_INTERVAL_TICKS"),
+         java_const(read("src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagCosts.java"), "DRAIN_COLUMNS_PER_PASS"),
+         java_const(read("src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagCosts.java"), "DRAIN_VERTICAL") * 2 + 1,
+         java_const(read("src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagCosts.java"), "DRAIN_HALF_EXTENT") ** 2 * 4))
+print("      金块/金装备直接消除，金矿变石头（深层变深层、下界金矿变下界岩）。")

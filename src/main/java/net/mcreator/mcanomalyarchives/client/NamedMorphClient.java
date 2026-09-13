@@ -37,11 +37,15 @@ public final class NamedMorphClient {
 	/**
 	 * 要盖上去的那张贴图（目标方块）。
 	 *
-	 * @return 目标方块贴图；不是"变成方块"的转化、或贴图不存在时返回 null
+	 * ⚠️ 这里**不能**在进度到 100% 时返回 null —— 之前就是这么写的，结果进度一满、
+	 * 混合被关掉，贴图"啪"地弹回生物原本的材质，而它还要过一小会儿才真正变成方块。
+	 * 现在只要进度 > 0 就一直盖着，到 100% 时 alpha = 255（全身都是方块材质），
+	 * 直到服务端把它替换成方块为止。
+	 *
+	 * @return 目标方块贴图；没在转化、或贴图不存在时返回 null
 	 */
 	public static ResourceLocation blendTexture(LivingEntity entity) {
-		float progress = NamedTransformClient.progressOf(entity);
-		if (progress <= 0.0f || progress >= 1.0f) {
+		if (NamedTransformClient.progressOf(entity) <= 0.0f) {
 			return null;
 		}
 		String token = NamedTransformClient.targetOf(entity);

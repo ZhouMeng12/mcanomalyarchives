@@ -24,13 +24,13 @@ public final class NameTagTransform {
 	/** 阶段数：0-25 / 25-50 / 50-75 / 75-100，外加完成。 */
 	public static final int STAGES = 4;
 
-	public static final int MIN_TICKS = 600; // 30 秒
-	public static final int MAX_TICKS = 6000; // 5 分钟
+	public static final int MIN_TICKS = 300; // 15 秒
+	public static final int MAX_TICKS = 2400; // 2 分钟
 
 	/** 每字符多少 tick。 */
-	public static final int TICKS_PER_CHAR = 200;
+	public static final int TICKS_PER_CHAR = 100;
 	/** 每单位质料差额多少 tick。 */
-	public static final int TICKS_PER_DEFICIT = 4;
+	public static final int TICKS_PER_DEFICIT = 1;
 
 	private NameTagTransform() {
 	}

@@ -97,7 +97,11 @@ public final class NameTagTicker {
 		if (!NameTagTransform.isTransforming(living)) {
 			startTransform(level, living, target, now);
 		}
-		tickDrain(level, living, target);
+		// 夺取附近的同类材料：金块消除、金矿变石头、金装备没收。
+		// 作者定的规则是"有就夺、没有就算了，但照样要换" —— 所以它**不是**完成条件。
+		if (living.tickCount % NameTagCosts.DRAIN_INTERVAL_TICKS == 0) {
+			EntityNaming.seizeNearby(level, living, target);
+		}
 
 		float progress = NameTagTransform.progressOf(living, now);
 		int stage = NameTagTransform.stageOf(progress);
@@ -105,7 +109,8 @@ public final class NameTagTicker {
 			NameTagTransform.setLastStage(living, stage);
 			onStage(level, living, target, stage);
 		}
-		if (progress >= 1.0f && materialReady(living, target)) {
+		// 时间到就换，不再看材料够不够
+		if (progress >= 1.0f) {
 			complete(level, living, target);
 		}
 	}
@@ -129,34 +134,6 @@ public final class NameTagTicker {
 		int duration = NameTagTransform.durationTicks(NamedState.displayOf(living),
 				MaterialUnits.budgetOf(living), MaterialUnits.requirement(target));
 		NameTagTransform.start(living, now, duration);
-	}
-
-	// ===== 材料是否够（不够就一直掠夺，卡在最后一步之前） =====
-
-	private static boolean materialReady(LivingEntity living, ResolvedName target) {
-		int need = MaterialUnits.requirement(target);
-		if (need <= 0) {
-			return true;
-		}
-		return NamedState.progressOf(living) >= need;
-	}
-
-	// ===== 需要材料：持续从附近抽走目标材料，累积进度 =====
-
-	private static void tickDrain(ServerLevel level, LivingEntity living, ResolvedName target) {
-		if (living.tickCount % NameTagCosts.DRAIN_INTERVAL_TICKS != 0) {
-			return;
-		}
-		if (materialReady(living, target)) {
-			return;
-		}
-		BlockPos source = EntityNaming.findDrainable(level, living, target);
-		if (source == null) {
-			return; // 附近没材料：停在那儿等玩家搬过来
-		}
-		if (EntityNaming.drain(level, source)) {
-			NamedState.addProgress(living, NameTagCosts.DRAIN_PROGRESS_PER_BLOCK);
-		}
 	}
 
 	// ===== 阶段表现：让玩家看得出"正在变" =====

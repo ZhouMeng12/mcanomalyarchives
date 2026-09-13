@@ -215,10 +215,20 @@ public final class MaterialUnits {
 
 	/**
 	 * 掠夺来源：目标材料本身，以及它的矿石/粗矿形态。
-	 * 正片里羊是从"收容所附近含金元素的设备"里抽走零件的——只要附近有金，就该能抽，
-	 * 不该苛刻到"必须正好有一块金块"。
+	 *
+	 * 作者 2026-09-13 把规则改具体了：**周围 64×64 范围内有金子就夺取
+	 * （金块与金装备直接消除、金矿变成石头），没有就算了、但还是照常换**。
+	 * 所以下面不再是"找一块够用的"，而是按**材料族**把整片区域扫一遍、见到就拿。
 	 */
-	private static final Map<String, java.util.List<String>> DRAIN_SOURCES = new HashMap<>();
+	/** 一个材料族：直接消除的方块、要替换成什么的矿石、要没收的物品、以及装备的材质。 */
+	public record Family(java.util.Set<net.minecraft.world.level.block.Block> removes,
+			Map<net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block> replaces,
+			java.util.Set<net.minecraft.world.item.Item> items,
+			@org.jetbrains.annotations.Nullable net.minecraft.world.item.Tier tier,
+			@org.jetbrains.annotations.Nullable net.minecraft.world.item.ArmorMaterial armor) {
+	}
+
+	private static final Map<String, Family> FAMILIES = new HashMap<>();
 
 	static {
 		RESIDUE.put("minecraft:diamond_block", "minecraft:diamond");
@@ -232,46 +242,105 @@ public final class MaterialUnits {
 		RESIDUE.put("minecraft:coal_block", "minecraft:coal");
 		RESIDUE.put("minecraft:amethyst_block", "minecraft:amethyst_shard");
 
-		DRAIN_SOURCES.put("minecraft:gold_block", java.util.List.of(
-				"minecraft:gold_block", "minecraft:gold_ore", "minecraft:deepslate_gold_ore",
-				"minecraft:raw_gold_block", "minecraft:nether_gold_ore"));
-		DRAIN_SOURCES.put("minecraft:iron_block", java.util.List.of(
-				"minecraft:iron_block", "minecraft:iron_ore", "minecraft:deepslate_iron_ore",
-				"minecraft:raw_iron_block"));
-		DRAIN_SOURCES.put("minecraft:diamond_block", java.util.List.of(
-				"minecraft:diamond_block", "minecraft:diamond_ore", "minecraft:deepslate_diamond_ore"));
-		DRAIN_SOURCES.put("minecraft:emerald_block", java.util.List.of(
-				"minecraft:emerald_block", "minecraft:emerald_ore", "minecraft:deepslate_emerald_ore"));
-		DRAIN_SOURCES.put("minecraft:copper_block", java.util.List.of(
-				"minecraft:copper_block", "minecraft:copper_ore", "minecraft:deepslate_copper_ore",
-				"minecraft:raw_copper_block"));
-		DRAIN_SOURCES.put("minecraft:coal_block", java.util.List.of(
-				"minecraft:coal_block", "minecraft:coal_ore", "minecraft:deepslate_coal_ore"));
-		DRAIN_SOURCES.put("minecraft:netherite_block", java.util.List.of("minecraft:netherite_block"));
-		DRAIN_SOURCES.put("minecraft:lapis_block", java.util.List.of(
-				"minecraft:lapis_block", "minecraft:lapis_ore", "minecraft:deepslate_lapis_ore"));
-		DRAIN_SOURCES.put("minecraft:redstone_block", java.util.List.of(
-				"minecraft:redstone_block", "minecraft:redstone_ore", "minecraft:deepslate_redstone_ore"));
+		// ===== 材料族：按作者的新规则，见到就夺 =====
+		family("minecraft:gold_block",
+				new String[]{"gold_block", "raw_gold_block"},
+				new String[][]{{"gold_ore", "stone"}, {"deepslate_gold_ore", "deepslate"}, {"nether_gold_ore", "netherrack"}},
+				new String[]{"gold_ingot", "gold_nugget", "raw_gold", "golden_horse_armor"},
+				net.minecraft.world.item.Tiers.GOLD, net.minecraft.world.item.ArmorMaterials.GOLD.value());
+		family("minecraft:iron_block",
+				new String[]{"iron_block", "raw_iron_block"},
+				new String[][]{{"iron_ore", "stone"}, {"deepslate_iron_ore", "deepslate"}},
+				new String[]{"iron_ingot", "raw_iron", "iron_horse_armor", "iron_bars", "anvil", "cauldron", "hopper"},
+				net.minecraft.world.item.Tiers.IRON, net.minecraft.world.item.ArmorMaterials.IRON.value());
+		family("minecraft:diamond_block",
+				new String[]{"diamond_block"},
+				new String[][]{{"diamond_ore", "stone"}, {"deepslate_diamond_ore", "deepslate"}},
+				new String[]{"diamond", "diamond_horse_armor"},
+				net.minecraft.world.item.Tiers.DIAMOND, net.minecraft.world.item.ArmorMaterials.DIAMOND.value());
+		family("minecraft:netherite_block",
+				new String[]{"netherite_block"},
+				new String[][]{},
+				new String[]{"netherite_ingot", "netherite_scrap"},
+				net.minecraft.world.item.Tiers.NETHERITE, net.minecraft.world.item.ArmorMaterials.NETHERITE.value());
+		family("minecraft:emerald_block",
+				new String[]{"emerald_block"},
+				new String[][]{{"emerald_ore", "stone"}, {"deepslate_emerald_ore", "deepslate"}},
+				new String[]{"emerald"}, null, null);
+		family("minecraft:copper_block",
+				new String[]{"copper_block", "raw_copper_block"},
+				new String[][]{{"copper_ore", "stone"}, {"deepslate_copper_ore", "deepslate"}},
+				new String[]{"copper_ingot", "raw_copper"}, null, null);
+		family("minecraft:coal_block",
+				new String[]{"coal_block"},
+				new String[][]{{"coal_ore", "stone"}, {"deepslate_coal_ore", "deepslate"}},
+				new String[]{"coal"}, null, null);
+		family("minecraft:lapis_block",
+				new String[]{"lapis_block"},
+				new String[][]{{"lapis_ore", "stone"}, {"deepslate_lapis_ore", "deepslate"}},
+				new String[]{"lapis_lazuli"}, null, null);
+		family("minecraft:redstone_block",
+				new String[]{"redstone_block"},
+				new String[][]{{"redstone_ore", "stone"}, {"deepslate_redstone_ore", "deepslate"}},
+				new String[]{"redstone"}, null, null);
 	}
 
-	/** 可以被掠夺的方块集合（目标材料本身 + 它的矿石形态）。 */
-	public static java.util.Set<net.minecraft.world.level.block.Block> drainSources(ResolvedName name) {
-		java.util.Set<net.minecraft.world.level.block.Block> out = new java.util.HashSet<>();
-		java.util.List<String> list = DRAIN_SOURCES.get(name.id().toString());
-		if (list == null) {
-			// 没登记的方块：就只有它自己
-			if (name.kind() == ResolvedName.Kind.BLOCK) {
-				out.add(BuiltInRegistries.BLOCK.get(name.id()));
-			}
-			return out;
-		}
-		for (String id : list) {
-			ResourceLocation loc = ResourceLocation.tryParse(id);
-			if (loc != null && BuiltInRegistries.BLOCK.containsKey(loc)) {
-				out.add(BuiltInRegistries.BLOCK.get(loc));
+	private static void family(String targetBlock, String[] removes, String[][] replaces, String[] items,
+			@org.jetbrains.annotations.Nullable net.minecraft.world.item.Tier tier,
+			@org.jetbrains.annotations.Nullable net.minecraft.world.item.ArmorMaterial armor) {
+		java.util.Set<net.minecraft.world.level.block.Block> removeSet = new java.util.HashSet<>();
+		for (String id : removes) {
+			net.minecraft.world.level.block.Block b = block("minecraft:" + id);
+			if (b != null) {
+				removeSet.add(b);
 			}
 		}
-		return out;
+		Map<net.minecraft.world.level.block.Block, net.minecraft.world.level.block.Block> replaceMap = new java.util.HashMap<>();
+		for (String[] pair : replaces) {
+			net.minecraft.world.level.block.Block from = block("minecraft:" + pair[0]);
+			net.minecraft.world.level.block.Block to = block("minecraft:" + pair[1]);
+			if (from != null && to != null) {
+				replaceMap.put(from, to);
+			}
+		}
+		java.util.Set<net.minecraft.world.item.Item> itemSet = new java.util.HashSet<>();
+		for (String id : items) {
+			ResourceLocation loc = ResourceLocation.tryParse("minecraft:" + id);
+			if (loc != null && BuiltInRegistries.ITEM.containsKey(loc)) {
+				itemSet.add(BuiltInRegistries.ITEM.get(loc));
+			}
+		}
+		FAMILIES.put(targetBlock, new Family(removeSet, replaceMap, itemSet, tier, armor));
+	}
+
+	private static net.minecraft.world.level.block.Block block(String id) {
+		ResourceLocation loc = ResourceLocation.tryParse(id);
+		return loc != null && BuiltInRegistries.BLOCK.containsKey(loc) ? BuiltInRegistries.BLOCK.get(loc) : null;
+	}
+
+	/** 名字对应的材料族；不是金属/宝石类方块就返回 null（那就不掠夺，直接换）。 */
+	public static Family familyOf(ResolvedName name) {
+		return name == null || name.kind() != ResolvedName.Kind.BLOCK ? null : FAMILIES.get(name.id().toString());
+	}
+
+	/** 这件物品算不算"要没收的同类材料/装备"。 */
+	public static boolean isSeizable(ItemStack stack, Family family) {
+		return family != null && !stack.isEmpty() && isSeizable(stack.getItem(), family);
+	}
+
+	public static boolean isSeizable(net.minecraft.world.item.Item item, Family family) {
+		if (family == null) {
+			return false;
+		}
+		if (family.items().contains(item)) {
+			return true;
+		}
+		if (family.tier() != null && item instanceof net.minecraft.world.item.TieredItem tiered
+				&& tiered.getTier() == family.tier()) {
+			return true; // 金镐、金剑……一整族装备
+		}
+		return family.armor() != null && item instanceof net.minecraft.world.item.ArmorItem armorItem
+				&& armorItem.getMaterial().value() == family.armor();
 	}
 
 	/** 爆炸中心找到的那点东西（正片：一例极其微小的钻石块颗粒）。 */

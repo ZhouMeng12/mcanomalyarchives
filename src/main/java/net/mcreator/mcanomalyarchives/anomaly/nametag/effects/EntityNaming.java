@@ -62,59 +62,114 @@ public final class EntityNaming {
 	}
 
 	/**
-	 * 跨类（实体 ← 方块/物品名）：先做质料结算。
+	 * **夺取附近的同类材料**（作者 2026-09-13 定的新规则）。
 	 *
-	 * ⚠️ 已废弃：作者 2026-09-13 把实体侧改成"慢慢变成"之后，生物不再按"够不够"当场结算
-	 * ——材料不够就停在最后一步之前持续掠夺（{@link NameTagTicker#tickDrain} 那一支），**不爆炸**。
+	 * 正片里羊是这么抽走收容所里的金的：【旁白 4:14-4:22】"收容所附近含金元素的设备均出现故障，
+	 * 甚至有的设备零件已经部分缺失"。所以这里不是"找一块够用的"，而是：
+	 * <ul>
+	 *   <li>照作者的话，扫**周围 64×64 的范围**（水平 ±32 格、上下 ±24 格）；</li>
+	 *   <li>金块一类的直接**消除**；金矿**变成石头**（深层变深层、下界金矿变下界岩）；</li>
+	 *   <li>地上的同类掉落物、以及沿途遇到的容器里的同类物品，一并**没收**；</li>
+	 *   <li>扫到多少算多少，一块都没有也照样完成转化 —— 时间到了就换。</li>
+	 * </ul>
+	 *
+	 * 64×64 = 4096 列，一列要查 49 格，不可能一次扫完：所以按**列**推进，
+	 * 游标存进 persistentData 循环，每次结算只处理 {@code DRAIN_COLUMNS_PER_PASS} 列。
+	 *
+	 * @return 这一趟夺走了多少东西（仅用于提示/日志）
 	 */
-	@Deprecated
-	public static MaterialUnits.Outcome settle(ServerLevel level, LivingEntity target, ResolvedName name) {
-		int budget = MaterialUnits.budgetOf(target);
-		int need = MaterialUnits.requirement(name);
-		MaterialUnits.Outcome outcome = MaterialUnits.settle(budget, need);
-		if (outcome == MaterialUnits.Outcome.DRAIN && !hasDrainable(level, target, name)) {
-			return MaterialUnits.Outcome.EXPLODE;
+	public static int seizeNearby(ServerLevel level, LivingEntity living, ResolvedName target) {
+		MaterialUnits.Family family = MaterialUnits.familyOf(target);
+		if (family == null) {
+			return 0;
 		}
-		return outcome;
+		int half = NameTagCosts.DRAIN_HALF_EXTENT;
+		int span = half * 2;
+		int total = span * span;
+		int cursor = Math.floorMod(NamedState.drainCursor(living), total);
+		int seized = 0;
+
+		int columns = Math.min(NameTagCosts.DRAIN_COLUMNS_PER_PASS, total);
+		for (int i = 0; i < columns; i++) {
+			int cx = cursor % span - half;
+			int cz = cursor / span - half;
+			cursor = (cursor + 1) % total;
+			seized += sweepColumn(level, living, family, cx, cz);
+		}
+		NamedState.setDrainCursor(living, cursor);
+
+		// 地上的掉落物（同类材料/装备）一并没收 —— 实体表很短，一次查完不心疼
+		net.minecraft.world.phys.AABB area = living.getBoundingBox().inflate(half, NameTagCosts.DRAIN_VERTICAL, half);
+		for (ItemEntity drop : level.getEntitiesOfClass(ItemEntity.class, area)) {
+			if (MaterialUnits.isSeizable(drop.getItem(), family)) {
+				drop.discard();
+				seized++;
+			}
+		}
+		return seized;
 	}
 
-	/** @deprecated 见 {@link #settle}；现在只用 {@link #findDrainable}。 */
-	@Deprecated
-	public static boolean hasDrainable(ServerLevel level, LivingEntity target, ResolvedName name) {
-		return findDrainable(level, target, name) != null;
-	}
-
-	/** 找一块可以被掠夺的方块：目标材料本身，或它的矿石/粗矿形态。 */
-	public static BlockPos findDrainable(ServerLevel level, LivingEntity target, ResolvedName name) {
-		java.util.Set<Block> wanted = MaterialUnits.drainSources(name);
-		if (wanted.isEmpty()) {
-			return null;
-		}
-		BlockPos origin = target.blockPosition();
-		int r = NameTagCosts.DRAIN_RADIUS;
+	/** 扫一列（竖直 ±24 格），见到同类就消除/替换，遇到容器就翻一遍。 */
+	private static int sweepColumn(ServerLevel level, LivingEntity living, MaterialUnits.Family family, int dx, int dz) {
+		int seized = 0;
+		BlockPos origin = living.blockPosition();
+		int baseX = origin.getX() + dx;
+		int baseZ = origin.getZ() + dz;
 		int vy = NameTagCosts.DRAIN_VERTICAL;
-		BlockPos min = origin.offset(-r, -vy, -r);
-		BlockPos max = origin.offset(r, vy, r);
-		for (BlockPos pos : BlockPos.betweenClosed(min, max)) {
-			if (!level.isLoaded(pos)) {
+		BlockPos.MutableBlockPos cursor = new BlockPos.MutableBlockPos();
+		for (int y = origin.getY() - vy; y <= origin.getY() + vy; y++) {
+			cursor.set(baseX, y, baseZ);
+			if (!level.isLoaded(cursor)) {
 				continue;
 			}
-			if (wanted.contains(level.getBlockState(pos).getBlock())) {
-				return pos.immutable();
+			BlockState state = level.getBlockState(cursor);
+			if (state.isAir()) {
+				continue;
+			}
+			Block block = state.getBlock();
+			if (family.removes().contains(block)) {
+				// 金块这类：直接消除
+				level.removeBlock(cursor, false);
+				seized++;
+				continue;
+			}
+			Block replacement = family.replaces().get(block);
+			if (replacement != null) {
+				// 金矿这类：变成石头
+				level.setBlockAndUpdate(cursor, replacement.defaultBlockState());
+				seized++;
+				continue;
+			}
+			// 沿途遇到的容器：把里面的同类材料/装备没收掉
+			// （先用 hasBlockEntity() 挡一道，否则每趟要对四千多个位置做方块实体查询）
+			if (state.hasBlockEntity()) {
+				seized += seizeFromContainer(level, cursor, family);
 			}
 		}
-		return null;
+		return seized;
 	}
 
-	/** 抽走一块材料（变成空气），返回是否成功。 */
-	public static boolean drain(ServerLevel level, BlockPos pos) {
-		BlockState state = level.getBlockState(pos);
-		if (state.isAir()) {
-			return false;
+	private static int seizeFromContainer(ServerLevel level, BlockPos pos, MaterialUnits.Family family) {
+		if (!(level.getBlockEntity(pos) instanceof net.minecraft.world.Container container)) {
+			return 0;
 		}
-		level.removeBlock(pos, false);
-		level.sendParticles(ParticleTypes.SMOKE, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 6, 0.3, 0.3, 0.3, 0.01);
-		return true;
+		int seized = 0;
+		for (int slot = 0; slot < container.getContainerSize(); slot++) {
+			ItemStack stack = container.getItem(slot);
+			if (MaterialUnits.isSeizable(stack, family)) {
+				seized += stack.getCount();
+				container.setItem(slot, ItemStack.EMPTY);
+			}
+		}
+		if (seized > 0) {
+			container.setChanged();
+		}
+		return seized;
+	}
+
+	/** 转化中/完成时的特效：一道烟，表示东西被抽走了。 */
+	public static void puff(ServerLevel level, double x, double y, double z) {
+		level.sendParticles(ParticleTypes.SMOKE, x, y, z, 4, 0.25, 0.25, 0.25, 0.01);
 	}
 
 	/**
