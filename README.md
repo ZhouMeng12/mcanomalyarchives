@@ -1,4 +1,4 @@
-# MC诡异见闻录 (strangerecord)
+# MC诡异见闻录 (mcanomalyarchives)
 
 一个基于 MCreator 开发的 **Minecraft 1.21.1 / NeoForge** 恐怖·诡异题材同人模组。
 
@@ -116,6 +116,11 @@
   ```
 - 手写机制的纯逻辑自检在 `tools/nametag/`（名称解析表、转化时长、掉落换算、产物内容等），
   都是不需要启动游戏就能跑的 Python 脚本。
+- 发布相关的 GitHub 操作用 `tools/github/gh.ps1`（建 Release、看 Release 列表等）：
+  它会借用 git 凭据管理器里已存的凭据，不需要另外登录 gh。例如
+  ```powershell
+  pwsh tools/github/gh.ps1 release list --limit 3
+  ```
 
 ## 项目结构
 
