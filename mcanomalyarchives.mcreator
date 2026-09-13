@@ -1459,6 +1459,20 @@
         ]
       },
       "path": "~/pinksheep"
+    },
+    {
+      "name": "AnomalyCodex",
+      "type": "item",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "anomaly_codex",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/mcanomalyarchives/item/AnomalyCodexItem.java",
+          "src/main/resources/assets/mcanomalyarchives/models/item/anomaly_codex.json"
+        ]
+      },
+      "path": "~/StrangeRecord"
     }
   ],
   "variable_elements": [],

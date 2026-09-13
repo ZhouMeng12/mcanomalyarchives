@@ -168,6 +168,26 @@ python tools/structure-fix/fix_structure_nbt.py verify          # 校验引用�
 > 这是生成区里的签名，MCreator 重生成会改回单参版本（配置会静默失效），
 > 因此清单里加了 `mod-constructor-modcontainer` 盯着它。
 
+## 见闻录（图鉴）系统
+
+`codex` 包（非生成区）+ 一个 MCreator 物品元素：
+
+| 部分 | 位置 | 说明 |
+|---|---|---|
+| 档案数据 + 解锁状态 | `codex/AnomalyCodex.java` | 12 条 UO 档案；解锁状态存玩家 `persistentData` 的位掩码（不占数据组件、不用注册 AttachmentType） |
+| 周期扫描 | `codex/CodexScanner.java` | 每 2 秒对在线玩家扫一次：附近有该实体 / 背包有该物品 → 解锁；死亡重生时搬运位掩码（`PlayerEvent.Clone`） |
+| 右键打开 | `codex/CodexItemHandler.java` | 监听 `PlayerInteractEvent.RightClickItem`，不碰生成区代码 |
+| 客户端界面 | `client/codex/CodexScreen.java` | 左列 12 条（未解明显示 ???），右侧详情，含进度 |
+| 同步 | `network/CodexSyncPacket.java` | 位掩码 + 「打开界面」标志一起发 |
+| 承载物品 | `elements/AnomalyCodex.mod.json` | MCreator 元素，**`locked_code: true`**（用户建议的防覆盖） |
+
+档案内容取自 wiki 的 UO 系列（UO-001~011，字段按原文用「项目等级 / 保密协议等级」而不是「威胁等级」），
+UO-012 幸运粉羊是本模组自己实现的、wiki 上暂无页面，等级由本模组自定。
+未实装的 6 条（UO-002/006/007/008/009/010）以 `PLANNED` 标记：名称可见但要显示「尚未实装」。
+
+wiki 原文抓取存放在 `docs/codex-research/`，**已加进 .gitignore**（wiki 内容为 CC BY-SA，
+只作本地研究资料，不随仓库分发）。
+
 ## 版本控制
 
 `.gitignore` 曾有第 30 行 `net/` 未锚定仓库根，git 会把它匹配到任意层级的 `net` 目录，

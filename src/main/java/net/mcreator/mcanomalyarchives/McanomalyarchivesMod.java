@@ -108,6 +108,8 @@ public class McanomalyarchivesMod {
 		net.mcreator.mcanomalyarchives.events.PinkSheepCalamityHandler.init();
 		net.mcreator.mcanomalyarchives.events.PinkSheepStructureSpawnHandler.init();
 		net.mcreator.mcanomalyarchives.client.BlinkClientHandler.init();
+		net.mcreator.mcanomalyarchives.codex.CodexScanner.init(); // 见闻录：周期扫描解锁
+		net.mcreator.mcanomalyarchives.codex.CodexItemHandler.init(); // 见闻录：右键打开
 		// End of user code block mod init
 	}
 

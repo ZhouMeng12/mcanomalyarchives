@@ -66,6 +66,7 @@ public class McanomalyarchivesModItems {
 	public static final DeferredItem<Item> STRANGETREELEAVES;
 	public static final DeferredItem<Item> STRANGE_TREE_SPAWN_EGG;
 	public static final DeferredItem<Item> PINK_SHEEP_SPAWN_EGG;
+	public static final DeferredItem<Item> ANOMALY_CODEX;
 	static {
 		STANGE_CLOUD_SPAWN_EGG = REGISTRY.register("stange_cloud_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.STANGE_CLOUD, -1, -1, new Item.Properties()));
 		CLOUD_STONE = block(McanomalyarchivesModBlocks.CLOUD_STONE);
@@ -96,6 +97,7 @@ public class McanomalyarchivesModItems {
 		PURPLEHAND = REGISTRY.register("purplehand", PurplehandItem::new);
 		CLOUD_ROCK = block(McanomalyarchivesModBlocks.CLOUD_ROCK);
 		CLOUD_ORE = block(McanomalyarchivesModBlocks.CLOUD_ORE);
+		ANOMALY_CODEX = REGISTRY.register("anomaly_codex", AnomalyCodexItem::new);
 		CLOUD_INGOT = REGISTRY.register("cloud_ingot", CloudIngotItem::new);
 		CLOUD_UPGRADE = REGISTRY.register("cloud_upgrade", CloudUpgradeItem::new);
 		CLOUD_ARMOR_HELMET = REGISTRY.register("cloud_armor_helmet", CloudArmorItem.Helmet::new);

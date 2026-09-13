@@ -90,3 +90,6 @@ docs/video-research/frames/
 # ===== 参考用的 NeoForge/原版 jar（25MB 二进制，不入仓库）=====
 1.21.1-NeoForge_21.1.248.jar
 *.jar
+
+# ===== wiki 原文抓取（CC BY-SA，仅本地研究用，不随仓库分发）=====
+docs/codex-research/

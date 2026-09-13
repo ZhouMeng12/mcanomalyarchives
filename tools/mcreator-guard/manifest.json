@@ -237,12 +237,16 @@
       "canonical": "zh_cn.extra.txt",
       "anchor": "}",
       "expectAll": [
-        "\"entity.mcanomalyarchives.sitting_enity\"",
-        "\"item_group.mcanomalyarchives.strange_record\"",
-        "\"death.attack.meteor_strike\"",
-        "\"advancements.pink_sheep_sighting.title\"",
         "\"advancements.pink_sheep_calamity.descr\"",
-        "\"entity.mcanomalyarchives.pink_sheep_gift\""
+        "\"advancements.pink_sheep_sighting.title\"",
+        "\"codex.mcanomalyarchives.title\"",
+        "\"codex.mcanomalyarchives.uo001.name\"",
+        "\"codex.mcanomalyarchives.uo012.trait\"",
+        "\"death.attack.meteor_strike\"",
+        "\"entity.mcanomalyarchives.pink_sheep_gift\"",
+        "\"entity.mcanomalyarchives.sitting_enity\"",
+        "\"item.mcanomalyarchives.anomaly_codex\"",
+        "\"item_group.mcanomalyarchives.strange_record\""
       ]
     },
     {
@@ -253,10 +257,49 @@
       "canonical": "en_us.extra.txt",
       "anchor": "}",
       "expectAll": [
-        "\"death.attack.meteor_strike\"",
-        "\"advancements.pink_sheep_sighting.title\"",
         "\"advancements.pink_sheep_calamity.descr\"",
+        "\"advancements.pink_sheep_sighting.title\"",
+        "\"codex.mcanomalyarchives.title\"",
+        "\"codex.mcanomalyarchives.uo012.trait\"",
+        "\"death.attack.meteor_strike\"",
         "\"entity.mcanomalyarchives.pink_sheep_gift\""
+      ]
+    },
+    {
+      "id": "codex-item-registration",
+      "kind": "contains",
+      "why": "见闻录物品在生成区注册表里的注册行（元素已挂进 workspace，MCreator 重生成会自己产出；这条只是防它被改坏）",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModItems.java",
+      "fixHint": "确认 elements/AnomalyCodex.mod.json 在 workspace 里，然后让 MCreator 重新生成代码",
+      "mustContain": [
+        "ANOMALY_CODEX = REGISTRY.register(\"anomaly_codex\""
+      ]
+    },
+    {
+      "id": "codex-init-hooks",
+      "kind": "contains",
+      "why": "见闻录的初始化调用（user code block）：丢了则图鉴不扫描、右键打不开",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/McanomalyarchivesMod.java",
+      "fixHint": "补回 CodexScanner.init(); 与 CodexItemHandler.init();",
+      "mustContain": [
+        "CodexScanner.init()",
+        "CodexItemHandler.init()"
+      ]
+    },
+    {
+      "id": "codex-files",
+      "kind": "exists",
+      "why": "见闻录系统本体（非生成区代码 + MCreator 元素 + 物品资源）",
+      "fixHint": "从 git 恢复 src/main/java/net/mcreator/mcanomalyarchives/codex/ 与 client/codex/",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/codex/AnomalyCodex.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/codex/CodexScanner.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/codex/CodexItemHandler.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/codex/CodexScreen.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/network/CodexSyncPacket.java",
+        "elements/AnomalyCodex.mod.json",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/anomalycodex.png",
+        "src/main/resources/assets/mcanomalyarchives/models/item/anomaly_codex.json"
       ]
     }
   ]
