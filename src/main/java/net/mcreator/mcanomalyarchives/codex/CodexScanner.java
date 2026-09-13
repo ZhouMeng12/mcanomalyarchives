@@ -28,6 +28,8 @@ public final class CodexScanner {
 	public static void onServerTick(ServerTickEvent.Post event) {
 		if (event.getServer().getTickCount() % SCAN_INTERVAL != 0)
 			return;
+		// 剧情脚本热重载：文件被改过就重新解析（详见 dialogue/StoryLoader）
+		net.mcreator.mcanomalyarchives.dialogue.StoryLoader.tick(event.getServer().overworld().getGameTime());
 		for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
 			// 创造/旁观也算"见过"：作者调试与旁观玩家同样应该能记录档案
 			AnomalyCodex.scan(player);

@@ -348,6 +348,18 @@
       "expectAll": [
         "\"weight\": 0"
       ]
+    },
+    {
+      "id": "story-script-system",
+      "kind": "exists",
+      "why": "外部剧情脚本系统（可写剧情 + 热重载）：解析器、加载器、运行时、日志",
+      "fixHint": "从 git 恢复 src/main/java/net/mcreator/mcanomalyarchives/dialogue/ 下的 Story*.java 与 DialogueLog.java",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/dialogue/Story.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/dialogue/StoryLoader.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/dialogue/StoryPlayer.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/dialogue/DialogueLog.java"
+      ]
     }
   ]
 }

@@ -1,7 +1,7 @@
 package net.mcreator.mcanomalyarchives.network;
 
 import net.mcreator.mcanomalyarchives.McanomalyarchivesMod;
-import net.mcreator.mcanomalyarchives.codex.CodexOriginStory;
+import net.mcreator.mcanomalyarchives.dialogue.StoryPlayer;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -42,7 +42,7 @@ public record DialogueChoiceAnswerPacket(int choiceId, int index) implements Cus
 
 	public static void handleData(final DialogueChoiceAnswerPacket message, final IPayloadContext context) {
 		if (context.flow() == PacketFlow.SERVERBOUND && context.player() instanceof ServerPlayer player) {
-			context.enqueueWork(() -> CodexOriginStory.onAnswer(player, message.choiceId(), message.index()));
+			context.enqueueWork(() -> StoryPlayer.onAnswer(player, message.choiceId(), message.index()));
 		}
 	}
 
