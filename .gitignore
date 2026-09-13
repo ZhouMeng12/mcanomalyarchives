@@ -16,6 +16,8 @@ latest_crash.log
 .mcreator/
 /backup/
 *.bak
+*.bak-*
+*.mcreator.bak*
 
 # ===== IDE / 编辑器 =====
 .vscode/
