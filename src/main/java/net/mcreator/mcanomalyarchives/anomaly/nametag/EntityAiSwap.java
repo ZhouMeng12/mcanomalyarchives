@@ -107,16 +107,28 @@ public final class EntityAiSwap {
 			return false;
 		}
 		String id = target.id().toString();
-		// 清空原来的全部行为与攻击目标（这就是"失去它自己的 AI"）
-		mob.goalSelector.removeAllGoals(goal -> true);
-		mob.targetSelector.removeAllGoals(goal -> true);
-		if (HOSTILE.contains(id)) {
-			installHostile(mob);
-		} else {
-			installPassive(mob, PASSIVE.getOrDefault(id, DEFAULT_ANIMAL));
+		try {
+			// 清空原来的全部行为与攻击目标（这就是"失去它自己的 AI"）
+			mob.goalSelector.removeAllGoals(goal -> true);
+			mob.targetSelector.removeAllGoals(goal -> true);
+			if (HOSTILE.contains(id)) {
+				installHostile(mob);
+			} else {
+				installPassive(mob, PASSIVE.getOrDefault(id, DEFAULT_ANIMAL));
+			}
+			return true;
+		} catch (Throwable t) {
+			// 兜底：装目标的过程中出错时，宁可让它"什么都不做"，也别把带病的目标留在这只生物身上
+			// （一个会在 tick 里抛异常的目标会让整个服务端崩）。
+			LOGGER.error("[nametag] 给 {} 换行为目标失败（目标 {}），已清空其行为目标",
+					mob.getType().getDescription().getString(), id, t);
+			mob.goalSelector.removeAllGoals(goal -> true);
+			mob.targetSelector.removeAllGoals(goal -> true);
+			return false;
 		}
-		return true;
 	}
+
+	private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger("mcanomalyarchives/nametag");
 
 	private static void installPassive(PathfinderMob mob, Template template) {
 		GoalSelector goals = mob.goalSelector;
@@ -140,12 +152,78 @@ public final class EntityAiSwap {
 	private static void installHostile(PathfinderMob mob) {
 		GoalSelector goals = mob.goalSelector;
 		goals.addGoal(0, new FloatGoal(mob));
-		goals.addGoal(2, new MeleeAttackGoal(mob, 1.0, false));
+		// ⚠️ 这里必须判断有没有攻击力属性！
+		// 牛、羊、猪、鸡这些被动生物的属性表里**没有 ATTACK_DAMAGE**，
+		// 直接给它们装原版 MeleeAttackGoal 会在第一次打人时炸：
+		//   IllegalArgumentException: Can't find attribute minecraft:generic.attack_damage
+		//   at Mob.doHurtTarget → LivingEntity.getAttributeValue → 服务端整个崩
+		// 2026-09-13 实际崩过一次（一只叫"僵尸"的牛）。
+		if (mob.getAttributes().hasAttribute(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE)) {
+			goals.addGoal(2, new MeleeAttackGoal(mob, 1.0, false));
+		} else {
+			// 没有攻击力就读不到伤害值，改用我们自己的"咬"目标：直接结算伤害，不碰属性
+			LOGGER.info("[nametag] {} 没有 ATTACK_DAMAGE 属性，改用自带近战目标（避免原版 MeleeAttackGoal 崩溃）",
+					mob.getType().getDescription().getString());
+			goals.addGoal(2, new BiteGoal(mob, 1.0));
+		}
 		goals.addGoal(7, new WaterAvoidingRandomStrollGoal(mob, 1.0));
 		goals.addGoal(8, new LookAtPlayerGoal(mob, Player.class, 8.0f));
 		goals.addGoal(8, new RandomLookAroundGoal(mob));
 		mob.targetSelector.addGoal(1, new HurtByTargetGoal(mob));
 		mob.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(mob, Player.class, true));
+	}
+
+	/**
+	 * 没有 {@code ATTACK_DAMAGE} 属性的生物也能咬人。
+	 *
+	 * 原版 {@code MeleeAttackGoal} 会走 {@code Mob.doHurtTarget}，那里要读攻击力属性；
+	 * 牛这类生物压根没有这个属性，读的时候直接抛异常。所以这里绕开它：
+	 * 自己走到目标旁边，用 {@code damageSources().mobAttack(this)} 直接结算伤害 —— 完全不碰属性表。
+	 */
+	private static final class BiteGoal extends net.minecraft.world.entity.ai.goal.Goal {
+
+		private static final float BITE_DAMAGE = 3.0f;
+		private static final double REACH_SQR = 4.0;
+
+		private final PathfinderMob mob;
+		private final double speed;
+		private int cooldown;
+
+		private BiteGoal(PathfinderMob mob, double speed) {
+			this.mob = mob;
+			this.speed = speed;
+			this.setFlags(java.util.EnumSet.of(net.minecraft.world.entity.ai.goal.Goal.Flag.MOVE,
+					net.minecraft.world.entity.ai.goal.Goal.Flag.LOOK));
+		}
+
+		@Override
+		public boolean canUse() {
+			net.minecraft.world.entity.LivingEntity target = this.mob.getTarget();
+			return target != null && target.isAlive();
+		}
+
+		@Override
+		public void start() {
+			this.cooldown = 0;
+		}
+
+		@Override
+		public void tick() {
+			net.minecraft.world.entity.LivingEntity target = this.mob.getTarget();
+			if (target == null) {
+				return;
+			}
+			this.mob.getLookControl().setLookAt(target, 30.0f, 30.0f);
+			if (this.mob.distanceToSqr(target) > REACH_SQR) {
+				this.mob.getNavigation().moveTo(target, this.speed);
+				return;
+			}
+			this.mob.getNavigation().stop();
+			if (this.cooldown-- <= 0) {
+				this.cooldown = 20;
+				target.hurt(this.mob.damageSources().mobAttack(this.mob), BITE_DAMAGE);
+			}
+		}
 	}
 
 	/** 名字所指的生物在不在我们支持的表里（供提示/自检用）。 */

@@ -293,3 +293,35 @@ durationTicks = clamp(名字字符数 × 100 + 质料差额 × 1, 300, 2400)   /
   掉落表、繁殖产物仍然是原生物的。下蛋由 `NameTagTicker` 补（正片那头牛就是靠这个下"牛蛋"）。
   要让掉落表也跟名字走，就得换本体，那是方案 B——作者选了"先做 A，不够再上 B"。
 - 只支持 `PathfinderMob`：史莱姆、恶魂这类不走寻路目标的另有一套移动逻辑，Goal 装上去也没用。
+
+### 10.4 ⚠️ 踩过的崩：给没有攻击力的生物装原版 MeleeAttackGoal
+
+2026-09-13 实际崩过一次服务端（一只叫"僵尸"的 **牛**）：
+
+```
+java.lang.IllegalArgumentException: Can't find attribute minecraft:generic.attack_damage
+  at AttributeSupplier.getAttributeInstance
+  at LivingEntity.getAttributeValue
+  at Mob.doHurtTarget              ← 近战目标第一次打人
+  at MeleeAttackGoal.checkAndPerformAttack
+Entity Type: minecraft:cow   Entity Name: 僵尸
+```
+
+**原因**：`Mob.createMobAttributes()` 只给 `FOLLOW_RANGE`，`Cow.createAttributes()` 也只是
+`createMobAttributes() + MAX_HEALTH + MOVEMENT_SPEED` —— **牛/羊/猪/鸡这类被动生物根本没有
+`ATTACK_DAMAGE` 属性**（只有 `Monster.createMonsterAttributes()` 那类才加）。
+而原版 `Mob.doHurtTarget` 第一行就读 `getAttributeValue(ATTACK_DAMAGE)`，
+读不到直接抛异常，**整个服务端跟着崩**。
+
+**修法**：
+1. `installHostile` 里先 `mob.getAttributes().hasAttribute(Attributes.ATTACK_DAMAGE)`：
+   有才装原版 `MeleeAttackGoal`；没有就装我们自己的 `BiteGoal`。
+2. `BiteGoal` 绕开属性表：走到目标旁边后直接
+   `target.hurt(mob.damageSources().mobAttack(mob), 3.0f)`。
+   已核对：`LivingEntity` 里**没有任何地方**读 `ATTACK_DAMAGE`（那是 `Mob.doHurtTarget` 独有的），
+   `DamageSources.mobAttack` 也只是构造伤害来源 —— 所以这条路径完全不碰属性，安全。
+3. `swap()` 外面套了 try/catch 兜底：装目标出错时把这只生物的目标选择器清空并记日志，
+   宁可让它"什么都不做"，也不留一个会在 tick 里抛异常的目标（那会崩服）。
+
+**好消息**：行为目标是**运行时装的、不进存档**，所以崩掉的世界重新加载就正常
+（那只牛会变回普通牛，只是还顶着"僵尸"这个名字）。
