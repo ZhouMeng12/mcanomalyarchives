@@ -16,6 +16,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -155,6 +156,27 @@ public final class EntityNaming {
 	}
 
 	/**
+	 * 变成方块的那一支：**失去 AI**。
+	 *
+	 * 作者要求"变成方块后应该失去 AI"，正片也是这么演的：
+	 * 【旁白 3:55-4:06】羊被命名成「金块」后"**瞬间失去了所有生物活性、躯体僵硬**"。
+	 *
+	 * 用 {@code setNoAi(true)}：{@code Mob.isEffectiveAi()} 会变成 false，
+	 * 于是整个 {@code serverAiStep()}（感知、目标选择、寻路、移动控制）全部停摆 —— 它就僵在原地，
+	 * 但重力、碰撞、受伤这些物理还照常，所以站在坑边会掉下去，不会浮空。
+	 */
+	public static void loseVitality(LivingEntity living) {
+		if (living instanceof Mob mob && !mob.isNoAi()) {
+			mob.setNoAi(true);
+			mob.getNavigation().stop();
+			mob.setDeltaMovement(0.0, mob.getDeltaMovement().y, 0.0);
+			if (!living.level().isClientSide()) {
+				living.level().playSound(null, living.blockPosition(), SoundEvents.SHEEP_HURT, SoundSource.NEUTRAL, 0.5f, 0.5f);
+			}
+		}
+	}
+
+	/**
 	 * 实体 ← 材料名（钻石 / 金锭 / 熟牛排 …）：**完全转换**——它变成那个东西。
 	 *
 	 * 【为什么和"工具名"分开处理】正片里猪被命名成"钻石镐"之后是**获得挖矿行为、挖到死**，
@@ -163,6 +185,10 @@ public final class EntityNaming {
 	 * 没有行为的名字，唯一说得通的结果就是"它就是那个东西本身"。
 	 *
 	 * 数量按质料守恒折算（牛 110 单位 ÷ 钻石 30 单位 = 3 颗），并夹在 1~8 之间。
+	 *
+	 * 【作者要求：变成物品后可以右键拿起、作为物品使用】
+	 * 所以产物是一个**货真价实的物品实体**：没有拾取延迟、**永不过期**（它不是掉落物，
+	 * 是那只生物变成的东西，不该自己消失），并且可以被右键拿走。
 	 */
 	public static void convertToMaterial(ServerLevel level, LivingEntity target, ResolvedName name) {
 		ItemStack drop = materialYield(target, name);
@@ -170,6 +196,9 @@ public final class EntityNaming {
 		target.discard();
 		if (!drop.isEmpty()) {
 			ItemEntity item = new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, drop);
+			item.setPickUpDelay(0);
+			item.setUnlimitedLifetime();
+			item.getPersistentData().putBoolean(NamedState.TAG_FROM_TRANSFORM, true);
 			level.addFreshEntity(item);
 		}
 		level.sendParticles(ParticleTypes.END_ROD, pos.getX() + 0.5, pos.getY() + 0.6, pos.getZ() + 0.5,

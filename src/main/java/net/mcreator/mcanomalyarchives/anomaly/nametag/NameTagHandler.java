@@ -331,6 +331,38 @@ public final class NameTagHandler {
 	 * 已按作者要求删除：玩法靠玩家自己发现，界面不解释。
 	 */
 
+	// ==================== 变成物品的那一支：右键拿起 ====================
+
+	/**
+	 * 生物变成物品之后，那个物品实体是"它变成的东西"，不是普通掉落物——
+	 * 作者要求可以**右键拿起**，拿起来之后就是一件正常的物品，该怎么用怎么用。
+	 */
+	@SubscribeEvent
+	public static void onPickUpTransformed(PlayerInteractEvent.EntityInteract event) {
+		if (!(event.getEntity() instanceof ServerPlayer player)) {
+			return;
+		}
+		if (!(event.getTarget() instanceof ItemEntity item)) {
+			return;
+		}
+		if (!item.getPersistentData().getBoolean(NamedState.TAG_FROM_TRANSFORM)) {
+			return;
+		}
+		ItemStack stack = item.getItem();
+		if (stack.isEmpty()) {
+			return;
+		}
+		event.setCanceled(true);
+		event.setCancellationResult(InteractionResult.SUCCESS);
+		ItemStack taken = stack.copy();
+		if (!player.getInventory().add(taken)) {
+			player.drop(taken, false);
+		}
+		item.discard();
+		player.level().playSound(null, player.blockPosition(), net.minecraft.sounds.SoundEvents.ITEM_PICKUP,
+				net.minecraft.sounds.SoundSource.PLAYERS, 0.2f, 1.6f);
+	}
+
 	// ==================== 中途进来的玩家也要看得到转化过程 ====================
 
 	@SubscribeEvent

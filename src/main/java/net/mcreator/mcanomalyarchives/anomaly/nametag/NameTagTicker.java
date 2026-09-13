@@ -155,6 +155,8 @@ public final class NameTagTicker {
 
 	/** 需要材料：持续从附近抽走目标材料，累积进度。 */
 	private static void tickDrain(ServerLevel level, LivingEntity living, ResolvedName target) {
+		// 变成方块的那一支：**失去 AI**，僵在原地（正片：羊被命名后"躯体僵硬"）
+		EntityNaming.loseVitality(living);
 		if (living.tickCount % NameTagCosts.DRAIN_INTERVAL_TICKS != 0) {
 			return;
 		}

@@ -43,8 +43,60 @@ public final class NamedMorphClient {
 	private static final Map<ResourceLocation, Integer> AVERAGE_COLOR = new ConcurrentHashMap<>();
 	/** 采不到的记下来，别再反复尝试。 */
 	private static final java.util.Set<ResourceLocation> FAILED = ConcurrentHashMap.newKeySet();
+	/** 存在性检查结果（贴图路径 → 存不存在）。 */
+	private static final Map<ResourceLocation, Boolean> EXISTS = new ConcurrentHashMap<>();
+
+	/** 转化过半之后，身体贴图换成目标方块/物品的贴图。 */
+	private static final float TEXTURE_SWAP_AT = 0.5f;
 
 	private NamedMorphClient() {
+	}
+
+	/**
+	 * 身体贴图是否该换成目标方块/物品的贴图。
+	 *
+	 * 作者要求：**变成方块后身体材质慢慢变成对应的方块**（变成物品同理）。
+	 *
+	 * 两张贴图之间的真正混合需要额外把模型再画一遍，代价与风险都大；
+	 * 这里做的是"过半之后换成目标材质"——配合体型缩放与颜色渐变，整体仍然是渐进的过程。
+	 *
+	 * @return 要换成的贴图；不该换 / 贴图不存在时返回 null（退回原样，不会出现紫黑方块）
+	 */
+	public static ResourceLocation bodyTextureOverride(LivingEntity entity) {
+		float progress = NamedTransformClient.progressOf(entity);
+		if (progress < TEXTURE_SWAP_AT) {
+			return null;
+		}
+		ResolvedName target = targetOf(entity);
+		if (target == null) {
+			return null;
+		}
+		String folder = switch (target.kind()) {
+			case BLOCK -> "textures/block/";
+			case ITEM -> "textures/item/";
+			// 生物不用换贴图：走到 100% 时直接换成真身
+			case ENTITY -> null;
+		};
+		if (folder == null) {
+			return null;
+		}
+		ResourceLocation path = ResourceLocation.fromNamespaceAndPath(target.id().getNamespace(),
+				folder + target.id().getPath() + ".png");
+		return textureExists(path) ? path : null;
+	}
+
+	private static boolean textureExists(ResourceLocation path) {
+		return EXISTS.computeIfAbsent(path, p -> {
+			Minecraft mc = Minecraft.getInstance();
+			if (mc.getResourceManager() == null) {
+				return false;
+			}
+			try {
+				return mc.getResourceManager().getResource(p).isPresent();
+			} catch (Throwable t) {
+				return false;
+			}
+		});
 	}
 
 	public static void beginRender(LivingEntity entity) {

@@ -45,6 +45,11 @@ public final class NamedState {
 	public static final String K_TRANSFORM_START = P + "Start";
 	public static final String K_TRANSFORM_DURATION = P + "Duration";
 	public static final String K_TRANSFORM_STAGE = P + "Stage";
+	/**
+	 * 这个物品实体是"某个生物变成的东西"，不是一个普通掉落物。
+	 * 带着它的物品实体：不会自己过期，而且可以被右键拿走。
+	 */
+	public static final String TAG_FROM_TRANSFORM = P + "FromTransform";
 
 	private NamedState() {
 	}
