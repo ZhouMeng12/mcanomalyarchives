@@ -164,15 +164,23 @@
       ]
     },
     {
-      "id": "mod-constructor-modcontainer",
+      "id": "comfort-config-registration",
       "kind": "contains",
-      "why": "舒适度配置必须在模组构造期用 ModContainer 注册；MCreator 重生成会把构造器签名改回单参版本，配置会静默失效",
+      "why": "舒适度配置的注册调用（写在 user code block 里，MCreator 会保留）。必须是【无参】调用：一旦写成 register(modContainer) 就会依赖构造器签名，而 MCreator 重生成时会把签名改回单参 —— 2026-09-12 就是这样炸了一次编译（调用行被 user code block 保留、签名被改回）",
       "path": "src/main/java/net/mcreator/mcanomalyarchives/McanomalyarchivesMod.java",
-      "fixHint": "构造器改回 (IEventBus modEventBus, net.neoforged.fml.ModContainer modContainer) 并保留 ComfortConfig.register(modContainer);",
+      "fixHint": "改成 net.mcreator.mcanomalyarchives.config.ComfortConfig.register();（无参，ModContainer 由它自己从 ModList 取）",
       "mustContain": [
-        "McanomalyarchivesMod(IEventBus modEventBus, net.neoforged.fml.ModContainer modContainer)",
-        "ComfortConfig.register(modContainer);"
+        "ComfortConfig.register();"
       ]
+    },
+    {
+      "id": "comfort-config-no-param-call",
+      "kind": "noMatch",
+      "why": "反向检查：禁止再出现依赖构造器参数的配置注册写法",
+      "fixHint": "把 ComfortConfig.register(modContainer) 改回无参调用；构造器签名保持 MCreator 生成的样子即可",
+      "glob": "McanomalyarchivesMod.java",
+      "searchRoot": "src/main/java/net/mcreator/mcanomalyarchives",
+      "pattern": "ComfortConfig\\.register\\(modContainer\\)"
     },
     {
       "id": "comfort-config",

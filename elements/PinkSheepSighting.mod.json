@@ -5,7 +5,7 @@
     "achievementName": "Lucky Pink Sheep",
     "achievementDescription": "Witness the pink sheep and receive its luck",
     "achievementIcon": {
-      "value": "Items.PINK_DYE"
+      "value": "CUSTOM:Hearticon"
     },
     "background": "Default",
     "disableDisplay": false,

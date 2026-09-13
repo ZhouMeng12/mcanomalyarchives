@@ -1,9 +1,12 @@
 package net.mcreator.mcanomalyarchives.config;
 
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.common.ModConfigSpec;
+
+import net.mcreator.mcanomalyarchives.McanomalyarchivesMod;
 
 /**
  * 游戏体验 / 舒适度配置（客户端）。
@@ -61,8 +64,25 @@ public final class ComfortConfig {
 	private ComfortConfig() {
 	}
 
-	/** 在模组构造期注册（必须是构造期，NeoForge 之后不再接受注册） */
-	public static void register(ModContainer container) {
+	/**
+	 * 在模组构造期注册（必须是构造期，NeoForge 之后不再接受注册）。
+	 *
+	 * <p>这里刻意做成【无参】：ModContainer 自己通过 {@link ModList} 取，
+	 * 于是模组主类的构造器不需要注入 ModContainer，调用点也就不依赖构造器签名。
+	 * 背景：MCreator 会重新生成 {@code McanomalyarchivesMod} 的构造器（改回单参版本），
+	 * 而写在 user code block 里的调用行是保留的 —— 只要调用点引用构造器参数，
+	 * 就会在"签名被改回 + 调用行还在"时炸编译（2026-09-12 实际发生过）。
+	 *
+	 * <p>ModList 在构造期可用已由 FML 字节码确认：
+	 * {@code ModList.setLoadedMods(...)} → {@code putstatic modList} → {@code constructMods(...)}。
+	 */
+	public static void register() {
+		ModList.get().getModContainerById(McanomalyarchivesMod.MODID).ifPresentOrElse(ComfortConfig::registerTo,
+				() -> McanomalyarchivesMod.LOGGER
+						.warn("[mcanomalyarchives] 找不到本模组的 ModContainer，舒适度配置未注册（游戏本身不受影响）"));
+	}
+
+	private static void registerTo(ModContainer container) {
 		container.registerConfig(ModConfig.Type.CLIENT, SPEC);
 		if (FMLEnvironment.dist.isClient()) {
 			// 让模组列表里出现 Config 按钮（ConfigurationScreen 是客户端专属类，必须挡在 dist 判断里）

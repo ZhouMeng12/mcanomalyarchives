@@ -51,11 +51,14 @@ public class McanomalyarchivesMod {
 	public static final Logger LOGGER = LogManager.getLogger(McanomalyarchivesMod.class);
 	public static final String MODID = "mcanomalyarchives";
 
-	public McanomalyarchivesMod(IEventBus modEventBus, net.neoforged.fml.ModContainer modContainer) {
+	public McanomalyarchivesMod(IEventBus modEventBus) {
 		// Start of user code block mod constructor
-		// 舒适度配置（震动强度 / 眨眼黑屏 / 陨石是否破坏地形）：必须在这里注册，
-		// 且构造器需要注入 ModContainer —— 该方法签名由 tools/mcreator-guard 保护，别让 MCreator 改回去。
-		net.mcreator.mcanomalyarchives.config.ComfortConfig.register(modContainer);
+		// 舒适度配置（震动强度 / 眨眼黑屏 / 陨石是否破坏地形）。
+		// 这行故意不引用任何构造器参数：ModContainer 由 ComfortConfig 自己通过 ModList 取
+		// （已从 FML 字节码确认：ModList 的静态字段在 constructMods 之前就赋值好了）。
+		// 这样 MCreator 无论把构造器签名生成成什么样，这行都能编译 ——
+		// 2026-09-12 就因为构造器被改回单参版本而炸过一次编译。
+		net.mcreator.mcanomalyarchives.config.ComfortConfig.register();
 		// End of user code block mod constructor
 		NeoForge.EVENT_BUS.register(this);
 		modEventBus.addListener(this::registerNetworking);
