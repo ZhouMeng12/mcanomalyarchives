@@ -63,7 +63,7 @@ public final class AnomalyCodex {
 	 *
 	 * 编号 / 名称 / 项目等级 / 保密协议等级 / 特征全部取自 wiki 的 UO 系列文档
 	 * （UO-011 的"项目等级 R2、保密协议 C"等字段照抄原文；wiki 用的是"项目等级"而非"威胁等级"）。
-	 * UO-012 是作者按 Sven 同名视频实现的，wiki 上还没有它的页面，等级由本模组自定。
+	 * UO-012 是作者按 Sven 同名视频实现的，wiki 上还没有它的页面，项目等级 R4 由作者指定。
 	 */
 	public static final List<Entry> ENTRIES = List.of(
 			new Entry("UO-001", key("uo001.name"), key("uo001.info"), key("uo001.trait"), key("uo001.level"),

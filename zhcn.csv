@@ -190,5 +190,5 @@ codex.mcanomalyarchives.uo011.protocol,C,C
 codex.mcanomalyarchives.uo012.name,幸运粉羊,Lucky Pink Sheep
 codex.mcanomalyarchives.uo012.info,平原上静静站着的粉色羊。注视它会得到好运；盯得太久，它会在你眨眼的一瞬间消失。,A pink sheep standing quietly in the plains. Looking at it brings luck; stare too long and it vanishes between two blinks.
 codex.mcanomalyarchives.uo012.trait,只在平原等温和开阔群系出现 · 目击满 2 秒获得幸运 · 凝视满 45 秒它会眨眼消失并转移 · 靠得太近或攻击它会招来三档灾厄 · 最高档灾厄没有任何预警,Appears only in plains and similar open temperate biomes · Two seconds of sighting grants luck · Forty-five seconds of staring makes it blink away and relocate · Getting close or attacking triggers three tiers of calamity · The top tier gives no warning at all
-codex.mcanomalyarchives.uo012.level,R3（本模组自定）,R3 (set by this mod)
-codex.mcanomalyarchives.uo012.protocol,B（本模组自定）,B (set by this mod)
+codex.mcanomalyarchives.uo012.level,R4,R4
+codex.mcanomalyarchives.uo012.protocol,B,B

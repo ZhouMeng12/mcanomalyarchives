@@ -66,5 +66,5 @@
   "codex.mcanomalyarchives.uo012.name": "Lucky Pink Sheep",
   "codex.mcanomalyarchives.uo012.info": "A pink sheep standing quietly in the plains. Looking at it brings luck; stare too long and it vanishes between two blinks.",
   "codex.mcanomalyarchives.uo012.trait": "Appears only in plains and similar open temperate biomes · Two seconds of sighting grants luck · Forty-five seconds of staring makes it blink away and relocate · Getting close or attacking triggers three tiers of calamity · The top tier gives no warning at all",
-  "codex.mcanomalyarchives.uo012.level": "R3 (set by this mod)",
-  "codex.mcanomalyarchives.uo012.protocol": "B (set by this mod)",
+  "codex.mcanomalyarchives.uo012.level": "R4",
+  "codex.mcanomalyarchives.uo012.protocol": "B",
