@@ -47,6 +47,8 @@ public final class NamedState {
 	public static final String K_TRANSFORM_STAGE = P + "Stage";
 	/** 掠夺扫描的游标（扫到 64×64 里的第几列了，循环推进）。 */
 	public static final String K_DRAIN_CURSOR = P + "DrainCursor";
+	/** 已经夺走的点数（1 个目标方块 = 81 点）；攒够上限就收手。 */
+	public static final String K_SEIZED_POINTS = P + "Seized";
 	/**
 	 * 这个物品实体是"某个生物变成的东西"，不是一个普通掉落物。
 	 * 带着它的物品实体：不会自己过期，而且可以被右键拿走。
@@ -109,6 +111,15 @@ public final class NamedState {
 
 	public static void setDrainCursor(Entity entity, int cursor) {
 		entity.getPersistentData().putInt(K_DRAIN_CURSOR, cursor);
+	}
+
+	/** 已经夺走多少点（1 个目标方块 = 81 点）。 */
+	public static int seizedPoints(Entity entity) {
+		return entity.getPersistentData().getInt(K_SEIZED_POINTS);
+	}
+
+	public static void setSeizedPoints(Entity entity, int points) {
+		entity.getPersistentData().putInt(K_SEIZED_POINTS, points);
 	}
 
 	// ===== 物品 =====

@@ -411,7 +411,44 @@ public final class MaterialUnits {
 		return out;
 	}
 
-	/** 这件物品算不算"要没收的同类材料/装备"。 */
+	/**
+	 * **夺取上限**：够做 1 个目标方块的量。
+	 *
+	 * 作者 2026-09-13："吞太多了，一个生物变成铁块最多吞一个铁块就行。"
+	 * 所以按"点"记账，**1 个目标方块 = 81 点**：
+	 * 方块 81 点、锭/宝石/装备 9 点、粒 1 点 —— 攒够 81 点就收手，剩下的留在原地。
+	 */
+	public static final int SEIZE_CAP_POINTS = 81;
+
+	/** 一件物品值多少点（1/81 个目标方块）。 */
+	public static int pointsOf(ItemStack stack, Family family) {
+		if (stack.isEmpty()) {
+			return 0;
+		}
+		if (family.nugget() != null && stack.is(family.nugget())) {
+			return 1;
+		}
+		if (family.unit() != null && stack.is(family.unit())) {
+			return 9;
+		}
+		// 方块物品：它代表的那一块
+		if (stack.getItem() instanceof net.minecraft.world.item.BlockItem blockItem
+				&& family.removes().contains(blockItem.getBlock())) {
+			return 81;
+		}
+		return isSeizable(stack, family) ? 9 : 0;
+	}
+
+	/** 一个方块值多少点：整块 81，矿石（会被换成石头）算 9。 */
+	public static int pointsOfBlock(net.minecraft.world.level.block.Block block, Family family) {
+		if (family.removes().contains(block)) {
+			return 81;
+		}
+		return family.replaces().containsKey(block) ? 9 : 0;
+	}
+
+	/**
+	 * 这件物品算不算"要没收的同类材料/装备"。 */
 	public static boolean isSeizable(ItemStack stack, Family family) {
 		return family != null && !stack.isEmpty() && isSeizable(stack.getItem(), family);
 	}

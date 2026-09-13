@@ -111,6 +111,35 @@ for p, want in ((1.0, 9), (0.5, 5), (0.1, 1), (0.01, 1)):
     if not ok:
         FAILED.append("钻石块 %.2f 应掉 %d，实得 %d" % (p, want, got))
 
+print("=== 5. 夺取记账：最多吞够 1 个目标方块（作者：一个生物变成铁块最多吞一个铁块）===")
+SEIZE_CAP = 81  # MaterialUnits.SEIZE_CAP_POINTS
+
+
+def seize(points_each, available):
+    """给一堆等值材料，看它吞几个就收手。"""
+    taken, total = 0, 0
+    for _ in range(available):
+        if total >= SEIZE_CAP:
+            break
+        total += points_each
+        taken += 1
+    return taken, total
+
+
+# 方块 81 点、矿石/锭/宝石/装备 9 点、粒 1 点
+for label, each, available, want_taken in (
+        ("整块（金块/铁块）", 81, 10, 1),      # ← 作者要的：10 块铁块也只吞 1 块
+        ("矿石（变石头）", 9, 100, 9),
+        ("锭", 9, 100, 9),
+        ("粒", 1, 100, 81),
+):
+    taken, total = seize(each, available)
+    ok = taken == want_taken and total == SEIZE_CAP
+    print("  [%s] %-16s 旁边有 %3d 个 -> 吞 %2d 个（%d 点）"
+          % ("OK " if ok else "FAIL", label, available, taken, total))
+    if not ok:
+        FAILED.append("夺取上限 %s：期望吞 %d 个，实得 %d 个" % (label, want_taken, taken))
+
 print()
 if FAILED:
     print("自检失败 %d 项：" % len(FAILED))

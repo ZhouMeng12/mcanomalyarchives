@@ -62,26 +62,32 @@ public final class EntityNaming {
 	}
 
 	/**
-	 * **夺取附近的同类材料**（作者 2026-09-13 定的新规则）。
+	 * **夺取附近的同类材料**（作者 2026-09-13 定的新规则，第二轮又加了上限）。
 	 *
 	 * 正片里羊是这么抽走收容所里的金的：【旁白 4:14-4:22】"收容所附近含金元素的设备均出现故障，
-	 * 甚至有的设备零件已经部分缺失"。所以这里不是"找一块够用的"，而是：
+	 * 甚至有的设备零件已经部分缺失"。规则：
 	 * <ul>
-	 *   <li>照作者的话，扫**周围 64×64 的范围**（水平 ±32 格、上下 ±24 格）；</li>
+	 *   <li>扫**周围 64×64 的范围**（水平 ±32 格、上下 ±24 格）；</li>
 	 *   <li>金块一类的直接**消除**；金矿**变成石头**（深层变深层、下界金矿变下界岩）；</li>
 	 *   <li>地上的同类掉落物、以及沿途遇到的容器里的同类物品，一并**没收**；</li>
-	 *   <li>扫到多少算多少，一块都没有也照样完成转化 —— 时间到了就换。</li>
+	 *   <li><b>但最多只吞够一个目标方块的量</b>（作者："一个生物变成铁块最多吞一个铁块就行"）——
+	 *       按"点"记账，1 个目标方块 = 81 点（方块 81、锭/宝石/装备 9、粒 1），攒够就收手，剩下的留在原地；</li>
+	 *   <li>一块都没有也照样完成转化 —— 时间到了就换。</li>
 	 * </ul>
 	 *
 	 * 64×64 = 4096 列，一列要查 49 格，不可能一次扫完：所以按**列**推进，
 	 * 游标存进 persistentData 循环，每次结算只处理 {@code DRAIN_COLUMNS_PER_PASS} 列。
 	 *
-	 * @return 这一趟夺走了多少东西（仅用于提示/日志）
+	 * @return 这一趟夺走了多少点
 	 */
 	public static int seizeNearby(ServerLevel level, LivingEntity living, ResolvedName target) {
 		MaterialUnits.Family family = MaterialUnits.familyOf(target);
 		if (family == null) {
 			return 0;
+		}
+		int already = NamedState.seizedPoints(living);
+		if (already >= MaterialUnits.SEIZE_CAP_POINTS) {
+			return 0; // 已经吞够一个目标方块了，收手
 		}
 		int half = NameTagCosts.DRAIN_HALF_EXTENT;
 		int span = half * 2;
@@ -91,6 +97,9 @@ public final class EntityNaming {
 
 		int columns = Math.min(NameTagCosts.DRAIN_COLUMNS_PER_PASS, total);
 		for (int i = 0; i < columns; i++) {
+			if (already + seized >= MaterialUnits.SEIZE_CAP_POINTS) {
+				break; // 够了就停，别继续扫
+			}
 			int cx = cursor % span - half;
 			int cz = cursor / span - half;
 			cursor = (cursor + 1) % total;
@@ -99,19 +108,27 @@ public final class EntityNaming {
 		NamedState.setDrainCursor(living, cursor);
 
 		// 地上的掉落物（同类材料/装备）一并没收 —— 实体表很短，一次查完不心疼
-		net.minecraft.world.phys.AABB area = living.getBoundingBox().inflate(half, NameTagCosts.DRAIN_VERTICAL, half);
-		for (ItemEntity drop : level.getEntitiesOfClass(ItemEntity.class, area)) {
-			if (MaterialUnits.isSeizable(drop.getItem(), family)) {
-				drop.discard();
-				seized++;
+		if (already + seized < MaterialUnits.SEIZE_CAP_POINTS) {
+			net.minecraft.world.phys.AABB area = living.getBoundingBox().inflate(half, NameTagCosts.DRAIN_VERTICAL, half);
+			for (ItemEntity drop : level.getEntitiesOfClass(ItemEntity.class, area)) {
+				if (already + seized >= MaterialUnits.SEIZE_CAP_POINTS) {
+					break;
+				}
+				if (MaterialUnits.isSeizable(drop.getItem(), family)) {
+					seized += MaterialUnits.pointsOf(drop.getItem(), family);
+					drop.discard();
+				}
 			}
+		}
+		if (seized > 0) {
+			NamedState.setSeizedPoints(living, already + seized);
 		}
 		return seized;
 	}
 
 	/** 扫一列（竖直 ±24 格），见到同类就消除/替换，遇到容器就翻一遍。 */
 	private static int sweepColumn(ServerLevel level, LivingEntity living, MaterialUnits.Family family, int dx, int dz) {
-		int seized = 0;
+		int points = 0;
 		BlockPos origin = living.blockPosition();
 		int baseX = origin.getX() + dx;
 		int baseZ = origin.getZ() + dz;
@@ -128,43 +145,43 @@ public final class EntityNaming {
 			}
 			Block block = state.getBlock();
 			if (family.removes().contains(block)) {
-				// 金块这类：直接消除
+				// 金块这类：直接消除（整整一块 = 81 点，正好是上限）
 				level.removeBlock(cursor, false);
-				seized++;
+				points += 81;
 				continue;
 			}
 			Block replacement = family.replaces().get(block);
 			if (replacement != null) {
-				// 金矿这类：变成石头
+				// 金矿这类：变成石头（一块矿石算 9 点）
 				level.setBlockAndUpdate(cursor, replacement.defaultBlockState());
-				seized++;
+				points += 9;
 				continue;
 			}
 			// 沿途遇到的容器：把里面的同类材料/装备没收掉
 			// （先用 hasBlockEntity() 挡一道，否则每趟要对四千多个位置做方块实体查询）
 			if (state.hasBlockEntity()) {
-				seized += seizeFromContainer(level, cursor, family);
+				points += seizeFromContainer(level, cursor, family);
 			}
 		}
-		return seized;
+		return points;
 	}
 
 	private static int seizeFromContainer(ServerLevel level, BlockPos pos, MaterialUnits.Family family) {
 		if (!(level.getBlockEntity(pos) instanceof net.minecraft.world.Container container)) {
 			return 0;
 		}
-		int seized = 0;
+		int points = 0;
 		for (int slot = 0; slot < container.getContainerSize(); slot++) {
 			ItemStack stack = container.getItem(slot);
 			if (MaterialUnits.isSeizable(stack, family)) {
-				seized += stack.getCount();
+				points += MaterialUnits.pointsOf(stack, family) * stack.getCount();
 				container.setItem(slot, ItemStack.EMPTY);
 			}
 		}
-		if (seized > 0) {
+		if (points > 0) {
 			container.setChanged();
 		}
-		return seized;
+		return points;
 	}
 
 	/** 转化中/完成时的特效：一道烟，表示东西被抽走了。 */
