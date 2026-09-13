@@ -13,8 +13,17 @@ package net.mcreator.mcanomalyarchives.anomaly.nametag;
  */
 public final class NameTagCosts {
 
-	/** 物品耐久上限 = 名字字符数（"下界合金镐"5 字 → 5 次）。 */
-	public static final boolean DURABILITY_FROM_NAME_LENGTH = true;
+	/**
+	 * 物品耐久上限 = 名字字符数（"下界合金镐"5 字 → 5 次）。
+	 *
+	 * ⚠️ 已废弃：作者 2026-09-13 改为"工具/护甲用源物品原本的耐久，源物品没有耐久则一律 100 点"。
+	 * 见 {@link #DURABILITY_FALLBACK}。这里保留常量只为记录历史，不要再使用。
+	 */
+	@Deprecated
+	public static final boolean DURABILITY_FROM_NAME_LENGTH = false;
+
+	/** 源物品没有耐久时，被命名出来的工具/护甲给多少耐久。 */
+	public static final int DURABILITY_FALLBACK = 100;
 
 	public static final int DURABILITY_MIN = 1;
 	public static final int DURABILITY_MAX = 64;

@@ -1752,8 +1752,7 @@
       "nametag.mcanomalyarchives.not_for_player": "The tag has no effect on players",
       "nametag.mcanomalyarchives.no_output": "A rewritten existence no longer yields what it used to",
       "nametag.mcanomalyarchives.draining": "It is draining %s from its surroundings",
-      "nametag.mcanomalyarchives.dry": "Nothing nearby can be drained",
-      "nametag.mcanomalyarchives.egg": "%s Egg"
+      "nametag.mcanomalyarchives.dry": "Nothing nearby can be drained","nametag.mcanomalyarchives.egg": "%s Egg"
     },
     "zh_cn": {
       "advancements.cloudarmadv.descr": "获得全套云锭套装",
@@ -1960,8 +1959,7 @@
       "nametag.mcanomalyarchives.not_for_player": "命名牌对玩家不起作用",
       "nametag.mcanomalyarchives.no_output": "被改写的存在已经产不出原来的东西了",
       "nametag.mcanomalyarchives.draining": "它正从四周抽取%s",
-      "nametag.mcanomalyarchives.dry": "附近找不到它能抽取的东西",
-      "nametag.mcanomalyarchives.egg": "%s蛋"
+      "nametag.mcanomalyarchives.dry": "附近找不到它能抽取的东西","nametag.mcanomalyarchives.egg": "%s蛋"
     }
   },
   "metadata": {

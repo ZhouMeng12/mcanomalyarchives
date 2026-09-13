@@ -39,6 +39,8 @@ CLASSES = [
     "net/mcreator/mcanomalyarchives/anomaly/nametag/effects/ItemNaming.class",
     "net/mcreator/mcanomalyarchives/anomaly/nametag/effects/EntityNaming.class",
     "net/mcreator/mcanomalyarchives/item/BaibianNameTagItem.class",
+    # 外观不变全靠这个客户端 mixin，丢了它编译和构建都不会报错
+    "net/mcreator/mcanomalyarchives/mixin/NamedItemAppearanceMixin.class",
 ]
 
 with zipfile.ZipFile(jar) as zf:
@@ -65,6 +67,14 @@ with zipfile.ZipFile(jar) as zf:
                 FAILED.append("%s 缺少词条 %s" % (path, k))
         if "辐射污染" in json.dumps(data, ensure_ascii=False):
             FAILED.append("%s 里还残留旧的 UO-008 占位文案（辐射污染）" % path)
+
+    print("\n=== mixin 注册（外观不变的关键）===")
+    mixins = json.loads(zf.read("mcanomalyarchives.mixins.json").decode("utf-8"))
+    registered = mixins.get("client", []) + mixins.get("mixins", [])
+    ok = "NamedItemAppearanceMixin" in registered
+    print("  [%s] NamedItemAppearanceMixin 已在 mixin 配置里" % ("OK " if ok else "FAIL"))
+    if not ok:
+        FAILED.append("mixins.json 没注册 NamedItemAppearanceMixin —— 外观不变会静默失效")
 
     print("\n=== 索引内容抽查（直接从 jar 里读）===")
     idx = json.loads(zf.read("data/mcanomalyarchives/name_index/zh_cn.json").decode("utf-8"))

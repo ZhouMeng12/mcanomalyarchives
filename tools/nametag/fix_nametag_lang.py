@@ -53,18 +53,31 @@ def write(p, t, backup=False):
     io.open(p, "w", encoding="utf-8", newline="").write(t)
 
 
+def drop_key(text, key):
+    """删掉一个 "key": "value" 条目，并且**不留下悬空逗号**。
+
+    分两种情况：条目后面有逗号就连逗号一起删；条目是块里最后一条（没有后置逗号）就删前置逗号。
+    上一版只删"含可选后置逗号"的形式，遇到最后一条会留下 `"上一条": "...",\n}` 这种非法 JSON
+    ——Gson 容错能吃下，严格解析器不能，脚本自己就崩了。
+    """
+    body = re.escape(key)
+    new, n = re.subn(r'\s*"' + body + r'"\s*:\s*"(?:[^"\\]|\\.)*"\s*,\s*', "", text)
+    if n:
+        return new, n
+    new, n = re.subn(r',\s*"' + body + r'"\s*:\s*"(?:[^"\\]|\\.)*"', "", text)
+    return new, n
+
+
 def clean_json_lines(text, lg, label):
     removed = replaced = 0
     for key in REMOVE:
-        # 只删"键:值"，逗号留给下面统一收拾 —— 否则删到最后一条会留下悬空逗号
-        pat = re.compile(r'\s*"' + re.escape(key) + r'"\s*:\s*"(?:[^"\\]|\\.)*",?')
-        text, n = pat.subn("", text)
+        text, n = drop_key(text, key)
         removed += n
     for key, value in REPLACE[lg].items():
         pat = re.compile(r'^(\s*"' + re.escape(key) + r'"\s*:\s*)("(?:[^"\\]|\\.)*")(,?)\s*$', re.M)
         text, n = pat.subn(lambda m: m.group(1) + json.dumps(value, ensure_ascii=False) + m.group(3), text)
         replaced += n
-    # Gson 容错能接受悬空逗号，但严格 JSON 解析器不能；顺手清干净
+    # 兜底：Gson 容错能接受悬空逗号，严格 JSON 解析器不能
     text = re.sub(r",(\s*[}\]])", r"\1", text)
     print("  %-34s 删除 %d 条 / 改写 %d 条" % (label, removed, replaced))
     return text
@@ -123,7 +136,7 @@ for lg in ("zh_cn", "en_us"):
     bopen, bclose = r
     body = segment[bopen:bclose]
     for key in REMOVE:
-        body = re.sub(r'\s*"' + re.escape(key) + r'"\s*:\s*"(?:[^"\\]|\\.)*",?', "", body)
+        body, _ = drop_key(body, key)
     for key, value in REPLACE[lg].items():
         pat = re.compile(r'("' + re.escape(key) + r'"\s*:\s*)("(?:[^"\\]|\\.)*")')
         body, n = pat.subn(lambda m: m.group(1) + json.dumps(value, ensure_ascii=False), body)

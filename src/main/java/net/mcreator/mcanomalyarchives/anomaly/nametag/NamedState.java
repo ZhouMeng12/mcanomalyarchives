@@ -32,6 +32,15 @@ public final class NamedState {
 	private static final String K_UNSTABLE = P + "Unstable";
 	/** 跨类"掠夺转化"的累积进度（正片：羊不是瞬间变金，而是历时数天）。 */
 	private static final String K_PROGRESS = P + "Progress";
+	/**
+	 * 被命名物品"看起来该是什么"。
+	 *
+	 * 作者要求：被命名的东西**外观不变、只有性质变**。但"能合成钻石装备"这类性质在 MC 里
+	 * 由**物品本体**决定（配方按 Item 匹配），所以本体必须真的换成目标物品——
+	 * 于是外观就得靠客户端把它画回源物品的模型（见 mixin/NamedItemAppearanceMixin）。
+	 * 这个键存的就是"要画成哪个物品"。
+	 */
+	private static final String K_APPEARANCE = P + "Appearance";
 
 	private NamedState() {
 	}
@@ -111,6 +120,37 @@ public final class NamedState {
 		tag.putInt(K_REMAIN, remaining);
 		tag.putBoolean(K_LOCKED, true);
 		writeItemTag(stack, tag);
+	}
+
+	/**
+	 * 完全转换后的标记：本体已经是目标物品了，额外记住"要画成哪个物品的样子"。
+	 *
+	 * @param appearance 源物品的注册名（客户端据此把模型画回去）；null 表示不伪造外观
+	 */
+	public static void applyConverted(ItemStack stack, ResolvedName target, String display,
+			net.minecraft.resources.ResourceLocation appearance) {
+		apply(stack, target, display, 0);
+		if (appearance != null) {
+			CompoundTag tag = itemTag(stack);
+			tag.putString(K_APPEARANCE, appearance.toString());
+			writeItemTag(stack, tag);
+		}
+	}
+
+	/**
+	 * 这个 stack 该被画成什么样子（客户端每帧都会问，所以先做最便宜的判断）。
+	 *
+	 * @return 源物品的注册名；没有伪造外观时返回 null
+	 */
+	public static net.minecraft.resources.ResourceLocation appearanceOf(ItemStack stack) {
+		if (stack.isEmpty()) {
+			return null;
+		}
+		CustomData data = stack.get(DataComponents.CUSTOM_DATA);
+		if (data == null || !data.contains(K_APPEARANCE)) {
+			return null;
+		}
+		return net.minecraft.resources.ResourceLocation.tryParse(data.copyTag().getString(K_APPEARANCE));
 	}
 
 	/** 标记为"撑不住的命名"：拿在手上没事，放到地上就炸（正片木棍→钻石块）。 */

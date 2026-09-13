@@ -277,22 +277,13 @@ public final class NameTagHandler {
 					return;
 				}
 				// 名字得有"物品形态"才谈得上转换（水/岩浆/火这类没有物品形态的方块不行）
-				ItemStack model = MaterialUnits.itemFormOf(resolved);
-				if (model.isEmpty()) {
+				if (MaterialUnits.itemFormOf(resolved).isEmpty()) {
 					event.setCanceled(true);
 					NameTagNotifier.actionBar(player, NameTagNotifier.PLANNED);
 					return;
 				}
-				if (ItemNaming.isToolOrArmor(left) && ItemNaming.isToolOrArmor(model)) {
-					// 正片的"同形态命名"：木铲 → 下界合金镐。外观不变，只换内核，代价是耐久 = 名字字数。
-					output = ItemNaming.transfer(left, resolved, raw);
-					if (output.isEmpty()) {
-						output = convertOrUnstable(left, resolved, raw, player);
-					}
-				} else {
-					// 其余一律"完全转换"：命名后真的就是那个东西
-					output = convertOrUnstable(left, resolved, raw, player);
-				}
+				// 一律"完全转换"：本体换成名字所指的物品，外观由客户端画回源物品
+				output = convertOrUnstable(left, resolved, raw, player);
 			}
 			default -> {
 				return;
@@ -310,13 +301,14 @@ public final class NameTagHandler {
 	 *
 	 * 撑得住（质料够）→ 产物就是**真正的目标物品**：这块石头之后就是钻石，
 	 * 能合成钻石装备、能进信标、**而且不能再当方块放下去**——因为物品本体已经是钻石了。
+	 * 外观不变这一条由客户端 mixin 把它画回源物品的模型。
 	 *
 	 * 撑不住（质料不够）→ 正片木棍→钻石块那一幕：产物是个"不稳定"的东西，
 	 * 拿在手上没事，一放到地上/一用就炸，爆炸中心只留下等量转换的极小残渣。
 	 */
 	private static ItemStack convertOrUnstable(ItemStack left, ResolvedName resolved, String raw, Player player) {
 		if (MaterialUnits.canHold(left, resolved)) {
-			return ItemNaming.convert(resolved, raw);
+			return ItemNaming.convert(left, resolved, raw);
 		}
 		ItemStack unstable = left.copy();
 		int budget = MaterialUnits.budgetOf(left);

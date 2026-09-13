@@ -75,24 +75,49 @@ target.set(DataComponents.DAMAGE, 0);      // 全新
 
 > 跨类（物品做目标、名字是实体/方块）不走组件转让 —— 走**质料守恒结算**（玩法方案 §4.1）：物品是质料预算最小的载体，跨类几乎必然"质量不足"→ 爆炸 + 极小残渣，正是正片木棍→钻石块。
 
-### 1.6 但物品不止"组件转让"这一支（作者 2026-09-13 追加的要求）
+### 1.6 物品只有一条路径：本体真换 + 客户端把外观画回来（作者 2026-09-13 定稿）
 
-作者要求：**被命名的东西必须与名称有同样的性质**——给石头命名"钻石"，这块石头就要能合成钻石装备、
-而且不能再当方块放下去。这**做不到**用组件解决：Minecraft 的配方按 **Item** 匹配（组件救不了），
-"能不能放置"取决于它是不是 `BlockItem`。所以物品路径必须拆成两支：
+作者要求三条同时成立：
+1. **只有性质变，外观不变**；
+2. **性质要是名字所指事物的全部性质**——石头命名成"钻石"要能合成钻石装备、**不能再当方块放下**；
+3. **工具/护甲耐久用源物品原本的耐久**，源物品没有耐久就一律 100 点。
 
-| 目标 | 做法 | 落点 |
-|---|---|---|
-| 工具 / 护甲（`DataComponents.TOOL` 或 `ArmorItem`） | **组件转让**：外观不变，能力全换，耐久 = 名字字数 | `ItemNaming.transfer` |
-| 其它物品（材料、方块物品…） | **完全转换**：`ItemStack` 真的换成目标物品 | `ItemNaming.convert` |
+第 2 条决定了**本体必须真的换成目标物品**：Minecraft 的配方按 **Item** 匹配（组件救不了），
+"能不能放置"看是不是 `BlockItem`。只搬组件的话石头永远进不了钻石的配方。
+既然本体必须换，第 1 条就只能由客户端在渲染时解决：
 
-换掉之后，"有名字所指事物的全部性质"自动成立——耐久、能否放置、能否合成、能否当燃料、能不能吃
-一律随目标物品走，一条都不用枚举。代价随之从"耐久 = 名字字数"变成**质料守恒**：
-`MaterialUnits.canHold` 为假就是爆炸 + 极小残渣。
+```java
+@Mixin(ItemRenderer.class)
+public abstract class NamedItemAppearanceMixin {
+    @Inject(method = "getModel", at = @At("HEAD"), cancellable = true)
+    private void mcanomalyarchives$drawSourceAppearance(ItemStack stack, Level level, LivingEntity entity, int seed,
+            CallbackInfoReturnable<BakedModel> cir) {
+        ResourceLocation appearance = NamedState.appearanceOf(stack);
+        ...
+        cir.setReturnValue(((ItemRenderer) (Object) this).getModel(new ItemStack(source), level, entity, seed));
+    }
+}
+```
 
-对应的实体侧规则也理顺了：名字指向的事物**有行为**（工具）→ 行为移植（正片猪→钻石镐挖到死）；
-**没有行为**（钻石、金锭、牛排）→ `EntityNaming.convertToMaterial` 直接析出那个东西，
-数量按质料守恒折算（牛 110 ÷ 钻石 30 = 3 颗）。
+选点的依据（已核对 1.21.1 反编译源码）：**所有**物品模型解析都收敛到
+`ItemRenderer.getModel(ItemStack, Level, LivingEntity, int)` —— 手上的（`renderStatic`）、
+丢在地上的、物品展示框里的、GUI 格子里的都走它，且它是该类里**唯一**的 `getModel` 重载。
+临时 stack 没有标记，递归进来会在第一行返回，不会无限递归。
+
+于是：
+
+| 项 | 结果 |
+|---|---|
+| 石头命名"钻石" | 本体 = 真钻石（能合成、能进信标、不能放置），画出来是石头，耐久无关 |
+| 木铲命名"下界合金镐" | 本体 = 真下界合金镐，画出来是木铲，耐久 = 木铲的 59 |
+| 石头命名"钻石胸甲" | 本体 = 真钻石胸甲，画出来是石头，耐久 = 100（石头没耐久） |
+
+代价仍是**质料守恒**（`MaterialUnits.canHold`）：撑得住才换得成，撑不住就是爆炸 + 等量残渣。
+质料表补了"工具 = 10"一档，否则"木铲(1) → 下界合金镐(10)"会被判成质料不足而炸掉，
+而正片这一幕是成功的；有了这一档，"木棍(1) → 钻石镐(10)"仍然会炸，守恒的直觉也保住了。
+
+> ⚠️ 已知局限：外观伪装只作用于**物品形态**。把它当方块放下去，落地的是目标方块本身的样子
+> （真钻石块就是钻石块）。要连落地外观也保留，需要阶段 2 的 mimic 方块。
 
 | **绝不复制**（黑名单） | 原因 |
 |---|---|

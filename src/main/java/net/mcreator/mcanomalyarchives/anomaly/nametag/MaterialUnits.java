@@ -39,6 +39,14 @@ public final class MaterialUnits {
 	/** 保守兜底：没进表的方块按 1 立方米石头算，物品按"一小件"算。 */
 	private static final int FALLBACK_BLOCK = 100;
 	private static final int FALLBACK_ITEM = 1;
+	/**
+	 * 工具 / 护甲按"一整件做出来的东西"算。
+	 *
+	 * 这个数字是**为了保住正片那一幕**：木铲(10) → 下界合金镐(10) 必须成功
+	 * （【旁白 2:19-2:37】），而木棍(1) → 钻石块(900) 必须爆炸（【旁白 3:16-3:45】）。
+	 * 如果工具也按 1 算，木棍就能白变一把钻石镐；如果按 2 算，正片的木铲那一次又会炸。
+	 */
+	private static final int TOOL_UNITS = 10;
 
 	/** 实体的质料直接由碰撞箱体积换算（1 立方米 ≈ 100 单位），免维护。 */
 	private static final double ENTITY_SCALE = 100.0;
@@ -47,9 +55,9 @@ public final class MaterialUnits {
 
 	static {
 		// 正片里出现过的、以及玩家最爱试的那些
+		// 注意：工具/护甲**不要**在这里写死，交给 itemUnits() 的 TOOL_UNITS 规则，
+		// 否则"木铲(1) → 下界合金镐(10)"就会被判成质料不足而爆炸，正片那一幕就演不出来了。
 		OVERRIDES.put("item:minecraft:stick", 1);
-		OVERRIDES.put("item:minecraft:wooden_shovel", 1);
-		OVERRIDES.put("item:minecraft:netherite_pickaxe", 2);
 		OVERRIDES.put("item:minecraft:netherite_ingot", 60);
 		OVERRIDES.put("item:minecraft:diamond", 30);
 		OVERRIDES.put("item:minecraft:gold_ingot", 40);
@@ -81,10 +89,22 @@ public final class MaterialUnits {
 			return override;
 		}
 		return switch (kind) {
-			case ITEM -> FALLBACK_ITEM;
+			case ITEM -> itemUnits(id);
 			case BLOCK -> blockUnits(id);
 			case ENTITY -> entityUnits(id);
 		};
+	}
+
+	private static int itemUnits(ResourceLocation id) {
+		net.minecraft.world.item.Item item = BuiltInRegistries.ITEM.get(id);
+		if (item == null || item == net.minecraft.world.item.Items.AIR) {
+			return FALLBACK_ITEM;
+		}
+		// 工具/护甲是一整件成品，比一根木棍重
+		if (item.getDefaultInstance().isDamageableItem() || item instanceof net.minecraft.world.item.ArmorItem) {
+			return TOOL_UNITS;
+		}
+		return FALLBACK_ITEM;
 	}
 
 	private static int blockUnits(ResourceLocation id) {

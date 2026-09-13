@@ -84,7 +84,8 @@
         "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/MaterialUnits.java",
         "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagCosts.java",
         "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/effects/ItemNaming.java",
-        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/effects/EntityNaming.java"
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/effects/EntityNaming.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/NamedItemAppearanceMixin.java"
       ]
     },
     {
@@ -460,6 +461,16 @@
         "src/main/resources/data/mcanomalyarchives/name_index/zh_cn.json",
         "src/main/resources/data/mcanomalyarchives/name_index/en_us.json",
         "src/main/resources/data/mcanomalyarchives/name_index/alias_zh_cn.json"
+      ]
+    },
+    {
+      "id": "nametag-appearance-mixin",
+      "kind": "contains",
+      "why": "被命名物品的『外观不变』完全靠这个客户端 mixin：它把 ItemRenderer.getModel 换成源物品的模型。丢了之后本体是真钻石、看上去也是真钻石，『只有性质变、外观不变』就没了——而编译、构建、守卫都不会报错",
+      "path": "src/main/resources/mcanomalyarchives.mixins.json",
+      "fixHint": "把 NamedItemAppearanceMixin 加回 client 段；类本体在 src/main/java/net/mcreator/mcanomalyarchives/mixin/NamedItemAppearanceMixin.java",
+      "mustContain": [
+        "\"NamedItemAppearanceMixin\""
       ]
     },
     {
