@@ -38,6 +38,8 @@ public class PinkSheepLuckyHandler {
 	private static void grantEncounterLuck(ServerPlayer player, PinkSheepEntity sheep) {
 		if (player == null || !player.isAlive())
 			return;
+		// 成就：幸运粉羊（目击并收到它的祝福）
+		net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepAdvancements.grantSighting(player);
 		// 1. 原版幸运效果（60s = 1200 tick）
 		player.addEffect(new MobEffectInstance(MobEffects.LUCK, 1200, 0));
 		// 2. 随机奇遇

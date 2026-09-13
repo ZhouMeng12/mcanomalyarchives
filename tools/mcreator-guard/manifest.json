@@ -134,7 +134,8 @@
       "startAnchor": "EntityType<StangeCloudEntity>> STANGE_CLOUD = register(",
       "endAnchor": ".sized(",
       "expectAll": [
-        "sized(30f, 5f)"
+        "sized(30f, 5f)",
+        "setTrackingRange(128)"
       ]
     },
     {
@@ -146,6 +147,43 @@
       "mustContain": [
         "\"modelWidth\": 30.0",
         "\"modelHeight\": 5.0"
+      ]
+    },
+    {
+      "id": "pink-sheep-advancements",
+      "kind": "exists",
+      "why": "粉羊进度线（幸运粉羊 / 眨眼之间 / 陨石问候）：成就定义在 MCreator 元素里、由它生成 advancement 资源，任一侧丢了就永远拿不到成就",
+      "fixHint": "确认 elements/PinkSheep*mod.json 存在，并在 MCreator 里对这三个成就重新生成代码",
+      "exists": [
+        "src/main/resources/data/mcanomalyarchives/advancement/pink_sheep_sighting.json",
+        "src/main/resources/data/mcanomalyarchives/advancement/pink_sheep_blink.json",
+        "src/main/resources/data/mcanomalyarchives/advancement/pink_sheep_calamity.json",
+        "elements/PinkSheepSighting.mod.json",
+        "elements/PinkSheepBlink.mod.json",
+        "elements/PinkSheepCalamity.mod.json"
+      ]
+    },
+    {
+      "id": "mod-constructor-modcontainer",
+      "kind": "contains",
+      "why": "舒适度配置必须在模组构造期用 ModContainer 注册；MCreator 重生成会把构造器签名改回单参版本，配置会静默失效",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/McanomalyarchivesMod.java",
+      "fixHint": "构造器改回 (IEventBus modEventBus, net.neoforged.fml.ModContainer modContainer) 并保留 ComfortConfig.register(modContainer);",
+      "mustContain": [
+        "McanomalyarchivesMod(IEventBus modEventBus, net.neoforged.fml.ModContainer modContainer)",
+        "ComfortConfig.register(modContainer);"
+      ]
+    },
+    {
+      "id": "comfort-config",
+      "kind": "contains",
+      "why": "舒适度配置本体（震动强度 / 眨眼黑屏 / 陨石是否破坏地形）",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/config/ComfortConfig.java",
+      "fixHint": "从 git 恢复 src/main/java/net/mcreator/mcanomalyarchives/config/",
+      "mustContain": [
+        "screenShakeIntensity",
+        "blinkDarkness",
+        "meteorTerrainDamage"
       ]
     },
     {
@@ -193,7 +231,9 @@
       "expectAll": [
         "\"entity.mcanomalyarchives.sitting_enity\"",
         "\"item_group.mcanomalyarchives.strange_record\"",
-        "\"death.attack.meteor_strike\""
+        "\"death.attack.meteor_strike\"",
+        "\"advancements.pink_sheep_sighting.title\"",
+        "\"advancements.pink_sheep_calamity.descr\""
       ]
     },
     {
@@ -204,7 +244,9 @@
       "canonical": "en_us.extra.txt",
       "anchor": "}",
       "expectAll": [
-        "\"death.attack.meteor_strike\""
+        "\"death.attack.meteor_strike\"",
+        "\"advancements.pink_sheep_sighting.title\"",
+        "\"advancements.pink_sheep_calamity.descr\""
       ]
     }
   ]

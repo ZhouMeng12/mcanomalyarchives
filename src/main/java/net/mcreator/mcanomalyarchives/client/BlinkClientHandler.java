@@ -53,8 +53,10 @@ public final class BlinkClientHandler {
         } else {
             alpha = (1.0F - t) * 2.0F;     // 后段渐亮
         }
-        // 上限到 ~0.85 不完全黑屏，保证不眩晕
-        alpha = Math.min(alpha, 0.85F);
+        // 上限到 ~0.85 不完全黑屏，保证不眩晕；再乘舒适度配置的黑屏浓度倍率（0 = 不黑屏）
+        alpha = Math.min(alpha, 0.85F) * net.mcreator.mcanomalyarchives.config.ComfortConfig.blinkScale();
+        if (alpha <= 0.0F)
+            return;
         GuiGraphics gui = event.getGuiGraphics();
         int a = (int) (alpha * 255.0F) << 24;
         int width = Minecraft.getInstance().getWindow().getGuiScaledWidth();

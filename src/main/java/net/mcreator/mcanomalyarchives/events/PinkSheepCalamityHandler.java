@@ -1,5 +1,6 @@
 package net.mcreator.mcanomalyarchives.events;
 
+import net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepAdvancements;
 import net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepMechanics;
 import net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepMeteor;
 import net.mcreator.mcanomalyarchives.entity.PinkSheepEntity;
@@ -235,6 +236,8 @@ public class PinkSheepCalamityHandler {
 				}
 			}
 			case 3 -> {
+				// 成就：陨石问候（惹出最高档灾厄；近战/远程攻击触发也走这里）
+				PinkSheepAdvancements.grantCalamity(player);
 				// 最高档（直接击杀，无预警）：陨石 或 天基屠龙炮
 				if (player.getRandom().nextBoolean()) {
 					meteorStrike(player, levelWorld);

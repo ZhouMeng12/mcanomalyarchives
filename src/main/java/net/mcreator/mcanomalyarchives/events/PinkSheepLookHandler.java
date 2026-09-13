@@ -1,5 +1,6 @@
 package net.mcreator.mcanomalyarchives.events;
 
+import net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepAdvancements;
 import net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepMechanics;
 import net.mcreator.mcanomalyarchives.entity.PinkSheepEntity;
 import net.mcreator.mcanomalyarchives.network.PlayerBlinkPacket;
@@ -175,6 +176,7 @@ public class PinkSheepLookHandler {
 			// 凝视满 → 眨眼转移
 			if (ticks >= BLINK_TICKS) {
 				PacketDistributor.sendToPlayer(player, new PlayerBlinkPacket());
+				PinkSheepAdvancements.grantBlink(player); // 成就：眨眼之间
 				lookingAtSheep.remove(player.getUUID());
 				lookTicks.remove(player.getUUID());
 				encounterGranted.remove(target);

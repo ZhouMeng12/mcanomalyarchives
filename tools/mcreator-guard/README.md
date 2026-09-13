@@ -75,6 +75,9 @@ powershell -ExecutionPolicy Bypass -File tools/mcreator-guard/guard.ps1 -Action 
 | `structure-jigsaw-refs` | 内容检查 | 拼图池指向的模板名被改坏 |
 | `stange-cloud-registration` | 代码块 | 伪云碰撞箱被改回 0.6×1.8 → 模型 30 格宽被视锥剔除，看云边缘时整朵云消失 |
 | `stange-cloud-element-hitbox` | 内容检查 | MCreator 元素里的碰撞箱字段（生成 `.sized()` 的源头）被改回 |
+| `pink-sheep-advancements` | 存在检查 | 粉羊进度线的 3 个成就元素或生成的 advancement 资源丢失 |
+| `mod-constructor-modcontainer` | 内容检查 | 构造器签名被 MCreator 改回单参 → 舒适度配置静默失效 |
+| `comfort-config` | 内容检查 | 舒适度配置本体（震动强度 / 眨眼黑屏 / 陨石是否破坏地形） |
 
 > 伪云为什么要 30×5 的碰撞箱：渲染器 `poseStack.scale(20f,20f,20f)` 把模型放大了 20 倍，
 > 模型本体 `addBox(-12,-4,-6, 24,4,12)` + `PartPose.offset(0,24,0)` 换算成方块是
@@ -145,6 +148,25 @@ python tools/structure-fix/fix_structure_nbt.py verify          # 校验引用�
 
 守卫里的 `structure-nbt-namespace` 项会在每次 `check` 时解压这些 `.nbt` 反查旧命名空间，
 所以这个问题不会再悄悄溜进构建产物。
+
+## 舒适度配置（游戏体验）
+
+`config/ComfortConfig.java`（非生成区）+ 在模组构造器里注册：
+
+| 配置项 | 默认 | 作用 |
+|---|---|---|
+| `comfort.screenShakeIntensity` | 1.0 | 屏幕震动强度倍率（0 关闭 / 上限 2.0）。影响怪树地震、伪云掠过、粉羊陨石下落震颤与落地大震 |
+| `comfort.blinkDarkness` | 1.0 | 粉羊凝视触发眨眼的黑屏浓度（0 = 不黑屏） |
+| `comfort.meteorTerrainDamage` | true | 陨石是否破坏地形（关掉只保留伤害与演出，不炸建筑） |
+
+改法（二选一）：
+- 游戏内：模组列表 → MC诡异见闻录 → **Config**（NeoForge 自动界面）
+- 文件：`config/mcanomalyarchives-client.toml`（客户端本地，不影响服务器）
+
+> 注册配置必须在**模组构造期**，而 NeoForge 21.1 已移除 `ModLoadingContext`，
+> 所以构造器必须注入 `ModContainer`：`McanomalyarchivesMod(IEventBus, ModContainer)`。
+> 这是生成区里的签名，MCreator 重生成会改回单参版本（配置会静默失效），
+> 因此清单里加了 `mod-constructor-modcontainer` 盯着它。
 
 ## 版本控制
 

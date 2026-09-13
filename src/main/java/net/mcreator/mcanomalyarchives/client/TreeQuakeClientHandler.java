@@ -14,6 +14,14 @@ public final class TreeQuakeClientHandler {
 
     /** 触发一次震颤：amplitude 为初始振幅（格），durationTicks 为时长（tick） */
     public static void startShake(float amplitude, int durationTicks) {
+        // 舒适度配置：震动强度倍率（0 = 完全关闭），晕动症玩家可在 config 里调小或关掉
+        float scale = net.mcreator.mcanomalyarchives.config.ComfortConfig.shakeScale();
+        amplitude *= scale;
+        if (amplitude <= 0.0f || durationTicks <= 0) {
+            shakeStartMs = 0;
+            shakeEndMs = 0;
+            return;
+        }
         long now = System.currentTimeMillis();
         shakeStartMs = now;
         shakeEndMs = now + (long) durationTicks * 50L;

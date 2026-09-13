@@ -15,7 +15,7 @@
           "src/main/resources/assets/strangerecord/items/stange_cloud_spawn_egg.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudStone",
@@ -32,7 +32,7 @@
           "src/main/resources/assets/mcanomalyarchives/models/block/cloud_stone.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudDemChuanSongMenTongGuoTiaoJian",
@@ -52,7 +52,7 @@
           "src/main/java/net/mcreator/mcanomalyarchives/procedures/CloudDemChuanSongMenTongGuoTiaoJianProcedure.java"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudDem",
@@ -75,7 +75,7 @@
           "src/main/resources/assets/mcanomalyarchives/blockstates/cloud_dem_portal.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudStoneandSteel",
@@ -89,7 +89,7 @@
           "src/main/resources/data/mcanomalyarchives/advancement/recipes/cloud_stoneand_steel.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudWater",
@@ -108,7 +108,7 @@
           "src/main/resources/assets/mcanomalyarchives/models/item/cloud_water_bucket.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudWaterButtle",
@@ -123,7 +123,7 @@
           "src/main/resources/assets/strangerecord/models/item/cloud_water_bottle.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "Clouding",
@@ -136,7 +136,7 @@
           "src/main/java/net/mcreator/mcanomalyarchives/potion/CloudingMobEffect.java"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudWaterButtleWanJiaWanChengShiYongWuPinShi",
@@ -155,7 +155,7 @@
           "src/main/java/net/mcreator/mcanomalyarchives/procedures/CloudWaterButtleWanJiaWanChengShiYongWuPinShiProcedure.java"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "GetCloudWaterBottle",
@@ -174,7 +174,7 @@
           "src/main/java/net/mcreator/mcanomalyarchives/procedures/GetCloudWaterBottleProcedure.java"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "StrangeStone",
@@ -187,7 +187,7 @@
           "src/main/resources/data/mcanomalyarchives/advancement/strange_stone.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "StrangeWater",
@@ -200,7 +200,7 @@
           "src/main/resources/data/mcanomalyarchives/advancement/strange_water.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "ReturnHome1",
@@ -213,7 +213,7 @@
           "src/main/resources/data/mcanomalyarchives/advancement/return_home_1.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "ReturnHome2",
@@ -226,7 +226,7 @@
           "src/main/resources/data/mcanomalyarchives/advancement/return_home_2.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CornPoppy",
@@ -1014,7 +1014,7 @@
           "src/main/resources/assets/mcanomalyarchives/models/item/cloud_rock.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "Cloudrockdrop",
@@ -1027,7 +1027,7 @@
           "src/main/resources/data/mcanomalyarchives/loot_table/blocks/cloud_rock.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "Cloudroom",
@@ -1040,7 +1040,7 @@
           "src/main/resources/data/mcanomalyarchives/worldgen/biome/cloudroom.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudOre",
@@ -1059,7 +1059,7 @@
           "src/main/resources/data/mcanomalyarchives/worldgen/placed_feature/cloud_ore.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudIngot",
@@ -1073,7 +1073,7 @@
           "src/main/resources/assets/mcanomalyarchives/models/item/cloud_ingot.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudUpgrade",
@@ -1087,7 +1087,7 @@
           "src/main/resources/assets/mcanomalyarchives/models/item/cloud_upgrade.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudArmor",
@@ -1104,7 +1104,7 @@
           "src/main/resources/assets/mcanomalyarchives/models/item/cloud_armor_chestplate.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudScrap",
@@ -1118,7 +1118,7 @@
           "src/main/java/net/mcreator/mcanomalyarchives/item/CloudScrapItem.java"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudScaptToIngot",
@@ -1131,7 +1131,7 @@
           "src/main/resources/data/mcanomalyarchives/recipe/cloud_scapt_to_ingot.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudOreDrop",
@@ -1144,7 +1144,7 @@
           "src/main/resources/data/mcanomalyarchives/loot_table/blocks/cloud_ore.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudHatRes",
@@ -1157,7 +1157,7 @@
           "src/main/resources/data/mcanomalyarchives/recipe/cloud_hat_res.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudChestRes",
@@ -1170,7 +1170,7 @@
           "src/main/resources/data/mcanomalyarchives/recipe/cloud_chest_res.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudLegRes",
@@ -1183,7 +1183,7 @@
           "src/main/resources/data/mcanomalyarchives/recipe/cloud_leg_res.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudShoeRes",
@@ -1196,7 +1196,7 @@
           "src/main/resources/data/mcanomalyarchives/recipe/cloud_shoe_res.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudUpgradeRes",
@@ -1209,7 +1209,7 @@
           "src/main/resources/data/mcanomalyarchives/recipe/cloud_upgrade_res.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CloudUpgradeRes2",
@@ -1222,7 +1222,7 @@
           "src/main/resources/data/mcanomalyarchives/recipe/cloud_upgrade_res_2.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "CornPoppySad",
@@ -1292,7 +1292,7 @@
           "src/main/resources/data/mcanomalyarchives/advancement/cloudarmadv.json"
         ]
       },
-      "path": "~/pinksheep"
+      "path": "~/StrangeCloud"
     },
     {
       "name": "Purplehandadv",
@@ -1418,45 +1418,6 @@
           "src/main/resources/data/mcanomalyarchives/neoforge/biome_modifier/pink_sheep_biome_modifier.json",
           "src/main/resources/assets/mcanomalyarchives/models/item/pink_sheep_spawn_egg.json",
           "src/main/java/net/mcreator/mcanomalyarchives/entity/PinkSheepEntity.java"
-        ]
-      },
-      "path": "~/pinksheep"
-    },
-    {
-      "name": "PinkSheepSighting",
-      "type": "achievement",
-      "compiles": true,
-      "locked_code": false,
-      "registry_name": "pink_sheep_sighting",
-      "metadata": {
-        "files": [
-          "src/main/resources/data/mcanomalyarchives/advancement/pink_sheep_sighting.json"
-        ]
-      },
-      "path": "~/pinksheep"
-    },
-    {
-      "name": "PinkSheepBlink",
-      "type": "achievement",
-      "compiles": true,
-      "locked_code": false,
-      "registry_name": "pink_sheep_blink",
-      "metadata": {
-        "files": [
-          "src/main/resources/data/mcanomalyarchives/advancement/pink_sheep_blink.json"
-        ]
-      },
-      "path": "~/pinksheep"
-    },
-    {
-      "name": "PinkSheepCalamity",
-      "type": "achievement",
-      "compiles": true,
-      "locked_code": false,
-      "registry_name": "pink_sheep_calamity",
-      "metadata": {
-        "files": [
-          "src/main/resources/data/mcanomalyarchives/advancement/pink_sheep_calamity.json"
         ]
       },
       "path": "~/pinksheep"

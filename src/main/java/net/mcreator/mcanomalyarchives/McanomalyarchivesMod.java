@@ -32,7 +32,6 @@ import net.mcreator.mcanomalyarchives.event.PurpleDogPettingHandler;
 import net.mcreator.mcanomalyarchives.entity.AnbulaEntity;
 import net.mcreator.mcanomalyarchives.commands.SanityCommand;
 import net.mcreator.mcanomalyarchives.commands.PurpleGuiCommand;
-import net.mcreator.mcanomalyarchives.commands.CornPoppyDebugCommand;
 import net.mcreator.mcanomalyarchives.client.dialogue.DialogueBubbleRenderer;
 import net.mcreator.mcanomalyarchives.client.SanityMonitorHudOverlay;
 import net.mcreator.mcanomalyarchives.client.SanityClientHandler;
@@ -52,8 +51,11 @@ public class McanomalyarchivesMod {
 	public static final Logger LOGGER = LogManager.getLogger(McanomalyarchivesMod.class);
 	public static final String MODID = "mcanomalyarchives";
 
-	public McanomalyarchivesMod(IEventBus modEventBus) {
+	public McanomalyarchivesMod(IEventBus modEventBus, net.neoforged.fml.ModContainer modContainer) {
 		// Start of user code block mod constructor
+		// 舒适度配置（震动强度 / 眨眼黑屏 / 陨石是否破坏地形）：必须在这里注册，
+		// 且构造器需要注入 ModContainer —— 该方法签名由 tools/mcreator-guard 保护，别让 MCreator 改回去。
+		net.mcreator.mcanomalyarchives.config.ComfortConfig.register(modContainer);
 		// End of user code block mod constructor
 		NeoForge.EVENT_BUS.register(this);
 		modEventBus.addListener(this::registerNetworking);
@@ -76,7 +78,6 @@ public class McanomalyarchivesMod {
 		PURPLEHAND_SOUNDS.register(modEventBus);
 		PlayerLookAtCornPoppyListener.init();
 		CornPoppyAngryListener.init();
-		CornPoppyDebugCommand.init();
 		PurpleGuiCommand.init();
 		SanityCommand.init();
 		PlayerJoinEventListener.init();

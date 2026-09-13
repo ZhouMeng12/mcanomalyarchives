@@ -113,5 +113,11 @@
   "entity.mcanomalyarchives.pink_sheep": "幸运粉羊",
   "entity.mcanomalyarchives.sitting_enity": "端坐者",
   "item_group.mcanomalyarchives.strange_record": "MC诡异见闻录",
-  "death.attack.meteor_strike": "%1$s被陨石砸成了坑"
+  "death.attack.meteor_strike": "%1$s被陨石砸成了坑",
+  "advancements.pink_sheep_sighting.title": "幸运粉羊",
+  "advancements.pink_sheep_sighting.descr": "目击粉羊，并收到它的祝福",
+  "advancements.pink_sheep_blink.title": "眨眼之间",
+  "advancements.pink_sheep_blink.descr": "凝视粉羊，直到它在一瞬间消失",
+  "advancements.pink_sheep_calamity.title": "陨石问候",
+  "advancements.pink_sheep_calamity.descr": "惹出粉羊最高档的灾厄"
 }
