@@ -235,7 +235,7 @@ public final class NameTagTicker {
 	 * 正片：【旁白 1:42-1:46】牛被命名成"鸡"后开始下出深褐色的牛蛋，
 	 * "**这些牛蛋可以孵出正常的牛幼仔**" —— 所以蛋砸出来的是**下蛋那只生物的幼体**，
 	 * 而不是原版蛋孵出来的小鸡。这里把物种写进物品的 CUSTOM_DATA，
-	 * 由 {@code NameTagHandler.onEggThrow} 在右键投掷时按它生成。
+	 * 由 {@code NameTagHandler.onEntityJoin} 在小鸡孵化那一刻按它换掉。
 	 */
 	private static void layEgg(ServerLevel level, LivingEntity living) {
 		ItemStack egg = new ItemStack(Items.EGG);

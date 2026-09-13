@@ -485,50 +485,53 @@ public final class NameTagHandler {
 		}
 	}
 
-	// ==================== 牛蛋：砸出来的是下蛋那只生物的幼体 ====================
+	// ==================== 牛蛋：和鸡蛋一样砸出去，概率孵出下蛋那只生物的幼体 ====================
 
 	/**
 	 * 正片【旁白 1:42-1:46】：牛被命名成"鸡"后下的牛蛋，"**这些牛蛋可以孵出正常的牛幼仔**"。
 	 *
-	 * 原版蛋砸出来是**小鸡**，所以要拦掉：右键投掷时直接生成**下蛋那只生物的幼体**
-	 * （{@code AgeableMob.setBaby}）；那只生物要是没有幼体形态（僵尸、末影人这类），
-	 * 就生成它本身。所以一只叫"鸡"的牛下的"牛蛋"，砸出来是**牛犊**。
+	 * <p>蛋**照原版那样右键扔出去**（抛物线、落地碎），概率也照原版：1/8 出 1 只、其中 1/32 出 4 只。
+	 * 只是孵出来的**不是小鸡**，而是**下蛋那只生物的幼体**。
+	 *
+	 * <p>钩子选得很取巧：原版 {@code ThrownEgg.onHit} 是**先在世界里生成小鸡、之后才 discard 掉蛋**
+	 * （见它的生成循环与结尾的 {@code this.discard()}），所以小鸡入场那一刻，那颗蛋**还在它旁边**。
+	 * 于是只要在小鸡入场时看一眼：附近 2 格内有没有我们标记过的飞行中的蛋 —— 有就把小鸡换成对应物种。
+	 * 既不用改 {@code onHit}（那要重写整个方法，还得复制父类行为），也不影响没标记过的普通蛋。
 	 */
 	@SubscribeEvent
-	public static void onEggThrow(PlayerInteractEvent.RightClickItem event) {
-		if (!(event.getEntity() instanceof ServerPlayer player)) {
+	public static void onEntityJoin(net.neoforged.neoforge.event.entity.EntityJoinLevelEvent event) {
+		if (!(event.getLevel() instanceof ServerLevel level)) {
 			return;
 		}
-		ItemStack stack = event.getItemStack();
-		ResourceLocation species = eggSpecies(stack);
-		if (species == null || !(player.level() instanceof ServerLevel level)) {
+		if (!(event.getEntity() instanceof net.minecraft.world.entity.animal.Chicken chick) || !chick.isBaby()) {
 			return;
 		}
-		net.minecraft.world.entity.EntityType<?> type =
-				net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.get(species);
-		Entity spawned = type == null ? null : type.create(level);
-		if (spawned == null) {
+		// 刚砸开的那颗蛋还在旁边吗？
+		for (net.minecraft.world.entity.projectile.ThrownEgg egg : level.getEntitiesOfClass(
+				net.minecraft.world.entity.projectile.ThrownEgg.class, chick.getBoundingBox().inflate(2.0))) {
+			ResourceLocation species = eggSpecies(egg.getItem());
+			if (species == null) {
+				continue; // 普通蛋，照旧孵小鸡
+			}
+			net.minecraft.world.entity.EntityType<?> type =
+					net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.get(species);
+			Entity spawned = type == null ? null : type.create(level);
+			if (spawned == null) {
+				return;
+			}
+			event.setCanceled(true); // 别要那只小鸡
+			spawned.moveTo(chick.getX(), chick.getY(), chick.getZ(), chick.getYRot(), 0.0f);
+			if (spawned instanceof net.minecraft.world.entity.AgeableMob ageable) {
+				ageable.setAge(-24000); // 原版孵出来就是幼体（-24000 = 刚出生）
+			}
+			level.addFreshEntity(spawned);
+			level.playSound(null, chick.blockPosition(), net.minecraft.sounds.SoundEvents.CHICKEN_EGG,
+					net.minecraft.sounds.SoundSource.NEUTRAL, 1.0f, 1.2f);
 			return;
 		}
-		event.setCanceled(true);
-		event.setCancellationResult(InteractionResult.SUCCESS);
-
-		spawned.moveTo(player.getX(), player.getEyeY() - 0.4, player.getZ(), player.getYRot(), 0.0f);
-		if (spawned instanceof net.minecraft.world.entity.AgeableMob ageable) {
-			ageable.setBaby(true); // 幼体
-		}
-		// 往视线方向弹出去一点，像刚孵出来
-		spawned.setDeltaMovement(player.getLookAngle().scale(0.25).add(0.0, 0.2, 0.0));
-		level.addFreshEntity(spawned);
-		level.playSound(null, player.blockPosition(), net.minecraft.sounds.SoundEvents.CHICKEN_EGG,
-				net.minecraft.sounds.SoundSource.NEUTRAL, 1.0f, 1.2f);
-		if (!player.hasInfiniteMaterials()) {
-			stack.shrink(1);
-		}
-		player.getCooldowns().addCooldown(stack.getItem(), 10);
 	}
 
-	/** 这张蛋是"谁下的"；不是我们标记过的蛋就返回 null（原版蛋照旧孵小鸡）。 */
+	/** 这张蛋是"谁下的"；不是我们标记过的蛋就返回 null（普通蛋照旧孵小鸡）。 */
 	private static ResourceLocation eggSpecies(ItemStack stack) {
 		if (stack.isEmpty() || !stack.is(Items.EGG)) {
 			return null;
