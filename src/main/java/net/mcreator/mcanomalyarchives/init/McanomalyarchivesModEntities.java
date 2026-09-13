@@ -22,7 +22,7 @@ import net.mcreator.mcanomalyarchives.McanomalyarchivesMod;
 public class McanomalyarchivesModEntities {
 	public static final DeferredRegister<EntityType<?>> REGISTRY = DeferredRegister.create(Registries.ENTITY_TYPE, McanomalyarchivesMod.MODID);
 	public static final DeferredHolder<EntityType<?>, EntityType<StangeCloudEntity>> STANGE_CLOUD = register("stange_cloud",
-			EntityType.Builder.<StangeCloudEntity>of(StangeCloudEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3).fireImmune()
+			EntityType.Builder.<StangeCloudEntity>of(StangeCloudEntity::new, MobCategory.AMBIENT).setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3).fireImmune()
 
 					.sized(30f, 5f));
 	public static final DeferredHolder<EntityType<?>, EntityType<AnbulaEntity>> ANBULA = register("anbula",

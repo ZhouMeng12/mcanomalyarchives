@@ -10,11 +10,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
@@ -124,5 +126,23 @@ public class StangeCloudSpawnHandler {
             if (state.isSolid() || !state.getFluidState().isEmpty()) return false;
         }
         return true;
+    }
+    /**
+     * 禁止伪云以"生物自然刷怪"方式出现（它由本类按玩家距离自行投放）。
+     *
+     * <p><b>注意这道拦截单独并不足以避免世界生成崩溃</b>：
+     * {@code NaturalSpawner.spawnMobsForChunkGeneration} 里先算 spawn AABB 做碰撞检测
+     * （{@code noCollision}），{@code checkSpawnRules}（本事件）排在它后面，短路求值也救不了。
+     * 伪云宽 30 格，生成 AABB 会横跨邻接区块 → {@code Requested chunk unavailable during world generation}。
+     * 真正让它不进区块生成刷怪表的是【注册为 MobCategory.AMBIENT】
+     * （该方法只取 {@code MobCategory.CREATURE}）。这里只作为双保险。
+     */
+    @SubscribeEvent
+    public void onSpawnPlacement(MobSpawnEvent.SpawnPlacementCheck event) {
+        if (event.getEntityType() != McanomalyarchivesModEntities.STANGE_CLOUD.get()) return;
+        MobSpawnType type = event.getSpawnType();
+        if (type == MobSpawnType.NATURAL || type == MobSpawnType.CHUNK_GENERATION) {
+            event.setResult(MobSpawnEvent.SpawnPlacementCheck.Result.FAIL);
+        }
     }
 }

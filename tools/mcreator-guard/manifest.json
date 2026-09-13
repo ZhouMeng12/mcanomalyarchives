@@ -128,14 +128,15 @@
     {
       "id": "stange-cloud-registration",
       "kind": "block",
-      "why": "伪云碰撞箱：渲染时模型被 visualScale 放大 20 倍（30×5×15 格），而碰撞箱只有 0.6×1.8 —— 视锥剔除按碰撞箱判断，导致看云边缘时整朵云被剔掉（看不见）。碰撞箱必须覆盖模型",
+      "why": "伪云注册块：碰撞箱必须覆盖模型（30×5，否则视锥剔除会让整朵云消失）、出现距离 128，并且【必须是 AMBIENT 分类】—— CREATURE 分类会被区块生成刷怪（NaturalSpawner.spawnMobsForChunkGeneration 只取 CREATURE）选中，30 格宽的生成 AABB 横跨邻接区块，导致世界生成时崩溃（2026-09-12 实际发生过）",
       "path": "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModEntities.java",
       "canonical": "StangeCloud.registration.txt",
       "startAnchor": "EntityType<StangeCloudEntity>> STANGE_CLOUD = register(",
       "endAnchor": ".sized(",
       "expectAll": [
         "sized(30f, 5f)",
-        "setTrackingRange(128)"
+        "setTrackingRange(128)",
+        "MobCategory.AMBIENT"
       ]
     },
     {
@@ -336,6 +337,16 @@
         "CODEX_CHOICE_A_OPTIONS",
         "CODEX_GIVE",
         "CODEX_ALREADY"
+      ]
+    },
+    {
+      "id": "stange-cloud-spawn-weight",
+      "kind": "full",
+      "why": "伪云的刷怪权重必须为 0：它由 StangeCloudSpawnHandler 按玩家距离自行投放。一旦被 MCreator 恢复成 100，区块生成刷怪会选中这只 30 格宽的生物，其生成 AABB 横跨邻接区块 → Requested chunk unavailable during world generation（崩服）",
+      "path": "src/main/resources/data/mcanomalyarchives/neoforge/biome_modifier/stange_cloud_biome_modifier.json",
+      "canonical": "stange_cloud_biome_modifier.json",
+      "expectAll": [
+        "\"weight\": 0"
       ]
     }
   ]
