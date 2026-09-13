@@ -90,7 +90,7 @@
 
 ## 下载 / 安装
 
-发布版放在 [Releases](https://github.com/ZhouMeng12/MinecraftStrangeRecord/releases) 页，
+发布版放在 [Releases](https://github.com/ZhouMeng12/mcanomalyarchives/releases) 页，
 文件名形如 `strangerecord-<版本>-neoforge-1.21.1.jar`。
 
 1. 装上对应版本的 **NeoForge**（≥ 21.1.190）与 **GeckoLib**（≥ 4，推荐 4.6.6）；TACZ / Curios 可选；
