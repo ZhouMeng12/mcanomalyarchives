@@ -111,16 +111,18 @@ public final class NameTagTicker {
 	private static void tickItemIdentity(ServerLevel level, LivingEntity living, ResolvedName target) {
 		ItemStack model = new ItemStack(BuiltInRegistries.ITEM.get(target.id()));
 		if (model.has(DataComponents.TOOL)) {
+			// 有行为的名字（工具）→ 行为移植：正片里猪被命名成"钻石镐"后开始挖矿，挖到死
 			dig(level, living);
 			return;
 		}
-		if (is(id(target), "minecraft:potato") || is(id(target), "minecraft:poisonous_potato")
-				|| is(id(target), "minecraft:baked_potato")) {
+		if (is(target.id(), "minecraft:potato") || is(target.id(), "minecraft:poisonous_potato")
+				|| is(target.id(), "minecraft:baked_potato")) {
 			// 正片开场事故：宠物狗被命名成"土豆"后瞬间丧失所有动物活性、遗体长出土豆嫩芽
 			EntityNaming.toPotato(level, living);
 			return;
 		}
-		idleCost(level, living);
+		// 没有行为的名字（材料）→ 完全转换：它就是那个东西本身
+		EntityNaming.convertToMaterial(level, living, target);
 	}
 
 	// ===== 实体 ← 方块名：质料守恒 · 延迟掠夺转化（正片羊→金块） =====
@@ -193,22 +195,13 @@ public final class NameTagTicker {
 
 	/** 每次"按新身份行动"扣一点寿命，扣完就死（正片：牛在多次产蛋后痛苦地猝死）。 */
 	private static void consumeAction(ServerLevel level, LivingEntity living) {
-		int remaining = NamedState.remainingOf(living) - 1;
-		NamedState.setRemaining(living, remaining);
-		if (remaining <= 0) {
-			dies(level, living);
-		}
+		EntityNaming.spendAction(level, living);
 	}
 
 	private static void idleCost(ServerLevel level, LivingEntity living) {
 		if (living.tickCount % IDLE_LIFESPAN_INTERVAL == 0) {
 			consumeAction(level, living);
 		}
-	}
-
-	private static void dies(ServerLevel level, LivingEntity living) {
-		level.playSound(null, living.blockPosition(), SoundEvents.GENERIC_DEATH, SoundSource.NEUTRAL, 0.6f, 0.7f);
-		living.hurt(living.damageSources().genericKill(), Float.MAX_VALUE);
 	}
 
 	private static void spawnDrainHint(ServerLevel level, LivingEntity living) {
@@ -220,9 +213,5 @@ public final class NameTagTicker {
 
 	private static boolean is(ResourceLocation id, String expected) {
 		return id.toString().equals(expected);
-	}
-
-	private static ResourceLocation id(ResolvedName name) {
-		return name.id();
 	}
 }

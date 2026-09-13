@@ -22,8 +22,6 @@ public final class NameTagNotifier {
 	public static final String NO_OUTPUT = "nametag.mcanomalyarchives.no_output";
 	public static final String DRAINING = "nametag.mcanomalyarchives.draining";
 	public static final String DRY = "nametag.mcanomalyarchives.dry";
-	public static final String TOOLTIP = "nametag.mcanomalyarchives.tooltip";
-	public static final String TAG_HINT = "nametag.mcanomalyarchives.tag_hint";
 	public static final String EGG = "nametag.mcanomalyarchives.egg";
 
 	private NameTagNotifier() {

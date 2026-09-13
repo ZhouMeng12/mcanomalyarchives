@@ -5,7 +5,6 @@ import net.mcreator.mcanomalyarchives.anomaly.nametag.effects.ItemNaming;
 import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModItems;
 
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,11 +16,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AnvilUpdateEvent;
-import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 /**
@@ -90,13 +87,16 @@ public final class NameTagHandler {
 				deny(event, player, NameTagNotifier.LOCKED);
 				return;
 			}
-			// 名字已经写死：原版产出（挤奶/剪毛/上鞍）要被改写的身份接管
-			if (isHarvestTool(held) && !isOwnIdentity(living)) {
-				deny(event, player, NameTagNotifier.NO_OUTPUT);
-				return;
-			}
 			if (isOurTag(held)) {
 				deny(event, player, NameTagNotifier.LOCKED);
+				return;
+			}
+			// 名字已经写死：原版产出（挤奶/剪毛/上鞍）改由"名字"决定
+			// ——正片：牛被命名成"鸡"之后"无法再挤出牛奶"
+			if (isHarvestTool(held)) {
+				event.setCanceled(true);
+				event.setCancellationResult(InteractionResult.SUCCESS);
+				harvest(player, living, held, event.getHand());
 				return;
 			}
 		}
@@ -119,9 +119,40 @@ public final class NameTagHandler {
 		nameEntity(player, living, raw, held);
 	}
 
-	/** 名字就是它自己原本的类型（牛→"牛"）：身份没变，产出照旧。 */
-	private static boolean isOwnIdentity(LivingEntity living) {
-		return EntityNaming.isSelfIdentity(living);
+	/**
+	 * 被命名过的生物被"利用"：能不能挤奶、能不能剪毛，由**名字**决定，不由它原本是什么决定。
+	 * 牛被命名成"绵羊"就剪得出羊毛；牛被命名成"鸡"就挤不出奶。
+	 */
+	private static void harvest(ServerPlayer player, LivingEntity living, ItemStack held, net.minecraft.world.InteractionHand hand) {
+		if (!(living.level() instanceof ServerLevel level)) {
+			return;
+		}
+		switch (EntityNaming.harvestFor(NamedState.targetOf(living), held)) {
+			case MILK -> {
+				ItemStack filled = net.minecraft.world.item.ItemUtils.createFilledResult(held, player, new ItemStack(Items.MILK_BUCKET));
+				player.setItemInHand(hand, filled);
+				level.playSound(null, living.blockPosition(), net.minecraft.sounds.SoundEvents.COW_MILK, net.minecraft.sounds.SoundSource.NEUTRAL, 1.0f, 1.0f);
+			}
+			case WOOL -> {
+				ItemStack wool = new ItemStack(Items.WHITE_WOOL, 1 + level.random.nextInt(3));
+				if (!player.getInventory().add(wool)) {
+					player.drop(wool, false);
+				}
+				held.hurtAndBreak(1, player, net.minecraft.world.entity.EquipmentSlot.MAINHAND);
+				level.playSound(null, living.blockPosition(), net.minecraft.sounds.SoundEvents.SHEEP_SHEAR, net.minecraft.sounds.SoundSource.NEUTRAL, 1.0f, 1.0f);
+			}
+			case STEW -> {
+				ItemStack filled = net.minecraft.world.item.ItemUtils.createFilledResult(held, player, new ItemStack(Items.MUSHROOM_STEW));
+				player.setItemInHand(hand, filled);
+				level.playSound(null, living.blockPosition(), net.minecraft.sounds.SoundEvents.MOOSHROOM_SHEAR, net.minecraft.sounds.SoundSource.NEUTRAL, 1.0f, 1.0f);
+			}
+			case NONE -> {
+				NameTagNotifier.actionBar(player, NameTagNotifier.NO_OUTPUT);
+				return;
+			}
+		}
+		// 取一次产出就算"按新身份行动"一次（正片：牛在多次产蛋后痛苦地猝死）
+		EntityNaming.spendAction(level, living);
 	}
 
 	private static void nameEntity(ServerPlayer player, LivingEntity living, String raw, ItemStack held) {
@@ -245,21 +276,22 @@ public final class NameTagHandler {
 					NameTagNotifier.actionBar(player, NameTagNotifier.UNKNOWN, raw);
 					return;
 				}
-				if (resolved.kind() == ResolvedName.Kind.ITEM) {
+				// 名字得有"物品形态"才谈得上转换（水/岩浆/火这类没有物品形态的方块不行）
+				ItemStack model = MaterialUnits.itemFormOf(resolved);
+				if (model.isEmpty()) {
+					event.setCanceled(true);
+					NameTagNotifier.actionBar(player, NameTagNotifier.PLANNED);
+					return;
+				}
+				if (ItemNaming.isToolOrArmor(left) && ItemNaming.isToolOrArmor(model)) {
+					// 正片的"同形态命名"：木铲 → 下界合金镐。外观不变，只换内核，代价是耐久 = 名字字数。
 					output = ItemNaming.transfer(left, resolved, raw);
 					if (output.isEmpty()) {
-						// 同类型、但源物品没有任何可转让的内核（纯材料，例如"钻石"）：
-						// 走质料守恒结算，而不是白送 —— 否则"木棍 → 下界合金锭"就成了复制器
-						output = crossTypeItem(left, resolved, raw, player);
-						if (output.isEmpty()) {
-							return;
-						}
+						output = convertOrUnstable(left, resolved, raw, player);
 					}
 				} else {
-					output = crossTypeItem(left, resolved, raw, player);
-					if (output.isEmpty()) {
-						return; // 已经给出提示（撑不住 → 变成了不稳定产物）
-					}
+					// 其余一律"完全转换"：命名后真的就是那个东西
+					output = convertOrUnstable(left, resolved, raw, player);
 				}
 			}
 			default -> {
@@ -274,28 +306,23 @@ public final class NameTagHandler {
 	}
 
 	/**
-	 * 物品 ← 方块名 / 实体名：走质料守恒。
+	 * 完全转换，或者"撑不住"。
 	 *
-	 * 物品是"质料预算最小"的载体，所以跨类几乎必然质量不足 → 爆炸 + 极小残渣
-	 * ——正是正片木棍→钻石块那一节。质料够时按"完全转换"处理，直接变成那个方块的物品形态。
+	 * 撑得住（质料够）→ 产物就是**真正的目标物品**：这块石头之后就是钻石，
+	 * 能合成钻石装备、能进信标、**而且不能再当方块放下去**——因为物品本体已经是钻石了。
+	 *
+	 * 撑不住（质料不够）→ 正片木棍→钻石块那一幕：产物是个"不稳定"的东西，
+	 * 拿在手上没事，一放到地上/一用就炸，爆炸中心只留下等量转换的极小残渣。
 	 */
-	private static ItemStack crossTypeItem(ItemStack left, ResolvedName resolved, String raw, Player player) {
+	private static ItemStack convertOrUnstable(ItemStack left, ResolvedName resolved, String raw, Player player) {
+		if (MaterialUnits.canHold(left, resolved)) {
+			return ItemNaming.convert(resolved, raw);
+		}
+		ItemStack unstable = left.copy();
 		int budget = MaterialUnits.budgetOf(left);
 		int need = MaterialUnits.requirement(resolved);
-		if (budget >= need && resolved.kind() == ResolvedName.Kind.BLOCK) {
-			Block block = BuiltInRegistries.BLOCK.get(resolved.id());
-			if (block != null && block.asItem() != Items.AIR) {
-				ItemStack out = new ItemStack(block.asItem());
-				ItemNaming.applyCost(out, raw);
-				NamedState.apply(out, resolved, raw, NameTagCosts.durabilityFor(raw));
-				return out;
-			}
-		}
-		// 撑不住：产出一个"不稳定"的产物，放到地上或右键使用时爆炸
-		ItemStack unstable = left.copy();
 		NamedState.markUnstable(unstable, resolved, raw, MaterialUnits.explosionPower(budget, need),
 				MaterialUnits.residueCount(budget, need));
-		unstable.set(DataComponents.CUSTOM_NAME, Component.literal(raw));
 		NameTagNotifier.actionBar(player, NameTagNotifier.UNSTABLE);
 		return unstable;
 	}
@@ -346,28 +373,11 @@ public final class NameTagHandler {
 		NameTagNotifier.actionBar(player, NameTagNotifier.EXPLODED);
 	}
 
-	// ==================== tooltip ====================
-
-	@SubscribeEvent
-	public static void onTooltip(ItemTooltipEvent event) {
-		ItemStack stack = event.getItemStack();
-		if (isOurTag(stack)) {
-			// 这张牌本身没有"怎么用"的暗示，玩家不看文档不会知道要先过铁砧
-			if (stack.get(DataComponents.CUSTOM_NAME) == null) {
-				event.getToolTip().add(Component.translatable(NameTagNotifier.TAG_HINT));
-			}
-			return;
-		}
-		if (NamedState.isUnstable(stack)) {
-			event.getToolTip().add(Component.translatable(NameTagNotifier.UNSTABLE));
-			return;
-		}
-		if (!NamedState.isNamed(stack)) {
-			return;
-		}
-		int remaining = stack.getMaxDamage() > 0 ? stack.getMaxDamage() - stack.getDamageValue() : 0;
-		event.getToolTip().add(Component.translatable(NameTagNotifier.TOOLTIP, NamedState.displayOf(stack), remaining));
-	}
+	/*
+	 * 这里原本有一个 ItemTooltipEvent 处理器，给命名牌加"先过铁砧"的用法提示、
+	 * 给被命名的物品加"命名：X · 剩余 N 次"的读数。
+	 * 已按作者要求删除：玩法靠玩家自己发现，界面不解释。
+	 */
 
 	/** 供自检/日志用：把名字直接解析一次，不产生任何副作用。 */
 	public static String debugResolve(String rawName) {

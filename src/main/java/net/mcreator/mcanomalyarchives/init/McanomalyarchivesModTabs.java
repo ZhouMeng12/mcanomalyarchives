@@ -57,5 +57,6 @@ public class McanomalyarchivesModTabs {
 				tabData.accept(McanomalyarchivesModItems.STRANGE_TREE_SPAWN_EGG.get());
 				tabData.accept(McanomalyarchivesModItems.PINK_SHEEP_SPAWN_EGG.get());
 				tabData.accept(McanomalyarchivesModItems.ANOMALY_CODEX.get());
+				tabData.accept(McanomalyarchivesModItems.BAIBIAN_NAME_TAG.get());
 			}).build());
 }

@@ -192,8 +192,8 @@
   "death.attack.meteor_strike": "%1$s was obliterated by a meteor",
   "entity.mcanomalyarchives.pink_sheep_gift": "Pink Sheep\u0027s Gift",
   "item.mcanomalyarchives.baibian_name_tag": "Baibian Name Tag",
-  "nametag.mcanomalyarchives.need_name": "This tag has nothing written on it - rename it in an anvil first",
-  "nametag.mcanomalyarchives.unknown": "The Association has no record of \"%s\" (it only accepts common names)",
+  "nametag.mcanomalyarchives.need_name": "This tag has nothing written on it",
+  "nametag.mcanomalyarchives.unknown": "The archives hold no name like \"%s\"",
   "nametag.mcanomalyarchives.applied": "Named: %s",
   "nametag.mcanomalyarchives.locked": "This name is already fixed - it cannot be changed back",
   "nametag.mcanomalyarchives.erased": "...nothing was left behind",
@@ -204,7 +204,5 @@
   "nametag.mcanomalyarchives.no_output": "A rewritten existence no longer yields what it used to",
   "nametag.mcanomalyarchives.draining": "It is draining %s from its surroundings",
   "nametag.mcanomalyarchives.dry": "Nothing nearby can be drained",
-  "nametag.mcanomalyarchives.tooltip": "Named: %s - %s uses left",
-  "nametag.mcanomalyarchives.egg": "%s Egg",
-  "nametag.mcanomalyarchives.tag_hint": "Rename it in an anvil first: right-click a mob, or place it beside an item in the anvil"
+  "nametag.mcanomalyarchives.egg": "%s Egg"
 }

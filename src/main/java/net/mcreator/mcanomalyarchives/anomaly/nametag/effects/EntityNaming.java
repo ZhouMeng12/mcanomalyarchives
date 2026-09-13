@@ -146,4 +146,78 @@ public final class EntityNaming {
 				12, 0.3, 0.4, 0.3, 0.0);
 		target.discard();
 	}
+
+	/**
+	 * 实体 ← 材料名（钻石 / 金锭 / 熟牛排 …）：**完全转换**——它变成那个东西。
+	 *
+	 * 【为什么和"工具名"分开处理】正片里猪被命名成"钻石镐"之后是**获得挖矿行为、挖到死**，
+	 * 而石头被命名成"钻石"该变成钻石、纸被命名成"书"该变成书。
+	 * 区别在于名字指向的事物有没有"行为"：工具有，材料没有。
+	 * 没有行为的名字，唯一说得通的结果就是"它就是那个东西本身"。
+	 *
+	 * 数量按质料守恒折算（牛 110 单位 ÷ 钻石 30 单位 = 3 颗），并夹在 1~8 之间。
+	 */
+	public static void convertToMaterial(ServerLevel level, LivingEntity target, ResolvedName name) {
+		ItemStack drop = materialYield(target, name);
+		BlockPos pos = target.blockPosition();
+		target.discard();
+		if (!drop.isEmpty()) {
+			ItemEntity item = new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, drop);
+			level.addFreshEntity(item);
+		}
+		level.sendParticles(ParticleTypes.END_ROD, pos.getX() + 0.5, pos.getY() + 0.6, pos.getZ() + 0.5,
+				16, 0.4, 0.5, 0.4, 0.02);
+		level.playSound(null, pos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.NEUTRAL, 0.7f, 0.6f);
+	}
+
+	/** 一个实体按质料守恒能析出多少"那个东西"。 */
+	public static ItemStack materialYield(LivingEntity source, ResolvedName name) {
+		int budget = MaterialUnits.budgetOf(source);
+		int need = MaterialUnits.requirement(name);
+		int count = need <= 0 ? 1 : Math.max(1, Math.min(8, budget / need));
+		return MaterialUnits.residueStack(name, count);
+	}
+
+	// ===== 身份决定"能不能被利用"，以及产出什么 =====
+
+	/** 对某个身份而言，手上这件东西能取走什么。 */
+	public enum Harvest {
+		NONE,
+		MILK,
+		WOOL,
+		STEW
+	}
+
+	/**
+	 * 正片：牛被命名成"鸡"之后"无法再挤出牛奶"——**能不能挤奶由名字决定，不由它原本是什么决定**。
+	 * 反过来，牛被命名成"绵羊"就该能剪下羊毛。
+	 */
+	public static Harvest harvestFor(ResolvedName identity, net.minecraft.world.item.ItemStack tool) {
+		if (identity == null || identity.kind() != ResolvedName.Kind.ENTITY) {
+			return Harvest.NONE;
+		}
+		String id = identity.id().toString();
+		boolean milkable = id.equals("minecraft:cow") || id.equals("minecraft:goat") || id.equals("minecraft:mooshroom");
+		boolean shearable = id.equals("minecraft:sheep") || id.equals("minecraft:mooshroom");
+		if (tool.is(net.minecraft.world.item.Items.BUCKET) && milkable) {
+			return Harvest.MILK;
+		}
+		if (tool.is(net.minecraft.world.item.Items.SHEARS) && shearable) {
+			return Harvest.WOOL;
+		}
+		if (tool.is(net.minecraft.world.item.Items.BOWL) && id.equals("minecraft:mooshroom")) {
+			return Harvest.STEW;
+		}
+		return Harvest.NONE;
+	}
+
+	/** 让这次利用计入"按新身份行动"的次数（正片：牛在多次产蛋后痛苦地猝死）。 */
+	public static void spendAction(ServerLevel level, LivingEntity living) {
+		int remaining = NamedState.remainingOf(living) - 1;
+		NamedState.setRemaining(living, remaining);
+		if (remaining <= 0) {
+			level.playSound(null, living.blockPosition(), SoundEvents.GENERIC_DEATH, SoundSource.NEUTRAL, 0.6f, 0.7f);
+			living.hurt(living.damageSources().genericKill(), Float.MAX_VALUE);
+		}
+	}
 }

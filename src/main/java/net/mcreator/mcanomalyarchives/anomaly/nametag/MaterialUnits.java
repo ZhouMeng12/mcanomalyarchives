@@ -116,7 +116,40 @@ public final class MaterialUnits {
 	}
 
 	public static int budgetOf(ItemStack stack) {
+		// 方块物品要按"它代表的那个方块"算质料：一块石头重 100，不是 1
+		if (stack.getItem() instanceof net.minecraft.world.item.BlockItem blockItem) {
+			ResourceLocation blockId = BuiltInRegistries.BLOCK.getKey(blockItem.getBlock());
+			if (blockId != null) {
+				return unitsOf(ResolvedName.Kind.BLOCK, blockId);
+			}
+		}
 		return unitsOf(ResolvedName.Kind.ITEM, BuiltInRegistries.ITEM.getKey(stack.getItem()));
+	}
+
+	/**
+	 * 名字对应的"物品形态"：名字是物品就用它自己，是方块就用方块物品
+	 * （钻石块 → 钻石块物品）。没有物品形态的方块（水/岩浆/火）返回空。
+	 */
+	public static ItemStack itemFormOf(ResolvedName name) {
+		return switch (name.kind()) {
+			case ITEM -> BuiltInRegistries.ITEM.containsKey(name.id())
+					? new ItemStack(BuiltInRegistries.ITEM.get(name.id()))
+					: ItemStack.EMPTY;
+			case BLOCK -> {
+				Block block = BuiltInRegistries.BLOCK.get(name.id());
+				if (block == null || block.asItem() == net.minecraft.world.item.Items.AIR) {
+					yield ItemStack.EMPTY;
+				}
+				yield new ItemStack(block.asItem());
+			}
+			// 实体没有物品形态（刷怪蛋不算——那只是"召唤它的工具"，不是它本身）
+			case ENTITY -> ItemStack.EMPTY;
+		};
+	}
+
+	/** 目标的质料是否够承载这个名字。 */
+	public static boolean canHold(ItemStack target, ResolvedName name) {
+		return budgetOf(target) >= requirement(name);
 	}
 
 	/** 结算结果。 */

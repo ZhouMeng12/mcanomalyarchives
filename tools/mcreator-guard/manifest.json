@@ -260,8 +260,7 @@
         "\"entity.mcanomalyarchives.sitting_enity\"",
         "\"item.mcanomalyarchives.anomaly_codex\"",
         "\"item.mcanomalyarchives.baibian_name_tag\"",
-        "\"nametag.mcanomalyarchives.tag_hint\"",
-        "\"nametag.mcanomalyarchives.tooltip\"",
+        "\"nametag.mcanomalyarchives.unstable\"",
         "\"item_group.mcanomalyarchives.strange_record\""
       ]
     },
@@ -281,8 +280,7 @@
         "\"death.attack.meteor_strike\"",
         "\"entity.mcanomalyarchives.pink_sheep_gift\"",
         "\"item.mcanomalyarchives.baibian_name_tag\"",
-        "\"nametag.mcanomalyarchives.tag_hint\"",
-        "\"nametag.mcanomalyarchives.tooltip\""
+        "\"nametag.mcanomalyarchives.unstable\""
       ]
     },
     {

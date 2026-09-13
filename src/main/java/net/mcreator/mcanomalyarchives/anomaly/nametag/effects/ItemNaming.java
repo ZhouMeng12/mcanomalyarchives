@@ -1,5 +1,6 @@
 package net.mcreator.mcanomalyarchives.anomaly.nametag.effects;
 
+import net.mcreator.mcanomalyarchives.anomaly.nametag.MaterialUnits;
 import net.mcreator.mcanomalyarchives.anomaly.nametag.NamedState;
 import net.mcreator.mcanomalyarchives.anomaly.nametag.NameTagCosts;
 import net.mcreator.mcanomalyarchives.anomaly.nametag.ResolvedName;
@@ -56,7 +57,17 @@ public final class ItemNaming {
 	}
 
 	/**
-	 * 同类（物品 → 物品名）：把源物品的"内核"搬过来，外壳不动。
+	 * 工具 / 护甲：这类目标走"组件转让"（外观不变、能力全换），正片的木铲→下界合金镐就是这一支。
+	 *
+	 * 注意 1.21.1 还没有 {@code DataComponents.EQUIPPABLE}（那是 1.21.2+ 才有的），
+	 * 所以护甲只能靠 {@link net.minecraft.world.item.ArmorItem} 这个类来判断。
+	 */
+	public static boolean isToolOrArmor(ItemStack stack) {
+		return stack.has(DataComponents.TOOL) || stack.getItem() instanceof net.minecraft.world.item.ArmorItem;
+	}
+
+	/**
+	 * 工具 → 工具：把源物品的"内核"搬过来，外壳不动。
 	 *
 	 * @param target 左槽里的目标物品（会被复制，不改原物）
 	 * @param source 名字指向的物品
@@ -87,6 +98,30 @@ public final class ItemNaming {
 		int durability = NameTagCosts.durabilityFor(rawName);
 		out.set(DataComponents.MAX_DAMAGE, durability);
 		out.set(DataComponents.DAMAGE, 0);
+	}
+
+	/**
+	 * 非工具/护甲类目标：**完全转换** —— 这个 stack 真的变成名字所指的那个东西。
+	 *
+	 * 【为什么要真的换掉物品，而不是"搬点组件"】
+	 * 玩家输入"钻石"之后，他期望的是"这块石头就是钻石了"：
+	 * 能拿去合成钻石装备、放进信标、当钻石用，**而且不能再当方块放下去**。
+	 * 在 Minecraft 里，"能不能合成"由**物品本体**决定（配方按 Item 匹配，组件救不了），
+	 * "能不能放置"也由物品本体决定（是不是 BlockItem）。所以只能真的换成那个物品。
+	 * 换掉之后，命名对象自然"有名字所指事物的全部性质"——耐久、能否放置、能否合成、
+	 * 能否当燃料、能不能吃……一律随目标物品走，一条都不用我们枚举。
+	 *
+	 * 【已经不设"耐久 = 名字字数"】那是给"外观不变的工具"用的代价；
+	 * 完全转换的产物必须是货真价实的目标物品，再压一个耐久上去就自相矛盾了。
+	 */
+	public static ItemStack convert(ResolvedName name, String rawName) {
+		ItemStack out = MaterialUnits.itemFormOf(name);
+		if (out.isEmpty()) {
+			return ItemStack.EMPTY;
+		}
+		out.setCount(1);
+		NamedState.apply(out, name, rawName, 0);
+		return out;
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
