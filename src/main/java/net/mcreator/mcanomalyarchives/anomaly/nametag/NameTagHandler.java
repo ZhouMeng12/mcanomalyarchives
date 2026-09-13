@@ -3,6 +3,7 @@ package net.mcreator.mcanomalyarchives.anomaly.nametag;
 import net.mcreator.mcanomalyarchives.anomaly.nametag.effects.EntityNaming;
 import net.mcreator.mcanomalyarchives.anomaly.nametag.effects.ItemNaming;
 import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModItems;
+import net.mcreator.mcanomalyarchives.network.NamedTransformPacket;
 
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -151,8 +152,6 @@ public final class NameTagHandler {
 				return;
 			}
 		}
-		// 取一次产出就算"按新身份行动"一次（正片：牛在多次产蛋后痛苦地猝死）
-		EntityNaming.spendAction(level, living);
 	}
 
 	private static void nameEntity(ServerPlayer player, LivingEntity living, String raw, ItemStack held) {
@@ -170,56 +169,17 @@ public final class NameTagHandler {
 					NameTagNotifier.actionBar(player, NameTagNotifier.UNKNOWN, raw);
 					return;
 				}
-				if (resolved.kind() == ResolvedName.Kind.ENTITY) {
-					EntityNaming.apply(living, resolved, raw);
-					consume(player, held);
-					NameTagNotifier.actionBar(player, NameTagNotifier.APPLIED, resolved.defaultDisplay());
-					return;
-				}
-				// 跨类：先做质料守恒结算（正片：实体是唯一能"拖"的载体）
-				MaterialUnits.Outcome outcome = EntityNaming.settle(level, living, resolved);
-				switch (outcome) {
-					case EXPLODE -> {
-						explodeNaming(level, living.getX(), living.getY() + living.getBbHeight() * 0.5, living.getZ(), living, resolved);
-						consume(player, held);
-						NameTagNotifier.actionBar(player, NameTagNotifier.EXPLODED);
-					}
-					case SUCCESS -> {
-						// 质料够：立刻完全转换（方块名 → 直接变成那个方块）
-						if (resolved.kind() == ResolvedName.Kind.BLOCK) {
-							EntityNaming.completeBlockConversion(level, living, resolved);
-						} else {
-							EntityNaming.apply(living, resolved, raw);
-						}
-						consume(player, held);
-						NameTagNotifier.actionBar(player, NameTagNotifier.APPLIED, resolved.defaultDisplay());
-					}
-					default -> {
-						// 质料不够：进入延迟掠夺转化（正片羊→金块，历时数天、内部完全中空）
-						EntityNaming.apply(living, resolved, raw);
-						consume(player, held);
-						NameTagNotifier.actionBar(player, NameTagNotifier.DRAINING, resolved.defaultDisplay());
-					}
-				}
+				// 生物这条路只有一种结局：**慢慢变成**名字所指的东西（作者 2026-09-13 定的机制）。
+				// 行为立刻接管（正片：牛被命名成鸡后马上不能挤奶、马上开始下蛋），
+				// 外形与本体沿时间轴推进（NameTagTicker + NameTagTransform），
+				// 材料不够就停在最后一步之前、持续从周围掠夺（正片羊→金块）——**不爆炸**
+				// （爆炸是"物品被命名"那一支的规则：正片木棍→钻石块）。
+				EntityNaming.apply(living, resolved, raw);
+				NameTagTicker.startTransform(level, living, resolved, level.getGameTime());
+				NamedTransformPacket.sendToWatchers(living);
+				consume(player, held);
+				NameTagNotifier.actionBar(player, NameTagNotifier.APPLIED, resolved.defaultDisplay());
 			}
-		}
-	}
-
-	/** 跨类结算失败的爆炸：威力与质料差额挂钩，中心留下"等量转换"的极小残渣。 */
-	private static void explodeNaming(ServerLevel level, double x, double y, double z, Entity cause, ResolvedName wanted) {
-		int budget = cause instanceof LivingEntity living ? MaterialUnits.budgetOf(living) : 1;
-		int need = MaterialUnits.requirement(wanted);
-		float power = Math.min(NameTagCosts.EXPLOSION_MAX_POWER, MaterialUnits.explosionPower(budget, need));
-		level.explode(null, x, y, z, power,
-				NameTagCosts.EXPLOSION_BREAKS_TERRAIN ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.NONE);
-		int residue = MaterialUnits.residueCount(budget, need);
-		ItemStack drop = MaterialUnits.residueStack(wanted, residue);
-		if (!drop.isEmpty()) {
-			ItemEntity item = new ItemEntity(level, x, y, z, drop);
-			level.addFreshEntity(item);
-		}
-		if (cause instanceof LivingEntity living && living.isAlive()) {
-			living.hurt(living.damageSources().genericKill(), Float.MAX_VALUE);
 		}
 	}
 
@@ -370,6 +330,16 @@ public final class NameTagHandler {
 	 * 给被命名的物品加"命名：X · 剩余 N 次"的读数。
 	 * 已按作者要求删除：玩法靠玩家自己发现，界面不解释。
 	 */
+
+	// ==================== 中途进来的玩家也要看得到转化过程 ====================
+
+	@SubscribeEvent
+	public static void onStartTracking(net.neoforged.neoforge.event.entity.player.PlayerEvent.StartTracking event) {
+		if (event.getTarget() instanceof LivingEntity living && NamedState.isNamed(living)
+				&& event.getEntity() instanceof ServerPlayer player) {
+			NamedTransformPacket.sendTo(player, living);
+		}
+	}
 
 	/** 供自检/日志用：把名字直接解析一次，不产生任何副作用。 */
 	public static String debugResolve(String rawName) {

@@ -7,10 +7,14 @@ import net.mcreator.mcanomalyarchives.anomaly.nametag.ResolvedName;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -57,10 +61,12 @@ public final class EntityNaming {
 	}
 
 	/**
-	 * 跨类（实体 ← 方块名）：先做质料结算。
+	 * 跨类（实体 ← 方块/物品名）：先做质料结算。
 	 *
-	 * @return 结算结果；{@link MaterialUnits.Outcome#SUCCESS} 表示可以立刻转化
+	 * ⚠️ 已废弃：作者 2026-09-13 把实体侧改成"慢慢变成"之后，生物不再按"够不够"当场结算
+	 * ——材料不够就停在最后一步之前持续掠夺（{@link NameTagTicker#tickDrain} 那一支），**不爆炸**。
 	 */
+	@Deprecated
 	public static MaterialUnits.Outcome settle(ServerLevel level, LivingEntity target, ResolvedName name) {
 		int budget = MaterialUnits.budgetOf(target);
 		int need = MaterialUnits.requirement(name);
@@ -71,7 +77,8 @@ public final class EntityNaming {
 		return outcome;
 	}
 
-	/** 半径内是否存在可掠夺的"同族材料"（正片：羊抽走了收容所里含金设备的零件）。 */
+	/** @deprecated 见 {@link #settle}；现在只用 {@link #findDrainable}。 */
+	@Deprecated
 	public static boolean hasDrainable(ServerLevel level, LivingEntity target, ResolvedName name) {
 		return findDrainable(level, target, name) != null;
 	}
@@ -178,6 +185,52 @@ public final class EntityNaming {
 		return MaterialUnits.residueStack(name, count);
 	}
 
+	/**
+	 * 转化完成：**原地替换成目标生物的真身**。
+	 *
+	 * 作者定的机制是"被命名的生物会慢慢变成对应的生物"，这里是它的最后一步。
+	 * 换成真身之后，之前靠打补丁实现的东西全部自动正确——真鸡自己会下蛋、自己会鸡叫、
+	 * 本来就没奶、掉落表也是鸡的，我们一行都不用写。
+	 *
+	 * **保留**：位置、朝向、玩家的自定义名、被命名标记（不可逆）。
+	 * **不保留**：血量（新个体满血）、原生物的掉落 —— 它不是死了，是变成了别的。
+	 * **清掉转化状态**：新个体不该继续"正在转化"。
+	 */
+	public static boolean replaceWith(ServerLevel level, LivingEntity source, ResourceLocation targetTypeId) {
+		EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(targetTypeId);
+		if (type == null) {
+			return false;
+		}
+		if (!(type.create(level) instanceof LivingEntity replacement)) {
+			return false;
+		}
+		replacement.moveTo(source.getX(), source.getY(), source.getZ(), source.getYRot(), source.getXRot());
+		replacement.setYHeadRot(source.getYHeadRot());
+		replacement.setYBodyRot(source.yBodyRot);
+
+		// 继承标记（不可逆、目标、显示名），但把"正在转化"清掉——它已经变完了
+		CompoundTag carried = source.getPersistentData().copy();
+		carried.remove(NamedState.K_TRANSFORM_START);
+		carried.remove(NamedState.K_TRANSFORM_DURATION);
+		carried.remove(NamedState.K_TRANSFORM_STAGE);
+		carried.remove(NamedState.K_PROGRESS);
+		replacement.getPersistentData().merge(carried);
+
+		if (source.hasCustomName()) {
+			replacement.setCustomName(source.getCustomName());
+			replacement.setCustomNameVisible(source.isCustomNameVisible());
+		}
+
+		// 它不是死了：discard 不触发死亡掉落，也不留尸体
+		source.discard();
+		level.addFreshEntity(replacement);
+
+		level.sendParticles(ParticleTypes.END_ROD, replacement.getX(),
+				replacement.getY() + replacement.getBbHeight() * 0.5, replacement.getZ(), 24, 0.4, 0.6, 0.4, 0.04);
+		level.playSound(null, replacement.blockPosition(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.NEUTRAL, 0.7f, 1.4f);
+		return true;
+	}
+
 	// ===== 身份决定"能不能被利用"，以及产出什么 =====
 
 	/** 对某个身份而言，手上这件东西能取走什么。 */
@@ -211,7 +264,14 @@ public final class EntityNaming {
 		return Harvest.NONE;
 	}
 
-	/** 让这次利用计入"按新身份行动"的次数（正片：牛在多次产蛋后痛苦地猝死）。 */
+	/**
+	 * 让这次利用计入"按新身份行动"的次数。
+	 *
+	 * ⚠️ 已废弃：作者 2026-09-13 把实体侧改成"**慢慢变成**对应的生物"之后，
+	 * "寿命耗尽就死"被**转化时间轴**取代（见 {@link NameTagTransform}）——
+	 * 生物不再是被命名几次就猝死，而是走完转化、变成目标。保留此方法只为记录历史。
+	 */
+	@Deprecated
 	public static void spendAction(ServerLevel level, LivingEntity living) {
 		int remaining = NamedState.remainingOf(living) - 1;
 		NamedState.setRemaining(living, remaining);

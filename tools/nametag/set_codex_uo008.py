@@ -24,11 +24,11 @@ CANON = {
 TEXT = {
     "zh_cn": {
         "codex.mcanomalyarchives.uo008.info": "深褐色的异常命名牌，出自一处矿井里的矿车宝藏。它倒置了命名的因果——不是按特性起名，而是按名字赋予特性。",
-        "codex.mcanomalyarchives.uo008.trait": "只改内核、不改外壳 · 物品与方块必须过铁砧才能命名 · 物品耐久等于名字字数 · 命名不可逆，普通命名牌覆盖无效 · 跨类转化遵循质料守恒，撑不住就以爆炸偿付 · 现存数量被协会[数据删除]",
+        "codex.mcanomalyarchives.uo008.trait": "只改内核、不改外壳 · 物品与方块必须过铁砧才能命名 · 命名不可逆，普通命名牌覆盖无效 · 被命名的生物会慢慢变成名字所指的东西 · 物品转化遵循质料守恒，撑不住就以爆炸偿付 · 现存数量被协会[数据删除]",
     },
     "en_us": {
         "codex.mcanomalyarchives.uo008.info": "A dark brown anomalous name tag recovered from a minecart cache inside a mineshaft. It inverts the causality of naming: a thing is not named after its properties - its properties are rewritten to match the name.",
-        "codex.mcanomalyarchives.uo008.trait": "Changes the core, never the shell - Items and blocks must be named through an anvil - Item durability equals the number of characters in the name - Naming is irreversible; ordinary name tags cannot overwrite it - Cross-category conversion obeys material conservation and pays any deficit with an explosion - The number of extant tags is [DATA EXPUNGED]",
+        "codex.mcanomalyarchives.uo008.trait": "Changes the core, never the shell - Items and blocks must be named through an anvil - Naming is irreversible; ordinary name tags cannot overwrite it - A named creature slowly becomes the thing its name points to - Item conversion obeys material conservation and pays any deficit with an explosion - The number of extant tags is [DATA EXPUNGED]",
     },
 }
 

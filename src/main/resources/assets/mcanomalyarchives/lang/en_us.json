@@ -166,7 +166,7 @@
   "codex.mcanomalyarchives.uo007.protocol": "B",
   "codex.mcanomalyarchives.uo008.name": "Shapeshifting Name Tag",
   "codex.mcanomalyarchives.uo008.info": "A dark brown anomalous name tag recovered from a minecart cache inside a mineshaft. It inverts the causality of naming: a thing is not named after its properties - its properties are rewritten to match the name.",
-  "codex.mcanomalyarchives.uo008.trait": "Changes the core, never the shell - Items and blocks must be named through an anvil - Item durability equals the number of characters in the name - Naming is irreversible; ordinary name tags cannot overwrite it - Cross-category conversion obeys material conservation and pays any deficit with an explosion - The number of extant tags is [DATA EXPUNGED]",
+  "codex.mcanomalyarchives.uo008.trait": "Changes the core, never the shell - Items and blocks must be named through an anvil - Naming is irreversible; ordinary name tags cannot overwrite it - A named creature slowly becomes the thing its name points to - Item conversion obeys material conservation and pays any deficit with an explosion - The number of extant tags is [DATA EXPUNGED]",
   "codex.mcanomalyarchives.uo008.level": "R1",
   "codex.mcanomalyarchives.uo008.protocol": "A",
   "codex.mcanomalyarchives.uo009.name": "The False Sun",

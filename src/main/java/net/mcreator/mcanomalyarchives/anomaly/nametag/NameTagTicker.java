@@ -3,7 +3,7 @@ package net.mcreator.mcanomalyarchives.anomaly.nametag;
 import net.mcreator.mcanomalyarchives.anomaly.nametag.effects.EntityNaming;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -18,24 +18,29 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
+
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 /**
- * 被命名实体的"行为覆盖层"——每个 tick 驱动它们的产出、行动与寿命。
+ * 被命名实体的**行为接管 + 转化推进**。
+ *
+ * 【作者定的机制】被命名的生物会**慢慢变成**对应的生物。所以这里做两件并行的事：
+ * <ol>
+ *   <li><b>行为立刻接管</b>（正片：牛被命名成"鸡"后马上不能挤奶、马上开始下牛蛋）；</li>
+ *   <li><b>转化沿时间轴推进</b>（{@link NameTagTransform}），走完 100% 且材料够时，
+ *       原地替换成目标事物（{@link EntityNaming#replaceWith} 等）。</li>
+ * </ol>
+ *
+ * 【质料不够就卡住】需要掠夺材料的目标（正片羊→金块）会一直停到最后一步之前，
+ * 直到从周围凑够材料 —— 玩家得自己把材料搬过去。
  *
  * 【工程层归属】anomaly.nametag 包（非 MCreator 生成区）。
- *
- * 为什么用 {@link EntityTickEvent.Post} 而不是自己扫实体列表：它是逐实体触发的，
- * 我们只要在最前面用廉价条件挡掉绝大多数实体即可。代价是每 tick 都会走一遍，
- * 所以第一道判据必须是 {@code tickCount % STRIDE}（不碰 NBT）。
  */
 public final class NameTagTicker {
 
 	/** 每多少 tick 处理一次被命名实体（4 次/秒足够）。 */
 	private static final int STRIDE = 5;
-	/** 没有具体产出的身份：维持这种"被改写过的存在"也要付出代价。 */
-	private static final int IDLE_LIFESPAN_INTERVAL = 200;
 	/** 产蛋间隔。 */
 	private static final int EGG_INTERVAL = 120;
 	/** 挖掘的搜索半径。 */
@@ -75,43 +80,69 @@ public final class NameTagTicker {
 	}
 
 	private static void tick(ServerLevel level, LivingEntity living, ResolvedName target) {
+		long now = level.getGameTime();
+
+		// 时间轴：走过的存档（或刚被别处贴上标记的）在这里补一条
+		if (!NameTagTransform.isTransforming(living)) {
+			startTransform(level, living, target, now);
+		}
+
+		// 1) 行为接管：立刻生效
 		switch (target.kind()) {
-			case BLOCK -> tickBlockIdentity(level, living, target);
-			case ITEM -> tickItemIdentity(level, living, target);
 			case ENTITY -> tickEntityIdentity(level, living, target);
+			case ITEM -> tickItemIdentity(level, living, target);
+			case BLOCK -> tickDrain(level, living, target);
+		}
+
+		// 2) 转化推进
+		float progress = NameTagTransform.progressOf(living, now);
+		int stage = NameTagTransform.stageOf(progress);
+		if (stage > NameTagTransform.lastStage(living)) {
+			NameTagTransform.setLastStage(living, stage);
+			onStage(level, living, target, stage);
+		}
+
+		// 3) 时间走完 + 材料够 → 完成
+		if (progress >= 1.0f && materialReady(living, target)) {
+			complete(level, living, target);
 		}
 	}
 
-	// ===== 实体 ← 实体名：行为/产出覆盖 =====
+	public static void startTransform(ServerLevel level, LivingEntity living, ResolvedName target, long now) {
+		int duration = NameTagTransform.durationTicks(NamedState.displayOf(living),
+				MaterialUnits.budgetOf(living), MaterialUnits.requirement(target));
+		NameTagTransform.start(living, now, duration);
+	}
+
+	// ===== 材料是否够（不够就一直掠夺，卡在最后一步之前） =====
+
+	private static boolean materialReady(LivingEntity living, ResolvedName target) {
+		int need = MaterialUnits.requirement(target);
+		if (need <= 0) {
+			return true;
+		}
+		return NamedState.progressOf(living) >= need;
+	}
+
+	// ===== 行为接管（正片里"立刻"发生的那部分） =====
 
 	private static void tickEntityIdentity(ServerLevel level, LivingEntity living, ResolvedName target) {
 		if (EntityNaming.isSelfIdentity(living)) {
-			// 名字就是它自己（牛→"牛"）：身份没被改写，不该按"改写过的存在"收寿命
+			// 名字就是它自己（牛→"牛"）：身份没被改写，行为照旧，也不该被转化掉
 			return;
 		}
 		ResourceLocation id = target.id();
 		if (is(id, "minecraft:chicken")) {
-			// 正片：牛被命名成"鸡"后开始下出深褐色的牛蛋，牛蛋可以孵出正常的牛幼仔
 			if (living.tickCount % EGG_INTERVAL == 0) {
 				layEgg(level, living);
-				consumeAction(level, living);
 			}
-			return;
 		}
-		if (is(id, "minecraft:cow")) {
-			// 奶牛的产出（挤奶）走交互拦截，这里只维持存在
-			idleCost(level, living);
-			return;
-		}
-		idleCost(level, living);
 	}
-
-	// ===== 实体 ← 物品名：行为移植（正片猪→钻石镐） =====
 
 	private static void tickItemIdentity(ServerLevel level, LivingEntity living, ResolvedName target) {
 		ItemStack model = new ItemStack(BuiltInRegistries.ITEM.get(target.id()));
-		if (model.has(DataComponents.TOOL)) {
-			// 有行为的名字（工具）→ 行为移植：正片里猪被命名成"钻石镐"后开始挖矿，挖到死
+		if (model.has(net.minecraft.core.component.DataComponents.TOOL)) {
+			// 有行为的名字（工具）→ 行为移植：正片里猪被命名成"钻石镐"后开始挖矿
 			dig(level, living);
 			return;
 		}
@@ -119,31 +150,73 @@ public final class NameTagTicker {
 				|| is(target.id(), "minecraft:baked_potato")) {
 			// 正片开场事故：宠物狗被命名成"土豆"后瞬间丧失所有动物活性、遗体长出土豆嫩芽
 			EntityNaming.toPotato(level, living);
-			return;
 		}
-		// 没有行为的名字（材料）→ 完全转换：它就是那个东西本身
-		EntityNaming.convertToMaterial(level, living, target);
 	}
 
-	// ===== 实体 ← 方块名：质料守恒 · 延迟掠夺转化（正片羊→金块） =====
-
-	private static void tickBlockIdentity(ServerLevel level, LivingEntity living, ResolvedName target) {
-		int need = MaterialUnits.requirement(target);
+	/** 需要材料：持续从附近抽走目标材料，累积进度。 */
+	private static void tickDrain(ServerLevel level, LivingEntity living, ResolvedName target) {
 		if (living.tickCount % NameTagCosts.DRAIN_INTERVAL_TICKS != 0) {
 			return;
 		}
-		if (NamedState.progressOf(living) >= need) {
-			EntityNaming.completeBlockConversion(level, living, target);
+		if (materialReady(living, target)) {
 			return;
 		}
 		BlockPos source = EntityNaming.findDrainable(level, living, target);
 		if (source == null) {
-			// 抢不到材料：正片里这一步会演变成爆炸；这里温和降级为"继续等"，不再额外惩罚
-			spawnDrainHint(level, living);
-			return;
+			return; // 附近没材料：停在那儿等玩家搬过来
 		}
 		if (EntityNaming.drain(level, source)) {
 			NamedState.addProgress(living, NameTagCosts.DRAIN_PROGRESS_PER_BLOCK);
+		}
+	}
+
+	// ===== 阶段表现：让玩家看得出"正在变" =====
+
+	private static void onStage(ServerLevel level, LivingEntity living, ResolvedName target, int stage) {
+		BlockPos pos = living.blockPosition();
+		switch (stage) {
+			case 1 -> {
+				// 25%：开始不适——抽搐、惨叫
+				level.sendParticles(ParticleTypes.SMOKE, living.getX(), living.getY() + living.getBbHeight() * 0.5,
+						living.getZ(), 10, 0.3, 0.4, 0.3, 0.01);
+				level.playSound(null, pos, SoundEvents.GENERIC_HURT, SoundSource.NEUTRAL, 0.7f, 0.6f);
+			}
+			case 2 -> {
+				// 50%：挣扎加剧
+				level.sendParticles(ParticleTypes.LARGE_SMOKE, living.getX(), living.getY() + living.getBbHeight() * 0.5,
+						living.getZ(), 14, 0.3, 0.5, 0.3, 0.02);
+				level.playSound(null, pos, SoundEvents.GENERIC_HURT, SoundSource.NEUTRAL, 0.8f, 0.5f);
+			}
+			case 3 -> {
+				// 75%：身上开始出现目标材料的痕迹
+				level.sendParticles(materialParticle(target), living.getX(), living.getY() + living.getBbHeight() * 0.6,
+						living.getZ(), 18, 0.35, 0.5, 0.35, 0.03);
+				level.playSound(null, pos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.NEUTRAL, 0.6f, 0.7f);
+			}
+			default -> {
+			}
+		}
+	}
+
+	private static net.minecraft.core.particles.SimpleParticleType materialParticle(ResolvedName target) {
+		return switch (target.kind()) {
+			case BLOCK, ITEM -> ParticleTypes.CRIT;
+			case ENTITY -> ParticleTypes.END_ROD;
+		};
+	}
+
+	// ===== 完成 =====
+
+	private static void complete(ServerLevel level, LivingEntity living, ResolvedName target) {
+		switch (target.kind()) {
+			case ENTITY -> {
+				if (!EntityNaming.replaceWith(level, living, target.id())) {
+					// 目标不是生物（比如指向了刷怪蛋之类）→ 退化成"析出材料"
+					EntityNaming.convertToMaterial(level, living, target);
+				}
+			}
+			case BLOCK -> EntityNaming.completeBlockConversion(level, living, target);
+			case ITEM -> EntityNaming.convertToMaterial(level, living, target);
 		}
 	}
 
@@ -153,7 +226,8 @@ public final class NameTagTicker {
 	private static void layEgg(ServerLevel level, LivingEntity living) {
 		ItemStack egg = new ItemStack(Items.EGG);
 		String original = living.getType().getDescription().getString();
-		egg.set(DataComponents.CUSTOM_NAME, Component.translatable("nametag.mcanomalyarchives.egg", original));
+		egg.set(net.minecraft.core.component.DataComponents.CUSTOM_NAME,
+				Component.translatable(NameTagNotifier.EGG, original));
 		ItemEntity drop = new ItemEntity(level, living.getX(), living.getY() + 0.3, living.getZ(), egg);
 		drop.setDeltaMovement(0.0, 0.1, 0.0);
 		level.addFreshEntity(drop);
@@ -164,7 +238,6 @@ public final class NameTagTicker {
 	private static void dig(ServerLevel level, LivingEntity living) {
 		BlockPos pos = findDigTarget(level, living);
 		if (pos == null) {
-			idleCost(level, living);
 			return;
 		}
 		if (living instanceof Mob mob) {
@@ -172,7 +245,6 @@ public final class NameTagTicker {
 		}
 		if (living.position().distanceToSqr(Vec3.atCenterOf(pos)) <= DIG_REACH_SQR) {
 			level.destroyBlock(pos, false); // 正片：它只是挖，不是替你收集
-			consumeAction(level, living);
 		}
 	}
 
@@ -191,24 +263,6 @@ public final class NameTagTicker {
 			}
 		}
 		return null;
-	}
-
-	/** 每次"按新身份行动"扣一点寿命，扣完就死（正片：牛在多次产蛋后痛苦地猝死）。 */
-	private static void consumeAction(ServerLevel level, LivingEntity living) {
-		EntityNaming.spendAction(level, living);
-	}
-
-	private static void idleCost(ServerLevel level, LivingEntity living) {
-		if (living.tickCount % IDLE_LIFESPAN_INTERVAL == 0) {
-			consumeAction(level, living);
-		}
-	}
-
-	private static void spawnDrainHint(ServerLevel level, LivingEntity living) {
-		if (living.tickCount % 100 == 0) {
-			level.sendParticles(net.minecraft.core.particles.ParticleTypes.SMOKE,
-					living.getX(), living.getY() + living.getBbHeight() * 0.5, living.getZ(), 3, 0.2, 0.3, 0.2, 0.01);
-		}
 	}
 
 	private static boolean is(ResourceLocation id, String expected) {

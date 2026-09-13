@@ -15,6 +15,7 @@
         "CloudingGrayLivingRendererMixin",
         "LevelRendererMixin",
         "NamedItemAppearanceMixin",
+        "NamedTransformRenderMixin",
         "PlayerSlowSwingMixin"
     ]
 }

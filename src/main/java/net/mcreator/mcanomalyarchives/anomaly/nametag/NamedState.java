@@ -31,7 +31,7 @@ public final class NamedState {
 	/** 尚未结算的跨类爆炸（"放置后才炸"）。 */
 	private static final String K_UNSTABLE = P + "Unstable";
 	/** 跨类"掠夺转化"的累积进度（正片：羊不是瞬间变金，而是历时数天）。 */
-	private static final String K_PROGRESS = P + "Progress";
+	public static final String K_PROGRESS = P + "Progress";
 	/**
 	 * 被命名物品"看起来该是什么"。
 	 *
@@ -41,6 +41,10 @@ public final class NamedState {
 	 * 这个键存的就是"要画成哪个物品"。
 	 */
 	private static final String K_APPEARANCE = P + "Appearance";
+	/** 转化时间轴：开始的游戏刻、总时长、已派发到第几个阶段（见 NameTagTransform）。 */
+	public static final String K_TRANSFORM_START = P + "Start";
+	public static final String K_TRANSFORM_DURATION = P + "Duration";
+	public static final String K_TRANSFORM_STAGE = P + "Stage";
 
 	private NamedState() {
 	}
@@ -58,6 +62,11 @@ public final class NamedState {
 
 	public static String displayOf(Entity entity) {
 		return entity.getPersistentData().getString(K_DISPLAY);
+	}
+
+	/** 目标注册名的原始 token（形如 {@code entity:minecraft:chicken}），给同步包用。 */
+	public static String targetTokenOf(Entity entity) {
+		return entity.getPersistentData().getString(K_TARGET);
 	}
 
 	public static int remainingOf(Entity entity) {

@@ -85,7 +85,12 @@
         "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagCosts.java",
         "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/effects/ItemNaming.java",
         "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/effects/EntityNaming.java",
-        "src/main/java/net/mcreator/mcanomalyarchives/mixin/NamedItemAppearanceMixin.java"
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagTransform.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/NamedTransformClient.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/NamedMorphClient.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/network/NamedTransformPacket.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/NamedItemAppearanceMixin.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/NamedTransformRenderMixin.java"
       ]
     },
     {
@@ -470,7 +475,8 @@
       "path": "src/main/resources/mcanomalyarchives.mixins.json",
       "fixHint": "把 NamedItemAppearanceMixin 加回 client 段；类本体在 src/main/java/net/mcreator/mcanomalyarchives/mixin/NamedItemAppearanceMixin.java",
       "mustContain": [
-        "\"NamedItemAppearanceMixin\""
+        "\"NamedItemAppearanceMixin\"",
+        "\"NamedTransformRenderMixin\""
       ]
     },
     {
