@@ -82,14 +82,12 @@ UO-011*
 .DS_Store
 Thumbs.db
 
-# ===== 视频研读缓存（封面/弹幕原稿/逐帧截图，体积大不进仓库；结论写在 md 里）=====
-docs/video-research/covers/
-docs/video-research/raw/
-docs/video-research/frames/
+# ===== 设计文稿 / 视频研读 / 本地技能：只留本地，不随仓库发布 =====
+# 2026-09-13 起整份 docs/ 与 .dsh/ 都不再入库（此前提交里仍有历史副本）。
+# 这一条覆盖了原来单独列的 docs/video-research/{covers,raw,frames}/ 与 docs/codex-research/。
+/docs/
+/.dsh/
 
 # ===== 参考用的 NeoForge/原版 jar（25MB 二进制，不入仓库）=====
 1.21.1-NeoForge_21.1.248.jar
 *.jar
-
-# ===== wiki 原文抓取（CC BY-SA，仅本地研究用，不随仓库分发）=====
-docs/codex-research/
