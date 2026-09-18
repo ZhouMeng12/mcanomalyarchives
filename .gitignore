@@ -7,10 +7,10 @@ out/
 # ===== MCreator 运行数据（含世界存档、日志、模组 jar）=====
 /run/
 /logs/
-crash-reports/
-crash-*.txt
+/crash-reports/
+/crash-*.txt
 *.log
-latest_crash.log
+/latest_crash.log
 
 # ===== MCreator 本地元数据 / 备份 =====
 .mcreator/
@@ -32,51 +32,58 @@ latest_crash.log
 /.geckolib_src/
 /software/
 /net/
-GuiGraphics_source.java
-Screen_source.java
+/GuiGraphics_source.java
+/Screen_source.java
 
 # ===== 根目录散落的旧备份/重复文件（src/ 里已有正式版本）=====
-CornPoppyAngryListener.java
-CornPoppyBlock.java
-CornPoppyDebugCommand.java
-PlayerLookAtCornPoppyListener.java
-StangeCloudEntity.java
-PurplehandItem.java.bak
-Invicon_Poppy.png
-anbulacat.png
-playerslimmodel.geo.json
-BACKUP_README.md
+# ⚠️ 这一段**必须全部带前导 /**。2026-09-18 发现：这些规则原来没有锚定，
+# 于是同名文件在任意深度都被忽略 —— 结果 src/ 里的
+#   entity/StangeCloudEntity.java（伪云本体，379 行）
+#   block/CornPoppyBlock.java · events/CornPoppyAngryListener.java · events/PlayerLookAtCornPoppyListener.java
+#   textures/{block,item,mob_effect}/invicon_poppy.png · textures/entities/anbulacat.png
+# 一直没进过版本控制，而引用它们的文件（注册表、模型 json、渲染 mixin）却都在仓库里
+# —— 别人克隆下来既编不过、贴图也是紫黑。别再把这些规则改回不带 / 的样子。
+/CornPoppyAngryListener.java
+/CornPoppyBlock.java
+/CornPoppyDebugCommand.java
+/PlayerLookAtCornPoppyListener.java
+/StangeCloudEntity.java
+/PurplehandItem.java.bak
+/Invicon_Poppy.png
+/anbulacat.png
+/playerslimmodel.geo.json
+/BACKUP_README.md
 
 # ===== 构建/崩溃日志 =====
-build_errors.txt
-build_output.txt
-builderror.txt
+/build_errors.txt
+/build_output.txt
+/builderror.txt
 
 # ===== 设计稿 / 预览 / 截图 =====
-QQ20260719-203930.png
-purplegui2.psd
-purplegui2.png
-noise-demo.html
-sanity-noise-preview.html
-purple-monster-gui-editor.html
-purple-monster-gui-editor-phase1.html
-purple-monster-gui-editor-phase4.html
-purple-monster-gui-preview.html
+/QQ20260719-203930.png
+/purplegui2.psd
+/purplegui2.png
+/noise-demo.html
+/sanity-noise-preview.html
+/purple-monster-gui-editor.html
+/purple-monster-gui-editor-phase1.html
+/purple-monster-gui-editor-phase4.html
+/purple-monster-gui-preview.html
 
 # ===== 音频/字体源文件（转换后的副本已在 src/main/resources 里）=====
-黑.mp3
-黑.ogg
-5_Minecraft AE(支持中文).ttf
+/黑.mp3
+/黑.ogg
+/5_Minecraft AE(支持中文).ttf
 
 # ===== TACZ 提取物：第三方模组资产，涉及版权，勿公开提交 =====
-tacz_shotgun_export/
-tacz_shotgun_export.sh
+/tacz_shotgun_export/
+/tacz_shotgun_export.sh
 
 # ===== 素材（个人素材，不公开）=====
-素材/
+/素材/
 
 # ===== 下载的参考网页 =====
-UO-011*
+/UO-011*
 
 # ===== 系统文件 =====
 .DS_Store
@@ -89,5 +96,5 @@ Thumbs.db
 /.dsh/
 
 # ===== 参考用的 NeoForge/原版 jar（25MB 二进制，不入仓库）=====
-1.21.1-NeoForge_21.1.248.jar
+/1.21.1-NeoForge_21.1.248.jar
 *.jar
