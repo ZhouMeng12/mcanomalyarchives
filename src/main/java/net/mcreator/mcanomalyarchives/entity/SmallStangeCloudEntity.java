@@ -328,10 +328,11 @@ public class SmallStangeCloudEntity extends Monster {
 	/**
 	 * 还在"被门吐出来"的阶段吗（出场前 40 tick）。
 	 *
-	 * <p>子类（黑吸伪云）用它决定"别一出生就干活"：刚出门时身体还压在门框那一片，
-	 * 立刻开咬既看起来像门什么都没吐出来，也会咬坏自己的门。
+	 * <p>两处用到它：子类黑吸伪云用它决定"别一出生就干活"；通行 mixin 用它挡住
+	 * **刚出生那一下的过门** —— 云是在门口生成的，4×4 的碰撞箱一开始就压在门方块上，
+	 * 不放行的话它会被原版传送逻辑当场吸走（2026-09-18 的"云刚出来就传回去了"）。
 	 */
-	protected boolean isLaunching() {
+	public boolean isLaunching() {
 		return !cruising;
 	}
 

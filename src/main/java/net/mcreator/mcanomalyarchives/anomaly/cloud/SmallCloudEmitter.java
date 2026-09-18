@@ -85,6 +85,10 @@ public final class SmallCloudEmitter {
 		if (exit == null) {
 			return false; // 两侧都被堵住：这次算了
 		}
+		// 出生点尽量往外挪一格：云的碰撞箱是 4×4（元素里 modelWidth=4），
+		// 紧贴门方块生成时箱子会压在门上，原版传送逻辑会把刚出生的云当场吸走。
+		// 外面那格不通（门贴着墙）就退回紧贴生成，靠 mixin 里的"出场期不过门"兜底。
+		BlockPos spawnPos = isPassable(level, pos.relative(exit, 2)) ? pos.relative(exit, 2) : pos.relative(exit);
 
 		AABB neighbourhood = new AABB(pos).inflate(PORTAL_NEIGHBOURHOOD);
 		List<SmallStangeCloudEntity> existing = level.getEntitiesOfClass(SmallStangeCloudEntity.class, neighbourhood);
@@ -102,8 +106,7 @@ public final class SmallCloudEmitter {
 			return false;
 		}
 
-		BlockPos exitPos = pos.relative(exit);
-		cloud.moveTo(exitPos.getX() + 0.5D, pos.getY() + SPAWN_Y_OFFSET, exitPos.getZ() + 0.5D, 0.0F, 0.0F);
+		cloud.moveTo(spawnPos.getX() + 0.5D, pos.getY() + SPAWN_Y_OFFSET, spawnPos.getZ() + 0.5D, 0.0F, 0.0F);
 		// 出场方向 = 门面法线。**只通过朝向传递**：实体朝向会随生成包同步到客户端，
 		// 于是客户端也能算出同一个方向，不需要额外的网络包（见 SmallStangeCloudEntity.headingFromYaw）。
 		cloud.setYRot(SmallStangeCloudEntity.yawFor(exit.getStepX(), exit.getStepZ()));
@@ -112,7 +115,7 @@ public final class SmallCloudEmitter {
 
 		// 门口冒一下云气，像被咳出来
 		level.sendParticles(ParticleTypes.CLOUD,
-				exitPos.getX() + 0.5D, pos.getY() + 0.6D, exitPos.getZ() + 0.5D,
+				pos.relative(exit).getX() + 0.5D, pos.getY() + 0.6D, pos.relative(exit).getZ() + 0.5D,
 				8, 0.4D, 0.5D, 0.4D, 0.01D);
 		return true;
 	}

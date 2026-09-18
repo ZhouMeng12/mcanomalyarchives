@@ -53,7 +53,7 @@ BIG_DAMAGE = 1.0
 TARGET_SHORT = 2.0              # 作者要求：短的横边是 2 格
 
 print("=" * 68)
-print("1. 尺寸链：短横边 2 格 ↔ 缩放 ↔ 碰撞箱 ↔ 伤害盒")
+print("1. 尺寸链：短横边 2 格 -> 缩放 -> 碰撞箱 -> 伤害盒")
 print("=" * 68)
 
 scale = BIG_SCALE * (TARGET_SHORT / BIG_SHORT)
