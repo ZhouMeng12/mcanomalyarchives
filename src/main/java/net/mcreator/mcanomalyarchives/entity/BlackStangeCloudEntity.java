@@ -49,6 +49,15 @@ public class BlackStangeCloudEntity extends SmallStangeCloudEntity {
 	}
 
 	/**
+	 * 不走出场阶段：作者 2026-09-18「黑吸云移动也要像伪云一样水平移动」——
+	 * 一出生就进入与伪云同款的水平匀速漂移（朝向仍由传送门给的门口法线决定，所以还是从门里出来）。
+	 */
+	@Override
+	protected boolean skipLaunchPhase() {
+		return true;
+	}
+
+	/**
 	 * 覆盖父类的"伤害盒 + 染水"：黑吸伪云只做一件事 ——
 	 * 身体碰到实体方块就吞一口，然后自己消散。
 	 */
@@ -75,21 +84,39 @@ public class BlackStangeCloudEntity extends SmallStangeCloudEntity {
 		vanish(serverLevel);
 	}
 
-	/** 身体（视觉那一段：模型悬在实体原点下方约 0.667 格）范围内有没有可站立的实体方块。 */
+	/**
+	 * 身体（视觉那一段：模型悬在实体原点下方约 0.667 格）真的碰到实体方块了吗。
+	 *
+	 * <p>用**真正的方块碰撞箱求交**，不是"整数方块格"式的粗判：
+	 * 上一版把 AABB 稍微往下多算了一点，`BlockPos.betweenClosed` 取整就把云**下面那一层地面**
+	 * 也算了进来 —— 而云出生时本来就悬在地面上方约 0.13 格，于是"刚出现就触发黑吸消失"
+	 * （作者 2026-09-18 报的正是这个）。
+	 */
 	private boolean touchingSolidBlock(ServerLevel level) {
 		AABB body = bodyBox();
 		for (BlockPos pos : BlockPos.betweenClosed(
 				BlockPos.containing(body.minX, body.minY, body.minZ),
 				BlockPos.containing(body.maxX, body.maxY, body.maxZ))) {
 			BlockState state = level.getBlockState(pos);
-			if (!state.isAir() && !state.getCollisionShape(level, pos).isEmpty()) {
+			if (state.isAir()) {
+				continue;
+			}
+			net.minecraft.world.phys.shapes.VoxelShape shape = state.getCollisionShape(level, pos);
+			if (shape.isEmpty()) {
+				continue;
+			}
+			if (shape.bounds().move(pos.getX(), pos.getY(), pos.getZ()).intersects(body)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	/** 云体实际占的那块空间：长边沿运动方向、短边横着，垂直方向对齐视觉（悬在原点下方）。 */
+	/**
+	 * 云体实际占的那块空间：长边沿运动方向、短边横着，垂直方向对齐视觉（悬在原点下方）。
+	 *
+	 * <p>垂直方向**不往下多给余量**：视觉底边就是它的"身体底"，多给一点就会擦到地面。
+	 */
 	private AABB bodyBox() {
 		double alongX = Math.abs(heading.x) > 0.5D ? VISUAL_LENGTH / 2.0D : VISUAL_SHORT_EDGE / 2.0D;
 		double alongZ = Math.abs(heading.z) > 0.5D ? VISUAL_LENGTH / 2.0D : VISUAL_SHORT_EDGE / 2.0D;
@@ -97,8 +124,8 @@ public class BlackStangeCloudEntity extends SmallStangeCloudEntity {
 		double y = this.getY();
 		double z = this.getZ();
 		return new AABB(
-				x - alongX - CONTACT_MARGIN, y - VISUAL_HEIGHT - CONTACT_MARGIN, z - alongZ - CONTACT_MARGIN,
-				x + alongX + CONTACT_MARGIN, y + CONTACT_MARGIN, z + alongZ + CONTACT_MARGIN);
+				x - alongX - CONTACT_MARGIN, y - VISUAL_HEIGHT, z - alongZ - CONTACT_MARGIN,
+				x + alongX + CONTACT_MARGIN, y, z + alongZ + CONTACT_MARGIN);
 	}
 
 	/**

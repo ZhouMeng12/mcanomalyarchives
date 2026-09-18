@@ -86,6 +86,13 @@ public class SmallStangeCloudEntity extends Monster {
 	 */
 	private static final int PORTAL_COOLDOWN_TICKS = 1400;
 
+	/**
+	 * 出生后的"不许过门"宽限期（tick）。
+	 *
+	 * <p>5 秒 —— 云速 0.045/tick，5 秒走 4.5 格，足以让 4 格宽的碰撞箱离开它出生的那扇门。
+	 */
+	public static final int PORTAL_GRACE_TICKS = 100;
+
 	// ==================== 收场 ====================
 
 	/** 寿命：60 秒（作者 2026-09-16 定），到点散掉 */
@@ -114,6 +121,16 @@ public class SmallStangeCloudEntity extends Monster {
 	/** 子类（黑吸伪云）要看这个标记 */
 	protected boolean isCruising() {
 		return cruising;
+	}
+
+	/**
+	 * 跳过"被门吐出来"的出场阶段，一出生就进入水平巡航吗？
+	 *
+	 * <p>黑吸伪云覆盖成 true：作者 2026-09-18「黑吸云移动也要像伪云一样水平移动」——
+	 * 出场阶段带初速衰减、看起来像被弹出来，而黑吸云要的是跟伪云同款的水平匀速漂移。
+	 */
+	protected boolean skipLaunchPhase() {
+		return false;
 	}
 	private int launchTick = 0;
 	private double launchSpeed = 0.0D;
@@ -297,6 +314,9 @@ public class SmallStangeCloudEntity extends Monster {
 		if (heading == Vec3.ZERO) {
 			heading = headingFromYaw(this.getYRot());
 		}
+		if (!cruising && skipLaunchPhase()) {
+			cruising = true;
+		}
 
 		double newX = this.getX();
 		double newZ = this.getZ();
@@ -342,6 +362,17 @@ public class SmallStangeCloudEntity extends Monster {
 	 * <p>黑吸伪云（子类）把它整个换掉：不伤害、不染水，改成"碰到方块就吞一口然后消散"。
 	 * 之所以留成钩子而不是在父类里 if：两种云的"影响"是互斥的两套，覆盖比分支清楚。
 	 */
+	/**
+	 * 已经活够"不许过门"的宽限期了吗？
+	 *
+	 * <p>云是在门口生成的、碰撞箱又有 4 格宽，地一时间必然压在门方块上；
+	 * 不放行的话原版传送逻辑会把刚出门的云当场吸到另一边（2026-09-18 的"云刚出来就传回去了"）。
+	 * 5 秒之后它已经离开门 4 格以上，这时"自己飘进传送门"才是作者要的行为。
+	 */
+	public boolean mayUsePortalNow() {
+		return this.tickCount >= PORTAL_GRACE_TICKS;
+	}
+
 	protected void tickCloudEffects() {
 		applyCloudDamage();
 		convertLavaAndWaterToCloudBlocks();

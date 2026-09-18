@@ -32,10 +32,11 @@ public abstract class CloudPortalPassMixin {
 	private static void mcanomalyarchives$smallCloudMayPass(Entity entity, CallbackInfoReturnable<Boolean> cir) {
 		// 黑吸伪云是小伪云的子类，一起放行。
 		//
-		// 但**出场那 40 tick 不放行**：云是在门口生成的，4×4 的碰撞箱一出生就压在门方块上，
-		// 放行的话原版传送逻辑当场把它吸走（作者 2026-09-18 看到的现象："云刚出来就传回去了"）。
-		// 等它飞出门那一小段之后（isLaunching() 变 false）才是真的"自己飘进传送门"。
-		if (entity instanceof SmallStangeCloudEntity cloud && !cloud.isLaunching()) {
+		// 但**出生后 5 秒内不放行**（mayUsePortalNow）：云是在门口生成的、碰撞箱又有 4 格宽，
+		// 一出生必然压在门方块上，放行的话原版传送逻辑当场把它吸走
+		//（作者 2026-09-18 看到的"云刚出来就传回去了"）。等它飘出门那一小段之后，
+		// "自己钻进传送门"才是作者要的行为。
+		if (entity instanceof SmallStangeCloudEntity cloud && cloud.mayUsePortalNow()) {
 			cir.setReturnValue(true);
 		}
 	}
