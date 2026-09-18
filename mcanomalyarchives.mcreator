@@ -1501,6 +1501,22 @@
         ]
       },
       "path": "~/StrangeCloud"
+    },
+    {
+      "name": "BlackStangeCloud",
+      "type": "livingentity",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "black_stange_cloud",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/mcanomalyarchives/entity/BlackStangeCloudEntity.java",
+          "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/BlackStangeCloudRenderer.java",
+          "src/main/resources/assets/mcanomalyarchives/models/item/black_stange_cloud_spawn_egg.json",
+          "src/main/resources/assets/mcanomalyarchives/items/black_stange_cloud_spawn_egg.json"
+        ]
+      },
+      "path": "~/StrangeCloud"
     }
   ],
   "variable_elements": [],
@@ -1772,7 +1788,8 @@
       "nametag.mcanomalyarchives.egg": "%s Egg",
       "entity.mcanomalyarchives.small_stange_cloud": "Small Stange Cloud",
       "item.mcanomalyarchives.small_stange_cloud_spawn_egg": "Small Stange Cloud Spawn Egg",
-      "nametag.mcanomalyarchives.not_for_anomaly": "It cannot be rewritten - it is an anomaly itself"
+      "entity.mcanomalyarchives.black_stange_cloud": "Black Devouring Cloud",
+      "item.mcanomalyarchives.black_stange_cloud_spawn_egg": "Black Devouring Cloud Spawn Egg"
 },
     "zh_cn": {
       "advancements.cloudarmadv.descr": "获得全套云锭套装",
@@ -1983,7 +2000,8 @@
       "nametag.mcanomalyarchives.egg": "%s蛋",
       "entity.mcanomalyarchives.small_stange_cloud": "小伪云",
       "item.mcanomalyarchives.small_stange_cloud_spawn_egg": "小伪云刷怪蛋",
-      "nametag.mcanomalyarchives.not_for_anomaly": "改写不了——它本身就是异常"
+      "entity.mcanomalyarchives.black_stange_cloud": "黑吸伪云",
+      "item.mcanomalyarchives.black_stange_cloud_spawn_egg": "黑吸伪云刷怪蛋"
 }
   },
   "metadata": {

@@ -34,6 +34,15 @@ public final class ComfortConfig {
 	public static final ModConfigSpec.DoubleValue BLINK_DARKNESS;
 	/** 陨石在无障碍物时是否破坏地形（默认开；关掉只伤人不炸地形） */
 	public static final ModConfigSpec.BooleanValue METEOR_TERRAIN_DAMAGE;
+	/**
+	 * 黑吸伪云吞不吞方块（默认开）。
+	 *
+	 * <p>注意这是**客户端配置**（与 {@link #METEOR_TERRAIN_DAMAGE} 同一个 SPEC）：
+	 * 单人游戏里集成服务器与客户端同 JVM，开关立刻生效；
+	 * 专用服务器上客户端配置不在服务端加载，会回退默认值 true ——
+	 * 那种场合请改用原版 {@code /gamerule mobGriefing false}（黑吸伪云和末影人一样尊重它）。
+	 */
+	public static final ModConfigSpec.BooleanValue BLACK_CLOUD_TERRAIN_DAMAGE;
 
 	static {
 		ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -56,6 +65,13 @@ public final class ComfortConfig {
 						"true = 砸出陨石坑（默认）；false = 只保留爆炸伤害与演出，不炸方块。",
 						"住在精心搭的建筑附近时建议关掉。")
 				.define("meteorTerrainDamage", true);
+
+		BLACK_CLOUD_TERRAIN_DAMAGE = builder
+				.comment("黑吸伪云碰到方块时，是否让它吞掉周围一片方块（不掉落）。",
+						"true = 吞（默认，会在地面/墙上咬出一个洞）；false = 只散掉、不动方块。",
+						"与 mobGriefing 是【与】的关系：任一为 false 都不吞。",
+						"专用服务器上这条客户端配置不生效，请用 /gamerule mobGriefing false。")
+				.define("blackCloudTerrainDamage", true);
 
 		builder.pop();
 		SPEC = builder.build();
@@ -118,6 +134,17 @@ public final class ComfortConfig {
 			if (!SPEC.isLoaded())
 				return true;
 			return METEOR_TERRAIN_DAMAGE.get();
+		} catch (Exception e) {
+			return true;
+		}
+	}
+
+	/** 黑吸伪云是否吞方块；配置未加载时回退 true（与 mobGriefing 取与） */
+	public static boolean blackCloudTerrainDamage() {
+		try {
+			if (!SPEC.isLoaded())
+				return true;
+			return BLACK_CLOUD_TERRAIN_DAMAGE.get();
 		} catch (Exception e) {
 			return true;
 		}

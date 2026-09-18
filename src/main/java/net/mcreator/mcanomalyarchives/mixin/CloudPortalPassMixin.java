@@ -30,6 +30,7 @@ public abstract class CloudPortalPassMixin {
 
 	@Inject(method = "execute", at = @At("HEAD"), cancellable = true)
 	private static void mcanomalyarchives$smallCloudMayPass(Entity entity, CallbackInfoReturnable<Boolean> cir) {
+		// 黑吸伪云是小伪云的子类，一起放行
 		if (entity instanceof SmallStangeCloudEntity) {
 			cir.setReturnValue(true);
 		}

@@ -67,7 +67,7 @@ public final class AnomalyCodex {
 	 */
 	public static final List<Entry> ENTRIES = List.of(
 			new Entry("UO-001", key("uo001.name"), key("uo001.info"), key("uo001.trait"), key("uo001.level"),
-					key("uo001.protocol"), Unlock.ENTITY, "mcanomalyarchives:stange_cloud|mcanomalyarchives:small_stange_cloud"),
+					key("uo001.protocol"), Unlock.ENTITY, "mcanomalyarchives:stange_cloud|mcanomalyarchives:small_stange_cloud|mcanomalyarchives:black_stange_cloud"),
 			new Entry("UO-002", key("uo002.name"), key("uo002.info"), key("uo002.trait"), key("uo002.level"),
 					key("uo002.protocol"), Unlock.PLANNED, ""),
 			new Entry("UO-003", key("uo003.name"), key("uo003.info"), key("uo003.trait"), key("uo003.level"),

@@ -107,18 +107,18 @@ public class SmallStangeCloudEntity extends Monster {
 	private static final int DAMAGE_INTERVAL = 10;
 
 	/** 固定高度巡航的基准高度（出生时锁定） */
-	private double fixedYLevel = 60.0D;
+	protected double fixedYLevel = 60.0D;
 	/** 出场阶段结束、进入巡航 */
 	private boolean cruising = false;
 	private int launchTick = 0;
 	private double launchSpeed = 0.0D;
 	/** 水平方向（永远是轴对齐的单位向量，与大伪云同一套约定） */
-	private Vec3 heading = Vec3.ZERO;
+	protected Vec3 heading = Vec3.ZERO;
 	/** 出生时锁高度用的标记 */
 	private boolean isFirstSpawn = true;
 	private int damageTimer = 0;
 
-	public SmallStangeCloudEntity(EntityType<SmallStangeCloudEntity> type, Level world) {
+	public SmallStangeCloudEntity(EntityType<? extends SmallStangeCloudEntity> type, Level world) {
 		super(type, world);
 		xpReward = 0;
 		setNoAi(false);
@@ -316,9 +316,19 @@ public class SmallStangeCloudEntity extends Monster {
 		// 与大伪云一样单次 setPos，避免位置被更新两遍导致抽搐。
 		this.setPos(newX, fixedYLevel, newZ);
 
+		tickCloudEffects();
+		dissolveWhenExpired();
+	}
+
+	/**
+	 * 每 tick 的"对周围的影响"。默认就是伪云那一套：伤害盒 + 把水与岩浆染成云水云石。
+	 *
+	 * <p>黑吸伪云（子类）把它整个换掉：不伤害、不染水，改成"碰到方块就吞一口然后消散"。
+	 * 之所以留成钩子而不是在父类里 if：两种云的"影响"是互斥的两套，覆盖比分支清楚。
+	 */
+	protected void tickCloudEffects() {
 		applyCloudDamage();
 		convertLavaAndWaterToCloudBlocks();
-		dissolveWhenExpired();
 	}
 
 	/**
@@ -333,7 +343,7 @@ public class SmallStangeCloudEntity extends Monster {
 	// ==================== 对周围的影响（大伪云的等比缩小版） ====================
 
 	/** 命中的盒子：长边沿当前运动方向，短边横着，与大伪云同一套摆法。 */
-	private net.minecraft.world.phys.AABB effectBox() {
+	protected net.minecraft.world.phys.AABB effectBox() {
 		double alongX = Math.abs(heading.x) > 0.5D ? EFFECT_LENGTH : EFFECT_WIDTH;
 		double alongZ = Math.abs(heading.z) > 0.5D ? EFFECT_LENGTH : EFFECT_WIDTH;
 		return new net.minecraft.world.phys.AABB(

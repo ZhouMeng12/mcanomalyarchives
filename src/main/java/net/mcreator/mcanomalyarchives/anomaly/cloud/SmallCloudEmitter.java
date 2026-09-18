@@ -47,12 +47,17 @@ public final class SmallCloudEmitter {
 	 * 作者 2026-09-18：频率再低一点（原来 1/2 ≈ 23 秒一只，太勤了）。
 	 */
 	public static final int EMIT_ONE_IN = 10;
-	/** 同一扇门附近最多同时存在几只小伪云（防止刷屏）。 */
+	/** 同一扇门附近最多同时存在几只云（大伪云以外的云族合计，防止刷屏）。 */
 	public static final int MAX_PER_PORTAL = 2;
 	/** 统计"这扇门附近"的半径。 */
 	public static final double PORTAL_NEIGHBOURHOOD = 8.0D;
 	/** 出生点相对门方块的抬升：模型视觉悬在实体原点下方 0.667 格，抬 0.8 格云体就落在门内空里。 */
 	public static final double SPAWN_Y_OFFSET = 0.8D;
+	/**
+	 * 吐出来的是黑吸伪云的概率（作者 2026-09-18：传送门偶尔吐黑的）——
+	 * 1/6，其余 5/6 仍是普通小伪云。见闻录 UO-001 里"黑色个体"就是从这儿来的。
+	 */
+	public static final int BLACK_ONE_IN = 6;
 
 	private SmallCloudEmitter() {
 	}
@@ -84,7 +89,11 @@ public final class SmallCloudEmitter {
 			return false;
 		}
 
-		EntityType<SmallStangeCloudEntity> type = McanomalyarchivesModEntities.SMALL_STANGE_CLOUD.get();
+		// 偶尔吐黑的（作者 2026-09-18）。黑吸伪云继承自小伪云，所以上面那条并发上限把两种云一起算了。
+		boolean black = random.nextInt(BLACK_ONE_IN) == 0;
+		EntityType<? extends SmallStangeCloudEntity> type = black
+				? McanomalyarchivesModEntities.BLACK_STANGE_CLOUD.get()
+				: McanomalyarchivesModEntities.SMALL_STANGE_CLOUD.get();
 		SmallStangeCloudEntity cloud = type.create(level);
 		if (cloud == null) {
 			return false;
