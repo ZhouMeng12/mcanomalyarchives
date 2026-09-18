@@ -25,10 +25,6 @@ public class McanomalyarchivesModEntities {
 			EntityType.Builder.<StangeCloudEntity>of(StangeCloudEntity::new, MobCategory.AMBIENT).setShouldReceiveVelocityUpdates(true).setTrackingRange(128).setUpdateInterval(3).fireImmune()
 
 					.sized(30f, 5f));
-	public static final DeferredHolder<EntityType<?>, EntityType<SmallStangeCloudEntity>> SMALL_STANGE_CLOUD = register("small_stange_cloud",
-			EntityType.Builder.<SmallStangeCloudEntity>of(SmallStangeCloudEntity::new, MobCategory.AMBIENT).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).fireImmune()
-
-					.sized(4f, 0.67f));
 	public static final DeferredHolder<EntityType<?>, EntityType<AnbulaEntity>> ANBULA = register("anbula",
 			EntityType.Builder.<AnbulaEntity>of(AnbulaEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 
@@ -78,6 +74,10 @@ public class McanomalyarchivesModEntities {
 			EntityType.Builder.<PinkSheepEntity>of(PinkSheepEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 
 					.ridingOffset(-0.6f).sized(0.9f, 1.3f));
+	public static final DeferredHolder<EntityType<?>, EntityType<SmallStangeCloudEntity>> SMALL_STANGE_CLOUD = register("small_stange_cloud",
+			EntityType.Builder.<SmallStangeCloudEntity>of(SmallStangeCloudEntity::new, MobCategory.AMBIENT).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).fireImmune()
+
+					.sized(4f, 0.67f));
 
 	// Start of user code block custom entities
 	// End of user code block custom entities

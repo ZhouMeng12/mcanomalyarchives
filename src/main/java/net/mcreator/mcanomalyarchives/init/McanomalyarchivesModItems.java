@@ -24,7 +24,6 @@ import net.mcreator.mcanomalyarchives.McanomalyarchivesMod;
 public class McanomalyarchivesModItems {
 	public static final DeferredRegister.Items REGISTRY = DeferredRegister.createItems(McanomalyarchivesMod.MODID);
 	public static final DeferredItem<Item> STANGE_CLOUD_SPAWN_EGG;
-	public static final DeferredItem<Item> SMALL_STANGE_CLOUD_SPAWN_EGG;
 	public static final DeferredItem<Item> CLOUD_STONE;
 	public static final DeferredItem<Item> CLOUD_DEM;
 	public static final DeferredItem<Item> CLOUD_WATER_BUCKET;
@@ -69,9 +68,9 @@ public class McanomalyarchivesModItems {
 	public static final DeferredItem<Item> PINK_SHEEP_SPAWN_EGG;
 	public static final DeferredItem<Item> ANOMALY_CODEX;
 	public static final DeferredItem<Item> BAIBIAN_NAME_TAG;
+	public static final DeferredItem<Item> SMALL_STANGE_CLOUD_SPAWN_EGG;
 	static {
 		STANGE_CLOUD_SPAWN_EGG = REGISTRY.register("stange_cloud_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.STANGE_CLOUD, -1, -1, new Item.Properties()));
-		SMALL_STANGE_CLOUD_SPAWN_EGG = REGISTRY.register("small_stange_cloud_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.SMALL_STANGE_CLOUD, -1, -1, new Item.Properties()));
 		CLOUD_STONE = block(McanomalyarchivesModBlocks.CLOUD_STONE);
 		CLOUD_DEM = REGISTRY.register("cloud_dem", CloudDemItem::new);
 		CLOUD_WATER_BUCKET = REGISTRY.register("cloud_water_bucket", CloudWaterItem::new);
@@ -116,6 +115,7 @@ public class McanomalyarchivesModItems {
 		PINK_SHEEP_SPAWN_EGG = REGISTRY.register("pink_sheep_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.PINK_SHEEP, -1, -26164, new Item.Properties()));
 		ANOMALY_CODEX = REGISTRY.register("anomaly_codex", AnomalyCodexItem::new);
 		BAIBIAN_NAME_TAG = REGISTRY.register("baibian_name_tag", BaibianNameTagItem::new);
+		SMALL_STANGE_CLOUD_SPAWN_EGG = REGISTRY.register("small_stange_cloud_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.SMALL_STANGE_CLOUD, -1, -1, new Item.Properties()));
 	}
 
 	// Start of user code block custom items
