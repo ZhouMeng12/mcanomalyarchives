@@ -57,6 +57,11 @@ public class BlackStangeCloudEntity extends SmallStangeCloudEntity {
 		if (!(this.level() instanceof ServerLevel serverLevel)) {
 			return; // 只在服务端改世界
 		}
+		// ⓪ 刚被门吐出来的那 40 tick 先不干活：此时身体还压在门框那一片，
+		//    立刻开咬既会看起来像"门什么都没吐出来"，也会把自己的门咬坏
+		if (isLaunching()) {
+			return;
+		}
 		// ① 接触判定：身体范围内有没有"实体方块"（水、空气、草不算）
 		if (!touchingSolidBlock(serverLevel)) {
 			return;
@@ -147,6 +152,10 @@ public class BlackStangeCloudEntity extends SmallStangeCloudEntity {
 			return true;
 		}
 		return state.is(McanomalyarchivesModBlocks.CLOUD_DEM_PORTAL.get())
+				// 云室门的门框就是云石（元素里 portalFrame=CUSTOM:CloudStone）：
+				// 不保护它的话，黑云刚出门那一口就能把门框啃掉 → 门shape不完整 → 门没了，
+				// 于是"门里再也不生成云了"。顺便也保护云石建筑。
+				|| state.is(McanomalyarchivesModBlocks.CLOUD_STONE.get())
 				|| state.is(McanomalyarchivesModBlocks.STRANGETREELOG.get())
 				|| state.is(McanomalyarchivesModBlocks.STRANGETREELEAVES.get());
 	}

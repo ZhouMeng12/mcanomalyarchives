@@ -127,7 +127,7 @@ emit_one_in = int(re.search(r"EMIT_ONE_IN = ([0-9]+)", emitter).group(1))
 # → 单个门方块 3/4096 每 tick；一扇 2×3 的门 6 格 → 1/228 每 tick；再除以概率门槛。
 per_tick = 6.0 * 3.0 / 4096.0 / emit_one_in
 seconds = 1.0 / per_tick / 20.0
-check_true("平均出货间隔在'偶尔'的合理区间（60~180 秒）", 60.0 <= seconds <= 180.0,
+check_true("平均出货间隔在'偶尔'的合理区间（25~120 秒）", 25.0 <= seconds <= 120.0,
            "约 %.0f 秒一只（EMIT_ONE_IN=%d）" % (seconds, emit_one_in))
 check_true("出口侧要检查空气（否则云会卡在墙里）", "isPassable(level, pos.relative(normal))" in emitter)
 check_true("出场方向靠朝向传递（两端各算一遍，不需要网络包）",

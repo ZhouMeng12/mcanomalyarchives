@@ -207,7 +207,7 @@
   "nametag.mcanomalyarchives.egg": "%s Egg",
   "entity.mcanomalyarchives.small_stange_cloud": "Small Stange Cloud",
   "item.mcanomalyarchives.small_stange_cloud_spawn_egg": "Small Stange Cloud Spawn Egg",
-  "nametag.mcanomalyarchives.not_for_anomaly": "It cannot be rewritten - it is an anomaly itself",
   "entity.mcanomalyarchives.black_stange_cloud": "Black Devouring Cloud",
-  "item.mcanomalyarchives.black_stange_cloud_spawn_egg": "Black Devouring Cloud Spawn Egg"
+  "item.mcanomalyarchives.black_stange_cloud_spawn_egg": "Black Devouring Cloud Spawn Egg",
+  "nametag.mcanomalyarchives.not_for_anomaly": "It cannot be rewritten - it is an anomaly itself"
 }

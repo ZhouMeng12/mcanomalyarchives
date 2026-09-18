@@ -110,6 +110,11 @@ public class SmallStangeCloudEntity extends Monster {
 	protected double fixedYLevel = 60.0D;
 	/** 出场阶段结束、进入巡航 */
 	private boolean cruising = false;
+
+	/** 子类（黑吸伪云）要看这个标记 */
+	protected boolean isCruising() {
+		return cruising;
+	}
 	private int launchTick = 0;
 	private double launchSpeed = 0.0D;
 	/** 水平方向（永远是轴对齐的单位向量，与大伪云同一套约定） */
@@ -318,6 +323,16 @@ public class SmallStangeCloudEntity extends Monster {
 
 		tickCloudEffects();
 		dissolveWhenExpired();
+	}
+
+	/**
+	 * 还在"被门吐出来"的阶段吗（出场前 40 tick）。
+	 *
+	 * <p>子类（黑吸伪云）用它决定"别一出生就干活"：刚出门时身体还压在门框那一片，
+	 * 立刻开咬既看起来像门什么都没吐出来，也会咬坏自己的门。
+	 */
+	protected boolean isLaunching() {
+		return !cruising;
 	}
 
 	/**

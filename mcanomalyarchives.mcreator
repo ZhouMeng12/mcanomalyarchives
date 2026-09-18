@@ -1790,7 +1790,7 @@
       "item.mcanomalyarchives.small_stange_cloud_spawn_egg": "Small Stange Cloud Spawn Egg",
       "entity.mcanomalyarchives.black_stange_cloud": "Black Devouring Cloud",
       "item.mcanomalyarchives.black_stange_cloud_spawn_egg": "Black Devouring Cloud Spawn Egg"
-},
+    },
     "zh_cn": {
       "advancements.cloudarmadv.descr": "获得全套云锭套装",
       "advancements.cloudarmadv.title": "云雾缠身",
@@ -2002,7 +2002,7 @@
       "item.mcanomalyarchives.small_stange_cloud_spawn_egg": "小伪云刷怪蛋",
       "entity.mcanomalyarchives.black_stange_cloud": "黑吸伪云",
       "item.mcanomalyarchives.black_stange_cloud_spawn_egg": "黑吸伪云刷怪蛋"
-}
+    }
   },
   "metadata": {
     "files": [
