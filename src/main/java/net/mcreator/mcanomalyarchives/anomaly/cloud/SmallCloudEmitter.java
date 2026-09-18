@@ -21,14 +21,19 @@ import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModBlocks;
  * 「云室传送门往外吐小伪云」这件事的全部逻辑。
  *
  * <p>作者 2026-09-16 定的触发方式是「**只要门存在就吐**」，所以这里不去扫描方块、也不维护门户位置表，
- * 而是挂在**门自己的随机刻**上（{@link SmallCloudEmittingPortalBlock#randomTick}）：
+ * 而是挂在**门自己的随机刻**上（调用方是 {@code mixin/CloudPortalEmitMixin}）：
  * <ul>
  *   <li>随机刻只在有玩家的已加载区块里跑（原版规则），所以远方的门不会白刷 —— 这是免费拿到的"有人看才演"；</li>
  *   <li>原版的随机刻是**每个 16³ 区块段每 tick 抽 3 个位置**
  *       （{@code ServerLevel.tickChunk}：段里有随机刻方块就抽 {@code randomTickSpeed=3} 次），
  *       所以单个门方块每 tick 被选中的概率是 3/4096；一扇 2×3 的门有 6 格 → ≈1/228 每 tick。
- *       再除以 {@link #EMIT_ONE_IN}，就是**平均每扇门约 68 秒吐一只**。</li>
+ *       再除以 {@link #EMIT_ONE_IN}，就是**平均每扇门约 23 秒吐一只**。</li>
  * </ul>
+ *
+ * <p><b>为什么用 mixin 而不是"注册一个门户子类"</b>：子类方案必须改生成区的注册行
+ * （{@code init/McanomalyarchivesModBlocks.java}）。作者 2026-09-18 在 MCreator 里跑了一次客户端，
+ * 那一行就被重写回 {@code CloudDemPortalBlock::new} —— **不报错、不崩溃，只是门从此不再吐云**。
+ * mixin 类与 mixin 配置都在手写区，MCreator 不碰。
  *
  * <p>顺带说清楚为什么不用另外两种做法：扫描附近方块找门要对玩家周围做上万次 {@code getBlockState}；
  * 维护门户位置表则会让**老存档里已有的门在被人用之前一只都不吐**。
@@ -38,10 +43,10 @@ public final class SmallCloudEmitter {
 	/**
 	 * 每次随机刻只有 1/EMIT_ONE_IN 的概率真的吐。
 	 *
-	 * <p>换算（一个 2×3 的门）：6 格 × 3/4096 = 1/228 每 tick，除以 6 → 平均 1368 tick ≈ **68 秒一只**。
+	 * <p>换算（一个 2×3 的门）：6 格 × 3/4096 = 1/228 每 tick，除以 2 → 平均 456 tick ≈ **23 秒一只**。
 	 * 想要更频繁就调小这个数，想更安静就调大。
 	 */
-	public static final int EMIT_ONE_IN = 6;
+	public static final int EMIT_ONE_IN = 2;
 	/** 同一扇门附近最多同时存在几只小伪云（防止刷屏）。 */
 	public static final int MAX_PER_PORTAL = 2;
 	/** 统计"这扇门附近"的半径。 */

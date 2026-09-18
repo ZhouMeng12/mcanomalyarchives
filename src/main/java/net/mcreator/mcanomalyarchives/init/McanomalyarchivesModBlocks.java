@@ -36,7 +36,7 @@ public class McanomalyarchivesModBlocks {
 	public static final DeferredBlock<Block> STRANGETREELEAVES;
 	static {
 		CLOUD_STONE = REGISTRY.register("cloud_stone", CloudStoneBlock::new);
-		CLOUD_DEM_PORTAL = REGISTRY.register("cloud_dem_portal", net.mcreator.mcanomalyarchives.anomaly.cloud.SmallCloudEmittingPortalBlock::new); // 会吐小伪云的门（大伪云同族）
+		CLOUD_DEM_PORTAL = REGISTRY.register("cloud_dem_portal", CloudDemPortalBlock::new);
 		CLOUD_WATER = REGISTRY.register("cloud_water", CloudWaterBlock::new);
 		CORN_POPPY = REGISTRY.register("corn_poppy", CornPoppyBlock::new);
 		SAD_POPPY = REGISTRY.register("sad_poppy", SadPoppyBlock::new);

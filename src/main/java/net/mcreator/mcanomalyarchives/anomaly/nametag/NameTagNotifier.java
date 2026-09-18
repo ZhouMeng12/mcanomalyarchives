@@ -19,6 +19,7 @@ public final class NameTagNotifier {
 	public static final String UNSTABLE = "nametag.mcanomalyarchives.unstable";
 	public static final String EXPLODED = "nametag.mcanomalyarchives.exploded";
 	public static final String NOT_FOR_PLAYER = "nametag.mcanomalyarchives.not_for_player";
+	public static final String NOT_FOR_ANOMALY = "nametag.mcanomalyarchives.not_for_anomaly";
 	public static final String NO_OUTPUT = "nametag.mcanomalyarchives.no_output";
 	public static final String DRAINING = "nametag.mcanomalyarchives.draining";
 	public static final String DRY = "nametag.mcanomalyarchives.dry";

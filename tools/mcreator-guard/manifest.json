@@ -269,7 +269,8 @@
         "\"nametag.mcanomalyarchives.unstable\"",
         "\"item_group.mcanomalyarchives.strange_record\"",
         "\"entity.mcanomalyarchives.small_stange_cloud\"",
-        "\"item.mcanomalyarchives.small_stange_cloud_spawn_egg\""
+        "\"item.mcanomalyarchives.small_stange_cloud_spawn_egg\"",
+        "\"nametag.mcanomalyarchives.not_for_anomaly\""
       ]
     },
     {
@@ -290,7 +291,8 @@
         "\"item.mcanomalyarchives.baibian_name_tag\"",
         "\"nametag.mcanomalyarchives.unstable\"",
         "\"entity.mcanomalyarchives.small_stange_cloud\"",
-        "\"item.mcanomalyarchives.small_stange_cloud_spawn_egg\""
+        "\"item.mcanomalyarchives.small_stange_cloud_spawn_egg\"",
+        "\"nametag.mcanomalyarchives.not_for_anomaly\""
       ]
     },
     {
@@ -530,16 +532,6 @@
       ]
     },
     {
-      "id": "small-cloud-portal-registration",
-      "kind": "contains",
-      "why": "门户方块注册行被换成会吐云的子类。**这条最阴**：回退成 CloudDemPortalBlock::new 不会报错、不会崩，只是门从此不再吐小伪云",
-      "path": "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModBlocks.java",
-      "fixHint": "把 CLOUD_DEM_PORTAL 的注册行改成 SmallCloudEmittingPortalBlock::new（见 anomaly/cloud/SmallCloudEmittingPortalBlock.java）",
-      "mustContain": [
-        "SmallCloudEmittingPortalBlock::new"
-      ]
-    },
-    {
       "id": "small-cloud-entity-behaviour",
       "kind": "contains",
       "why": "小伪云的关键行为常量与朝向约定：出场方向靠朝向在客户端还原（headingFromYaw），缩放必须是 2.6667（短横边 2 格），寿命 60 秒",
@@ -562,17 +554,6 @@
       "mustContain": [
         "SmallStangeCloudEntity.RENDER_SCALE",
         "ModelStrangeCloud"
-      ]
-    },
-    {
-      "id": "small-cloud-portal-random-tick",
-      "kind": "contains",
-      "why": "「只要门存在就吐」靠的就是门方块自己的随机刻（不调 super，保持门里不刷僵尸猪灵）",
-      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/cloud/SmallCloudEmittingPortalBlock.java",
-      "fixHint": "补回 extends CloudDemPortalBlock 与 randomTick 里的 SmallCloudEmitter.tryEmit(level, pos, state, random);",
-      "mustContain": [
-        "extends CloudDemPortalBlock",
-        "SmallCloudEmitter.tryEmit(level, pos, state, random);"
       ]
     },
     {
@@ -637,6 +618,28 @@
       "glob": "*.java",
       "searchRoot": "src/main/java",
       "pattern": "clouddem\""
+    },
+    {
+      "id": "small-cloud-portal-mixin",
+      "kind": "contains",
+      "why": "让门吐云的钩子在 mixin 里（手写区，MCreator 不碰）。这条是踩过坑才有的：原本写了个门户子类 SmallCloudEmittingPortalBlock 并改写生成区的注册行，2026-09-18 作者在 MCreator 里跑了一次客户端，注册行被重写回 CloudDemPortalBlock::new —— 不报错、不崩、只是门从此不再吐云。",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/mixin/CloudPortalEmitMixin.java",
+      "fixHint": "从 git 恢复 mixin/CloudPortalEmitMixin.java（并确认 mixins.json 里登记了它）",
+      "mustContain": [
+        "@Mixin(CloudDemPortalBlock.class)",
+        "SmallCloudEmitter.tryEmit(level, pos, state, random);",
+        "randomTick(Lnet/minecraft/world/level/block/state/BlockState;"
+      ]
+    },
+    {
+      "id": "small-cloud-portal-mixin-registered",
+      "kind": "contains",
+      "why": "mixin 配置里必须登记 CloudPortalEmitMixin：少了它 mixin 根本不加载，门永远不吐云（同样不报错）",
+      "path": "src/main/resources/mcanomalyarchives.mixins.json",
+      "fixHint": "把 \"CloudPortalEmitMixin\" 加回 mixins 数组",
+      "mustContain": [
+        "\"CloudPortalEmitMixin\""
+      ]
     }
   ]
 }

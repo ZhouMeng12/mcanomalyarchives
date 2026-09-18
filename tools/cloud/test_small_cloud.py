@@ -109,16 +109,16 @@ print()
 print("=" * 68)
 print("3. 触发链：门存在 → 随机刻 → 吐出来")
 print("=" * 68)
-portal = read("src/main/java/net/mcreator/mcanomalyarchives/anomaly/cloud/SmallCloudEmittingPortalBlock.java")
-check_true("门户子类继承了云室门方块", "extends CloudDemPortalBlock" in portal)
-check_true("门户子类覆盖了 randomTick", "public void randomTick(" in portal)
-check_true("randomTick 里不调 super（保持门里不刷僵尸猪灵）",
-           "SmallCloudEmitter.tryEmit(level, pos, state, random);" in portal and "super.randomTick" not in portal)
-
-blocks = read("src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModBlocks.java")
-m = re.search(r'CLOUD_DEM_PORTAL = REGISTRY\.register\("cloud_dem_portal", ([A-Za-z0-9_.]+)::new\)', blocks)
-check_true("注册行确实指向吐云子类（回退会静默失效）",
-           m is not None and m.group(1).endswith("SmallCloudEmittingPortalBlock"), m.group(1) if m else "没匹配到")
+mixin = read("src/main/java/net/mcreator/mcanomalyarchives/mixin/CloudPortalEmitMixin.java")
+check_true("吐云钩子是 mixin（手写区，MCreator 打不掉）",
+           "@Mixin(CloudDemPortalBlock.class)" in mixin
+           and "SmallCloudEmitter.tryEmit(level, pos, state, random);" in mixin)
+check_true("mixin 不取消原调用（门自己的 randomTick 是空实现，行为不变）", "ci.cancel()" not in mixin)
+check_true("mixin 已在配置里登记（否则根本不加载，门永远不吐云）",
+           '"CloudPortalEmitMixin"' in read("src/main/resources/mcanomalyarchives.mixins.json"))
+check_true("不碰生成区的门户注册行（它会被 MCreator 重写，正是当初静默失效的原因）",
+           "CLOUD_DEM_PORTAL = REGISTRY.register(\"cloud_dem_portal\", CloudDemPortalBlock::new)"
+           in read("src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModBlocks.java"))
 
 emitter = read("src/main/java/net/mcreator/mcanomalyarchives/anomaly/cloud/SmallCloudEmitter.java")
 check("每门并发上限", int(re.search(r"MAX_PER_PORTAL = ([0-9]+)", emitter).group(1)), 2)
@@ -127,13 +127,16 @@ emit_one_in = int(re.search(r"EMIT_ONE_IN = ([0-9]+)", emitter).group(1))
 # → 单个门方块 3/4096 每 tick；一扇 2×3 的门 6 格 → 1/228 每 tick；再除以概率门槛。
 per_tick = 6.0 * 3.0 / 4096.0 / emit_one_in
 seconds = 1.0 / per_tick / 20.0
-check_true("平均出货间隔在'偶尔'的合理区间（30~120 秒）", 30.0 <= seconds <= 120.0,
+check_true("平均出货间隔在'偶尔'的合理区间（15~120 秒）", 15.0 <= seconds <= 120.0,
            "约 %.0f 秒一只（EMIT_ONE_IN=%d）" % (seconds, emit_one_in))
 check_true("出口侧要检查空气（否则云会卡在墙里）", "isPassable(level, pos.relative(normal))" in emitter)
 check_true("出场方向靠朝向传递（两端各算一遍，不需要网络包）",
            "yawFor(exit.getStepX(), exit.getStepZ())" in emitter and "headingFromYaw" in entity)
 check_true("实体运动不用 this.getRandom（两端必须算得一样）",
            "this.getRandom()" not in entity)
+check_true("没有任何上下浮动（作者：不要上下飘）",
+           "BOB" not in entity and "LAUNCH_LIFT" not in entity)
+check_true("高度恒定：只沿一个轴平移，Y 用 fixedYLevel", "this.setPos(newX, fixedYLevel, newZ)" in entity)
 check_true("实体每 tick 只 setPos 一次（避免位置更新两遍抽搐）", entity.count("this.setPos(") == 1)
 
 print()

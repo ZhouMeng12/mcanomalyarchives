@@ -206,5 +206,6 @@
   "nametag.mcanomalyarchives.dry": "附近找不到它能抽取的东西",
   "nametag.mcanomalyarchives.egg": "%s蛋",
   "entity.mcanomalyarchives.small_stange_cloud": "小伪云",
-  "item.mcanomalyarchives.small_stange_cloud_spawn_egg": "小伪云刷怪蛋"
+  "item.mcanomalyarchives.small_stange_cloud_spawn_egg": "小伪云刷怪蛋",
+  "nametag.mcanomalyarchives.not_for_anomaly": "改写不了——它本身就是异常"
 }

@@ -69,8 +69,6 @@ public class SmallStangeCloudEntity extends Monster {
 	private static final int LAUNCH_TICKS = 40;
 	/** 出场初速（格/tick） */
 	private static final double LAUNCH_SPEED = 0.06;
-	/** 出场时的上扬（格/tick） */
-	private static final double LAUNCH_LIFT = 0.02;
 	/** 出场速度衰减 */
 	private static final double LAUNCH_DECAY = 0.92;
 	/** 慢到这个速度以下就交给巡航 */
@@ -82,8 +80,6 @@ public class SmallStangeCloudEntity extends Monster {
 	private static final int DRIFT_TURN_INTERVAL = 300;
 	/** 水平速度系数（乘在 FLYING_SPEED 上）：大伪云是 0.2 */
 	private static final double DRIFT_SPEED_FACTOR = 0.15;
-	/** 上下浮动幅度（格） */
-	private static final double BOB_AMPLITUDE = 0.08;
 
 	// ==================== 收场 ====================
 
@@ -294,21 +290,18 @@ public class SmallStangeCloudEntity extends Monster {
 
 		double newX = this.getX();
 		double newZ = this.getZ();
-		double newY;
 
 		if (!cruising) {
 			// ── 出场：沿门口法线被吐出来，速度衰减 ──
 			launchSpeed = launchTick == 0 ? LAUNCH_SPEED : launchSpeed * LAUNCH_DECAY;
 			newX += heading.x * launchSpeed;
 			newZ += heading.z * launchSpeed;
-			newY = this.getY() + LAUNCH_LIFT * (launchSpeed / LAUNCH_SPEED);
 			launchTick++;
 			if (launchTick >= LAUNCH_TICKS || launchSpeed < LAUNCH_MIN_SPEED) {
 				cruising = true;
-				fixedYLevel = newY;
 			}
 		} else {
-			// ── 巡航：固定高度 + 水平慢漂，方向每 DRIFT_TURN_INTERVAL 换一次 ──
+			// ── 巡航：水平慢漂，方向每 DRIFT_TURN_INTERVAL 换一次 ──
 			if (this.tickCount % DRIFT_TURN_INTERVAL == 0) {
 				heading = pickHeading(this.getUUID().getLeastSignificantBits(), this.tickCount / DRIFT_TURN_INTERVAL);
 				this.setYRot(yawFor(heading.x, heading.z));
@@ -316,13 +309,11 @@ public class SmallStangeCloudEntity extends Monster {
 			double speed = this.getAttributeValue(Attributes.FLYING_SPEED) * DRIFT_SPEED_FACTOR;
 			newX += heading.x * speed;
 			newZ += heading.z * speed;
-			double yDiff = fixedYLevel - this.getY();
-			newY = Math.abs(yDiff) > 0.1D ? this.getY() + yDiff * 0.05D : this.getY();
-			newY += Math.sin((this.tickCount + this.getId()) * 0.08D) * BOB_AMPLITUDE * 0.15D;
 		}
 
-		// 与大伪云一样：单次 setPos，避免位置被更新两遍导致抽搐
-		this.setPos(newX, newY, newZ);
+		// 高度恒定：这是"碎片"，只沿 X 或 Z 一个轴平移（作者 2026-09-18：不要上下飘）。
+		// 与大伪云一样单次 setPos，避免位置被更新两遍导致抽搐。
+		this.setPos(newX, fixedYLevel, newZ);
 
 		applyCloudDamage();
 		convertLavaAndWaterToCloudBlocks();

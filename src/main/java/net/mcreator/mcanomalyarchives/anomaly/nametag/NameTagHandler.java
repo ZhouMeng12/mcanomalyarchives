@@ -61,6 +61,16 @@ public final class NameTagHandler {
 		return name == null ? null : NameResolver.normalize(name.getString());
 	}
 
+	/**
+	 * 是本模组自己的实体吗（按注册名命名空间判断：伪云/小伪云/紫怪/怪树/粉羊/NPC 等全算）。
+	 *
+	 * 依据是作者 2026-09-13 定的规则原文"不作用于玩家/Boss/本模组异常实体"。
+	 */
+	private static boolean isThisModsEntity(LivingEntity living) {
+		ResourceLocation id = net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE.getKey(living.getType());
+		return id != null && net.mcreator.mcanomalyarchives.McanomalyarchivesMod.MODID.equals(id.getNamespace());
+	}
+
 	private static void consume(Player player, ItemStack stack) {
 		if (!player.hasInfiniteMaterials()) {
 			stack.shrink(1);
@@ -110,6 +120,13 @@ public final class NameTagHandler {
 		}
 		if (!(target instanceof LivingEntity living) || target instanceof Player) {
 			deny(event, player, NameTagNotifier.NOT_FOR_PLAYER);
+			return;
+		}
+		if (isThisModsEntity(living)) {
+			// 作者 2026-09-13 定的规则里一直有"不作用于本模组异常实体"这一条，但实现里从来没做
+			// （只有上面 instanceof Player 那一层）→ 结果连伪云都能被命名成一头会走路的牛。
+			// 2026-09-18 按原规则补上：本模组自己的实体一律不接受改写。
+			deny(event, player, NameTagNotifier.NOT_FOR_ANOMALY);
 			return;
 		}
 		String raw = writtenName(held);
