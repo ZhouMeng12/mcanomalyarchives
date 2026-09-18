@@ -67,7 +67,7 @@ public final class AnomalyCodex {
 	 */
 	public static final List<Entry> ENTRIES = List.of(
 			new Entry("UO-001", key("uo001.name"), key("uo001.info"), key("uo001.trait"), key("uo001.level"),
-					key("uo001.protocol"), Unlock.ENTITY, "mcanomalyarchives:stange_cloud"),
+					key("uo001.protocol"), Unlock.ENTITY, "mcanomalyarchives:stange_cloud|mcanomalyarchives:small_stange_cloud"),
 			new Entry("UO-002", key("uo002.name"), key("uo002.info"), key("uo002.trait"), key("uo002.level"),
 					key("uo002.protocol"), Unlock.PLANNED, ""),
 			new Entry("UO-003", key("uo003.name"), key("uo003.info"), key("uo003.trait"), key("uo003.level"),
@@ -165,9 +165,16 @@ public final class AnomalyCodex {
 					unlock(player, i, level);
 				}
 			} else if (entry.unlock() == Unlock.ENTITY) {
-				EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(entry.match()));
-				if (type != null && !level.getEntitiesOfClass(Entity.class, box, e -> e.getType() == type).isEmpty()) {
-					unlock(player, i, level);
+				// match 允许用 | 分隔多个 id：UO-001 的伪云与小伪云算同一条目，
+				// 见过其中任何一个都算"见过伪云"（作者 2026-09-16：小伪云不单独开条目）。
+				for (String token : entry.match().split("\\|")) {
+					if (token.isEmpty())
+						continue;
+					EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(token));
+					if (type != null && !level.getEntitiesOfClass(Entity.class, box, e -> e.getType() == type).isEmpty()) {
+						unlock(player, i, level);
+						break;
+					}
 				}
 			}
 		}

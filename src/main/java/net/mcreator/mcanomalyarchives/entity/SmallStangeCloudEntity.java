@@ -1,0 +1,441 @@
+package net.mcreator.mcanomalyarchives.entity;
+
+import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.AreaEffectCloud;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.SpawnPlacementTypes;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.control.FlyingMoveControl;
+import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.entity.projectile.ThrownPotion;
+import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.particles.ParticleTypes;
+
+import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModBlocks;
+
+/**
+ * 小伪云（UO-001 衍生个体）—— 从云室传送门里飘出来的那一小片云。
+ *
+ * <p>作者 2026-09-16 定的规格：「等比缩小，短的横边是 2 格，效果和正常的伪云一样」。
+ * 尺寸推导（详见 {@code docs/design/uo-001-small-cloud.md}）：
+ * 大伪云用同一个模型，短横边 0.75 格 × 缩放 20 = 15 格；
+ * 这里要 2 格 → 缩放 = 20 × (2/15) = {@link #RENDER_SCALE}，
+ * 于是长 4.0、高 0.667、短 2.0 格。
+ *
+ * <p><b>与大伪云的关系</b>：同一套模型与贴图、同一套免疫与"不是生物而是一种现象"的设定，
+ * 但它是**碎片**——飘 60 秒后自己散掉（大伪云永不消失）。
+ *
+ * <p><b>确定性</b>：大伪云在 {@code aiStep} 里用 {@code getRandom()} 换向，客户端与服务端各掷各的骰子，
+ * 慢速漂移下看不出来但确实会互相拉。这里改成**由 UUID 与 tickCount 推导**的伪随机，
+ * 两端算出来完全一样，不需要额外的网络包。
+ */
+public class SmallStangeCloudEntity extends Monster {
+
+	// ==================== 尺寸（推导见类注释） ====================
+
+	/** 渲染缩放：0.75 格（模型短横边）× 2.6667 = 2.0 格。与大伪云的 ×20 是同一个模型。 */
+	public static final float RENDER_SCALE = 2.6667f;
+	/** 视觉长边（格）：模型 1.5 格 × 缩放 */
+	public static final float VISUAL_LENGTH = 4.0f;
+	/** 视觉高度（格）：模型 0.25 格 × 缩放 */
+	public static final float VISUAL_HEIGHT = 0.667f;
+	/** 视觉短横边（格）：作者指定的 2 格 */
+	public static final float VISUAL_SHORT_EDGE = 2.0f;
+
+	// ==================== 出场：被门"吐"出来 ====================
+
+	/** 出场阶段时长：约 2 秒 */
+	private static final int LAUNCH_TICKS = 40;
+	/** 出场初速（格/tick） */
+	private static final double LAUNCH_SPEED = 0.06;
+	/** 出场时的上扬（格/tick） */
+	private static final double LAUNCH_LIFT = 0.02;
+	/** 出场速度衰减 */
+	private static final double LAUNCH_DECAY = 0.92;
+	/** 慢到这个速度以下就交给巡航 */
+	private static final double LAUNCH_MIN_SPEED = 0.005;
+
+	// ==================== 巡航 ====================
+
+	/** 换向间隔（tick）：大伪云是 6000（5 分钟），碎片用 300（15 秒） */
+	private static final int DRIFT_TURN_INTERVAL = 300;
+	/** 水平速度系数（乘在 FLYING_SPEED 上）：大伪云是 0.2 */
+	private static final double DRIFT_SPEED_FACTOR = 0.15;
+	/** 上下浮动幅度（格） */
+	private static final double BOB_AMPLITUDE = 0.08;
+
+	// ==================== 收场 ====================
+
+	/** 寿命：60 秒（作者 2026-09-16 定），到点散掉 */
+	public static final int LIFETIME_TICKS = 1200;
+	/** 散掉时放几颗云粒子 */
+	private static final int DISSOLVE_PARTICLES = 12;
+
+	// ==================== 对周围的影响：大伪云的 2/15 ====================
+
+	/** 伤害盒水平半径（长边方向）：大伪云 15 → 2.0 */
+	private static final double EFFECT_LENGTH = 2.0;
+	/** 伤害盒水平半径（短边方向）：大伪云 7 → 0.933 */
+	private static final double EFFECT_WIDTH = 0.933;
+	/** 伤害盒垂直半径：大伪云 3 → 0.4 */
+	private static final double EFFECT_RADIUS_Y = 0.4;
+	/** 单次伤害：与大伪云一致（作者："效果和正常的伪云一样"，只缩范围） */
+	private static final float DAMAGE_PER_HIT = 1.0f;
+	/** 伤害间隔（tick）：与大伪云一致 */
+	private static final int DAMAGE_INTERVAL = 10;
+
+	/** 固定高度巡航的基准高度（出生时锁定） */
+	private double fixedYLevel = 60.0D;
+	/** 出场阶段结束、进入巡航 */
+	private boolean cruising = false;
+	private int launchTick = 0;
+	private double launchSpeed = 0.0D;
+	/** 水平方向（永远是轴对齐的单位向量，与大伪云同一套约定） */
+	private Vec3 heading = Vec3.ZERO;
+	/** 出生时锁高度用的标记 */
+	private boolean isFirstSpawn = true;
+	private int damageTimer = 0;
+
+	public SmallStangeCloudEntity(EntityType<SmallStangeCloudEntity> type, Level world) {
+		super(type, world);
+		xpReward = 0;
+		setNoAi(false);
+		setPersistenceRequired();
+		this.moveControl = new FlyingMoveControl(this, 10, true);
+	}
+
+	@Override
+	protected PathNavigation createNavigation(Level world) {
+		return new FlyingPathNavigation(this, world);
+	}
+
+	@Override
+	protected void registerGoals() {
+		// 与大伪云一样：位置全靠 aiStep 自己算，不注册导航类 AI Goal（否则会和 setPos 打架、抽搐）
+	}
+
+	// ==================== 永不自然消失（寿命由自己管） ====================
+
+	@Override
+	public boolean removeWhenFarAway(double distanceToClosestPlayer) {
+		return false;
+	}
+
+	@Override
+	public boolean shouldDespawnInPeaceful() {
+		return false;
+	}
+
+	@Override
+	public boolean requiresCustomPersistence() {
+		return true;
+	}
+
+	@Override
+	public void checkDespawn() {
+		// 完全禁用原版消失逻辑；到寿命由 dissolve() 自己收场
+	}
+
+	// ==================== 免疫（与大伪云一致） ====================
+
+	@Override
+	public SoundEvent getHurtSound(DamageSource ds) {
+		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("entity.generic.hurt"));
+	}
+
+	@Override
+	public SoundEvent getDeathSound() {
+		return BuiltInRegistries.SOUND_EVENT.get(ResourceLocation.parse("entity.generic.death"));
+	}
+
+	@Override
+	public boolean causeFallDamage(float l, float d, DamageSource source) {
+		return false;
+	}
+
+	@Override
+	public boolean hurt(DamageSource damagesource, float amount) {
+		if (damagesource.getDirectEntity() instanceof AbstractArrow)
+			return false;
+		if (damagesource.getDirectEntity() instanceof Player)
+			return false;
+		if (damagesource.getDirectEntity() instanceof ThrownPotion || damagesource.getDirectEntity() instanceof AreaEffectCloud)
+			return false;
+		if (damagesource.is(DamageTypes.IN_FIRE) || damagesource.is(DamageTypes.ON_FIRE) || damagesource.is(DamageTypes.LAVA))
+			return false;
+		if (damagesource.is(DamageTypes.FALL) || damagesource.is(DamageTypes.CACTUS) || damagesource.is(DamageTypes.DROWN))
+			return false;
+		if (damagesource.is(DamageTypes.LIGHTNING_BOLT) || damagesource.is(DamageTypes.TRIDENT) || damagesource.is(DamageTypes.FALLING_ANVIL))
+			return false;
+		if (damagesource.is(DamageTypes.EXPLOSION) || damagesource.is(DamageTypes.PLAYER_EXPLOSION))
+			return false;
+		if (damagesource.is(DamageTypes.DRAGON_BREATH) || damagesource.is(DamageTypes.WITHER) || damagesource.is(DamageTypes.WITHER_SKULL))
+			return false;
+		if (damagesource.is(DamageTypes.IN_WALL))
+			return false;
+		return super.hurt(damagesource, amount);
+	}
+
+	@Override
+	public boolean ignoreExplosion(Explosion explosion) {
+		return true;
+	}
+
+	@Override
+	public boolean isPushable() {
+		return false;
+	}
+
+	@Override
+	protected void doPush(Entity entityIn) {
+	}
+
+	@Override
+	protected void pushEntities() {
+	}
+
+	@Override
+	protected void checkFallDamage(double y, boolean onGroundIn, BlockState state, BlockPos pos) {
+	}
+
+	@Override
+	public void setNoGravity(boolean ignored) {
+		super.setNoGravity(true);
+	}
+
+	// ==================== 运动 ====================
+
+	/**
+	 * 朝向 ↔ 水平方向的对应（与大伪云同一套约定：沿 X 走用 yaw 0/180，沿 Z 走用 yaw ±90）。
+	 *
+	 * <p>之所以要"从朝向反推方向"：出场方向是生成时由 {@code SmallCloudEmitter} 按门口法线定的，
+	 * 而实体朝向会随生成包同步到客户端，于是**两端不需要额外的网络包就能算出同一个方向**。
+	 */
+	public static float yawFor(double dx, double dz) {
+		if (dx > 0.0D)
+			return 0f;
+		if (dx < 0.0D)
+			return 180f;
+		if (dz > 0.0D)
+			return 90f;
+		if (dz < 0.0D)
+			return -90f;
+		return 0f;
+	}
+
+	/** {@link #yawFor} 的逆：由朝向还原轴对齐的水平方向。 */
+	public static Vec3 headingFromYaw(float yaw) {
+		float y = net.minecraft.util.Mth.wrapDegrees(yaw);
+		if (y > -45f && y <= 45f)
+			return new Vec3(1.0D, 0.0D, 0.0D);
+		if (y > 45f && y <= 135f)
+			return new Vec3(0.0D, 0.0D, 1.0D);
+		if (y > 135f || y <= -135f)
+			return new Vec3(-1.0D, 0.0D, 0.0D);
+		return new Vec3(0.0D, 0.0D, -1.0D);
+	}
+
+	@Override
+	public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag) {
+		super.addAdditionalSaveData(tag);
+		tag.putBoolean("FirstSpawn", isFirstSpawn);
+		tag.putDouble("FixedYLevel", fixedYLevel);
+		tag.putBoolean("Cruising", cruising);
+	}
+
+	@Override
+	public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag) {
+		super.readAdditionalSaveData(tag);
+		if (tag.contains("FirstSpawn")) {
+			isFirstSpawn = tag.getBoolean("FirstSpawn");
+		}
+		if (tag.contains("FixedYLevel")) {
+			fixedYLevel = tag.getDouble("FixedYLevel");
+		}
+		if (tag.contains("Cruising")) {
+			// 存档里的云直接进入巡航，不用重演"被门吐出来"
+			cruising = tag.getBoolean("Cruising");
+		}
+	}
+
+	@Override
+	public void aiStep() {
+		super.aiStep();
+		this.setNoGravity(true);
+
+		if (isFirstSpawn) {
+			fixedYLevel = this.getY();
+			isFirstSpawn = false;
+		}
+		if (heading == Vec3.ZERO) {
+			heading = headingFromYaw(this.getYRot());
+		}
+
+		double newX = this.getX();
+		double newZ = this.getZ();
+		double newY;
+
+		if (!cruising) {
+			// ── 出场：沿门口法线被吐出来，速度衰减 ──
+			launchSpeed = launchTick == 0 ? LAUNCH_SPEED : launchSpeed * LAUNCH_DECAY;
+			newX += heading.x * launchSpeed;
+			newZ += heading.z * launchSpeed;
+			newY = this.getY() + LAUNCH_LIFT * (launchSpeed / LAUNCH_SPEED);
+			launchTick++;
+			if (launchTick >= LAUNCH_TICKS || launchSpeed < LAUNCH_MIN_SPEED) {
+				cruising = true;
+				fixedYLevel = newY;
+			}
+		} else {
+			// ── 巡航：固定高度 + 水平慢漂，方向每 DRIFT_TURN_INTERVAL 换一次 ──
+			if (this.tickCount % DRIFT_TURN_INTERVAL == 0) {
+				heading = pickHeading(this.getUUID().getLeastSignificantBits(), this.tickCount / DRIFT_TURN_INTERVAL);
+				this.setYRot(yawFor(heading.x, heading.z));
+			}
+			double speed = this.getAttributeValue(Attributes.FLYING_SPEED) * DRIFT_SPEED_FACTOR;
+			newX += heading.x * speed;
+			newZ += heading.z * speed;
+			double yDiff = fixedYLevel - this.getY();
+			newY = Math.abs(yDiff) > 0.1D ? this.getY() + yDiff * 0.05D : this.getY();
+			newY += Math.sin((this.tickCount + this.getId()) * 0.08D) * BOB_AMPLITUDE * 0.15D;
+		}
+
+		// 与大伪云一样：单次 setPos，避免位置被更新两遍导致抽搐
+		this.setPos(newX, newY, newZ);
+
+		applyCloudDamage();
+		convertLavaAndWaterToCloudBlocks();
+		dissolveWhenExpired();
+	}
+
+	/**
+	 * 由 UUID 与"第几次换向"推导方向 —— **不用 {@code getRandom()}**，
+	 * 这样客户端与服务端各自算一遍也是同一个结果（大伪云那边两端会算出不同的方向）。
+	 */
+	static Vec3 pickHeading(long uuidBits, long turnIndex) {
+		long h = uuidBits * 0x9E3779B97F4A7C15L + turnIndex * 0xBF58476D1CE4E5B9L;
+		h ^= (h >>> 31);
+		boolean alongX = (h & 1L) == 0L;
+		boolean positive = (h & 2L) == 0L;
+		if (alongX)
+			return new Vec3(positive ? 1.0D : -1.0D, 0.0D, 0.0D);
+		return new Vec3(0.0D, 0.0D, positive ? 1.0D : -1.0D);
+	}
+
+	// ==================== 对周围的影响（大伪云的等比缩小版） ====================
+
+	/** 命中的盒子：长边沿当前运动方向，短边横着，与大伪云同一套摆法。 */
+	private net.minecraft.world.phys.AABB effectBox() {
+		double alongX = Math.abs(heading.x) > 0.5D ? EFFECT_LENGTH : EFFECT_WIDTH;
+		double alongZ = Math.abs(heading.z) > 0.5D ? EFFECT_LENGTH : EFFECT_WIDTH;
+		return new net.minecraft.world.phys.AABB(
+				this.getX() - alongX, this.getY() - EFFECT_RADIUS_Y, this.getZ() - alongZ,
+				this.getX() + alongX, this.getY() + EFFECT_RADIUS_Y, this.getZ() + alongZ);
+	}
+
+	private void applyCloudDamage() {
+		if (!(this.level() instanceof ServerLevel serverLevel)) {
+			return;
+		}
+		if (++damageTimer < DAMAGE_INTERVAL) {
+			return;
+		}
+		damageTimer = 0;
+		DamageSource source = serverLevel.damageSources().inWall();
+		for (Entity entity : serverLevel.getEntitiesOfClass(Entity.class, effectBox())) {
+			// 大伪云与小伪云互相排除（门吐出来的小云不该被旁边的大云每 tick 打）
+			if (entity instanceof StangeCloudEntity || entity instanceof SmallStangeCloudEntity) {
+				continue;
+			}
+			entity.hurt(source, DAMAGE_PER_HIT);
+		}
+	}
+
+	/** 与大伪云同样的效果：范围内的水与岩浆被染成云水 / 云石。 */
+	private void convertLavaAndWaterToCloudBlocks() {
+		if (!(this.level() instanceof ServerLevel serverLevel)) {
+			return;
+		}
+		net.minecraft.world.phys.AABB box = effectBox();
+		boolean anyConverted = false;
+		for (BlockPos pos : BlockPos.betweenClosed(
+				BlockPos.containing(box.minX, box.minY, box.minZ),
+				BlockPos.containing(box.maxX, box.maxY, box.maxZ))) {
+			BlockState state = serverLevel.getBlockState(pos);
+			if (state.is(Blocks.LAVA)) {
+				serverLevel.setBlock(pos, McanomalyarchivesModBlocks.CLOUD_STONE.get().defaultBlockState(), 3);
+				anyConverted = true;
+			} else if (state.is(Blocks.WATER)) {
+				serverLevel.setBlock(pos, McanomalyarchivesModBlocks.CLOUD_WATER.get().defaultBlockState(), 3);
+				anyConverted = true;
+			}
+		}
+		if (anyConverted) {
+			serverLevel.playSound(null, this.getX(), this.getY(), this.getZ(),
+					net.minecraft.sounds.SoundEvents.LAVA_EXTINGUISH, net.minecraft.sounds.SoundSource.BLOCKS, 0.6F, 1.2F);
+		}
+	}
+
+	// ==================== 收场 ====================
+
+	/** 到寿命就散掉：放一圈云粒子然后 discard（服务端做，客户端跟随消失）。 */
+	private void dissolveWhenExpired() {
+		if (this.tickCount < LIFETIME_TICKS) {
+			return;
+		}
+		if (this.level() instanceof ServerLevel serverLevel) {
+			serverLevel.sendParticles(ParticleTypes.CLOUD,
+					this.getX(), this.getY(), this.getZ(),
+					DISSOLVE_PARTICLES, VISUAL_SHORT_EDGE, VISUAL_HEIGHT, VISUAL_SHORT_EDGE, 0.02D);
+			serverLevel.playSound(null, this.blockPosition(), net.minecraft.sounds.SoundEvents.WOOL_BREAK,
+					net.minecraft.sounds.SoundSource.NEUTRAL, 0.7F, 0.8F);
+			this.discard();
+		}
+	}
+
+	// ==================== 注册 ====================
+
+	/**
+	 * 生成规则：**永不自然生成**（元素里 {@code spawnThisMob=false}，连 biome_modifier 都不产出）。
+	 * 这里仍然注册一条"一律失败"的规则，作为万一被塞进生成表时的双保险
+	 * —— 大伪云当年就是因为 30 格宽的生成 AABB 横跨邻接区块炸过世界生成。
+	 */
+	public static void init(RegisterSpawnPlacementsEvent event) {
+		event.register(net.mcreator.mcanomalyarchives.init.McanomalyarchivesModEntities.SMALL_STANGE_CLOUD.get(),
+				SpawnPlacementTypes.NO_RESTRICTIONS, Heightmap.Types.MOTION_BLOCKING,
+				(entityType, world, reason, pos, random) -> false, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+	}
+
+	public static AttributeSupplier.Builder createAttributes() {
+		AttributeSupplier.Builder builder = Mob.createMobAttributes();
+		builder = builder.add(Attributes.MOVEMENT_SPEED, 0.3);
+		builder = builder.add(Attributes.MAX_HEALTH, 10);
+		builder = builder.add(Attributes.ARMOR, 0);
+		builder = builder.add(Attributes.ATTACK_DAMAGE, 3);
+		builder = builder.add(Attributes.FOLLOW_RANGE, 16);
+		builder = builder.add(Attributes.STEP_HEIGHT, 0.6);
+		builder = builder.add(Attributes.FLYING_SPEED, 0.3);
+		return builder;
+	}
+}

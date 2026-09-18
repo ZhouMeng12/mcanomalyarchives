@@ -1485,6 +1485,22 @@
           "src/main/resources/assets/mcanomalyarchives/models/item/baibian_name_tag.json"
         ]
       }
+    },
+    {
+      "name": "SmallStangeCloud",
+      "type": "livingentity",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "small_stange_cloud",
+      "metadata": {
+        "files": [
+          "src/main/java/net/mcreator/mcanomalyarchives/entity/SmallStangeCloudEntity.java",
+          "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/SmallStangeCloudRenderer.java",
+          "src/main/resources/assets/mcanomalyarchives/models/item/small_stange_cloud_spawn_egg.json",
+          "src/main/resources/assets/mcanomalyarchives/items/small_stange_cloud_spawn_egg.json"
+        ]
+      },
+      "path": "~/StrangeCloud"
     }
   ],
   "variable_elements": [],
@@ -1753,8 +1769,10 @@
       "nametag.mcanomalyarchives.no_output": "A rewritten existence no longer yields what it used to",
       "nametag.mcanomalyarchives.draining": "It is draining %s from its surroundings",
       "nametag.mcanomalyarchives.dry": "Nothing nearby can be drained",
-      "nametag.mcanomalyarchives.egg": "%s Egg"
-    },
+      "nametag.mcanomalyarchives.egg": "%s Egg",
+      "entity.mcanomalyarchives.small_stange_cloud": "Small Stange Cloud",
+      "item.mcanomalyarchives.small_stange_cloud_spawn_egg": "Small Stange Cloud Spawn Egg"
+},
     "zh_cn": {
       "advancements.cloudarmadv.descr": "获得全套云锭套装",
       "advancements.cloudarmadv.title": "云雾缠身",
@@ -1961,8 +1979,10 @@
       "nametag.mcanomalyarchives.no_output": "被改写的存在已经产不出原来的东西了",
       "nametag.mcanomalyarchives.draining": "它正从四周抽取%s",
       "nametag.mcanomalyarchives.dry": "附近找不到它能抽取的东西",
-      "nametag.mcanomalyarchives.egg": "%s蛋"
-    }
+      "nametag.mcanomalyarchives.egg": "%s蛋",
+      "entity.mcanomalyarchives.small_stange_cloud": "小伪云",
+      "item.mcanomalyarchives.small_stange_cloud_spawn_egg": "小伪云刷怪蛋"
+}
   },
   "metadata": {
     "files": [

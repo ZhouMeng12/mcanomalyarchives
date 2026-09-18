@@ -24,6 +24,7 @@ import net.mcreator.mcanomalyarchives.McanomalyarchivesMod;
 public class McanomalyarchivesModItems {
 	public static final DeferredRegister.Items REGISTRY = DeferredRegister.createItems(McanomalyarchivesMod.MODID);
 	public static final DeferredItem<Item> STANGE_CLOUD_SPAWN_EGG;
+	public static final DeferredItem<Item> SMALL_STANGE_CLOUD_SPAWN_EGG;
 	public static final DeferredItem<Item> CLOUD_STONE;
 	public static final DeferredItem<Item> CLOUD_DEM;
 	public static final DeferredItem<Item> CLOUD_WATER_BUCKET;
@@ -70,6 +71,7 @@ public class McanomalyarchivesModItems {
 	public static final DeferredItem<Item> BAIBIAN_NAME_TAG;
 	static {
 		STANGE_CLOUD_SPAWN_EGG = REGISTRY.register("stange_cloud_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.STANGE_CLOUD, -1, -1, new Item.Properties()));
+		SMALL_STANGE_CLOUD_SPAWN_EGG = REGISTRY.register("small_stange_cloud_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.SMALL_STANGE_CLOUD, -1, -1, new Item.Properties()));
 		CLOUD_STONE = block(McanomalyarchivesModBlocks.CLOUD_STONE);
 		CLOUD_DEM = REGISTRY.register("cloud_dem", CloudDemItem::new);
 		CLOUD_WATER_BUCKET = REGISTRY.register("cloud_water_bucket", CloudWaterItem::new);

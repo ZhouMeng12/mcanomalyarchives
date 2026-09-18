@@ -204,5 +204,7 @@
   "nametag.mcanomalyarchives.no_output": "A rewritten existence no longer yields what it used to",
   "nametag.mcanomalyarchives.draining": "It is draining %s from its surroundings",
   "nametag.mcanomalyarchives.dry": "Nothing nearby can be drained",
-  "nametag.mcanomalyarchives.egg": "%s Egg"
+  "nametag.mcanomalyarchives.egg": "%s Egg",
+  "entity.mcanomalyarchives.small_stange_cloud": "Small Stange Cloud",
+  "item.mcanomalyarchives.small_stange_cloud_spawn_egg": "Small Stange Cloud Spawn Egg"
 }

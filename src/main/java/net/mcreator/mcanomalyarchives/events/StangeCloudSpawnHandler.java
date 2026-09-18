@@ -44,7 +44,7 @@ public class StangeCloudSpawnHandler {
     private static final double NEARBY_RADIUS_SQ = 80.0 * 80.0;
 
     private static final ResourceKey<Level> CLOUD_DEM_KEY = ResourceKey.create(Registries.DIMENSION,
-            ResourceLocation.fromNamespaceAndPath("mcanomalyarchives", "clouddem"));
+            ResourceLocation.fromNamespaceAndPath("mcanomalyarchives", "cloud_dem")); // 注意是 cloud_dem，不是 clouddem
 
     /** 每玩家下次生成时间（gameTime） */
     private static final Map<UUID, Long> nextSpawnTime = new HashMap<>();

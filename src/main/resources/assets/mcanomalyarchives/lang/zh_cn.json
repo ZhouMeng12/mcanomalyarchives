@@ -204,5 +204,7 @@
   "nametag.mcanomalyarchives.no_output": "被改写的存在已经产不出原来的东西了",
   "nametag.mcanomalyarchives.draining": "它正从四周抽取%s",
   "nametag.mcanomalyarchives.dry": "附近找不到它能抽取的东西",
-  "nametag.mcanomalyarchives.egg": "%s蛋"
+  "nametag.mcanomalyarchives.egg": "%s蛋",
+  "entity.mcanomalyarchives.small_stange_cloud": "小伪云",
+  "item.mcanomalyarchives.small_stange_cloud_spawn_egg": "小伪云刷怪蛋"
 }
