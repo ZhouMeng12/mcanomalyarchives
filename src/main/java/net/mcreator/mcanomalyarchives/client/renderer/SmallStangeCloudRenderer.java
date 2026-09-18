@@ -37,6 +37,22 @@ public class SmallStangeCloudRenderer extends MobRenderer<SmallStangeCloudEntity
 		poseStack.scale(s, s, s);
 	}
 
+	/**
+	 * 半透明：走 translucent 渲染类型（贴图本身也是半透明的，见 tools/cloud/make_cloud_translucent.py）。
+	 * 用不剔除背面的那个变体，前后两层一起混 → 看起来像一团有厚度的雾。
+	 */
+	@Override
+	protected net.minecraft.client.renderer.RenderType getRenderType(SmallStangeCloudEntity entity, boolean bodyVisible, boolean translucent,
+			boolean glowing) {
+		if (translucent) {
+			return net.minecraft.client.renderer.RenderType.itemEntityTranslucentCull(getTextureLocation(entity));
+		}
+		if (!bodyVisible) {
+			return glowing ? net.minecraft.client.renderer.RenderType.outline(getTextureLocation(entity)) : null;
+		}
+		return net.minecraft.client.renderer.RenderType.entityTranslucent(getTextureLocation(entity));
+	}
+
 	// 与大伪云一样：无碰撞会穿过地形/树冠，方块光照拉满，避免在方块内渲染变黑
 	@Override
 	protected int getBlockLightLevel(SmallStangeCloudEntity entity, net.minecraft.core.BlockPos pos) {

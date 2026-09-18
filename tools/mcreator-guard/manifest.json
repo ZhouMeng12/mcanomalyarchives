@@ -634,11 +634,64 @@
     {
       "id": "small-cloud-portal-mixin-registered",
       "kind": "contains",
-      "why": "mixin 配置里必须登记 CloudPortalEmitMixin：少了它 mixin 根本不加载，门永远不吐云（同样不报错）",
+      "why": "mixin 配置里必须同时登记 CloudPortalEmitMixin（吐云）与 CloudPortalPassMixin（让小伪云能过门）：少了它们 mixin 根本不加载，门不吐云 / 小伪云过不去，而且都不报错",
       "path": "src/main/resources/mcanomalyarchives.mixins.json",
       "fixHint": "把 \"CloudPortalEmitMixin\" 加回 mixins 数组",
       "mustContain": [
-        "\"CloudPortalEmitMixin\""
+        "\"CloudPortalEmitMixin\"",
+        "\"CloudPortalPassMixin\""
+      ]
+    },
+    {
+      "id": "small-cloud-portal-pass-mixin",
+      "kind": "contains",
+      "why": "小伪云自己能过云室门。门原本的条件是『能跨维度 + 带云化效果』（给玩家用的），这里给条件开个后门。注入条件类而不是给云挂云化效果：云化效果自带灰白贴图、失去 AI 那套表现，挂在云上会把它变成一坨灰的",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/mixin/CloudPortalPassMixin.java",
+      "fixHint": "从 git 恢复 mixin/CloudPortalPassMixin.java（并确认 mixins.json 里登记了它）",
+      "mustContain": [
+        "@Mixin(CloudDemChuanSongMenTongGuoTiaoJianProcedure.class)",
+        "cir.setReturnValue(true);",
+        "instanceof SmallStangeCloudEntity"
+      ]
+    },
+    {
+      "id": "small-cloud-portal-cooldown",
+      "kind": "contains",
+      "why": "过门冷却：原版传送时会拿 getDimensionChangingDelay() 当冷却，小伪云把它设成 1400（比寿命 1200 还长），一只云一生只过一次门，不会在两个门之间反复弹",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/SmallStangeCloudEntity.java",
+      "fixHint": "补回 public int getDimensionChangingDelay() 覆盖与 PORTAL_COOLDOWN_TICKS = 1400",
+      "mustContain": [
+        "public int getDimensionChangingDelay()",
+        "PORTAL_COOLDOWN_TICKS = 1400"
+      ]
+    },
+    {
+      "id": "small-cloud-straight-line",
+      "kind": "noMatch",
+      "why": "反向检查：小伪云**永远不换向**（作者 2026-09-18：都不换向吧），只沿出场那个轴一直平移。别把巡航换向那套（pickHeading / DRIFT_TURN_INTERVAL）加回来",
+      "fixHint": "删掉换向逻辑，只保留出生时由朝向还原的 heading 与匀速平移",
+      "glob": "SmallStangeCloudEntity.java",
+      "searchRoot": "src/main/java/net/mcreator/mcanomalyarchives/entity",
+      "pattern": "pickHeading|DRIFT_TURN_INTERVAL"
+    },
+    {
+      "id": "cloud-family-translucent-big",
+      "kind": "contains",
+      "why": "伪云系列的半透明（作者 2026-09-18）：大伪云渲染器要走 translucent 渲染类型",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/StangeCloudRenderer.java",
+      "fixHint": "把 getRenderType 覆盖补回来，返回 RenderType.entityTranslucent(getTextureLocation(entity))",
+      "mustContain": [
+        "entityTranslucent"
+      ]
+    },
+    {
+      "id": "cloud-family-translucent-small",
+      "kind": "contains",
+      "why": "伪云系列的半透明：小伪云渲染器要走 translucent 渲染类型",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/SmallStangeCloudRenderer.java",
+      "fixHint": "把 getRenderType 覆盖补回来，返回 RenderType.entityTranslucent(getTextureLocation(entity))",
+      "mustContain": [
+        "entityTranslucent"
       ]
     }
   ]

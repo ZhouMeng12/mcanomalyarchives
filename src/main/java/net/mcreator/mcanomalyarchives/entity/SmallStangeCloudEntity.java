@@ -76,10 +76,15 @@ public class SmallStangeCloudEntity extends Monster {
 
 	// ==================== 巡航 ====================
 
-	/** 换向间隔（tick）：大伪云是 6000（5 分钟），碎片用 300（15 秒） */
-	private static final int DRIFT_TURN_INTERVAL = 300;
 	/** 水平速度系数（乘在 FLYING_SPEED 上）：大伪云是 0.2 */
 	private static final double DRIFT_SPEED_FACTOR = 0.15;
+	/**
+	 * 过门冷却（tick）：原版在传送时 {@code setPortalCooldown()} 用的就是这个值。
+	 * 取 1400（= 寿命 1200 再加 200）→ **一只云一生只过一次门**，
+	 * 不会在两侧门之间反复弹（作者 2026-09-18 要的"用冷却防反复出入门"）。
+	 * （这里写字面量而不是 LIFETIME_TICKS + 200：静态字段不能前向引用。）
+	 */
+	private static final int PORTAL_COOLDOWN_TICKS = 1400;
 
 	// ==================== 收场 ====================
 
@@ -301,11 +306,7 @@ public class SmallStangeCloudEntity extends Monster {
 				cruising = true;
 			}
 		} else {
-			// ── 巡航：水平慢漂，方向每 DRIFT_TURN_INTERVAL 换一次 ──
-			if (this.tickCount % DRIFT_TURN_INTERVAL == 0) {
-				heading = pickHeading(this.getUUID().getLeastSignificantBits(), this.tickCount / DRIFT_TURN_INTERVAL);
-				this.setYRot(yawFor(heading.x, heading.z));
-			}
+			// ── 巡航：**永远不换向**，就一直沿着出场那个轴平移（作者 2026-09-18 定）──
 			double speed = this.getAttributeValue(Attributes.FLYING_SPEED) * DRIFT_SPEED_FACTOR;
 			newX += heading.x * speed;
 			newZ += heading.z * speed;
@@ -321,17 +322,12 @@ public class SmallStangeCloudEntity extends Monster {
 	}
 
 	/**
-	 * 由 UUID 与"第几次换向"推导方向 —— **不用 {@code getRandom()}**，
-	 * 这样客户端与服务端各自算一遍也是同一个结果（大伪云那边两端会算出不同的方向）。
+	 * 过门冷却：原版 {@code Entity.setPortalCooldown()} 会把冷却设成这个值，
+	 * 这里拉到比寿命还长 → 一只小伪云一生只过一次门（防止在两个门之间反复弹）。
 	 */
-	static Vec3 pickHeading(long uuidBits, long turnIndex) {
-		long h = uuidBits * 0x9E3779B97F4A7C15L + turnIndex * 0xBF58476D1CE4E5B9L;
-		h ^= (h >>> 31);
-		boolean alongX = (h & 1L) == 0L;
-		boolean positive = (h & 2L) == 0L;
-		if (alongX)
-			return new Vec3(positive ? 1.0D : -1.0D, 0.0D, 0.0D);
-		return new Vec3(0.0D, 0.0D, positive ? 1.0D : -1.0D);
+	@Override
+	public int getDimensionChangingDelay() {
+		return PORTAL_COOLDOWN_TICKS;
 	}
 
 	// ==================== 对周围的影响（大伪云的等比缩小版） ====================

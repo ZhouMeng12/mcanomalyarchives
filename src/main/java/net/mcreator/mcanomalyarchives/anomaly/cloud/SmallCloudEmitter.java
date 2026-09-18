@@ -43,10 +43,10 @@ public final class SmallCloudEmitter {
 	/**
 	 * 每次随机刻只有 1/EMIT_ONE_IN 的概率真的吐。
 	 *
-	 * <p>换算（一个 2×3 的门）：6 格 × 3/4096 = 1/228 每 tick，除以 2 → 平均 456 tick ≈ **23 秒一只**。
-	 * 想要更频繁就调小这个数，想更安静就调大。
+	 * <p>换算（一个 2×3 的门）：6 格 × 3/4096 = 1/228 每 tick，除以 10 → 平均 2280 tick ≈ **114 秒一只**。
+	 * 作者 2026-09-18：频率再低一点（原来 1/2 ≈ 23 秒一只，太勤了）。
 	 */
-	public static final int EMIT_ONE_IN = 2;
+	public static final int EMIT_ONE_IN = 10;
 	/** 同一扇门附近最多同时存在几只小伪云（防止刷屏）。 */
 	public static final int MAX_PER_PORTAL = 2;
 	/** 统计"这扇门附近"的半径。 */

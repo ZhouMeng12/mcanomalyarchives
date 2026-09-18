@@ -26,6 +26,22 @@ public class StangeCloudRenderer extends MobRenderer<StangeCloudEntity, ModelStr
 		poseStack.scale(20f, 20f, 20f);
 	}
 
+	/**
+	 * 半透明：与 {@code SmallStangeCloudRenderer} 同一套（伪云系列的整只半透明，作者 2026-09-18）。
+	 * 贴图本身也是半透明的，见 tools/cloud/make_cloud_translucent.py。
+	 */
+	@Override
+	protected net.minecraft.client.renderer.RenderType getRenderType(StangeCloudEntity entity, boolean bodyVisible, boolean translucent,
+			boolean glowing) {
+		if (translucent) {
+			return net.minecraft.client.renderer.RenderType.itemEntityTranslucentCull(getTextureLocation(entity));
+		}
+		if (!bodyVisible) {
+			return glowing ? net.minecraft.client.renderer.RenderType.outline(getTextureLocation(entity)) : null;
+		}
+		return net.minecraft.client.renderer.RenderType.entityTranslucent(getTextureLocation(entity));
+	}
+
 	// 伪云无碰撞会穿过地形/树冠：方块光照拉满，避免在方块内渲染变黑
 	@Override
 	protected int getBlockLightLevel(StangeCloudEntity entity, net.minecraft.core.BlockPos pos) {

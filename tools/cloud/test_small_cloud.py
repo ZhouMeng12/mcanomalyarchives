@@ -127,7 +127,7 @@ emit_one_in = int(re.search(r"EMIT_ONE_IN = ([0-9]+)", emitter).group(1))
 # → 单个门方块 3/4096 每 tick；一扇 2×3 的门 6 格 → 1/228 每 tick；再除以概率门槛。
 per_tick = 6.0 * 3.0 / 4096.0 / emit_one_in
 seconds = 1.0 / per_tick / 20.0
-check_true("平均出货间隔在'偶尔'的合理区间（15~120 秒）", 15.0 <= seconds <= 120.0,
+check_true("平均出货间隔在'偶尔'的合理区间（60~180 秒）", 60.0 <= seconds <= 180.0,
            "约 %.0f 秒一只（EMIT_ONE_IN=%d）" % (seconds, emit_one_in))
 check_true("出口侧要检查空气（否则云会卡在墙里）", "isPassable(level, pos.relative(normal))" in emitter)
 check_true("出场方向靠朝向传递（两端各算一遍，不需要网络包）",
@@ -136,6 +136,17 @@ check_true("实体运动不用 this.getRandom（两端必须算得一样）",
            "this.getRandom()" not in entity)
 check_true("没有任何上下浮动（作者：不要上下飘）",
            "BOB" not in entity and "LAUNCH_LIFT" not in entity)
+check_true("永远不换向：没有换向逻辑（作者 2026-09-18）",
+           "pickHeading" not in entity and "DRIFT_TURN_INTERVAL" not in entity)
+check_true("过门冷却比寿命长 → 一生只过一次门",
+           "public int getDimensionChangingDelay()" in entity and "PORTAL_COOLDOWN_TICKS = 1400" in entity)
+check_true("小伪云自己能过门（注入通行条件类，不动生成区）",
+           "@Mixin(CloudDemChuanSongMenTongGuoTiaoJianProcedure.class)" in
+           read("src/main/java/net/mcreator/mcanomalyarchives/mixin/CloudPortalPassMixin.java")
+           and '"CloudPortalPassMixin"' in read("src/main/resources/mcanomalyarchives.mixins.json"))
+for _label, _path in (("大伪云", "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/StangeCloudRenderer.java"),
+                      ("小伪云", "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/SmallStangeCloudRenderer.java")):
+    check_true("%s渲染器走半透明渲染类型" % _label, "entityTranslucent" in read(_path))
 check_true("高度恒定：只沿一个轴平移，Y 用 fixedYLevel", "this.setPos(newX, fixedYLevel, newZ)" in entity)
 check_true("实体每 tick 只 setPos 一次（避免位置更新两遍抽搐）", entity.count("this.setPos(") == 1)
 
