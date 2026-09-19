@@ -28,6 +28,7 @@ import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModBlocks;
 import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModMobEffects;
 import net.mcreator.mcanomalyarchives.block.CornPoppyBlock;
 import net.mcreator.mcanomalyarchives.entity.AnbulaEntity;
+import net.mcreator.mcanomalyarchives.entity.RedStangeCloudEntity;
 
 import java.util.Map;
 import java.util.UUID;
@@ -46,6 +47,11 @@ public class PlayerLookAtCornPoppyListener {
     private static final int DEATH_LOOK_TIME = 10 * TICKS_PER_SECOND;
     private static final int DAMAGE_TICK_INTERVAL = 40;
     private static final int SAD_BUFFER_TIME = 1 * TICKS_PER_SECOND;
+
+    /** 看红伪云：最远 24 格内的云才算（云很大，太远就谈不上"盯着看"） */
+    private static final double CLOUD_VIEW_RANGE = 24.0D;
+    /** 视线与云方向的夹角阈值：约 30°（云体宽 4 格，给宽松一点才不会因为偏一点就断） */
+    private static final double CLOUD_COS_LIMIT = Math.cos(Math.toRadians(30.0D));
 
     private static final TagKey<EntityType<?>> NPC_TAG = TagKey.create(
         Registries.ENTITY_TYPE,
@@ -70,6 +76,15 @@ public class PlayerLookAtCornPoppyListener {
         double originalMoveSpeed;
         boolean speedModified;
         BlockPos poppyPos;
+        /**
+         * 正在看的是**红伪云**而不是虞美人。
+         *
+         * 红伪云接进了同一套上瘾系统（作者 2026-09-18：「变红后看这个红伪云会上瘾」）：
+         * 盯满 10 秒上瘾、每 10 秒升级、10 级定身再 10 秒丧命、移开视线转悲伤 —— 全部沿用。
+         * 这个标记只用来区分"看的是云"，需要真去改方块的地方就不会误伤
+         * （比如安布拉那个把虞美人看成枯死花的特例）。
+         */
+        boolean watchingCloud;
     }
 
     private static final Map<UUID, PlayerPoppyState> playerStates = new ConcurrentHashMap<>();
@@ -93,9 +108,12 @@ public class PlayerLookAtCornPoppyListener {
             PlayerPoppyState state = playerStates.computeIfAbsent(playerId, k -> new PlayerPoppyState());
 
             boolean isLookingAtPoppy = isPlayerLookingAtCornPoppy(player);
+            // 红伪云走同一套上瘾逻辑：不盯虞美人时再看它在不在视线里
+            boolean isLookingAtCloud = !isLookingAtPoppy && isPlayerLookingAtRedCloud(player);
+            state.watchingCloud = isLookingAtCloud;
             long currentTime = System.currentTimeMillis();
 
-            if (isLookingAtPoppy) {
+            if (isLookingAtPoppy || isLookingAtCloud) {
                 state.lastLookTime = currentTime;
                 state.poppyPos = currentWatchingPoppy.get(playerId);
                 handleLookingAtPoppy(player, state);
@@ -133,9 +151,12 @@ public class PlayerLookAtCornPoppyListener {
                 PlayerPoppyState npcState = npcStates.computeIfAbsent(npcId, k -> new PlayerPoppyState());
 
                 boolean isLookingAtPoppy = isEntityLookingAtCornPoppy(livingEntity);
+                // NPC 也会盯着红伪云上瘾（同一套逻辑；只是它们不会去看方块那一套特例）
+                boolean isLookingAtCloud = !isLookingAtPoppy && isEntityLookingAtRedCloud(livingEntity);
+                npcState.watchingCloud = isLookingAtCloud;
                 long currentTime = System.currentTimeMillis();
 
-                if (isLookingAtPoppy) {
+                if (isLookingAtPoppy || isLookingAtCloud) {
                     npcState.lastLookTime = currentTime;
                     npcState.poppyPos = npcCurrentWatchingPoppy.get(npcId);
                     handleNPCLookingAtPoppy(livingEntity, npcState);
@@ -167,6 +188,57 @@ public class PlayerLookAtCornPoppyListener {
     }
 
     // ========== 玩家相关方法 (保持不变) ==========
+
+    /**
+     * 玩家是不是在盯着红伪云看。
+     *
+     * <p>和虞美人不同，这里不能靠"沿着视线打方块"——云是实体。做法是：
+     * 取视线方向与"眼睛→云体中心"的夹角，夹角小于 {@link #CLOUD_VIEW_ANGLE} 就算在看它
+     * （云体宽 4 格，所以角度阈值给得比较宽松），取最近的那一只。
+     *
+     * <p>命中后把云的方块坐标写进 {@code currentWatchingPoppy}：这样上瘾系统里的
+     * "定身时强制面朝目标"（{@code getLookAtAngles}）对云也照常生效，不用改那套逻辑。
+     */
+    private static boolean isPlayerLookingAtRedCloud(Player player) {
+        RedStangeCloudEntity cloud = findRedCloudInView(player.level(), player.getEyePosition(1f), player.getViewVector(1f));
+        if (cloud == null) {
+            return false;
+        }
+        currentWatchingPoppy.put(player.getUUID(), cloud.blockPosition());
+        return true;
+    }
+
+    private static boolean isEntityLookingAtRedCloud(LivingEntity entity) {
+        RedStangeCloudEntity cloud = findRedCloudInView(entity.level(), entity.getEyePosition(1f), entity.getViewVector(1f));
+        if (cloud == null) {
+            return false;
+        }
+        npcCurrentWatchingPoppy.put(entity.getUUID(), cloud.blockPosition());
+        return true;
+    }
+
+    /** 视线锥里最近的一只红伪云（够近 + 夹角够小）。 */
+    private static RedStangeCloudEntity findRedCloudInView(Level level, Vec3 eye, Vec3 viewVector) {
+        Vec3 look = viewVector.normalize();
+        RedStangeCloudEntity best = null;
+        double bestDistSqr = Double.MAX_VALUE;
+        for (RedStangeCloudEntity cloud : level.getEntitiesOfClass(RedStangeCloudEntity.class,
+                new net.minecraft.world.phys.AABB(eye, eye).inflate(CLOUD_VIEW_RANGE))) {
+            Vec3 toCloud = cloud.position().add(0.0D, -0.33D, 0.0D).subtract(eye); // 模型悬在原点下方
+            double distSqr = toCloud.lengthSqr();
+            if (distSqr < 0.25D) {
+                return cloud; // 已经贴在脸上
+            }
+            if (distSqr >= bestDistSqr) {
+                continue;
+            }
+            if (toCloud.normalize().dot(look) >= CLOUD_COS_LIMIT) {
+                best = cloud;
+                bestDistSqr = distSqr;
+            }
+        }
+        return best;
+    }
 
     private static boolean isPlayerLookingAtCornPoppy(Player player) {
         Level level = player.level();
@@ -563,7 +635,7 @@ public class PlayerLookAtCornPoppyListener {
         }
 
         if (!state.hasAddiction && state.lookingTime >= ADDICTION_TRIGGER_TIME) {
-            if (entity instanceof AnbulaEntity) {
+            if (entity instanceof AnbulaEntity && !state.watchingCloud) {
                 if (state.poppyPos != null) {
                     entity.level().setBlock(state.poppyPos,
                         McanomalyarchivesModBlocks.DEAD_POPPY.get().defaultBlockState(), 3);

@@ -209,7 +209,9 @@
   "item.mcanomalyarchives.small_stange_cloud_spawn_egg": "Small Stange Cloud Spawn Egg",
   "entity.mcanomalyarchives.black_stange_cloud": "Black Devouring Cloud",
   "item.mcanomalyarchives.black_stange_cloud_spawn_egg": "Black Devouring Cloud Spawn Egg",
-  "item.mcanomalyarchives.yifulin_2_spawn_egg": "Gray Yifulin Spawn Egg",
-  "entity.mcanomalyarchives.yifulin_2": "Gray Yifulin",
-  "nametag.mcanomalyarchives.not_for_anomaly": "It cannot be rewritten - it is an anomaly itself"
+  "item.mcanomalyarchives.yifulin_2_spawn_egg": "Yifulin Spawn Egg",
+  "entity.mcanomalyarchives.yifulin_2": "Yifulin",
+  "nametag.mcanomalyarchives.not_for_anomaly": "It cannot be rewritten - it is an anomaly itself",
+  "entity.mcanomalyarchives.red_stange_cloud": "Red Stange Cloud",
+  "item.mcanomalyarchives.red_stange_cloud_spawn_egg": "Red Stange Cloud Spawn Egg"
 }

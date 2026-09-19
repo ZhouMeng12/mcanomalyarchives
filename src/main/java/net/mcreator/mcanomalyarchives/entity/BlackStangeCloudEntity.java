@@ -41,8 +41,6 @@ public class BlackStangeCloudEntity extends SmallStangeCloudEntity {
 	public static final int ERASE_MIN = 12;
 	/** 一次最多吞多少块（写死上界："范围大"不等于无上限，免得变成拆家灾难） */
 	public static final int ERASE_MAX = 24;
-	/** 接触判定时向外多算一点，避免"擦着边"不算碰到 */
-	private static final double CONTACT_MARGIN = 0.2D;
 
 	public BlackStangeCloudEntity(EntityType<? extends BlackStangeCloudEntity> type, Level world) {
 		super(type, world);
@@ -113,20 +111,11 @@ public class BlackStangeCloudEntity extends SmallStangeCloudEntity {
 	}
 
 	/**
-	 * 云体实际占的那块空间：长边沿运动方向、短边横着，垂直方向对齐视觉（悬在原点下方）。
+	 * 云体实际占的那块空间：用父类（小伪云）的那一份 —— 长边沿运动方向、短边横着、垂直对齐视觉。
 	 *
-	 * <p>垂直方向**不往下多给余量**：视觉底边就是它的"身体底"，多给一点就会擦到地面。
+	 * <p>父类那份**垂直方向不往下给余量**：视觉底边就是它的"身体底"，
+	 * 多给一点就会擦到地面（上一版"刚出现就触发黑吸消失"就是这么来的）。
 	 */
-	private AABB bodyBox() {
-		double alongX = Math.abs(heading.x) > 0.5D ? VISUAL_LENGTH / 2.0D : VISUAL_SHORT_EDGE / 2.0D;
-		double alongZ = Math.abs(heading.z) > 0.5D ? VISUAL_LENGTH / 2.0D : VISUAL_SHORT_EDGE / 2.0D;
-		double x = this.getX();
-		double y = this.getY();
-		double z = this.getZ();
-		return new AABB(
-				x - alongX - CONTACT_MARGIN, y - VISUAL_HEIGHT, z - alongZ - CONTACT_MARGIN,
-				x + alongX + CONTACT_MARGIN, y, z + alongZ + CONTACT_MARGIN);
-	}
 
 	/**
 	 * 吞掉周围随机方块：在 {@link #ERASE_RADIUS} 格球形范围内收集"实体、非免疫"的方块，

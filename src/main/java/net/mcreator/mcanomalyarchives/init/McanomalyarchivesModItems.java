@@ -69,6 +69,7 @@ public class McanomalyarchivesModItems {
 	public static final DeferredItem<Item> ANOMALY_CODEX;
 	public static final DeferredItem<Item> BAIBIAN_NAME_TAG;
 	public static final DeferredItem<Item> SMALL_STANGE_CLOUD_SPAWN_EGG;
+	public static final DeferredItem<Item> RED_STANGE_CLOUD_SPAWN_EGG;
 	public static final DeferredItem<Item> BLACK_STANGE_CLOUD_SPAWN_EGG;
 	public static final DeferredItem<Item> YIFULIN_2_SPAWN_EGG;
 	static {
@@ -118,6 +119,7 @@ public class McanomalyarchivesModItems {
 		ANOMALY_CODEX = REGISTRY.register("anomaly_codex", AnomalyCodexItem::new);
 		BAIBIAN_NAME_TAG = REGISTRY.register("baibian_name_tag", BaibianNameTagItem::new);
 		SMALL_STANGE_CLOUD_SPAWN_EGG = REGISTRY.register("small_stange_cloud_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.SMALL_STANGE_CLOUD, -1, -1, new Item.Properties()));
+		RED_STANGE_CLOUD_SPAWN_EGG = REGISTRY.register("red_stange_cloud_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.RED_STANGE_CLOUD, -1, -1, new Item.Properties()));
 		BLACK_STANGE_CLOUD_SPAWN_EGG = REGISTRY.register("black_stange_cloud_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.BLACK_STANGE_CLOUD, -1, -1, new Item.Properties()));
 		YIFULIN_2_SPAWN_EGG = REGISTRY.register("yifulin_2_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.YIFULIN_2, -1, -1, new Item.Properties()));
 	}

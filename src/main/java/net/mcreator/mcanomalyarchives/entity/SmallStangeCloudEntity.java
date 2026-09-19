@@ -32,7 +32,11 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.particles.ParticleTypes;
 
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.phys.AABB;
 import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModBlocks;
+import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModEntities;
 
 /**
  * 小伪云（UO-001 衍生个体）—— 从云室传送门里飘出来的那一小片云。
@@ -374,8 +378,80 @@ public class SmallStangeCloudEntity extends Monster {
 	}
 
 	protected void tickCloudEffects() {
+		// 普通小伪云碰到虞美人会"吸走"那朵花的异常、自己变红（作者 2026-09-18 定）
+		if (canAbsorbPoppy() && this.level() instanceof ServerLevel serverLevel) {
+			BlockPos poppy = findCornPoppy(serverLevel);
+			if (poppy != null) {
+				absorbPoppyAndTurnRed(serverLevel, poppy);
+				return;
+			}
+		}
 		applyCloudDamage();
 		convertLavaAndWaterToCloudBlocks();
+	}
+
+	/**
+	 * 会吸虞美人吗？只有**普通小伪云**会。
+	 *
+	 * <p>黑吸伪云整个覆盖了 {@link #tickCloudEffects()}（它不吸花）；红伪云覆盖这个方法返回 false ——
+	 * 否则它碰到下一朵虞美人就会再变一次红，变成没完没了的复制。
+	 */
+	protected boolean canAbsorbPoppy() {
+		return true;
+	}
+
+	/** 身体范围内有没有虞美人（花没有碰撞箱，所以按方块类型查，不看碰撞）。 */
+	protected BlockPos findCornPoppy(ServerLevel level) {
+		AABB body = bodyBox();
+		for (BlockPos pos : BlockPos.betweenClosed(
+				BlockPos.containing(body.minX, body.minY, body.minZ),
+				BlockPos.containing(body.maxX, body.maxY, body.maxZ))) {
+			if (level.getBlockState(pos).is(McanomalyarchivesModBlocks.CORN_POPPY.get())) {
+				return pos.immutable();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 吸走虞美人：那朵异常虞美人**变回普通虞美人**（原版罂粟），
+	 * 云自己变成 {@link RedStangeCloudEntity}（红伪云），运动状态原样交接。
+	 */
+	protected void absorbPoppyAndTurnRed(ServerLevel level, BlockPos poppyPos) {
+		level.setBlock(poppyPos, Blocks.POPPY.defaultBlockState(), 3);
+		level.sendParticles(ParticleTypes.CRIMSON_SPORE,
+				poppyPos.getX() + 0.5D, poppyPos.getY() + 0.5D, poppyPos.getZ() + 0.5D, 12, 0.3D, 0.3D, 0.3D, 0.01D);
+		level.playSound(null, poppyPos, SoundEvents.GRASS_PLACE, SoundSource.NEUTRAL, 0.8F, 1.4F);
+		RedStangeCloudEntity red = new RedStangeCloudEntity(McanomalyarchivesModEntities.RED_STANGE_CLOUD.get(), level);
+		handOffMotionTo(red);
+		level.addFreshEntity(red);
+		this.discard();
+	}
+
+	/**
+	 * 把运动状态原样交给"接替者"（小伪云变红伪云时用）：
+	 * 位置、朝向、锁定高度、方向、有没有走完出场阶段，还有已经活了多久（寿命接着算）。
+	 */
+	protected void handOffMotionTo(SmallStangeCloudEntity next) {
+		next.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
+		next.setYHeadRot(this.getYHeadRot());
+		next.fixedYLevel = this.fixedYLevel;
+		next.heading = this.heading;
+		next.cruising = this.cruising;
+		next.launchTick = this.launchTick;
+		next.launchSpeed = this.launchSpeed;
+		next.isFirstSpawn = false;
+		next.tickCount = this.tickCount;
+	}
+
+	/** 云体实际占的那块空间：长边沿运动方向、短边横着，垂直方向对齐视觉（悬在原点下方）。 */
+	protected AABB bodyBox() {
+		double alongX = Math.abs(heading.x) > 0.5D ? VISUAL_LENGTH / 2.0D : VISUAL_SHORT_EDGE / 2.0D;
+		double alongZ = Math.abs(heading.z) > 0.5D ? VISUAL_LENGTH / 2.0D : VISUAL_SHORT_EDGE / 2.0D;
+		double x = this.getX();
+		double y = this.getY();
+		double z = this.getZ();
+		return new AABB(x - alongX, y - VISUAL_HEIGHT, z - alongZ, x + alongX, y, z + alongZ);
 	}
 
 	/**

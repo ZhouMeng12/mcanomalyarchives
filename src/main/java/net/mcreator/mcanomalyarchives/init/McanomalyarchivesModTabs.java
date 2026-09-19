@@ -59,6 +59,7 @@ public class McanomalyarchivesModTabs {
 				tabData.accept(McanomalyarchivesModItems.ANOMALY_CODEX.get());
 				tabData.accept(McanomalyarchivesModItems.BAIBIAN_NAME_TAG.get());
 				tabData.accept(McanomalyarchivesModItems.SMALL_STANGE_CLOUD_SPAWN_EGG.get());
+		tabData.accept(McanomalyarchivesModItems.RED_STANGE_CLOUD_SPAWN_EGG.get());
 				tabData.accept(McanomalyarchivesModItems.BLACK_STANGE_CLOUD_SPAWN_EGG.get());
 				tabData.accept(McanomalyarchivesModItems.YIFULIN_2_SPAWN_EGG.get());
 			}).build());

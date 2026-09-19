@@ -82,6 +82,11 @@ public class McanomalyarchivesModEntities {
 			EntityType.Builder.<BlackStangeCloudEntity>of(BlackStangeCloudEntity::new, MobCategory.AMBIENT).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).fireImmune()
 
 					.sized(4f, 0.67f));
+
+	public static final DeferredHolder<EntityType<?>, EntityType<RedStangeCloudEntity>> RED_STANGE_CLOUD = register("red_stange_cloud",
+			EntityType.Builder.<RedStangeCloudEntity>of(RedStangeCloudEntity::new, MobCategory.AMBIENT).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).fireImmune()
+
+					.sized(4f, 0.67f));
 	public static final DeferredHolder<EntityType<?>, EntityType<Yifulin2Entity>> YIFULIN_2 = register("yifulin_2",
 			EntityType.Builder.<Yifulin2Entity>of(Yifulin2Entity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 
@@ -109,6 +114,7 @@ public class McanomalyarchivesModEntities {
 		StrangeTreeEntity.init(event);
 		PinkSheepEntity.init(event);
 		SmallStangeCloudEntity.init(event);
+		RedStangeCloudEntity.init(event);
 		BlackStangeCloudEntity.init(event);
 		Yifulin2Entity.init(event);
 	}
@@ -129,6 +135,7 @@ public class McanomalyarchivesModEntities {
 		event.put(STRANGE_TREE.get(), StrangeTreeEntity.createAttributes().build());
 		event.put(PINK_SHEEP.get(), PinkSheepEntity.createAttributes().build());
 		event.put(SMALL_STANGE_CLOUD.get(), SmallStangeCloudEntity.createAttributes().build());
+		event.put(RED_STANGE_CLOUD.get(), RedStangeCloudEntity.createAttributes().build());
 		event.put(BLACK_STANGE_CLOUD.get(), BlackStangeCloudEntity.createAttributes().build());
 		event.put(YIFULIN_2.get(), Yifulin2Entity.createAttributes().build());
 	}
