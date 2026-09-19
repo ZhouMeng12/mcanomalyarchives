@@ -272,7 +272,9 @@
         "\"item.mcanomalyarchives.small_stange_cloud_spawn_egg\"",
         "\"nametag.mcanomalyarchives.not_for_anomaly\"",
         "\"entity.mcanomalyarchives.black_stange_cloud\"",
-        "\"item.mcanomalyarchives.black_stange_cloud_spawn_egg\""
+        "\"item.mcanomalyarchives.black_stange_cloud_spawn_egg\"",
+        "\"entity.mcanomalyarchives.yifulin_2\"",
+        "\"item.mcanomalyarchives.yifulin_2_spawn_egg\""
       ]
     },
     {
@@ -296,7 +298,9 @@
         "\"item.mcanomalyarchives.small_stange_cloud_spawn_egg\"",
         "\"nametag.mcanomalyarchives.not_for_anomaly\"",
         "\"entity.mcanomalyarchives.black_stange_cloud\"",
-        "\"item.mcanomalyarchives.black_stange_cloud_spawn_egg\""
+        "\"item.mcanomalyarchives.black_stange_cloud_spawn_egg\"",
+        "\"entity.mcanomalyarchives.yifulin_2\"",
+        "\"item.mcanomalyarchives.yifulin_2_spawn_egg\""
       ]
     },
     {

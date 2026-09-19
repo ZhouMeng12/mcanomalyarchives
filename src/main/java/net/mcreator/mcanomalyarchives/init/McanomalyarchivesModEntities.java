@@ -82,6 +82,10 @@ public class McanomalyarchivesModEntities {
 			EntityType.Builder.<BlackStangeCloudEntity>of(BlackStangeCloudEntity::new, MobCategory.AMBIENT).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3).fireImmune()
 
 					.sized(4f, 0.67f));
+	public static final DeferredHolder<EntityType<?>, EntityType<Yifulin2Entity>> YIFULIN_2 = register("yifulin_2",
+			EntityType.Builder.<Yifulin2Entity>of(Yifulin2Entity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
+
+					.ridingOffset(-0.6f).sized(0.6f, 1.8f));
 
 	// Start of user code block custom entities
 	// End of user code block custom entities
@@ -106,6 +110,7 @@ public class McanomalyarchivesModEntities {
 		PinkSheepEntity.init(event);
 		SmallStangeCloudEntity.init(event);
 		BlackStangeCloudEntity.init(event);
+		Yifulin2Entity.init(event);
 	}
 
 	@SubscribeEvent
@@ -125,5 +130,6 @@ public class McanomalyarchivesModEntities {
 		event.put(PINK_SHEEP.get(), PinkSheepEntity.createAttributes().build());
 		event.put(SMALL_STANGE_CLOUD.get(), SmallStangeCloudEntity.createAttributes().build());
 		event.put(BLACK_STANGE_CLOUD.get(), BlackStangeCloudEntity.createAttributes().build());
+		event.put(YIFULIN_2.get(), Yifulin2Entity.createAttributes().build());
 	}
 }

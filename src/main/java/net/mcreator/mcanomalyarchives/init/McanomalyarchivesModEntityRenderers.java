@@ -30,5 +30,6 @@ public class McanomalyarchivesModEntityRenderers {
 		event.registerEntityRenderer(McanomalyarchivesModEntities.PINK_SHEEP.get(), PinkSheepRenderer::new);
 		event.registerEntityRenderer(McanomalyarchivesModEntities.SMALL_STANGE_CLOUD.get(), SmallStangeCloudRenderer::new);
 		event.registerEntityRenderer(McanomalyarchivesModEntities.BLACK_STANGE_CLOUD.get(), BlackStangeCloudRenderer::new);
+		event.registerEntityRenderer(McanomalyarchivesModEntities.YIFULIN_2.get(), Yifulin2Renderer::new);
 	}
 }
