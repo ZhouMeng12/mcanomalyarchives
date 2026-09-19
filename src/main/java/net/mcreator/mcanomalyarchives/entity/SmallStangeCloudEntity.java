@@ -286,6 +286,7 @@ public class SmallStangeCloudEntity extends Monster {
 	@Override
 	public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag) {
 		super.addAdditionalSaveData(tag);
+		tag.putBoolean("RedVariant", isRed());
 		tag.putBoolean("FirstSpawn", isFirstSpawn);
 		tag.putDouble("FixedYLevel", fixedYLevel);
 		tag.putBoolean("Cruising", cruising);
@@ -294,6 +295,7 @@ public class SmallStangeCloudEntity extends Monster {
 	@Override
 	public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag) {
 		super.readAdditionalSaveData(tag);
+		setRed(tag.getBoolean("RedVariant"));
 		if (tag.contains("FirstSpawn")) {
 			isFirstSpawn = tag.getBoolean("FirstSpawn");
 		}
@@ -382,7 +384,7 @@ public class SmallStangeCloudEntity extends Monster {
 		if (canAbsorbPoppy() && this.level() instanceof ServerLevel serverLevel) {
 			BlockPos poppy = findCornPoppy(serverLevel);
 			if (poppy != null) {
-				absorbPoppyAndTurnRed(serverLevel, poppy);
+				absorbPoppy(serverLevel, poppy);
 				return;
 			}
 		}
@@ -391,13 +393,39 @@ public class SmallStangeCloudEntity extends Monster {
 	}
 
 	/**
-	 * 会吸虞美人吗？只有**普通小伪云**会。
+	 * 红伪云是**同一个生物的变种**（作者 2026-09-18：红伪云作为伪云的一个变种，不要再加一个生物）：
+	 * 不再单独注册实体，而是给云加一个同步标记，客户端据此换贴图。
 	 *
-	 * <p>黑吸伪云整个覆盖了 {@link #tickCloudEffects()}（它不吸花）；红伪云覆盖这个方法返回 false ——
-	 * 否则它碰到下一朵虞美人就会再变一次红，变成没完没了的复制。
+	 * <p>用 {@code SynchedEntityData} 而不是"服务端记着就行"：贴图是客户端画的，
+	 * 客户端必须知道它红没红；同时写进 NBT，存档里再读出来还是红的。
+	 */
+	private static final net.minecraft.network.syncher.EntityDataAccessor<Boolean> DATA_RED =
+			net.minecraft.network.syncher.SynchedEntityData.defineId(SmallStangeCloudEntity.class,
+					net.minecraft.network.syncher.EntityDataSerializers.BOOLEAN);
+
+	@Override
+	protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
+		super.defineSynchedData(builder);
+		builder.define(DATA_RED, false);
+	}
+
+	/** 是不是"红伪云"形态。 */
+	public boolean isRed() {
+		return this.entityData.get(DATA_RED);
+	}
+
+	public void setRed(boolean red) {
+		this.entityData.set(DATA_RED, red);
+	}
+
+	/**
+	 * 会吸虞美人吗？只有**还没变红的**普通小伪云会。
+	 *
+	 * <p>黑吸伪云整个覆盖了 {@link #tickCloudEffects()}（它不吸花）；变红之后的云也不吸 ——
+	 * 否则它碰到下一朵虞美人就会再变一次，一朵花换一只红云，没完没了。
 	 */
 	protected boolean canAbsorbPoppy() {
-		return true;
+		return !isRed();
 	}
 
 	/** 身体范围内有没有虞美人（花没有碰撞箱，所以按方块类型查，不看碰撞）。 */
@@ -414,34 +442,17 @@ public class SmallStangeCloudEntity extends Monster {
 	}
 
 	/**
-	 * 吸走虞美人：那朵异常虞美人**变回普通虞美人**（原版罂粟），
-	 * 云自己变成 {@link RedStangeCloudEntity}（红伪云），运动状态原样交接。
+	 * 吸走虞美人：那朵异常虞美人**变回普通虞美人**（原版罂粟），云自己**变红**（同一个生物，只是换形态）。
+	 *
+	 * <p>变红只是把同步标记置上 —— 不生成新实体、不 discard 自己，所以运动状态、
+	 * 剩余寿命、已经过没过门都原样保留，客户端下一帧就换成红贴图。
 	 */
-	protected void absorbPoppyAndTurnRed(ServerLevel level, BlockPos poppyPos) {
+	protected void absorbPoppy(ServerLevel level, BlockPos poppyPos) {
 		level.setBlock(poppyPos, Blocks.POPPY.defaultBlockState(), 3);
 		level.sendParticles(ParticleTypes.CRIMSON_SPORE,
 				poppyPos.getX() + 0.5D, poppyPos.getY() + 0.5D, poppyPos.getZ() + 0.5D, 12, 0.3D, 0.3D, 0.3D, 0.01D);
 		level.playSound(null, poppyPos, SoundEvents.GRASS_PLACE, SoundSource.NEUTRAL, 0.8F, 1.4F);
-		RedStangeCloudEntity red = new RedStangeCloudEntity(McanomalyarchivesModEntities.RED_STANGE_CLOUD.get(), level);
-		handOffMotionTo(red);
-		level.addFreshEntity(red);
-		this.discard();
-	}
-
-	/**
-	 * 把运动状态原样交给"接替者"（小伪云变红伪云时用）：
-	 * 位置、朝向、锁定高度、方向、有没有走完出场阶段，还有已经活了多久（寿命接着算）。
-	 */
-	protected void handOffMotionTo(SmallStangeCloudEntity next) {
-		next.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
-		next.setYHeadRot(this.getYHeadRot());
-		next.fixedYLevel = this.fixedYLevel;
-		next.heading = this.heading;
-		next.cruising = this.cruising;
-		next.launchTick = this.launchTick;
-		next.launchSpeed = this.launchSpeed;
-		next.isFirstSpawn = false;
-		next.tickCount = this.tickCount;
+		setRed(true);
 	}
 
 	/** 云体实际占的那块空间：长边沿运动方向、短边横着，垂直方向对齐视觉（悬在原点下方）。 */

@@ -1532,23 +1532,8 @@
         ]
       },
       "path": "~/npc"
-    },
-    {
-      "name": "RedStangeCloud",
-      "type": "livingentity",
-      "compiles": true,
-      "locked_code": true,
-      "registry_name": "red_stange_cloud",
-      "metadata": {
-        "files": [
-          "src/main/java/net/mcreator/mcanomalyarchives/entity/RedStangeCloudEntity.java",
-          "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/RedStangeCloudRenderer.java",
-          "src/main/resources/assets/mcanomalyarchives/models/item/red_stange_cloud_spawn_egg.json",
-          "src/main/resources/assets/mcanomalyarchives/items/red_stange_cloud_spawn_egg.json"
-        ]
-      },
-      "path": "~/StrangeCloud"
     }
+    
   ],
   "variable_elements": [],
   "sound_elements": [
@@ -1822,10 +1807,8 @@
       "entity.mcanomalyarchives.black_stange_cloud": "Black Devouring Cloud",
       "item.mcanomalyarchives.black_stange_cloud_spawn_egg": "Black Devouring Cloud Spawn Egg",
       "item.mcanomalyarchives.yifulin_2_spawn_egg": "Yifulin Spawn Egg",
-      "entity.mcanomalyarchives.yifulin_2": "Yifulin",
-      "entity.mcanomalyarchives.red_stange_cloud": "Red Stange Cloud",
-      "item.mcanomalyarchives.red_stange_cloud_spawn_egg": "Red Stange Cloud Spawn Egg"
-},
+      "entity.mcanomalyarchives.yifulin_2": "Yifulin"
+    },
     "zh_cn": {
       "advancements.cloudarmadv.descr": "获得全套云锭套装",
       "advancements.cloudarmadv.title": "云雾缠身",
@@ -2038,10 +2021,8 @@
       "entity.mcanomalyarchives.black_stange_cloud": "黑吸伪云",
       "item.mcanomalyarchives.black_stange_cloud_spawn_egg": "黑吸伪云刷怪蛋",
       "item.mcanomalyarchives.yifulin_2_spawn_egg": "伊芙琳?刷怪蛋",
-      "entity.mcanomalyarchives.yifulin_2": "伊芙琳？",
-      "entity.mcanomalyarchives.red_stange_cloud": "红伪云",
-      "item.mcanomalyarchives.red_stange_cloud_spawn_egg": "红伪云刷怪蛋"
-}
+      "entity.mcanomalyarchives.yifulin_2": "伊芙琳？"
+    }
   },
   "metadata": {
     "files": [

@@ -93,5 +93,3 @@
   "item.mcanomalyarchives.black_stange_cloud_spawn_egg": "黑吸伪云刷怪蛋",
   "entity.mcanomalyarchives.yifulin_2": "灰色伊芙琳",
   "item.mcanomalyarchives.yifulin_2_spawn_egg": "灰色伊芙琳刷怪蛋",
-  "entity.mcanomalyarchives.red_stange_cloud": "红伪云",
-  "item.mcanomalyarchives.red_stange_cloud_spawn_egg": "红伪云刷怪蛋",

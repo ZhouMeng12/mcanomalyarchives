@@ -28,7 +28,7 @@ import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModBlocks;
 import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModMobEffects;
 import net.mcreator.mcanomalyarchives.block.CornPoppyBlock;
 import net.mcreator.mcanomalyarchives.entity.AnbulaEntity;
-import net.mcreator.mcanomalyarchives.entity.RedStangeCloudEntity;
+import net.mcreator.mcanomalyarchives.entity.SmallStangeCloudEntity;
 
 import java.util.Map;
 import java.util.UUID;
@@ -200,7 +200,7 @@ public class PlayerLookAtCornPoppyListener {
      * "定身时强制面朝目标"（{@code getLookAtAngles}）对云也照常生效，不用改那套逻辑。
      */
     private static boolean isPlayerLookingAtRedCloud(Player player) {
-        RedStangeCloudEntity cloud = findRedCloudInView(player.level(), player.getEyePosition(1f), player.getViewVector(1f));
+        SmallStangeCloudEntity cloud = findRedCloudInView(player.level(), player.getEyePosition(1f), player.getViewVector(1f));
         if (cloud == null) {
             return false;
         }
@@ -209,7 +209,7 @@ public class PlayerLookAtCornPoppyListener {
     }
 
     private static boolean isEntityLookingAtRedCloud(LivingEntity entity) {
-        RedStangeCloudEntity cloud = findRedCloudInView(entity.level(), entity.getEyePosition(1f), entity.getViewVector(1f));
+        SmallStangeCloudEntity cloud = findRedCloudInView(entity.level(), entity.getEyePosition(1f), entity.getViewVector(1f));
         if (cloud == null) {
             return false;
         }
@@ -217,13 +217,21 @@ public class PlayerLookAtCornPoppyListener {
         return true;
     }
 
-    /** 视线锥里最近的一只红伪云（够近 + 夹角够小）。 */
-    private static RedStangeCloudEntity findRedCloudInView(Level level, Vec3 eye, Vec3 viewVector) {
+    /**
+     * 视线锥里最近的一只**红伪云**（够近 + 夹角够小）。
+     *
+     * 红伪云不是独立生物：它是 SmallStangeCloudEntity 的变种，靠 isRed() 这个同步标记区分
+     * （作者 2026-09-18：红伪云作为伪云的一个变种，不要再加一个生物）。
+     */
+    private static SmallStangeCloudEntity findRedCloudInView(Level level, Vec3 eye, Vec3 viewVector) {
         Vec3 look = viewVector.normalize();
-        RedStangeCloudEntity best = null;
+        SmallStangeCloudEntity best = null;
         double bestDistSqr = Double.MAX_VALUE;
-        for (RedStangeCloudEntity cloud : level.getEntitiesOfClass(RedStangeCloudEntity.class,
+        for (SmallStangeCloudEntity cloud : level.getEntitiesOfClass(SmallStangeCloudEntity.class,
                 new net.minecraft.world.phys.AABB(eye, eye).inflate(CLOUD_VIEW_RANGE))) {
+            if (!cloud.isRed()) {
+                continue; // 白的/黑的都不算
+            }
             Vec3 toCloud = cloud.position().add(0.0D, -0.33D, 0.0D).subtract(eye); // 模型悬在原点下方
             double distSqr = toCloud.lengthSqr();
             if (distSqr < 0.25D) {

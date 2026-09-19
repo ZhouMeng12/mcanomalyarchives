@@ -274,9 +274,7 @@
         "\"entity.mcanomalyarchives.black_stange_cloud\"",
         "\"item.mcanomalyarchives.black_stange_cloud_spawn_egg\"",
         "\"entity.mcanomalyarchives.yifulin_2\"",
-        "\"item.mcanomalyarchives.yifulin_2_spawn_egg\"",
-        "\"entity.mcanomalyarchives.red_stange_cloud\"",
-        "\"item.mcanomalyarchives.red_stange_cloud_spawn_egg\""
+        "\"item.mcanomalyarchives.yifulin_2_spawn_egg\""
       ]
     },
     {
@@ -302,9 +300,7 @@
         "\"entity.mcanomalyarchives.black_stange_cloud\"",
         "\"item.mcanomalyarchives.black_stange_cloud_spawn_egg\"",
         "\"entity.mcanomalyarchives.yifulin_2\"",
-        "\"item.mcanomalyarchives.yifulin_2_spawn_egg\"",
-        "\"entity.mcanomalyarchives.red_stange_cloud\"",
-        "\"item.mcanomalyarchives.red_stange_cloud_spawn_egg\""
+        "\"item.mcanomalyarchives.yifulin_2_spawn_egg\""
       ]
     },
     {
@@ -619,8 +615,7 @@
       "fixHint": "把 UO-001 那行改回 stange_cloud|small_stange_cloud|black_stange_cloud 三个 id",
       "mustContain": [
         "entry.match().split(",
-        "mcanomalyarchives:black_stange_cloud",
-        "mcanomalyarchives:red_stange_cloud"
+        "mcanomalyarchives:black_stange_cloud"
       ]
     },
     {
@@ -828,83 +823,23 @@
       ]
     },
     {
-      "id": "red-cloud-element",
-      "kind": "contains",
-      "why": "红伪云的 MCreator 元素：与小伪云同模型同尺寸、贴图换成虞美人主色的红、不自然生成",
-      "path": "elements/RedStangeCloud.mod.json",
-      "fixHint": "重跑 python tools/cloud/attach_red_cloud.py",
-      "mustContain": [
-        "\"_type\": \"livingentity\"",
-        "\"mobModelName\": \"ModelStrangeCloud\"",
-        "\"mobModelTexture\": \"cloud_red.png\"",
-        "\"modelWidth\": 4.0",
-        "\"spawnThisMob\": false"
-      ]
-    },
-    {
-      "id": "red-cloud-registration",
-      "kind": "contains",
-      "why": "红伪云的实体注册行（生成区）",
-      "path": "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModEntities.java",
-      "fixHint": "补回 RED_STANGE_CLOUD 的 register(...) 与 registerAttributes 里的 event.put(...)",
-      "mustContain": [
-        "RED_STANGE_CLOUD = register(\"red_stange_cloud\"",
-        "event.put(RED_STANGE_CLOUD.get(), RedStangeCloudEntity.createAttributes().build())"
-      ]
-    },
-    {
-      "id": "red-cloud-renderer-registration",
-      "kind": "contains",
-      "why": "渲染器注册行（生成区）：丢了红伪云会看不见",
-      "path": "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModEntityRenderers.java",
-      "fixHint": "补回 RED_STANGE_CLOUD.get(), RedStangeCloudRenderer::new",
-      "mustContain": [
-        "RED_STANGE_CLOUD.get(), RedStangeCloudRenderer::new"
-      ]
-    },
-    {
-      "id": "red-cloud-renderer",
-      "kind": "contains",
-      "why": "红伪云渲染器：红色贴图 + 与小伪云同一套缩放 + 半透明",
-      "path": "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/RedStangeCloudRenderer.java",
-      "fixHint": "从 git 恢复 client/renderer/RedStangeCloudRenderer.java",
-      "mustContain": [
-        "textures/entities/cloud_red.png",
-        "RedStangeCloudEntity.RENDER_SCALE",
-        "entityTranslucent"
-      ]
-    },
-    {
-      "id": "red-cloud-entity",
-      "kind": "contains",
-      "why": "红伪云实体：继承小伪云（同一个模型尺寸与行为），但**不再吸虞美人** —— 否则它碰到下一朵花就会再变一只红伪云，一朵花换一只云没完没了",
-      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/RedStangeCloudEntity.java",
-      "fixHint": "从 git 恢复 entity/RedStangeCloudEntity.java（extends SmallStangeCloudEntity + canAbsorbPoppy=false）",
-      "mustContain": [
-        "extends SmallStangeCloudEntity",
-        "protected boolean canAbsorbPoppy()",
-        "return false;"
-      ]
-    },
-    {
       "id": "small-cloud-absorbs-poppy",
       "kind": "contains",
-      "why": "小伪云碰到虞美人 → 那朵虞美人变回普通虞美人（原版罂粟）、云自己变红伪云、运动状态原样交接。作者 2026-09-18 的原话：让小伪云（不是黑吸）碰到模组里的虞美人后会变红",
+      "why": "小伪云碰到虞美人 → 那朵虞美人变回普通虞美人（原版罂粟）、云自己变红。作者 2026-09-18 的原话：让小伪云（不是黑吸）碰到模组里的虞美人后会变红；红伪云是同一个生物的变种（见 no-separate-red-entity），所以这里是置标记而不是生成新实体",
       "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/SmallStangeCloudEntity.java",
-      "fixHint": "补回 canAbsorbPoppy() / findCornPoppy() / absorbPoppyAndTurnRed() / handOffMotionTo()",
+      "fixHint": "补回 canAbsorbPoppy() / findCornPoppy() / absorbPoppy()（内部 setRed(true)）",
       "mustContain": [
         "protected boolean canAbsorbPoppy()",
         "protected BlockPos findCornPoppy(",
-        "protected void absorbPoppyAndTurnRed(",
+        "protected void absorbPoppy(",
         "Blocks.POPPY.defaultBlockState()",
-        "McanomalyarchivesModEntities.RED_STANGE_CLOUD.get()",
-        "handOffMotionTo(red)"
+        "setRed(true);"
       ]
     },
     {
       "id": "red-cloud-addiction",
       "kind": "contains",
-      "why": "「看红伪云会上瘾」完全接在既有虞美人上瘾系统里（同一套 10 秒上瘾/升级/定身/丧命），漏了这几处就等于只会看不会上瘾，而且不报错",
+      "why": "「看红伪云会上瘾」接在既有虞美人上瘾系统里（同一套 10 秒上瘾/升级/定身/丧命）；红伪云不是独立生物，靠 SmallStangeCloudEntity.isRed() 这个同步标记区分",
       "path": "src/main/java/net/mcreator/mcanomalyarchives/events/PlayerLookAtCornPoppyListener.java",
       "fixHint": "补回 isPlayerLookingAtRedCloud / isEntityLookingAtRedCloud / findRedCloudInView 与 watchingCloud 标记",
       "mustContain": [
@@ -913,20 +848,27 @@
         "findRedCloudInView(",
         "CLOUD_COS_LIMIT",
         "boolean watchingCloud;",
-        "!state.watchingCloud"
+        "!state.watchingCloud",
+        "isRed()"
       ]
     },
     {
       "id": "red-cloud-assets",
       "kind": "exists",
-      "why": "红贴图 + 刷怪蛋三件套",
-      "fixHint": "重跑 python tools/cloud/make_red_texture.py 与 register_red_cloud.py",
+      "why": "红伪云变种用的那张红贴图（它不再有独立的刷怪蛋：变种不是新生物）",
+      "fixHint": "重跑 python tools/cloud/make_red_texture.py",
       "exists": [
-        "src/main/resources/assets/mcanomalyarchives/textures/entities/cloud_red.png",
-        "src/main/resources/assets/mcanomalyarchives/textures/item/red_stange_cloud_spawn_egg_generated.png",
-        "src/main/resources/assets/mcanomalyarchives/models/item/red_stange_cloud_spawn_egg.json",
-        "src/main/resources/assets/mcanomalyarchives/items/red_stange_cloud_spawn_egg.json"
+        "src/main/resources/assets/mcanomalyarchives/textures/entities/cloud_red.png"
       ]
+    },
+    {
+      "id": "no-separate-red-entity",
+      "kind": "noMatch",
+      "why": "反向检查：红伪云是**小伪云的变种**，不许再注册成一个独立生物（作者 2026-09-18：红伪云作为伪云的一个变种，不要再加一个生物）",
+      "fixHint": "红伪云靠 SmallStangeCloudEntity.isRed() 同步标记 + 渲染器换贴图实现；不要再加 register(\"red_stange_cloud\") 或刷怪蛋",
+      "glob": "*.java",
+      "searchRoot": "src/main/java",
+      "pattern": "red_stange_cloud|RED_STANGE_CLOUD|RedStangeCloud"
     }
   ]
 }

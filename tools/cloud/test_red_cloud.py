@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
-"""红伪云自检：贴图/尺寸/来源/上瘾/词条，不需要启动游戏。"""
+"""红伪云自检（变种版）：不启动游戏，核对"同一个生物换形态"这条设计。
+
+作者 2026-09-18：红伪云作为伪云的一个变种，不要再加一个生物。所以这份自检里
+最要紧的几条反向检查是「不许再出现独立的 red 实体/刷怪蛋」，
+以及"变红只是置一个同步标记、不生成新实体"。
+"""
 import io
 import json
 import os
@@ -17,44 +22,86 @@ def read(p):
 
 
 def check_true(label, ok, detail=""):
-    print("  [%s] %-48s %s" % ("OK " if ok else "FAIL", label, detail))
+    print("  [%s] %-50s %s" % ("OK " if ok else "FAIL", label, detail))
     if not ok:
         FAILED.append(label)
 
 
 def check(label, got, want, tol=0):
     ok = abs(got - want) <= tol if isinstance(got, (int, float)) and isinstance(want, (int, float)) else got == want
-    print("  [%s] %-48s -> %s" % ("OK " if ok else "FAIL", label, got))
+    print("  [%s] %-50s -> %s" % ("OK " if ok else "FAIL", label, got))
     if not ok:
         FAILED.append("%s: 得到 %r 期望 %r" % (label, got, want))
 
 
 SMALL = read("src/main/java/net/mcreator/mcanomalyarchives/entity/SmallStangeCloudEntity.java")
-RED = read("src/main/java/net/mcreator/mcanomalyarchives/entity/RedStangeCloudEntity.java")
-RENDERER = read("src/main/java/net/mcreator/mcanomalyarchives/client/renderer/RedStangeCloudRenderer.java")
+RENDERER = read("src/main/java/net/mcreator/mcanomalyarchives/client/renderer/SmallStangeCloudRenderer.java")
 LISTENER = read("src/main/java/net/mcreator/mcanomalyarchives/events/PlayerLookAtCornPoppyListener.java")
 
-print("=" * 72)
-print("1. 与小伪云同模型同尺寸（作者：还是和小伪云差不多）")
-print("=" * 72)
-check_true("红伪云继承小伪云", "extends SmallStangeCloudEntity" in RED)
-check_true("渲染器复用 ModelStrangeCloud 且缩放取小伪云那个常量",
-           "ModelStrangeCloud" in RENDERER and "RedStangeCloudEntity.RENDER_SCALE" in RENDERER)
-red_elem = json.load(io.open("elements/RedStangeCloud.mod.json", encoding="utf-8"))["definition"]
-small_elem = json.load(io.open("elements/SmallStangeCloud.mod.json", encoding="utf-8"))["definition"]
-for field in ("mobModelName", "modelWidth", "modelHeight", "visualScale", "spawnThisMob", "mobSpawningType"):
-    check_true("元素 %s 与小伪云一致" % field, red_elem[field] == small_elem[field], str(red_elem[field]))
-check_true("只有贴图不同", red_elem["mobModelTexture"] == "cloud_red.png")
-check_true("红伪云不吸虞美人（否则会一朵花换一只云、无限复制）",
-           "protected boolean canAbsorbPoppy()" in RED and "return false;" in RED)
+print("=" * 74)
+print("1. 红伪云是变种，不是新生物")
+print("=" * 74)
+check_true("没有 RedStangeCloudEntity 这个类", not os.path.exists(
+    "src/main/java/net/mcreator/mcanomalyarchives/entity/RedStangeCloudEntity.java"))
+check_true("没有 RedStangeCloud 元素", not os.path.exists("elements/RedStangeCloud.mod.json"))
+check_true("没有红伪云刷怪蛋资源", not os.path.exists(
+    "src/main/resources/assets/mcanomalyarchives/items/red_stange_cloud_spawn_egg.json"))
+for p in ("src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModEntities.java",
+          "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModItems.java",
+          "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModTabs.java",
+          "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModEntityRenderers.java"):
+    check_true("%s 里没有独立红实体" % os.path.basename(p), "RED_STANGE_CLOUD" not in read(p))
+ws = json.load(io.open("mcanomalyarchives.mcreator", encoding="utf-8"))
+check_true("工作区里没有红伪云元素", not any(e.get("name") == "RedStangeCloud" for e in ws["mod_elements"]))
+check_true("词条里没有红伪云独立条目",
+           not any("red_stange_cloud" in k for lg in ("zh_cn", "en_us") for k in ws["language_map"][lg]))
 
 print()
-print("=" * 72)
-print("2. 贴图是虞美人主色的红")
-print("=" * 72)
+print("=" * 74)
+print("2. 变红 = 置一个同步标记（客户端才画得出红贴图）")
+print("=" * 74)
+check_true("用 SynchedEntityData 定义标记", "SynchedEntityData.defineId(SmallStangeCloudEntity.class" in SMALL)
+check_true("defineSynchedData 里注册了它", "builder.define(DATA_RED, false);" in SMALL)
+check_true("有 isRed()/setRed()", "public boolean isRed()" in SMALL and "public void setRed(boolean red)" in SMALL)
+check_true("写进 NBT（存档读出来还是红的）",
+           'tag.putBoolean("RedVariant", isRed());' in SMALL and 'setRed(tag.getBoolean("RedVariant"));' in SMALL)
+check_true("渲染器按标记换贴图", "entity.isRed() ? redTexture : entityTexture" in RENDERER)
+check_true("红贴图就是虞美人主色那张", "textures/entities/cloud_red.png" in RENDERER)
+
+print()
+print("=" * 74)
+print("3. 来源：碰到虞美人 → 那朵花变普通虞美人、云变红（同一个实体）")
+print("=" * 74)
+check_true("按方块类型找虞美人（花没有碰撞箱）", "is(McanomalyarchivesModBlocks.CORN_POPPY.get())" in SMALL)
+check_true("虞美人变成原版罂粟", "Blocks.POPPY.defaultBlockState()" in SMALL)
+check_true("变红靠 setRed(true)，不生成新实体、不 discard 自己",
+           "setRed(true);" in SMALL and "level.addFreshEntity(red)" not in SMALL)
+check_true("已经变红的云不再吸花（否则一朵花换一只红云没完没了）", "return !isRed();" in SMALL)
+check_true("黑吸伪云不走这条路（它整个覆盖了 tickCloudEffects）",
+           "protected void tickCloudEffects()" in read("src/main/java/net/mcreator/mcanomalyarchives/entity/BlackStangeCloudEntity.java"))
+check_true("只有服务端改方块", "instanceof ServerLevel serverLevel" in SMALL)
+
+print()
+print("=" * 74)
+print("4. 看红伪云会上瘾（接在既有虞美人上瘾系统里，按标记过滤）")
+print("=" * 74)
+check_true("玩家侧认红伪云", "isPlayerLookingAtRedCloud(player)" in LISTENER)
+check_true("NPC 侧也认红伪云", "isEntityLookingAtRedCloud(livingEntity)" in LISTENER)
+check_true("按视线夹角找云", "CLOUD_COS_LIMIT" in LISTENER and "findRedCloudInView(" in LISTENER)
+check_true("只把变红的算进去", "if (!cloud.isRed())" in LISTENER)
+check_true("命中的云坐标写进 currentWatchingPoppy",
+           "currentWatchingPoppy.put(player.getUUID(), cloud.blockPosition())" in LISTENER)
+check_true("上瘾阈值沿用虞美人的 10 秒", "ADDICTION_TRIGGER_TIME = 10 * TICKS_PER_SECOND" in LISTENER)
+check_true("区分'看的是云'（安布拉的枯花特例不能误伤云）",
+           "boolean watchingCloud;" in LISTENER and "!state.watchingCloud" in LISTENER)
+
+print()
+print("=" * 74)
+print("5. 资源与见闻录")
+print("=" * 74)
 
 
-def png_colors(path):
+def colors(path):
     d = open(path, "rb").read()
     pos, idat, w, h = 8, b"", None, None
     while pos < len(d):
@@ -76,65 +123,15 @@ def png_colors(path):
     return w, h, out
 
 
-w, h, colors = png_colors("src/main/resources/assets/mcanomalyarchives/textures/entities/cloud_red.png")
-check("贴图尺寸", (w, h), (16, 16))
-check_true("纯色填充", len(colors) == 1, str(colors))
-color = list(colors)[0]
-check_true("是红色（红通道明显压过绿蓝）", color[0] > 150 and color[0] > color[1] + 100, str(color))
-
-print()
-print("=" * 72)
-print("3. 来源：小伪云碰到虞美人 → 花变普通虞美人、云变红")
-print("=" * 72)
-check_true("普通小伪云会吸（默认 true）", "protected boolean canAbsorbPoppy() {\n\t\treturn true;\n\t}" in SMALL)
-check_true("按方块类型找虞美人（花没有碰撞箱）",
-           "is(McanomalyarchivesModBlocks.CORN_POPPY.get())" in SMALL)
-check_true("虞美人变成原版罂粟", "Blocks.POPPY.defaultBlockState()" in SMALL)
-check_true("云变成 RED_STANGE_CLOUD 实体", "McanomalyarchivesModEntities.RED_STANGE_CLOUD.get()" in SMALL)
-check_true("运动状态原样交接（位置/高度/方向/已活时长）",
-           all(k in SMALL for k in ("handOffMotionTo(", "next.fixedYLevel = this.fixedYLevel",
-                                    "next.heading = this.heading", "next.tickCount = this.tickCount")))
-check_true("黑吸伪云不走这条路（它整个覆盖了 tickCloudEffects）",
-           "protected void tickCloudEffects()" in read("src/main/java/net/mcreator/mcanomalyarchives/entity/BlackStangeCloudEntity.java"))
-check_true("只有服务端改方块", "instanceof ServerLevel serverLevel" in SMALL)
-
-print()
-print("=" * 72)
-print("4. 看红伪云会上瘾（接在既有虞美人上瘾系统里）")
-print("=" * 72)
-check_true("玩家侧认红伪云", "isPlayerLookingAtRedCloud(player)" in LISTENER)
-check_true("NPC 侧也认红伪云", "isEntityLookingAtRedCloud(livingEntity)" in LISTENER)
-check_true("按视线夹角找云（不是打方块射线）", "findRedCloudInView(" in LISTENER and "CLOUD_COS_LIMIT" in LISTENER)
-check_true("命中的云坐标写进 currentWatchingPoppy（定身朝向才对得上）",
-           "currentWatchingPoppy.put(player.getUUID(), cloud.blockPosition())" in LISTENER)
-check_true("上瘾阈值沿用虞美人的 10 秒", "ADDICTION_TRIGGER_TIME = 10 * TICKS_PER_SECOND" in LISTENER)
-check_true("区分'看的是云'（安布拉的枯花特例不要误伤云）",
-           "boolean watchingCloud;" in LISTENER and "!state.watchingCloud" in LISTENER)
-
-print()
-print("=" * 72)
-print("5. 集成：见闻录 / 词条 / 资源")
-print("=" * 72)
-check_true("UO-001 解锁 id 含红伪云", "mcanomalyarchives:red_stange_cloud" in read(
-    "src/main/java/net/mcreator/mcanomalyarchives/codex/AnomalyCodex.java"))
-ws = json.load(io.open("mcanomalyarchives.mcreator", encoding="utf-8"))
-for lg in ("zh_cn", "en_us"):
-    keys = ws["language_map"][lg]
-    check_true("workspace language_map.%s 有两词条" % lg,
-               "entity.mcanomalyarchives.red_stange_cloud" in keys
-               and "item.mcanomalyarchives.red_stange_cloud_spawn_egg" in keys)
-for lg in ("zh_cn", "en_us"):
-    text = read("src/main/resources/assets/mcanomalyarchives/lang/%s.json" % lg)
-    check_true("lang/%s.json 有两词条" % lg,
-               '"entity.mcanomalyarchives.red_stange_cloud"' in text
-               and '"item.mcanomalyarchives.red_stange_cloud_spawn_egg"' in text)
-check_true("元素挂在工作区里且 locked_code",
-           any(e.get("name") == "RedStangeCloud" and e.get("locked_code") for e in ws["mod_elements"]))
-for p in ("src/main/resources/assets/mcanomalyarchives/textures/entities/cloud_red.png",
-          "src/main/resources/assets/mcanomalyarchives/textures/item/red_stange_cloud_spawn_egg_generated.png",
-          "src/main/resources/assets/mcanomalyarchives/models/item/red_stange_cloud_spawn_egg.json",
-          "src/main/resources/assets/mcanomalyarchives/items/red_stange_cloud_spawn_egg.json"):
-    check_true("资源 " + os.path.basename(p), os.path.exists(p))
+w, h, cols = colors("src/main/resources/assets/mcanomalyarchives/textures/entities/cloud_red.png")
+check("红贴图尺寸", (w, h), (16, 16))
+check_true("纯色", len(cols) == 1, str(cols))
+c = list(cols)[0]
+check_true("是红色（红通道压过绿蓝）", c[0] > 150 and c[0] > c[1] + 100, str(c))
+codex = read("src/main/java/net/mcreator/mcanomalyarchives/codex/AnomalyCodex.java")
+check_true("见闻录 UO-001 里有小伪云的 id（变种与它同类，同一个 id 解锁）",
+           "mcanomalyarchives:small_stange_cloud" in codex)
+check_true("见闻录里没有多余的 red id", "red_stange_cloud" not in codex)
 
 print()
 if FAILED:

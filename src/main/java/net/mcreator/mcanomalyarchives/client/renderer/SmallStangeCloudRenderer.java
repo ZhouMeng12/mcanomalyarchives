@@ -21,6 +21,12 @@ import net.mcreator.mcanomalyarchives.entity.SmallStangeCloudEntity;
  */
 public class SmallStangeCloudRenderer extends MobRenderer<SmallStangeCloudEntity, ModelStrangeCloud<SmallStangeCloudEntity>> {
 	private final ResourceLocation entityTexture = ResourceLocation.parse("mcanomalyarchives:textures/entities/texture.png");
+	/**
+	 * 红伪云用的是**同一个模型、同一个生物**，只是换了这张红贴图
+	 * （作者 2026-09-18：红伪云作为伪云的一个变种，不要再加一个生物）。
+	 * 颜色是虞美人贴图里的主色 #E02020，见 tools/cloud/make_red_texture.py。
+	 */
+	private final ResourceLocation redTexture = ResourceLocation.parse("mcanomalyarchives:textures/entities/cloud_red.png");
 
 	public SmallStangeCloudRenderer(EntityRendererProvider.Context context) {
 		super(context, new ModelStrangeCloud(context.bakeLayer(ModelStrangeCloud.LAYER_LOCATION)), 0f);
@@ -28,7 +34,7 @@ public class SmallStangeCloudRenderer extends MobRenderer<SmallStangeCloudEntity
 
 	@Override
 	public ResourceLocation getTextureLocation(SmallStangeCloudEntity entity) {
-		return entityTexture;
+		return entity.isRed() ? redTexture : entityTexture;
 	}
 
 	@Override
