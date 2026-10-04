@@ -30,7 +30,7 @@ public class PlayerJoinEventListener {
 				}
 			}
 			
-			PlayerSanity.syncToClient(player);
+			PlayerSanity.syncToClientNow(player); // 进服立刻发，不等批处理
 		}
 	}
 }

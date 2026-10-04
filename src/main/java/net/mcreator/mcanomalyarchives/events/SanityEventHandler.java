@@ -132,6 +132,6 @@ public class SanityEventHandler {
         if (!(newPlayer instanceof ServerPlayer)) return;
         PlayerSanity sanity = newPlayer.getData(McanomalyarchivesModAttachments.PLAYER_SANITY);
         sanity.resetToMax();
-        PlayerSanity.syncToClient((ServerPlayer) newPlayer);
+        PlayerSanity.syncToClientNow((ServerPlayer) newPlayer); // 重生立刻发，不等批处理
     }
 }

@@ -6,6 +6,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.mcreator.mcanomalyarchives.network.SyncPlayerSanityPacket;
+import net.mcreator.mcanomalyarchives.sanity.DirtyPlayerSanityTracker;
 
 public class PlayerSanity {
     public static final int MAX_SANITY = 100;
@@ -49,7 +50,17 @@ public class PlayerSanity {
         this.sanity = MAX_SANITY;
     }
 
+    /** 攒着，等 DirtyPlayerSanityTracker 每 5 tick 统一发一次（同一 tick 内反复触发只发一个包）。 */
     public static void syncToClient(ServerPlayer player) {
+        DirtyPlayerSanityTracker.markDirty(player);
+    }
+
+    /**
+     * 立刻发。给"客户端状态刚被重置、不能等"的两个时机用：
+     * 进服（PlayerLoggedInEvent）与死亡重生（PlayerEvent.Clone）。
+     * 这两处要是也走批处理，客户端会先按默认的满值画 250ms 的 HUD。
+     */
+    public static void syncToClientNow(ServerPlayer player) {
         int sanity = player.getData(
             net.mcreator.mcanomalyarchives.init.McanomalyarchivesModAttachments.PLAYER_SANITY
         ).getSanity();
