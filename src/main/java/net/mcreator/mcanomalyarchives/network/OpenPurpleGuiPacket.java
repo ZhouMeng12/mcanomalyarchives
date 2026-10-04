@@ -5,7 +5,6 @@ import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.protocol.PacketFlow;
@@ -14,9 +13,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 
 import net.mcreator.mcanomalyarchives.McanomalyarchivesMod;
-import net.mcreator.mcanomalyarchives.client.screen.PurpleMonsterScreen;
-import net.mcreator.mcanomalyarchives.event.Phase5CameraHandler;
-import net.mcreator.mcanomalyarchives.event.PurpleTransitionClientHandler;
+import net.mcreator.mcanomalyarchives.client.screen.PurpleGuiClientHandler;
 
 @EventBusSubscriber
 public record OpenPurpleGuiPacket(int entityId, int phase, int purpleDogEntityId) implements CustomPacketPayload {
@@ -38,22 +35,18 @@ public record OpenPurpleGuiPacket(int entityId, int phase, int purpleDogEntityId
 		return TYPE;
 	}
 
+	/**
+	 * 客户端落地逻辑一律放 {@link PurpleGuiClientHandler}，这里只留一句静态调用。
+	 *
+	 * 【别把客户端代码搬回来】本类带 @EventBusSubscriber，专用服务器也会扫描并加载它。
+	 * 方法体里只要出现 Minecraft / new PurpleMonsterScreen(...)，字节码校验就会去解析
+	 * PurpleMonsterScreen 的父类 Screen，RuntimeDistCleaner 立刻判定 invalid dist
+	 * DEDICATED_SERVER，整个模组加载失败——运行时的 flow() 判断救不了（2026-10-05 实测）。
+	 */
 	public static void handleData(final OpenPurpleGuiPacket message, final IPayloadContext context) {
 		if (context.flow() == PacketFlow.CLIENTBOUND) {
-			context.enqueueWork(() -> {
-				Minecraft mc = Minecraft.getInstance();
-				if (message.phase == 5 && mc.player != null) {
-					// Phase 5: 先开始视角过渡，延迟显示UI
-					Phase5CameraHandler.startLockWithDelayedScreen(
-						mc.player.getUUID(), message.entityId(), message.phase(), message.purpleDogEntityId());
-				} else {
-					// 其他阶段：直接显示UI
-					mc.setScreen(new PurpleMonsterScreen(message.entityId(), message.phase(), message.purpleDogEntityId()));
-					if (mc.player != null) {
-						PurpleTransitionClientHandler.unlockPlayer(mc.player.getUUID());
-					}
-				}
-			});
+			context.enqueueWork(() -> PurpleGuiClientHandler.open(
+					message.entityId(), message.phase(), message.purpleDogEntityId()));
 		}
 	}
 

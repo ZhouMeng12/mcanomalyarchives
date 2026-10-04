@@ -867,6 +867,24 @@
       "glob": "*.java",
       "searchRoot": "src/main/java",
       "pattern": "red_stange_cloud|RED_STANGE_CLOUD|RedStangeCloud"
+    },
+    {
+      "id": "packet-no-client-classes",
+      "kind": "noMatch",
+      "why": "网络包类带 @EventBusSubscriber，专用服务器也会扫描并加载。方法体里一旦出现 net.minecraft.client.*（尤其是 new XxxScreen(...)），字节码校验会去解析它的父类 Screen，RuntimeDistCleaner 判定 invalid dist DEDICATED_SERVER，整个模组加载失败——运行时的 flow()==CLIENTBOUND 判断挡不住（2026-10-05 实测）。",
+      "fixHint": "把客户端逻辑挪到 client/ 包的处理类，包体只留一句静态调用（照 OpenPurpleGuiPacket → client/screen/PurpleGuiClientHandler 的写法）",
+      "glob": "*.java",
+      "searchRoot": "src/main/java/net/mcreator/mcanomalyarchives/network",
+      "pattern": "net\\.minecraft\\.client\\."
+    },
+    {
+      "id": "mod-ctor-client-init-guarded",
+      "kind": "noMatch",
+      "why": "McanomalyarchivesMod 构造器里初始化的 5 个客户端 handler 必须包在 FMLEnvironment.dist.isClient() 里。裸调用会让专用服务器在构造模组阶段就加载 net.minecraft.client.*（LocalPlayer 最先炸），整个模组加载失败、服务器起不来；单机同 JVM 是 CLIENT dist，所以平时完全看不出来。",
+      "fixHint": "给这几行套上 if (net.neoforged.fml.loading.FMLEnvironment.dist.isClient()) { ... }（MCreator 重生成后守卫会报这一条）",
+      "glob": "McanomalyarchivesMod.java",
+      "searchRoot": "src/main/java/net/mcreator/mcanomalyarchives",
+      "pattern": "(?m)^\\t{2}(AddictionClientHandler|SanityClientHandler|SanityMonitorHudOverlay|DialogueBubbleRenderer)\\.init\\(\\);|^\\t{2}net\\.mcreator\\.mcanomalyarchives\\.client\\.BlinkClientHandler\\.init\\(\\);"
     }
   ]
 }

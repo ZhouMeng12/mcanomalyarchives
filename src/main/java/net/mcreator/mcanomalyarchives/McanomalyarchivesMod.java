@@ -85,15 +85,25 @@ public class McanomalyarchivesMod {
 		SanityCommand.init();
 		PlayerJoinEventListener.init();
 		PoppyEdgeEventListener.init();
-		AddictionClientHandler.init();
+		// 客户端专用初始化：必须包在 dist 判断里。
+		// 这些 handler 一旦在专用服务器上被类加载，就会顺着 net.minecraft.client.* 一路拉下去，
+		// RuntimeDistCleaner 判定 invalid dist DEDICATED_SERVER，整个模组加载失败（2026-10-05 实测）。
+		// 注意：加运行时 if 判断本身不够——类体里出现 new XxxScreen(...) 会在字节码校验阶段就触发加载。
+		if (net.neoforged.fml.loading.FMLEnvironment.dist.isClient()) {
+			AddictionClientHandler.init();
+		}
 		GardenStructureListener.init();
 		// StrangeFishingRodLootHandler 已通过 @EventBusSubscriber 自动注册
 		SanityEventHandler.init();
 		SanityRecoveryHandler.init();
-		SanityClientHandler.init();
+		if (net.neoforged.fml.loading.FMLEnvironment.dist.isClient()) {
+			SanityClientHandler.init(); // 客户端专用，见上
+		}
 		PurpleDogPettingHandler.init();
-		SanityMonitorHudOverlay.init();
-		DialogueBubbleRenderer.init();
+		if (net.neoforged.fml.loading.FMLEnvironment.dist.isClient()) {
+			SanityMonitorHudOverlay.init(); // 客户端专用，见上
+			DialogueBubbleRenderer.init(); // 客户端专用，见上
+		}
 		PurpleMonsterTriggerHandler.init();
 		PurpleStalkerHandler.init();
 		StangeCloudSpawnHandler.init();
@@ -107,7 +117,9 @@ public class McanomalyarchivesMod {
 		net.mcreator.mcanomalyarchives.events.PinkSheepLuckyHandler.init();
 		net.mcreator.mcanomalyarchives.events.PinkSheepCalamityHandler.init();
 		net.mcreator.mcanomalyarchives.events.PinkSheepStructureSpawnHandler.init();
-		net.mcreator.mcanomalyarchives.client.BlinkClientHandler.init();
+		if (net.neoforged.fml.loading.FMLEnvironment.dist.isClient()) {
+			net.mcreator.mcanomalyarchives.client.BlinkClientHandler.init(); // 客户端专用，见上
+		}
 		net.mcreator.mcanomalyarchives.codex.CodexScanner.init(); // 见闻录：周期扫描解锁
 		net.mcreator.mcanomalyarchives.codex.CodexItemHandler.init(); // 见闻录：右键打开
 		net.mcreator.mcanomalyarchives.anomaly.nametag.NameTagHandler.init(); // 百变命名牌：右键实体 / 铁砧命名
