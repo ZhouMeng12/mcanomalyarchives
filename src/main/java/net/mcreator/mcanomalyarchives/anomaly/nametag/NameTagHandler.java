@@ -78,11 +78,22 @@ public final class NameTagHandler {
 		player.getCooldowns().addCooldown(stack.getItem(), NameTagCosts.USE_COOLDOWN_TICKS);
 	}
 
+	/** 拦下这次使用：取消事件、给冷却，并按需要弹一条提示语。 */
 	private static void deny(PlayerInteractEvent.EntityInteract event, ServerPlayer player, String messageKey, Object... args) {
+		denyQuietly(event, player);
+		NameTagNotifier.actionBar(player, messageKey, args);
+	}
+
+	/**
+	 * 拦下这次使用但**不给任何提示**。
+	 *
+	 * 作者要求去掉解释性提示（见 {@link NameTagNotifier}），所以"不可逆 / 对玩家无效"
+	 * 这两条只剩行为、没有文字：手上的牌不会被消耗，但照样进冷却。
+	 */
+	private static void denyQuietly(PlayerInteractEvent.EntityInteract event, ServerPlayer player) {
 		event.setCanceled(true);
 		event.setCancellationResult(InteractionResult.FAIL);
 		player.getCooldowns().addCooldown(event.getItemStack().getItem(), NameTagCosts.USE_COOLDOWN_TICKS);
-		NameTagNotifier.actionBar(player, messageKey, args);
 	}
 
 	// ==================== 右键实体 ====================
@@ -98,11 +109,11 @@ public final class NameTagHandler {
 		if (target instanceof LivingEntity living && NamedState.isNamed(living)) {
 			// 不可逆：普通命名牌换不回名字
 			if (held.is(Items.NAME_TAG)) {
-				deny(event, player, NameTagNotifier.LOCKED);
+				denyQuietly(event, player);
 				return;
 			}
 			if (isOurTag(held)) {
-				deny(event, player, NameTagNotifier.LOCKED);
+				denyQuietly(event, player);
 				return;
 			}
 			// 名字已经写死：原版产出（挤奶/剪毛/上鞍）改由"名字"决定
@@ -119,7 +130,7 @@ public final class NameTagHandler {
 			return;
 		}
 		if (!(target instanceof LivingEntity living) || target instanceof Player) {
-			deny(event, player, NameTagNotifier.NOT_FOR_PLAYER);
+			denyQuietly(event, player);
 			return;
 		}
 		if (isThisModsEntity(living)) {
@@ -167,9 +178,8 @@ public final class NameTagHandler {
 				player.setItemInHand(hand, filled);
 				level.playSound(null, living.blockPosition(), net.minecraft.sounds.SoundEvents.MOOSHROOM_SHEAR, net.minecraft.sounds.SoundSource.NEUTRAL, 1.0f, 1.0f);
 			}
+			// 名字所指的东西挤不出来（比如被命名成"鸡"的牛挤奶）——什么都不掉，也不提示
 			case NONE -> {
-				NameTagNotifier.actionBar(player, NameTagNotifier.NO_OUTPUT);
-				return;
 			}
 		}
 	}
@@ -180,13 +190,13 @@ public final class NameTagHandler {
 			case ERASE -> {
 				EntityNaming.erase(level, living);
 				consume(player, held);
-				NameTagNotifier.actionBar(player, NameTagNotifier.ERASED);
 			}
-			case EARTH, GARBAGE -> NameTagNotifier.actionBar(player, NameTagNotifier.PLANNED);
+			// 「地球 / 乱码」尚未实装：什么都不发生
+			case EARTH, GARBAGE -> {
+			}
 			case NONE -> {
 				ResolvedName resolved = NameResolver.resolve(raw, ResolvedName.Kind.ENTITY);
 				if (resolved == null) {
-					NameTagNotifier.actionBar(player, NameTagNotifier.UNKNOWN, raw);
 					return;
 				}
 				consume(player, held);
@@ -218,7 +228,6 @@ public final class NameTagHandler {
 						NamedTransformPacket.sendToWatchers(living);
 					}
 				}
-				NameTagNotifier.actionBar(player, NameTagNotifier.APPLIED, resolved.defaultDisplay());
 			}
 		}
 	}
@@ -253,11 +262,9 @@ public final class NameTagHandler {
 			}
 			raw = typed;
 		}
-		Player player = event.getPlayer();
 
 		if (NamedState.isNamed(left)) {
 			event.setCanceled(true);
-			NameTagNotifier.actionBar(player, NameTagNotifier.LOCKED);
 			return;
 		}
 
@@ -266,24 +273,21 @@ public final class NameTagHandler {
 			case ERASE, EARTH, GARBAGE -> {
 				// 物品侧的「无 / 地球 / 乱码」尚未实装（正片里乱码产物与 UO-002 同源，属于后续内容）
 				event.setCanceled(true);
-				NameTagNotifier.actionBar(player, NameTagNotifier.PLANNED);
 				return;
 			}
 			case NONE -> {
 				ResolvedName resolved = NameResolver.resolve(raw, ResolvedName.Kind.ITEM);
 				if (resolved == null) {
 					event.setCanceled(true);
-					NameTagNotifier.actionBar(player, NameTagNotifier.UNKNOWN, raw);
 					return;
 				}
 				// 名字得有"物品形态"才谈得上转换（水/岩浆/火这类没有物品形态的方块不行）
 				if (MaterialUnits.itemFormOf(resolved).isEmpty()) {
 					event.setCanceled(true);
-					NameTagNotifier.actionBar(player, NameTagNotifier.PLANNED);
 					return;
 				}
 				// 一律"完全转换"：本体换成名字所指的物品，外观由客户端画回源物品
-				output = convertOrUnstable(left, resolved, raw, player);
+				output = convertOrUnstable(left, resolved, raw);
 			}
 			default -> {
 				return;
@@ -306,7 +310,7 @@ public final class NameTagHandler {
 	 * 撑不住（质料不够）→ 正片木棍→钻石块那一幕：产物是个"不稳定"的东西，
 	 * 拿在手上没事，一放到地上/一用就炸，爆炸中心只留下等量转换的极小残渣。
 	 */
-	private static ItemStack convertOrUnstable(ItemStack left, ResolvedName resolved, String raw, Player player) {
+	private static ItemStack convertOrUnstable(ItemStack left, ResolvedName resolved, String raw) {
 		if (MaterialUnits.canHold(left, resolved)) {
 			return ItemNaming.convert(left, resolved, raw);
 		}
@@ -315,7 +319,6 @@ public final class NameTagHandler {
 		int need = MaterialUnits.requirement(resolved);
 		NamedState.markUnstable(unstable, resolved, raw, MaterialUnits.explosionPower(budget, need),
 				MaterialUnits.residueCount(budget, need));
-		NameTagNotifier.actionBar(player, NameTagNotifier.UNSTABLE);
 		return unstable;
 	}
 
@@ -362,7 +365,6 @@ public final class NameTagHandler {
 			level.addFreshEntity(new ItemEntity(level, x, y, z, drop));
 		}
 		consume(player, stack);
-		NameTagNotifier.actionBar(player, NameTagNotifier.EXPLODED);
 	}
 
 	/*
