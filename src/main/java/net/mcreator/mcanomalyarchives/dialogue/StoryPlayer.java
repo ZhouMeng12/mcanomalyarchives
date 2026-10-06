@@ -1,6 +1,7 @@
 package net.mcreator.mcanomalyarchives.dialogue;
 
-import net.mcreator.mcanomalyarchives.McanomalyarchivesMod;
+import net.mcreator.mcanomalyarchives.runtime.ServerTasks;
+import net.mcreator.mcanomalyarchives.runtime.ServerTaskQueue.TaskHandle;
 import net.mcreator.mcanomalyarchives.codex.AnomalyCodex;
 import net.mcreator.mcanomalyarchives.codex.CodexOriginStory;
 import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModItems;
@@ -16,6 +17,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 
 import javax.annotation.Nullable;
 
@@ -36,12 +41,15 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * 【工程层归属】dialogue 包（非 MCreator 生成区）。
  */
+@EventBusSubscriber(modid = "mcanomalyarchives")
 public final class StoryPlayer {
 
 	/** 等待中的选项：玩家 → (选项编号, 回调) */
 	private static final Map<UUID, Pending> PENDING = new ConcurrentHashMap<>();
 	/** 正在看剧情的玩家（防连点开第二遍） */
-	private static final java.util.Set<UUID> RUNNING = ConcurrentHashMap.newKeySet();
+	private static final Map<UUID, Object> RUNNING = new ConcurrentHashMap<>();
+	/** 每个故事最多保留一个继续/选项超时任务；停止立即取消。 */
+	private static final Map<UUID, TaskHandle> NEXT_STEP = new ConcurrentHashMap<>();
 	private static final AtomicInteger NEXT_CHOICE_ID = new AtomicInteger(1);
 	/** 选项超时（tick）：3 分钟没点就当放弃 */
 	private static final int CHOICE_TIMEOUT = 3600;
@@ -54,7 +62,7 @@ public final class StoryPlayer {
 
 	/** 这个玩家是不是正在过剧情 */
 	public static boolean isRunning(ServerPlayer player) {
-		return RUNNING.contains(player.getUUID());
+		return RUNNING.containsKey(player.getUUID());
 	}
 
 	/**
@@ -63,7 +71,7 @@ public final class StoryPlayer {
 	 * @return true = 已开始（false 表示同名剧情已在跑，或脚本不可用）
 	 */
 	public static boolean play(ServerPlayer player, Entity speaker, String storyName) {
-		if (RUNNING.contains(player.getUUID())) {
+		if (RUNNING.containsKey(player.getUUID())) {
 			return false;
 		}
 		Story story = StoryLoader.get(storyName);
@@ -71,22 +79,68 @@ public final class StoryPlayer {
 			DialogueLog.warn(storyName, "脚本不可用，剧情未启动");
 			return false;
 		}
-		RUNNING.add(player.getUUID());
-		run(player, speaker, storyName, story, story.nodes(Story.START_LABEL), 0);
+		Object session = new Object();
+		RUNNING.put(player.getUUID(), session);
+		run(player, speaker, storyName, story, story.nodes(Story.START_LABEL), 0, session);
 		return true;
 	}
 
 	/** 强制停止（玩家取消 / 超时） */
 	public static void stop(ServerPlayer player) {
-		PENDING.remove(player.getUUID());
-		RUNNING.remove(player.getUUID());
+		stop(player.getUUID());
+	}
+
+	private static void stop(UUID player) {
+		PENDING.remove(player);
+		RUNNING.remove(player);
+		cancelNext(player);
+	}
+
+	private static void cancelNext(UUID player) {
+		TaskHandle previous = NEXT_STEP.remove(player);
+		if (previous != null) {
+			previous.cancel();
+		}
+	}
+
+	private static void scheduleNext(ServerPlayer player, int delay, Runnable action) {
+		cancelNext(player.getUUID());
+		NEXT_STEP.put(player.getUUID(), ServerTasks.scheduleForPlayer(player, delay, action));
+	}
+
+	@SubscribeEvent
+	public static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+		stop(event.getEntity().getUUID());
+	}
+
+	@SubscribeEvent
+	public static void onClone(PlayerEvent.Clone event) {
+		stop(event.getEntity().getUUID());
+	}
+
+	@SubscribeEvent
+	public static void onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+		stop(event.getEntity().getUUID());
+	}
+
+	@SubscribeEvent
+	public static void onServerStopped(ServerStoppedEvent event) {
+		NEXT_STEP.values().forEach(TaskHandle::cancel);
+		NEXT_STEP.clear();
+		PENDING.clear();
+		RUNNING.clear();
 	}
 
 	// ===== 节点推进 =====
 
 	private static void run(ServerPlayer player, Entity speaker, String storyName, Story story,
-			List<Story.Node> nodes, int index) {
-		if (!player.isAlive()) {
+			List<Story.Node> nodes, int index, Object session) {
+		if (session == null || RUNNING.get(player.getUUID()) != session) {
+			return;
+		}
+		if (!player.isAlive() || player.isRemoved()
+				|| player.getServer().getPlayerList().getPlayer(player.getUUID()) != player
+				|| (speaker != null && (speaker.isRemoved() || speaker.level() != player.level()))) {
 			stop(player);
 			return;
 		}
@@ -100,13 +154,13 @@ public final class StoryPlayer {
 							: DialogueLine.text(node.text());
 					DialogueManager.speakTo(player, speaker, line);
 					// 这条播完再继续（+4 tick 让气泡衔接自然）
-					McanomalyarchivesMod.queueServerWork(Math.max(20, line.durationTicks()) + 4,
-							() -> run(player, speaker, storyName, story, nodes, next));
+					scheduleNext(player, Math.max(20, line.durationTicks()) + 4,
+							() -> run(player, speaker, storyName, story, nodes, next, session));
 					return;
 				}
 				case WAIT -> {
-					McanomalyarchivesMod.queueServerWork(node.ticks(),
-							() -> run(player, speaker, storyName, story, nodes, next));
+					scheduleNext(player, node.ticks(),
+							() -> run(player, speaker, storyName, story, nodes, next, session));
 					return;
 				}
 				case JUMP -> {
@@ -116,7 +170,7 @@ public final class StoryPlayer {
 						stop(player);
 						return;
 					}
-					run(player, speaker, storyName, story, target, 0);
+					run(player, speaker, storyName, story, target, 0, session);
 					return;
 				}
 				case CHOICE -> {
@@ -145,7 +199,7 @@ public final class StoryPlayer {
 		PENDING.put(player.getUUID(), new Pending(id, node.options(), storyName, speaker));
 		PacketDistributor.sendToPlayer(player,
 				DialogueChoicePacket.of(id, node.prompt(), node.options().stream().map(Story.Option::text).toList()));
-		McanomalyarchivesMod.queueServerWork(CHOICE_TIMEOUT, () -> {
+		scheduleNext(player, CHOICE_TIMEOUT, () -> {
 			Pending pending = PENDING.get(player.getUUID());
 			if (pending != null && pending.choiceId() == id) {
 				DialogueLog.info("选项超时，剧情中止：" + storyName);
@@ -161,13 +215,19 @@ public final class StoryPlayer {
 			return; // 超时或重复点击
 		}
 		PENDING.remove(player.getUUID());
+		cancelNext(player.getUUID());
 		if (index < 0 || index >= pending.options().size()) {
 			stop(player); // 取消
 			return;
 		}
 		Story.Option chosen = pending.options().get(index);
 		Story story = StoryLoader.get(pending.storyName());
-		run(player, pending.speaker(), pending.storyName(), story, story.nodes(chosen.target()), 0);
+		if (story == null || !story.isUsable()) {
+			stop(player);
+			return;
+		}
+		run(player, pending.speaker(), pending.storyName(), story, story.nodes(chosen.target()), 0,
+				RUNNING.get(player.getUUID()));
 	}
 
 	// ===== 动作 =====

@@ -333,10 +333,12 @@ public class StrangeFishingRodLootHandler {
 		player.addEffect(new MobEffectInstance(
 				MobEffects.MOVEMENT_SLOWDOWN, 5 * 20, 4));
 
-		net.mcreator.mcanomalyarchives.McanomalyarchivesMod.queueServerWork(5 * 20, () -> {
-			DamageSource brainDamage = getBrainDamageSource(player.level());
-			forceKillPlayer(player, brainDamage);
-		});
+		if (player instanceof ServerPlayer serverPlayer) {
+			net.mcreator.mcanomalyarchives.runtime.ServerTasks.scheduleForPlayer(serverPlayer, 5 * 20, () -> {
+				DamageSource brainDamage = getBrainDamageSource(player.level());
+				forceKillPlayer(player, brainDamage);
+			});
+		}
 	}
 
 	private static void triggerCrash(ServerPlayer player) {

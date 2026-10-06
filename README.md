@@ -2,7 +2,7 @@
 
 一个基于 MCreator 开发的 **Minecraft 1.21.1 / NeoForge** 恐怖·诡异题材同人模组。
 
-> 版本：1.1.9 ｜ 作者：一只小恐龙 ｜ 内容灵感来源：B站 up 主 SvenTheOrangeBoy ｜ 许可证：[GPLv3](LICENSE)
+> 版本：1.1.9.1 ｜ 作者：一只小恐龙 ｜ 内容灵感来源：B站 up 主 SvenTheOrangeBoy ｜ 许可证：[GPLv3](LICENSE)
 
 ## 依赖
 
@@ -72,13 +72,18 @@
 - 五阶段剧情演出（对话/变身/抚摸/同化）；
 - 低理智（≤15）或低血量（≤30%）且静止 60 秒 → 自然触发；
 - 同化完成后 **紫怪** 会随机在**树后/窗外**出现；
+- 表演流程由服务端会话管理；阶段/演员/归属不符的请求无效，领奖只结算一次；
+- 退出、死亡、换维度或远离演员（16 格）会中止自己的会话，不删除其他玩家的表演实体。
 
 ### 怪树（StrangeTree / UO-011）
 - **钻地**：在怪树附近砍**8 棵完整树**（连通原木簇计棵，一棵树只算 1 棵）触发钻地——清树、翻土、钻地动画 + 地震，3 秒后埋入地下（实体保持存在，可用发光效果观察地底移动）；
-- **埋伏-偷袭链**：钻地后锁定砍树玩家，地底追踪（**持续屏幕震颤**）→ 到达后埋伏（小幅震颤）→ 玩家再砍 1 棵 → 从玩家**背后/侧面视野盲区的泥土**钻出（保底 3 格）→ **无视护甲一击必杀**；
+- **埋伏-偷袭链**：钻地后的首次砍树绑定玩家，地底追踪（**持续屏幕震颤**）→ 到达后埋伏（小幅震颤）→ 玩家再砍原木 → 从玩家**背后/侧面视野盲区的泥土**钻出（保底 4 格）→ **无视护甲一击必杀**；
 - **追杀模式**：可钻出泥土距玩家 >5 格时，树反复夹击（每 1.5 秒一轮），玩家进入 5 格内被秒杀；**种下树苗立即停止追杀**；
 - **补种免疫**：砍树后 10 秒内补种树苗 → 计数清零；累计补 3 棵 → 树彻底放弃本次袭击；
-- **迁居**：玩家在树旁久留（8 格内 ≥90 秒）、树旁发生爆炸（16 格内）、或 16 格内 5 秒破坏 ≥8 个方块 → 树钻地**换位置**（20~40 格外重新扎根，只换位置不攻击）；
+- **迁居**：玩家在树旁久留（4 格内 ≥45 秒）、树旁发生爆炸（16 格内）、或 16 格内 5 秒破坏 ≥10 个方块 → 树钻地**换位置**（20~40 格外重新扎根，只换位置不攻击）；这里同步的是现有代码参数，不是本轮改数值；
+- **恢复**：树身和原基座随实体保存；卸载/重载后取消未完成袭击、安全恢复站立，只填回空气位置。旧版已经丢失的快照不能凭空还原；
+- **恢复写入安全**：高度/区块完整预检、写入确认；迁居部分失败先撤回目的地再恢复原树。
+  journal 当前为版本2（兼容旧版本1），损坏的方块状态在改写前隔离并保留；
 - 树叶被破坏后瞬间再生；树干/实体免疫几乎所有伤害（物理抗性≈基岩）；
 
 ### 安布拉（Anbula）
@@ -87,6 +92,18 @@
 ### 其他
 - 诡异钓竿；
 - NPC：斯万/大卫/伊芙琳/波特（送礼、打招呼对话气泡、蹲下右键状态控制）；
+
+## 配置归属
+
+- 客户端视觉偏好：`config/mcanomalyarchives-client.toml` 的
+  `comfort.screenShakeIntensity`、`comfort.blinkDarkness`。
+- 服务端世界规则：`config/mcanomalyarchives-server.toml` 的
+  `world.meteorTerrainDamage`、`world.blackCloudTerrainDamage`。
+  当前世界的 `serverconfig/mcanomalyarchives-server.toml` 可覆盖全局默认。
+- 首次本地升级可从旧客户端地形设置迁移，原文件先备份；已有服务端配置不会被覆盖，
+  远程客户端不能改变服务器破坏规则。黑云仍同时遵守 `mobGriefing`。
+- 当前 NightConfig 版本使用相对世界覆盖路径时，自动修正配置可能触发原子写入失败；
+  建议使用独立绝对世界存放根（`--universe`），详情见 `architecture/ROUND-4.md`。
 
 ## 下载 / 安装
 
@@ -110,12 +127,16 @@
 - 工作区由 **MCreator** 创建。依赖仓库：NeoForge、GeckoLib（见 `settings.gradle`）。
 - 模组版本号在 `src/main/resources/META-INF/neoforge.mods.toml`（`build.gradle` 里的 `version` 只决定产物文件名）。
 - **MCreator 重新生成代码后请跑一次守卫脚本**，它会校验注册表、语言词条、mixin 注册、
-  名称索引等 40 条规则有没有被覆盖掉：
+  名称索引、服务器生命周期、紫怪权限、怪树恢复、配置与测试接线等 115 条规则有没有被覆盖掉：
   ```powershell
   pwsh tools/mcreator-guard/guard.ps1 check    # 只检查（apply / snapshot / status 见脚本注释）
   ```
-- 手写机制的纯逻辑自检在 `tools/nametag/`（名称解析表、转化时长、掉落换算、产物内容等），
-  都是不需要启动游戏就能跑的 Python 脚本。
+- 服务器任务、理智、紫怪、怪树、实际配置迁移与命名牌时长回归在 `src/test/java/`，
+  运行 `./gradlew test`；四轮重构记录在 `architecture/ROUND-1.md`～`ROUND-4.md`，
+  PR 自检问题修复与负向回归见 `architecture/PR-FIXES.md`。
+- 紫怪协议已改为单向注册的 `purple-story-2`；客户端和服务器必须使用同一轮构建，不能混用旧版本。
+- `tools/nametag/test_transform.py [--offline]` 调用真实 Java 时长测试，不再复制旧公式；
+  其他 Python 数据/静态检查不等于游戏内验证，计算器也不代替回归测试。
 - 发布相关的 GitHub 操作用 `tools/github/gh.ps1`（建 Release、看 Release 列表等）：
   它会借用 git 凭据管理器里已存的凭据，不需要另外登录 gh。例如
   ```powershell
@@ -126,7 +147,7 @@
 
 ```
 src/main/java/net/mcreator/mcanomalyarchives/
-├── anomaly/     手写的异常机制（nametag 百变命名牌 / pinksheep 幸运粉羊）
+├── anomaly/     手写异常机制（nametag / pinksheep / cloud / purple / strangetree）
 ├── block/       方块（虞美人/云系列/传送门/怪树树干树叶等）
 ├── client/      客户端渲染（HUD/气泡/灰白贴图/检测仪/屏幕震颤/命名转化表现）
 ├── clouding/    云化系统
@@ -140,7 +161,7 @@ src/main/java/net/mcreator/mcanomalyarchives/
 ├── entity/      实体（安布拉/紫怪/紫狗/NPC/伪云/怪树/粉羊）+ ai 子包
 ├── entity/ai/   自定义 AI（安布拉近战/远程/主人复仇等）
 ├── event/       服务端事件（理智/云化/紫怪触发/窥视者/伪云生成）
-├── events/      怪树钻地-偷袭-迁居等事件
+├── events/      玩法事件接入及怪树结构补实体（怪树状态流程已移至 anomaly/strangetree）
 ├── fluid/       自定义流体
 ├── init/        MCreator 生成的注册表（会被再生成）
 ├── item/        物品（紫怪触手/诡异钓竿/百变命名牌/见闻录等）
@@ -148,13 +169,14 @@ src/main/java/net/mcreator/mcanomalyarchives/
 ├── network/     自定义网络包（理智同步/震颤/对话气泡/命名转化同步等）
 ├── potion/      药水效果（上瘾/悲伤/云化）
 ├── procedures/  MCreator 生成的过程
-├── sanity/      理智系统（PlayerSanity 持久化）
+├── runtime/     手写服务器会话与可取消延迟任务
+├── sanity/      理智数据与会话内同步（周期合并、登录/重生立即同步）
 └── world/       维度/传送门
 ```
 
 > 工程上分两区：**MCreator 生成区**（`entity/` `init/` `item/` `client/renderer/` `resources/` `lang/` 等，
 > 会被 MCreator 重新生成覆盖）与**手写区**（`anomaly/` `codex/` `dialogue/` `mixin/` `network/` `config/` `tools/`）。
-> 手写逻辑一律放在生成区之外，并配 `tools/mcreator-guard/` 守卫脚本（40 条规则）在 MCreator 重新生成后校验完整性。
+> 手写逻辑一律放在生成区之外，并配 `tools/mcreator-guard/` 守卫脚本（115 条规则）在 MCreator 重新生成后校验完整性。
 
 ## 已知事项
 

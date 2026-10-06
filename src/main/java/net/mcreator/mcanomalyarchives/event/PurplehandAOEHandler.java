@@ -10,7 +10,9 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.phys.AABB;
 
-import net.mcreator.mcanomalyarchives.McanomalyarchivesMod;
+import net.mcreator.mcanomalyarchives.runtime.ServerTasks;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModItems;
 
 import java.util.List;
@@ -35,9 +37,19 @@ public class PurplehandAOEHandler {
 
 		if (swinging && !prev) {
 			if (player.getMainHandItem().getItem() == McanomalyarchivesModItems.PURPLEHAND.get()) {
-				McanomalyarchivesMod.queueServerWork(7, () -> triggerAOE(serverPlayer));
+				ServerTasks.scheduleForPlayer(serverPlayer, 7, () -> triggerAOE(serverPlayer));
 			}
 		}
+	}
+
+	@SubscribeEvent
+	public static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+		prevSwinging.remove(event.getEntity().getUUID());
+	}
+
+	@SubscribeEvent
+	public static void onServerStopped(ServerStoppedEvent event) {
+		prevSwinging.clear();
 	}
 
 	private static void triggerAOE(ServerPlayer attacker) {

@@ -26,6 +26,10 @@ public class PurpleDogPettingClientHandler {
 	private static final float WALK_SPEED = 0.1f;
 	private static final int ANIMATION_TICKS = 16; // 0.8s @ 20tps
 
+	public static void clear() {
+		PETTING_STATES.clear();
+	}
+
 	public static void startPetting(int purpleEntityId, int dogEntityId, double startX, double startY, double startZ) {
 		Minecraft mc = Minecraft.getInstance();
 		if (mc.player == null) return;
@@ -53,9 +57,7 @@ public class PurpleDogPettingClientHandler {
 
 		Entity dogEntity = mc.level.getEntity(state.dogEntityId);
 		if (dogEntity == null) {
-			PacketDistributor.sendToServer(
-				new PettingCompletePacket(state.purpleEntityId, state.dogEntityId));
-			PETTING_STATES.remove(player.getUUID());
+			// 追踪包尚未到达时等待；真正丢失演员由服务端结束会话，不能把“看不到狗”当作完成。
 			return;
 		}
 
@@ -130,10 +132,11 @@ public class PurpleDogPettingClientHandler {
 				break;
 
 			case 5:
-				// Phase 5: 通知服务端清理实体
-				PacketDistributor.sendToServer(
-					new PettingCompletePacket(state.purpleEntityId, state.dogEntityId));
-				PETTING_STATES.remove(player.getUUID());
+				// 等服务端确认再退出。低 TPS 时客户端动画可能先完成，按间隔重试而不提前结算。
+				if (state.tick == 1 || state.tick % 10 == 0) {
+					PacketDistributor.sendToServer(
+						new PettingCompletePacket(state.purpleEntityId, state.dogEntityId));
+				}
 				break;
 		}
 	}

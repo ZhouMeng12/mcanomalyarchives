@@ -14,7 +14,6 @@ import net.mcreator.mcanomalyarchives.event.Phase5CameraHandler;
 import net.mcreator.mcanomalyarchives.network.PetPurpleDogPacket;
 import net.mcreator.mcanomalyarchives.network.RemovePurpleMonsterPacket;
 import net.mcreator.mcanomalyarchives.network.AdvanceToPhase4Packet;
-import net.mcreator.mcanomalyarchives.network.AdvanceToPhase2Packet;
 import net.mcreator.mcanomalyarchives.network.GivePurplehandPacket;
 import net.mcreator.mcanomalyarchives.event.PurpleMonsterPhase1ClientHandler;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
@@ -102,6 +101,7 @@ public class PurpleMonsterScreen extends Screen {
 	private final int phase;
 	private final int purpleEntityId;
 	private final int purpleDogEntityId;
+	private boolean endingRequested;
 
 	private float scale;
 	private int xOffset;
@@ -709,8 +709,8 @@ public class PurpleMonsterScreen extends Screen {
 			// 给玩家紫怪触手
 			this.minecraft.player.connection.send(
 				new ServerboundCustomPayloadPacket(new GivePurplehandPacket()));
+			endingRequested = true; // 领奖同时由服务端结算/清理，不再另发一组删除请求。
 		}
-		this.removePurpleEntity(false);
 		this.onClose();
 	}
 
@@ -729,7 +729,8 @@ public class PurpleMonsterScreen extends Screen {
 	}
 
 	private void removePurpleEntity(boolean kill, boolean killPlayer) {
-		if (this.minecraft != null && this.minecraft.player != null) {
+		if (!endingRequested && this.minecraft != null && this.minecraft.player != null) {
+			endingRequested = true;
 			this.minecraft.player.connection.send(
 				new ServerboundCustomPayloadPacket(new RemovePurpleMonsterPacket(this.purpleEntityId, kill, this.purpleDogEntityId, killPlayer)));
 		}

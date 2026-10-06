@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-import net.mcreator.mcanomalyarchives.config.ComfortConfig;
+import net.mcreator.mcanomalyarchives.config.ServerGameplayConfig;
 import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModBlocks;
 
 /**
@@ -75,7 +75,7 @@ public class BlackStangeCloudEntity extends SmallStangeCloudEntity {
 		}
 		// ② 两道闸门：任一关闭就只消散、不吞方块（与末影人一样尊重 mobGriefing）
 		if (serverLevel.getGameRules().getBoolean(net.minecraft.world.level.GameRules.RULE_MOBGRIEFING)
-				&& ComfortConfig.blackCloudTerrainDamage()) {
+				&& ServerGameplayConfig.blackCloudTerrainDamage()) {
 			eraseAround(serverLevel);
 		}
 		// ③ 吞完自己消散

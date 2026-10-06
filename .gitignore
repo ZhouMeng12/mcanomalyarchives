@@ -98,3 +98,10 @@ Thumbs.db
 # ===== 参考用的 NeoForge/原版 jar（25MB 二进制，不入仓库）=====
 /1.21.1-NeoForge_21.1.248.jar
 *.jar
+
+# Gradle Wrapper 是构建入口，不属于参考 jar / 构建产物。
+!/gradle/wrapper/gradle-wrapper.jar
+
+# Python 离线检查的缓存（保留脚本，不提交解释器生成的数据）。
+__pycache__/
+*.py[cod]

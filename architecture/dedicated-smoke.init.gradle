@@ -1,0 +1,21 @@
+// 仅显式 -I 调用时启用；隔离加载检查，不修改日常 runServer，不接受 EULA。
+gradle.beforeProject { project ->
+    project.plugins.withId('net.neoforged.moddev') {
+        project.extensions.getByName('neoForge').runs.configureEach { run ->
+            if (run.name == 'server') {
+                def directory = project.findProperty('smokeGameDir') ?: 'run/purple-smoke'
+                if (!(directory in ['run/purple-smoke', 'run/tree-smoke', 'run/config-smoke'])) {
+                    throw new GradleException('Smoke tests must use an isolated run/*-smoke directory')
+                }
+                run.gameDirectory.set(project.layout.projectDirectory.dir(directory))
+                run.programArgument('--nogui')
+                run.programArgument('--port')
+                run.programArgument('0')
+                // NightConfig 3.8.2 对相对覆盖文件的原子写入会重复拼接目录，测试世界使用绝对根。
+                run.programArgument('--universe')
+                // Minecraft 不允许 universe 与当前游戏目录相同，使用隔离目录下独立的 worlds 根。
+                run.programArgument(project.file(directory + '/worlds').absolutePath.replace('\\', '/'))
+            }
+        }
+    }
+}

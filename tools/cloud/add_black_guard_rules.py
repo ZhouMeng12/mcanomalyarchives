@@ -15,7 +15,7 @@ os.chdir(ROOT)
 ENTITY = "src/main/java/net/mcreator/mcanomalyarchives/entity/BlackStangeCloudEntity.java"
 RENDERER = "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/BlackStangeCloudRenderer.java"
 EMITTER = "src/main/java/net/mcreator/mcanomalyarchives/anomaly/cloud/SmallCloudEmitter.java"
-CONFIG = "src/main/java/net/mcreator/mcanomalyarchives/config/ComfortConfig.java"
+CONFIG = "src/main/java/net/mcreator/mcanomalyarchives/config/ServerGameplayConfig.java"
 PASS_MIXIN = "src/main/java/net/mcreator/mcanomalyarchives/mixin/CloudPortalPassMixin.java"
 
 P = "tools/mcreator-guard/manifest.json"
@@ -68,7 +68,7 @@ NEW = [
         "fixHint": "从 git 恢复 entity/BlackStangeCloudEntity.java（数值推导见 docs/design/uo-001-black-cloud.md）",
         "mustContain": ["ERASE_RADIUS = 6.0D", "ERASE_MIN = 12", "ERASE_MAX = 24",
                         "level.destroyBlock(candidates.get(i), false)", "RULE_MOBGRIEFING",
-                        "ComfortConfig.blackCloudTerrainDamage()", "this.discard();",
+                        "ServerGameplayConfig.blackCloudTerrainDamage()", "this.discard();",
                         "protected void tickCloudEffects()", "isProtected("],
     },
     {

@@ -1,9 +1,6 @@
 package net.mcreator.mcanomalyarchives.network;
 
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.bus.api.SubscribeEvent;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -15,7 +12,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.mcreator.mcanomalyarchives.McanomalyarchivesMod;
 import net.mcreator.mcanomalyarchives.event.PurpleDogPettingClientHandler;
 
-@EventBusSubscriber
 public record StartPettingClientPacket(int purpleEntityId, int dogEntityId, double startX, double startY, double startZ) implements CustomPacketPayload {
 	public static final Type<StartPettingClientPacket> TYPE =
 		new Type<>(ResourceLocation.fromNamespaceAndPath(McanomalyarchivesMod.MODID, "start_petting_client"));
@@ -49,8 +45,4 @@ public record StartPettingClientPacket(int purpleEntityId, int dogEntityId, doub
 		}
 	}
 
-	@SubscribeEvent
-	public static void registerMessage(FMLCommonSetupEvent event) {
-		McanomalyarchivesMod.addNetworkMessage(TYPE, STREAM_CODEC, StartPettingClientPacket::handleData);
-	}
 }

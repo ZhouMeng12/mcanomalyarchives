@@ -2,6 +2,7 @@ package net.mcreator.mcanomalyarchives.client;
 
 import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RenderGuiEvent;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -37,6 +38,11 @@ public class SanityClientHandler {
 
     public static void updateCachedSanity(int sanity) {
         cachedSanity = sanity;
+    }
+
+    @SubscribeEvent
+    public void onLogout(ClientPlayerNetworkEvent.LoggingOut event) {
+        cachedSanity = PlayerSanity.MAX_SANITY;
     }
 
     @SubscribeEvent

@@ -4,10 +4,9 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 
-import net.mcreator.mcanomalyarchives.config.ComfortConfig;
 
 /**
- * 客户端专属：把舒适度配置挂到 NeoForge 自动生成的设置界面上
+ * 客户端专属：把该模组的客户端偏好与服务端规则挂到 NeoForge 自动配置界面上
  * （游戏内：模组列表 → MC诡异见闻录 → Config）。
  *
  * 单独一个类是为了把 {@link ConfigurationScreen}（客户端专属类）挡在 dist 判断之后，

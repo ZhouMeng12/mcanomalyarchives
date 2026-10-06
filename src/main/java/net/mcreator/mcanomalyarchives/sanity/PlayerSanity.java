@@ -4,9 +4,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ExtraCodecs;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.mcreator.mcanomalyarchives.network.SyncPlayerSanityPacket;
-import net.mcreator.mcanomalyarchives.sanity.DirtyPlayerSanityTracker;
 
 public class PlayerSanity {
     public static final int MAX_SANITY = 100;
@@ -57,13 +54,10 @@ public class PlayerSanity {
 
     /**
      * 立刻发。给"客户端状态刚被重置、不能等"的两个时机用：
-     * 进服（PlayerLoggedInEvent）与死亡重生（PlayerEvent.Clone）。
+     * 进服（PlayerLoggedInEvent）与死亡重生完成（PlayerRespawnEvent）。
      * 这两处要是也走批处理，客户端会先按默认的满值画 250ms 的 HUD。
      */
     public static void syncToClientNow(ServerPlayer player) {
-        int sanity = player.getData(
-            net.mcreator.mcanomalyarchives.init.McanomalyarchivesModAttachments.PLAYER_SANITY
-        ).getSanity();
-        PacketDistributor.sendToPlayer(player, new SyncPlayerSanityPacket(sanity));
+        DirtyPlayerSanityTracker.syncNow(player);
     }
 }
