@@ -3,15 +3,13 @@ package net.mcreator.mcanomalyarchives.anomaly.nametag;
 /**
  * 命名后的**转化时间轴**。
  *
- * 【作者定的机制】被命名的生物会**慢慢变成**对应的生物：
- * 行为立刻接管（正片：牛被命名成"鸡"后马上不能挤奶、马上开始下蛋），
- * 外形与本体随时间推进，走完 100% 时原地替换成目标。
+ * 生物变方块是保留渐变过程的一支；生物/物品身份立即接管，另使用此时钟计算寿命。
  *
- * 【时长公式】{@code clamp(名字字符数 × 200 + 质料差额 × 4, 30秒, 5分钟)}
+ * 【时长公式】{@code clamp(名字字符数 × 100 + 质料差额, 300, 2400)} tick（15 秒～2 分钟）。
  * ——越长、越"重"的名字越慢，天然形成压力：
  * <ul>
- *   <li>牛 →「鸡」：5 字、质料盈余 → 1000 tick ≈ 50 秒</li>
- *   <li>羊 →「金块」：2 字、质料亏 1100 → 4800 tick ≈ 4 分钟</li>
+ *   <li>5 字、质料盈余 → 500 tick ≈ 25 秒</li>
+ *   <li>羊 →「金块」：2 字、质料亏 1100 → 1300 tick ≈ 65 秒</li>
  * </ul>
  *
  * 【阶段】0 / 25 / 50 / 75 / 100%，每跨过一个阶段派发一次表现（抽搐、粒子、惨叫、体型推进）。
@@ -37,15 +35,16 @@ public final class NameTagTransform {
 
 	public static int durationTicks(String name, int budget, int need) {
 		int chars = name == null ? 1 : Math.max(1, name.codePointCount(0, name.length()));
-		int deficit = Math.max(0, need - budget);
-		return NameTagCosts.clamp(chars * TICKS_PER_CHAR + deficit * TICKS_PER_DEFICIT, MIN_TICKS, MAX_TICKS);
+		long deficit = Math.max(0L, (long) need - budget);
+		long ticks = (long) chars * TICKS_PER_CHAR + deficit * TICKS_PER_DEFICIT;
+		return (int) Math.clamp(ticks, MIN_TICKS, MAX_TICKS);
 	}
 
 	public static float progress(long gameTime, long startTick, int durationTicks) {
 		if (durationTicks <= 0) {
 			return 1.0f;
 		}
-		float p = (float) (gameTime - startTick) / (float) durationTicks;
+		float p = (float) (((double) gameTime - startTick) / durationTicks);
 		return Math.max(0.0f, Math.min(1.0f, p));
 	}
 

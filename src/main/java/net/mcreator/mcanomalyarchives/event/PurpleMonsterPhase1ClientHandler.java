@@ -26,10 +26,14 @@ public class PurpleMonsterPhase1ClientHandler {
 	private static final int ANIM_TICKS = 10; // model.hand 动画 0.5s = 10 ticks
 	private static final int DELAY_TICKS = 20; // 纹理切换后延迟 1s 再开 GUI
 
+	public static void clear() {
+		TRANSITIONS.clear();
+	}
+
 	@SubscribeEvent
 	public static void onClientLogout(ClientPlayerNetworkEvent.LoggingOut event) {
 		// 清理所有按玩家缓存的客户端状态，避免跨世界/跨登录后内存泄漏
-		TRANSITIONS.clear();
+		clear();
 		McanomalyarchivesModPlayerAnimationAPI.active_animations.clear();
 	}
 

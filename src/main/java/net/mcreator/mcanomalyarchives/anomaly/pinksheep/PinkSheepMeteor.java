@@ -380,9 +380,9 @@ public final class PinkSheepMeteor {
 		}
 
 		// 3) 大范围爆炸：半径 12 格，破坏地形（砸出陨石坑）
-		//    舒适度配置可关掉地形破坏（只保留伤害与演出），免得把玩家建筑砸了
+		//    服务端世界规则可关掉地形破坏（只保留伤害与演出），不受客户端舒适度影响
 		ServerPlayer victim = m.victim;
-		Level.ExplosionInteraction interaction = net.mcreator.mcanomalyarchives.config.ComfortConfig
+		Level.ExplosionInteraction interaction = net.mcreator.mcanomalyarchives.config.ServerGameplayConfig
 				.meteorTerrainDamage() ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.NONE;
 		if (victim != null && victim.isAlive())
 			victim.invulnerableTime = 0;                       // 别让无敌帧吃掉爆炸伤害

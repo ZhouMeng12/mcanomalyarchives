@@ -149,24 +149,28 @@ python tools/structure-fix/fix_structure_nbt.py verify          # 校验引用�
 守卫里的 `structure-nbt-namespace` 项会在每次 `check` 时解压这些 `.nbt` 反查旧命名空间，
 所以这个问题不会再悄悄溜进构建产物。
 
-## 舒适度配置（游戏体验）
+## 客户端舒适度与服务端世界规则
 
-`config/ComfortConfig.java`（非生成区）+ 在模组构造器里注册：
+两个手写 spec 在模组构造期无参注册，服务端规则与迁移先于客户端配置：
 
 | 配置项 | 默认 | 作用 |
 |---|---|---|
 | `comfort.screenShakeIntensity` | 1.0 | 屏幕震动强度倍率（0 关闭 / 上限 2.0）。影响怪树地震、伪云掠过、粉羊陨石下落震颤与落地大震 |
 | `comfort.blinkDarkness` | 1.0 | 粉羊凝视触发眨眼的黑屏浓度（0 = 不黑屏） |
-| `comfort.meteorTerrainDamage` | true | 陨石是否破坏地形（关掉只保留伤害与演出，不炸建筑） |
+| `world.meteorTerrainDamage` | true | 服务端陨石是否破坏地形（关掉只保留伤害与演出） |
+| `world.blackCloudTerrainDamage` | true | 服务端黑云是否吞方块，同时与 mobGriefing 取与 |
 
 改法（二选一）：
 - 游戏内：模组列表 → MC诡异见闻录 → **Config**（NeoForge 自动界面）
-- 文件：`config/mcanomalyarchives-client.toml`（客户端本地，不影响服务器）
+- 客户端文件：`config/mcanomalyarchives-client.toml`（仅震动、眨眼）
+- 服务端默认：`config/mcanomalyarchives-server.toml`
+- 世界覆盖：`<世界>/serverconfig/mcanomalyarchives-server.toml`
 
-> 注册配置必须在**模组构造期**，而 NeoForge 21.1 已移除 `ModLoadingContext`，
-> 所以构造器必须注入 `ModContainer`：`McanomalyarchivesMod(IEventBus, ModContainer)`。
-> 这是生成区里的签名，MCreator 重生成会改回单参版本（配置会静默失效），
-> 因此清单里加了 `mod-constructor-modcontainer` 盯着它。
+> `ComfortConfig.register()` 与 `ServerGameplayConfig.register()` 从 ModList 取得容器，
+> 不依赖 MCreator 构造器参数。首次本地迁移备份旧文件，不覆盖已有服务端默认，
+> 专服不读取客户端偏好。NeoForge 21.1.190 的 SERVER 使用全局默认加世界覆盖，
+> 不是自动为每个世界生成一份；具体迁移与相对路径原子写入注意事项见
+> `architecture/ROUND-4.md`、`architecture/adr/0004-server-gameplay-config.md`。
 
 ## 见闻录（图鉴）系统
 

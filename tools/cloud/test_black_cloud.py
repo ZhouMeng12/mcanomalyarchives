@@ -5,7 +5,7 @@
   entity/BlackStangeCloudEntity.java（继承小伪云，覆盖 tickCloudEffects）
   client/renderer/BlackStangeCloudRenderer.java
   anomaly/cloud/SmallCloudEmitter.java（1/6 概率吐黑的）
-  config/ComfortConfig.java（blackCloudTerrainDamage 开关）
+  config/ServerGameplayConfig.java（服务器 blackCloudTerrainDamage 开关）
 """
 import io
 import json
@@ -40,7 +40,7 @@ def check(label, got, want, tol=0):
 ENTITY = "src/main/java/net/mcreator/mcanomalyarchives/entity/BlackStangeCloudEntity.java"
 RENDERER = "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/BlackStangeCloudRenderer.java"
 EMITTER = "src/main/java/net/mcreator/mcanomalyarchives/anomaly/cloud/SmallCloudEmitter.java"
-CONFIG = "src/main/java/net/mcreator/mcanomalyarchives/config/ComfortConfig.java"
+CONFIG = "src/main/java/net/mcreator/mcanomalyarchives/config/ServerGameplayConfig.java"
 TEX = "src/main/resources/assets/mcanomalyarchives/textures/entities/cloud_black.png"
 
 black = read(ENTITY)
@@ -119,9 +119,11 @@ check_true("免疫名单齐全（基岩/屏障/命令方块/末地门/云室门/
            all(k in black for k in ("Blocks.BEDROCK", "Blocks.BARRIER", "COMMAND_BLOCK", "Blocks.END_PORTAL",
                                     "CLOUD_DEM_PORTAL", "STRANGETREELOG", "STRANGETREELEAVES")))
 check_true("两道闸门：mobGriefing + 配置项",
-           "RULE_MOBGRIEFING" in black and "ComfortConfig.blackCloudTerrainDamage()" in black)
+           "RULE_MOBGRIEFING" in black and "ServerGameplayConfig.blackCloudTerrainDamage()" in black)
 check_true("配置项确实定义了", "BLACK_CLOUD_TERRAIN_DAMAGE" in read(CONFIG)
            and "public static boolean blackCloudTerrainDamage()" in read(CONFIG))
+check_true("配置归服务端，不再使用客户端舒适度", "ModConfig.Type.SERVER" in read(CONFIG)
+           and "ComfortConfig.blackCloudTerrainDamage()" not in black)
 
 print()
 print("=" * 72)

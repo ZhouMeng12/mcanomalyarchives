@@ -2,10 +2,10 @@
 """算"实体变成方块"要多久 —— 把 Java 侧的公式与质料表读出来算，避免手抄漂移。
 
 Java 实现：
-  NameTagTransform.durationTicks = clamp(名字字数 × 200 + 质料差额 × 4, 600, 6000) tick
+  NameTagTransform.durationTicks = clamp(名字字数 × 100 + 质料差额, 300, 2400) tick
   MaterialUnits.budgetOf(实体)     = round(宽 × 宽 × 高 × 100)      ← 由碰撞箱体积算，不用表
   MaterialUnits.requirement(方块)  = OVERRIDES["block:<id>"] 或 FALLBACK_BLOCK(100)
-  完成还要 materialReady：掠夺到的材料 ≥ 需求量，否则停在 100% 等玩家搬材料
+  时间到就完成，掠夺不是完成条件。本工具只按源码常量做估算，不代替真实 Java 回归测试。
 
 用法: python tools/nametag/calc_transform_time.py
 """

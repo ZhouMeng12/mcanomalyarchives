@@ -203,13 +203,13 @@
     {
       "id": "comfort-config",
       "kind": "contains",
-      "why": "舒适度配置本体（震动强度 / 眨眼黑屏 / 陨石是否破坏地形）",
+      "why": "客户端舒适度仅控制震动与眨眼，地形破坏不归客户端",
       "path": "src/main/java/net/mcreator/mcanomalyarchives/config/ComfortConfig.java",
       "fixHint": "从 git 恢复 src/main/java/net/mcreator/mcanomalyarchives/config/",
       "mustContain": [
         "screenShakeIntensity",
         "blinkDarkness",
-        "meteorTerrainDamage"
+        "ModConfig.Type.CLIENT"
       ]
     },
     {
@@ -760,7 +760,7 @@
         "ERASE_MAX = 24",
         "level.destroyBlock(candidates.get(i), false)",
         "RULE_MOBGRIEFING",
-        "ComfortConfig.blackCloudTerrainDamage()",
+        "ServerGameplayConfig.blackCloudTerrainDamage()",
         "this.discard();",
         "protected void tickCloudEffects()",
         "isProtected("
@@ -790,12 +790,13 @@
       "id": "black-cloud-config-toggle",
       "kind": "contains",
       "why": "配置开关（与 mobGriefing 取与）：关掉后黑吸伪云只消散、不吞方块",
-      "path": "src/main/java/net/mcreator/mcanomalyarchives/config/ComfortConfig.java",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/config/ServerGameplayConfig.java",
       "fixHint": "补回 BLACK_CLOUD_TERRAIN_DAMAGE 与 blackCloudTerrainDamage()",
       "mustContain": [
         "BLACK_CLOUD_TERRAIN_DAMAGE",
         "public static boolean blackCloudTerrainDamage()",
-        "blackCloudTerrainDamage"
+        "blackCloudTerrainDamage",
+        "ModConfig.Type.SERVER"
       ]
     },
     {
@@ -885,6 +886,533 @@
       "glob": "McanomalyarchivesMod.java",
       "searchRoot": "src/main/java/net/mcreator/mcanomalyarchives",
       "pattern": "(?m)^\\t{2}(AddictionClientHandler|SanityClientHandler|SanityMonitorHudOverlay|DialogueBubbleRenderer)\\.init\\(\\);|^\\t{2}net\\.mcreator\\.mcanomalyarchives\\.client\\.BlinkClientHandler\\.init\\(\\);"
+    },
+    {
+      "id": "server-task-compatibility-bridge",
+      "kind": "block",
+      "why": "生成区保留旧调用入口，但不能再自己持有任务队列；重生成覆盖委托时会丢失停服清理与取消语义",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/McanomalyarchivesMod.java",
+      "canonical": "ServerTasks.bridge.txt",
+      "startAnchor": "public static void queueServerWork(int delay, Runnable action)",
+      "endAnchor": "\t}",
+      "expectAll": [
+        "net.mcreator.mcanomalyarchives.runtime.ServerTasks.schedule(delay, action);"
+      ]
+    },
+    {
+      "id": "no-generated-server-task-state",
+      "kind": "noMatch",
+      "why": "MCreator 模板恢复的静态队列和 tick 不能与手写服务器会话并存，主类必须只做兼容委托",
+      "fixHint": "移除主类中的 workToBeScheduled/workQueue 与旧 tick handler；queueServerWork 保留为 ServerTasks 委托",
+      "glob": "McanomalyarchivesMod.java",
+      "searchRoot": "src/main/java/net/mcreator/mcanomalyarchives",
+      "pattern": "workToBeScheduled|workQueue|void tick\\(ServerTickEvent"
+    },
+    {
+      "id": "runtime-task-lifecycle",
+      "kind": "contains",
+      "why": "任务调度、退出取消、Clone 取消与停服销毁由手写 runtime 接入，不能只测试纯队列而漏掉事件接线",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/runtime/ServerTasks.java",
+      "fixHint": "恢复 ServerTasks 的 EventBusSubscriber、服务器生命周期与玩家取消处理",
+      "mustContain": [
+        "@EventBusSubscriber",
+        "onStarting(ServerStartingEvent event)",
+        "onTick(ServerTickEvent.Post event)",
+        "queue.tick(event.getServer().getTickCount());",
+        "queue.cancelOwner(player.getUUID());",
+        "onClone(PlayerEvent.Clone event)",
+        "onStopping(ServerStoppingEvent event)",
+        "onStopped(ServerStoppedEvent event)",
+        "queue.close();"
+      ]
+    },
+    {
+      "id": "sanity-sync-lifecycle",
+      "kind": "contains",
+      "why": "理智同步必须有真正的 tick 调度、登录/重生立即同步、退出与停服清理，防止再次只有 markDirty 没有发送",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/sanity/DirtyPlayerSanityTracker.java",
+      "fixHint": "恢复理智模块的事件订阅与 SanitySyncQueue 接入",
+      "mustContain": [
+        "@EventBusSubscriber",
+        "onServerTick(ServerTickEvent.Post event)",
+        "pending.flush(server.getTickCount(),",
+        "onLogin(PlayerEvent.PlayerLoggedInEvent event)",
+        "onRespawn(PlayerEvent.PlayerRespawnEvent event)",
+        "pending.forget(player.getUUID());",
+        "onStopping(ServerStoppingEvent event)",
+        "onStopped(ServerStoppedEvent event)",
+        "pending.clear();"
+      ]
+    },
+    {
+      "id": "runtime-regression-tests",
+      "kind": "exists",
+      "why": "真实 Java 同步/调度策略及测试不能退回 Python 公式复刻",
+      "fixHint": "恢复 runtime 与 sanity 核心及 src/test 下的 JUnit 测试",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/runtime/ServerTaskQueue.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/sanity/SanitySyncQueue.java",
+        "src/test/java/net/mcreator/mcanomalyarchives/runtime/ServerTaskQueueTest.java",
+        "src/test/java/net/mcreator/mcanomalyarchives/sanity/SanitySyncQueueTest.java",
+        "architecture/runtime-tests.gradle"
+      ]
+    },
+    {
+      "id": "runtime-regression-build-hook",
+      "kind": "contains",
+      "why": "MCreator 重生成 build.gradle 后不能静默丢掉 JUnit 接线，让 build 再次显示 test NO-SOURCE 或不执行回归",
+      "path": "build.gradle",
+      "fixHint": "补回 apply from: 'architecture/runtime-tests.gradle'",
+      "mustContain": [
+        "apply from: 'architecture/runtime-tests.gradle'"
+      ]
+    },
+    {
+      "id": "purple-story-module-files",
+      "kind": "exists",
+      "why": "紫怪会话、协议和真实状态机测试属于手写模块，不允许退回分散状态",
+      "fixHint": "恢复 anomaly/purple 模块与 JUnit 测试",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurpleStorySessions.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurpleStoryModule.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurpleStoryNetworking.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/network/PurpleStoryEndedPacket.java",
+        "src/test/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurpleStorySessionsTest.java"
+      ]
+    },
+    {
+      "id": "purple-story-lifecycle",
+      "kind": "contains",
+      "why": "退出、死亡、Clone、切维度和停服必须结束所属会话；先消耗会话再执行奖励等副作用",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurpleStoryModule.java",
+      "fixHint": "恢复紫怪模块的生命周期和一次性结算接线",
+      "mustContain": [
+        "@EventBusSubscriber",
+        "onStarting(ServerStartingEvent event)",
+        "onTick(ServerTickEvent.Post event)",
+        "onLogout(PlayerEvent.PlayerLoggedOutEvent event)",
+        "onClone(PlayerEvent.Clone event)",
+        "onDeath(LivingDeathEvent event)",
+        "onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event)",
+        "onStopping(ServerStoppingEvent event)",
+        "onStopped(ServerStoppedEvent event)",
+        "sessions.close(player.getUUID());",
+        "session.player().equals(pm.getPerformTargetUUID())",
+        "session.player().equals(pd.getPerformTargetUUID())"
+      ]
+    },
+    {
+      "id": "purple-story-directed-network",
+      "kind": "contains",
+      "why": "紫怪请求与客户端演出必须单向注册，不允许旧客户端使用不同的会话协议",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurpleStoryNetworking.java",
+      "fixHint": "恢复全部七个服务端请求、三个客户端通知及 purple-story-2 协议版本",
+      "mustContain": [
+        "event.registrar(\"purple-story-2\")",
+        "playToServer(AdvanceToPhase2Packet.TYPE",
+        "playToServer(TransitionToPhase2Packet.TYPE",
+        "playToServer(AdvanceToPhase4Packet.TYPE",
+        "playToServer(PetPurpleDogPacket.TYPE",
+        "playToServer(PettingCompletePacket.TYPE",
+        "playToServer(GivePurplehandPacket.TYPE",
+        "playToServer(RemovePurpleMonsterPacket.TYPE",
+        "playToClient(OpenPurpleGuiPacket.TYPE",
+        "playToClient(StartPettingClientPacket.TYPE",
+        "playToClient(PurpleStoryEndedPacket.TYPE"
+      ]
+    },
+    {
+      "id": "no-purple-legacy-network-registration",
+      "kind": "noMatch",
+      "why": "网络包不能再通过主类双向注册紫怪包，否则会与模块单向注册重复或绕过其协议版本",
+      "fixHint": "删除紫怪包的 registerMessage，统一由 PurpleStoryNetworking 注册",
+      "glob": "*.java",
+      "searchRoot": "src/main/java/net/mcreator/mcanomalyarchives/network",
+      "pattern": "addNetworkMessage\\([^\\r\\n]*(AdvanceToPhase2Packet|TransitionToPhase2Packet|AdvanceToPhase4Packet|PetPurpleDogPacket|PettingCompletePacket|GivePurplehandPacket|RemovePurpleMonsterPacket|OpenPurpleGuiPacket|StartPettingClientPacket|PurpleStoryEndedPacket)"
+    },
+    {
+      "id": "no-network-gameplay-settlement",
+      "kind": "noMatch",
+      "why": "网络接入只提交交互请求，不应直接操作背包、发奖励、杀实体或写同化状态",
+      "fixHint": "将游戏副作用交给服务器玩法模块，不在包处理器中执行",
+      "glob": "*.java",
+      "searchRoot": "src/main/java/net/mcreator/mcanomalyarchives/network",
+      "pattern": "getInventory\\(\\)|new ItemStack\\(|\\.setData\\(|\\.kill\\(|\\.setModelVariant\\("
+    },
+    {
+      "id": "purple-reward-authority",
+      "kind": "contains",
+      "why": "空载荷的旧领奖包必须交给当前服务端会话验证，不再独立发物品",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/network/GivePurplehandPacket.java",
+      "fixHint": "恢复服务端方向检查和 PurpleStoryModule.claimReward 调用",
+      "mustContain": [
+        "PacketFlow.SERVERBOUND",
+        "PurpleStoryModule.claimReward(player);"
+      ]
+    },
+    {
+      "id": "purple-petting-authority",
+      "kind": "contains",
+      "why": "客户端完成动画只是请求，不能直接换模型、丢物品、推进第五阶段",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/network/PettingCompletePacket.java",
+      "fixHint": "恢复 PurpleStoryModule.completePetting 调用",
+      "mustContain": [
+        "PacketFlow.SERVERBOUND",
+        "PurpleStoryModule.completePetting(player, message.purpleEntityId, message.dogEntityId);"
+      ]
+    },
+    {
+      "id": "purple-ending-authority",
+      "kind": "contains",
+      "why": "结局请求中的杀死标记必须经过会话阶段、演员身份和一次性结算校验",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/network/RemovePurpleMonsterPacket.java",
+      "fixHint": "恢复 PurpleStoryModule.finish 调用",
+      "mustContain": [
+        "PacketFlow.SERVERBOUND",
+        "PurpleStoryModule.finish(player, message.entityId, message.purpleDogEntityId,"
+      ]
+    },
+    {
+      "id": "purple-client-session-cleanup",
+      "kind": "contains",
+      "why": "服务端中止与本地退出必须解除过渡、抚摸和相机状态，避免跨世界锁住输入",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/client/screen/PurpleGuiClientHandler.java",
+      "fixHint": "恢复客户端会话清理入口",
+      "mustContain": [
+        "public static void close()",
+        "PurpleMonsterPhase1ClientHandler.clear();",
+        "PurpleDogPettingClientHandler.clear();",
+        "PurpleTransitionClientHandler.clear();",
+        "Phase5CameraHandler.clear();",
+        "onLogout(ClientPlayerNetworkEvent.LoggingOut event)"
+      ]
+    },
+    {
+      "id": "purple-natural-trigger-module",
+      "kind": "contains",
+      "why": "自然触发也必须先建立服务端会话，不能仅生成实体并发 GUI",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/events/PurpleMonsterTriggerHandler.java",
+      "fixHint": "恢复自然触发的会话入口和重复触发排除",
+      "mustContain": [
+        "PurpleStoryModule.hasActive(player)",
+        "PurpleStoryModule.startNatural(player)"
+      ]
+    },
+    {
+      "id": "no-purple-secondary-transition-state",
+      "kind": "noMatch",
+      "why": "旧处理器不能继续保有独立的转换表或创建演员",
+      "fixHint": "PurplePhaseTransitionHandler 只保留兼容委托和无敌规则",
+      "glob": "PurplePhaseTransitionHandler.java",
+      "searchRoot": "src/main/java/net/mcreator/mcanomalyarchives/event",
+      "pattern": "TRANSITIONS|new PurpleMonsterEntity|new PurpleDogEntity"
+    },
+    {
+      "id": "purple-monster-story-contract",
+      "kind": "contains",
+      "why": "MCreator 生成区中的演员必须保留表演状态、归属和模型设置接口",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/PurpleMonsterEntity.java",
+      "fixHint": "恢复紫怪演员的手写接口后再构建，不用普通模板覆盖",
+      "mustContain": [
+        "boolean isPerformMode()",
+        "UUID getPerformTargetUUID()",
+        "void setPerformMode(",
+        "void setModelVariant(",
+        "void setTextureVariant("
+      ]
+    },
+    {
+      "id": "purple-dog-story-contract",
+      "kind": "contains",
+      "why": "紫狗演员必须保留表演状态和玩家归属接口，不能改回无归属模板",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/PurpleDogEntity.java",
+      "fixHint": "恢复紫狗演员的归属接口",
+      "mustContain": [
+        "boolean isPerformMode()",
+        "UUID getPerformTargetUUID()",
+        "void setPerformMode("
+      ]
+    },
+    {
+      "id": "strange-tree-module-files",
+      "kind": "exists",
+      "why": "怪树状态、玩家进度、世界 adapter 和 NBT 快照属于手写模块，旧分散表不再是状态所有者",
+      "fixHint": "恢复 anomaly/strangetree 和真实 Java 测试",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeState.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeProgress.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeNbt.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeWorld.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeModule.java",
+        "src/test/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeStateTest.java",
+        "src/test/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeNbtTest.java",
+        "src/test/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeProgressTest.java"
+      ]
+    },
+    {
+      "id": "strange-tree-lifecycle",
+      "kind": "contains",
+      "why": "实体 tick 驱动有状态流程，卸载/玩家退场/停服处理不能漏掉；先保存再破坏树身",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeModule.java",
+      "fixHint": "恢复模块事件与持久化接线",
+      "mustContain": [
+        "@EventBusSubscriber",
+        "onTreeTick(EntityTickEvent.Post event)",
+        "onEntityLeave(EntityLeaveLevelEvent event)",
+        "onLogout(PlayerEvent.PlayerLoggedOutEvent event)",
+        "onClone(PlayerEvent.Clone event)",
+        "onDimensionChange(PlayerEvent.PlayerChangedDimensionEvent event)",
+        "onStopping(ServerStoppingEvent event)",
+        "onStopped(ServerStoppedEvent event)",
+        "state.recoverAfterLoad();",
+        "tree.getPersistentData().put(StrangeTreeNbt.KEY",
+        "save(tree, memory); // 关键顺序",
+        "StrangeTreeWorld.clear(level, backups);"
+      ]
+    },
+    {
+      "id": "strange-tree-journal-version",
+      "kind": "contains",
+      "why": "恢复记录要有版本与体积限制，损坏/未来版本不能静默丢弃树身",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeNbt.java",
+      "fixHint": "恢复版本化 NBT schema 和快照/时钟编码",
+      "mustContain": [
+        "KEY = \"McanomalyarchivesTreeRuntime\"",
+        "VERSION = 2",
+        "version != 1 && version != VERSION",
+        "Unsupported tree journal version",
+        "StrangeTreeState.MAX_JOURNAL_BLOCKS",
+        "tag.put(\"Blocks\", blocks);",
+        "public static void writeClock("
+      ]
+    },
+    {
+      "id": "strange-tree-no-delayed-callbacks",
+      "kind": "noMatch",
+      "why": "怪树操作由可保存状态驱动，禁止再捕获旧实体/世界放进进程级回调",
+      "fixHint": "改用 StrangeTreeState 的 tick 和效果，不排队怪树回调",
+      "glob": "*.java",
+      "searchRoot": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree",
+      "pattern": "queueServerWork|ServerTasks\\.schedule|(?:static|final)\\s+ServerLevel\\s+\\w+\\s*;"
+    },
+    {
+      "id": "no-old-strange-tree-handlers",
+      "kind": "noMatch",
+      "why": "旧三套处理器不能重新被注册，否则会重复计数、删除方块或再建独立状态表",
+      "fixHint": "移除旧三个处理器及主类 init 调用，保留 StrangeTreeHandler 结构补实体入口",
+      "glob": "*.java",
+      "searchRoot": "src/main/java",
+      "pattern": "StrangeTreeBurrowHandler|StrangeTreeAmbushHandler|StrangeTreeRelocateHandler"
+    },
+    {
+      "id": "strange-tree-entity-contract",
+      "kind": "contains",
+      "why": "生成区保留客户端姿态和旧存档字段，完整恢复记录由 NeoForgeData 自动保存",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/StrangeTreeEntity.java",
+      "fixHint": "恢复姿态 getter/setter、动画起点与旧 NBT 字段",
+      "mustContain": [
+        "int getBurrowState()",
+        "void setBurrowState(int state)",
+        "public int burrowStartAge",
+        "McanomalyarchivesBurrowState",
+        "McanomalyarchivesNoPhysics"
+      ]
+    },
+    {
+      "id": "strange-tree-world-io",
+      "kind": "contains",
+      "why": "恢复只在已加载区块填回空气，不覆盖玩家方块；以实体脚底而非树冠为原锚点",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeWorld.java",
+      "fixHint": "恢复已加载检查与空气限定还原逻辑",
+      "mustContain": [
+        "level.isInWorldBounds(target) && level.hasChunkAt(target)",
+        "NbtUtils.writeBlockState(state)",
+        "StrangeTreeBlockCodec.decode(",
+        "StrangeTreePlacement.apply(",
+        "isLog(state) || isTree(state)"
+      ]
+    },
+    {
+      "id": "strange-tree-nbt-test-dependencies",
+      "kind": "contains",
+      "why": "NBT 测试要用生产 Minecraft 依赖，不能悄悄替换成自写 Tag 或失去 classpath",
+      "path": "architecture/runtime-tests.gradle",
+      "fixHint": "恢复测试集的 Minecraft 编译与运行依赖",
+      "mustContain": [
+        "sourceSets.test.compileClasspath += sourceSets.main.compileClasspath",
+        "sourceSets.test.runtimeClasspath += sourceSets.main.runtimeClasspath"
+      ]
+    },
+    {
+      "id": "server-gameplay-config-registration",
+      "kind": "contains",
+      "why": "世界规则必须在构造期注册 SERVER 配置；独立无参调用不依赖 MCreator 构造器签名",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/McanomalyarchivesMod.java",
+      "fixHint": "在 ComfortConfig.register 之前补回 ServerGameplayConfig.register",
+      "mustContain": [
+        "net.mcreator.mcanomalyarchives.config.ServerGameplayConfig.register();"
+      ]
+    },
+    {
+      "id": "server-gameplay-config-type",
+      "kind": "contains",
+      "why": "世界开关由服务器加载/同步；未加载时禁止地形破坏，不得回退到客户端 true",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/config/ServerGameplayConfig.java",
+      "fixHint": "恢复 SERVER 类型、两个开关和保守读取",
+      "mustContain": [
+        "FILE_NAME = \"mcanomalyarchives-server.toml\"",
+        "container.registerConfig(ModConfig.Type.SERVER, SPEC, FILE_NAME);",
+        "return SPEC.isLoaded() && METEOR_TERRAIN_DAMAGE.get();",
+        "return SPEC.isLoaded() && BLACK_CLOUD_TERRAIN_DAMAGE.get();",
+        "LegacyGameplayConfigMigration.migrate("
+      ]
+    },
+    {
+      "id": "client-comfort-has-no-world-policy",
+      "kind": "noMatch",
+      "why": "防止后来又把世界破坏开关塞回客户端偏好",
+      "fixHint": "将地形规则放入 ServerGameplayConfig，ComfortConfig 仅保留视觉倍率",
+      "glob": "ComfortConfig.java",
+      "searchRoot": "src/main/java/net/mcreator/mcanomalyarchives/config",
+      "pattern": "meteorTerrainDamage|blackCloudTerrainDamage|METEOR_TERRAIN_DAMAGE|BLACK_CLOUD_TERRAIN_DAMAGE|ModConfig\\.Type\\.SERVER"
+    },
+    {
+      "id": "meteor-world-policy",
+      "kind": "contains",
+      "why": "陨石地形效果必须读取服务端配置，伤害与演出保持原机制",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/pinksheep/PinkSheepMeteor.java",
+      "fixHint": "恢复 ServerGameplayConfig.meteorTerrainDamage 调用",
+      "mustContain": [
+        "net.mcreator.mcanomalyarchives.config.ServerGameplayConfig",
+        ".meteorTerrainDamage() ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.NONE"
+      ]
+    },
+    {
+      "id": "legacy-config-and-transform-test-files",
+      "kind": "exists",
+      "why": "真实配置迁移与 Java 规则测试不能丢失",
+      "fixHint": "恢复第四轮配置迁移与测试",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/config/LegacyGameplayConfigMigration.java",
+        "src/test/java/net/mcreator/mcanomalyarchives/config/ServerGameplayConfigTest.java",
+        "src/test/java/net/mcreator/mcanomalyarchives/config/LegacyGameplayConfigMigrationTest.java",
+        "src/test/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagTransformTest.java",
+        "tools/nametag/test_transform.py"
+      ]
+    },
+    {
+      "id": "legacy-config-preserves-files",
+      "kind": "contains",
+      "why": "迁移仅限本地升级，不能覆盖服务端默认或重新套用旧客户端值",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/config/LegacyGameplayConfigMigration.java",
+      "fixHint": "恢复本地限制、备份和 CREATE_NEW 写入",
+      "mustContain": [
+        "if (!localClient) return Result.NOT_LOCAL_CLIENT;",
+        "Files.exists(target, LinkOption.NOFOLLOW_LINKS)",
+        "Files.copy(source, backup);",
+        "StandardOpenOption.CREATE_NEW",
+        "Invalid legacy boolean"
+      ]
+    },
+    {
+      "id": "transform-selfcheck-executes-java",
+      "kind": "contains",
+      "why": "旧入口必须调用真实生产规则 JUnit，不以 Python 复制公式自证正确",
+      "path": "tools/nametag/test_transform.py",
+      "fixHint": "恢复 NameTagTransformTest 的 Gradle 入口",
+      "mustContain": [
+        "net.mcreator.mcanomalyarchives.anomaly.nametag.NameTagTransformTest",
+        "subprocess.run(command, cwd=ROOT",
+        "result.returncode"
+      ]
+    },
+    {
+      "id": "no-python-transform-formula-copy",
+      "kind": "noMatch",
+      "why": "禁止在回归入口重新复制时长/阶段/掉落公式，复制版通过不代表 Java 实现正确",
+      "fixHint": "使用真实 Java 测试，估算工具不冒充回归验证",
+      "glob": "test_transform.py",
+      "searchRoot": "tools/nametag",
+      "pattern": "def duration_ticks|def stage_of|def drops\\(|MIN_TICKS\\s*=|MAX_TICKS\\s*=|TICKS_PER_CHAR\\s*="
+    },
+    {
+      "id": "tree-placement-negative-test-files",
+      "kind": "exists",
+      "why": "写入拒绝/部分迁居/撤回失败以及真实状态校验需要生产路径负向回归，不仅检查 finishStanding",
+      "fixHint": "恢复写入事务、严格 codec 与回归测试",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreePlacement.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeBlockCodec.java",
+        "src/test/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreePlacementTest.java",
+        "src/test/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeBlockCodecTest.java"
+      ]
+    },
+    {
+      "id": "tree-world-write-acknowledgement",
+      "kind": "contains",
+      "why": "只有写入被接受且读回匹配才成功，撤回失败不得当作恢复完成",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreePlacement.java",
+      "fixHint": "恢复生产写入确认与可重试撤回",
+      "mustContain": [
+        "if (!accepted || !Objects.equals(world.read(entry.point), entry.state))",
+        "beforeWrite.accept(List.copyOf(attempted));",
+        "static <S> boolean rollback(",
+        "if (!removed || !world.isAir(world.read(entry.point)))"
+      ]
+    },
+    {
+      "id": "tree-journal-validate-before-normalize",
+      "kind": "contains",
+      "why": "加载记录必须验证真实注册/属性再转换，失败原 journal 保留隔离",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeModule.java",
+      "fixHint": "恢复预校验与可持久的部分迁居撤回接线",
+      "mustContain": [
+        "StrangeTreeWorld.validateJournal(snapshot);",
+        "StrangeTreeWorld.undoRelocation(level, memory.state)",
+        "state.recordPlacementUndo(StrangeTreeWorld.point(offset), attempted);",
+        "StrangeTreeWorld.placeRelocation("
+      ]
+    },
+    {
+      "id": "tree-placement-undo-persistence",
+      "kind": "contains",
+      "why": "部分迁居写入意图需要存档，重载后先清理目的地，不能直接复制恢复原树",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeNbt.java",
+      "fixHint": "恢复版本2 PlacementUndo 字段及严格旧记录处理",
+      "mustContain": [
+        "tag.put(\"PlacementUndo\", undo);",
+        "undo.putIntArray(\"Entries\", state.undo().entries());",
+        "StrangeTreeBlockCodec.parse(block.getString(\"State\"));",
+        "Undo plan requires journal version 2"
+      ]
+    },
+    {
+      "id": "tree-strict-block-properties",
+      "kind": "contains",
+      "why": "无效名称、字段和实际属性值不能被宽松 decoder 静默改成默认树块",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeBlockCodec.java",
+      "fixHint": "恢复严格方块 schema 与真实 Property 校验",
+      "mustContain": [
+        "Invalid tree block SNBT",
+        "Unknown or non-tree block in journal",
+        "Unexpected tree block field",
+        "Unknown tree block property",
+        "property.getValue(value.getValue()).isEmpty()",
+        "validateProperties(description, base.getBlock().getStateDefinition()::getProperty);"
+      ]
+    },
+    {
+      "id": "tree-journal-cannot-commit-before-undo",
+      "kind": "contains",
+      "why": "撤回目的地未完成前必须保留原树快照，不能 finishStanding 制造复制/丢失",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeState.java",
+      "fixHint": "恢复 PlacementUndo 保留与站立提交门槛",
+      "mustContain": [
+        "Cannot discard journal with incomplete placement undo",
+        "state.undo = snapshot.undo;",
+        "PlacementUndo undo",
+        "recordPlacementUndo("
+      ]
     }
   ]
 }

@@ -1,9 +1,6 @@
 package net.mcreator.mcanomalyarchives.network;
 
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.bus.api.SubscribeEvent;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -15,7 +12,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.mcreator.mcanomalyarchives.McanomalyarchivesMod;
 import net.mcreator.mcanomalyarchives.client.screen.PurpleGuiClientHandler;
 
-@EventBusSubscriber
 public record OpenPurpleGuiPacket(int entityId, int phase, int purpleDogEntityId) implements CustomPacketPayload {
 	public static final Type<OpenPurpleGuiPacket> TYPE =
 		new Type<>(ResourceLocation.fromNamespaceAndPath(McanomalyarchivesMod.MODID, "open_purple_gui"));
@@ -50,8 +46,4 @@ public record OpenPurpleGuiPacket(int entityId, int phase, int purpleDogEntityId
 		}
 	}
 
-	@SubscribeEvent
-	public static void registerMessage(FMLCommonSetupEvent event) {
-		McanomalyarchivesMod.addNetworkMessage(TYPE, STREAM_CODEC, OpenPurpleGuiPacket::handleData);
-	}
 }

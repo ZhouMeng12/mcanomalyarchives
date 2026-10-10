@@ -27,6 +27,14 @@ public class Phase5CameraHandler {
 
 	public record PendingScreenData(int entityId, int phase, int purpleDogEntityId, int totalWaitTicks) {}
 
+	public static void clear() {
+		LOCKED_PLAYERS.clear();
+		START_YAW.clear();
+		START_PITCH.clear();
+		TRANSITION_TICKS.clear();
+		PENDING_SCREENS.clear();
+	}
+
 	public static void startLock(UUID playerUUID, int purpleEntityId) {
 		LOCKED_PLAYERS.put(playerUUID, purpleEntityId);
 		Minecraft mc = Minecraft.getInstance();

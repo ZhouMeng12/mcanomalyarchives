@@ -35,7 +35,7 @@ public final class NameTagCosts {
 
 	/** 跨类命名结算失败时的爆炸威力上限（实际威力由质料差额决定）。 */
 	public static final float EXPLOSION_MAX_POWER = 6.0f;
-	/** 跨类爆炸是否破坏地形（与陨石共用同一个舒适度开关）。 */
+	/** 命名牌跨类爆炸独立规则；不与粉羊陨石配置共用，本轮不改变此行为。 */
 	public static final boolean EXPLOSION_BREAKS_TERRAIN = true;
 
 	/**

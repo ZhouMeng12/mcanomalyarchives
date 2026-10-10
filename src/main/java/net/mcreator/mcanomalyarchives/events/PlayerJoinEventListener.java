@@ -10,7 +10,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.advancements.AdvancementHolder;
 
 import net.mcreator.mcanomalyarchives.McanomalyarchivesMod;
-import net.mcreator.mcanomalyarchives.sanity.PlayerSanity;
 
 @EventBusSubscriber
 public class PlayerJoinEventListener {
@@ -29,8 +28,6 @@ public class PlayerJoinEventListener {
 					player.getAdvancements().award(welcomeHolder, "welcome_0");
 				}
 			}
-			
-			PlayerSanity.syncToClientNow(player); // 进服立刻发，不等批处理
 		}
 	}
 }

@@ -1,0 +1,3 @@
+	public static void queueServerWork(int delay, Runnable action) {
+		net.mcreator.mcanomalyarchives.runtime.ServerTasks.schedule(delay, action);
+	}

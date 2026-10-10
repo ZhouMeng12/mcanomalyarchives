@@ -4,6 +4,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 import net.minecraft.world.entity.player.Player;
@@ -132,6 +133,18 @@ public class SanityEventHandler {
         if (!(newPlayer instanceof ServerPlayer)) return;
         PlayerSanity sanity = newPlayer.getData(McanomalyarchivesModAttachments.PLAYER_SANITY);
         sanity.resetToMax();
-        PlayerSanity.syncToClientNow((ServerPlayer) newPlayer); // 重生立刻发，不等批处理
+        // 同步由理智模块在 PlayerRespawnEvent 执行，避免发送尚未完成 Clone 的实体状态。
+    }
+
+    @SubscribeEvent
+    public void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        cloudDimensionCooldowns.remove(event.getEntity().getUUID());
+        sadPoppyCooldowns.remove(event.getEntity().getUUID());
+    }
+
+    @SubscribeEvent
+    public void onServerStopped(ServerStoppedEvent event) {
+        cloudDimensionCooldowns.clear();
+        sadPoppyCooldowns.clear();
     }
 }

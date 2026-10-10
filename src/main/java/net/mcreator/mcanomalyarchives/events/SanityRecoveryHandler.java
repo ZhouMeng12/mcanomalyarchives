@@ -2,6 +2,8 @@ package net.mcreator.mcanomalyarchives.events;
 
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 import net.minecraft.world.entity.player.Player;
@@ -109,5 +111,28 @@ public class SanityRecoveryHandler {
         } else {
             brainDamageTickCounters.remove(playerId);
         }
+    }
+
+    @SubscribeEvent
+    public void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        forget(event.getEntity().getUUID());
+    }
+
+    @SubscribeEvent
+    public void onClone(PlayerEvent.Clone event) {
+        forget(event.getEntity().getUUID());
+    }
+
+    private static void forget(UUID player) {
+        recoveryTickCounters.remove(player);
+        chairTickCounters.remove(player);
+        brainDamageTickCounters.remove(player);
+    }
+
+    @SubscribeEvent
+    public void onServerStopped(ServerStoppedEvent event) {
+        recoveryTickCounters.clear();
+        chairTickCounters.clear();
+        brainDamageTickCounters.clear();
     }
 }

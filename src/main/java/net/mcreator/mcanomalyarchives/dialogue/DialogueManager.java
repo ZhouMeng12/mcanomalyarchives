@@ -6,7 +6,11 @@ import net.minecraft.world.entity.Entity;
 
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import net.mcreator.mcanomalyarchives.McanomalyarchivesMod;
+import net.mcreator.mcanomalyarchives.runtime.ServerTasks;
+import net.mcreator.mcanomalyarchives.runtime.ServerTaskQueue.TaskHandle;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.mcreator.mcanomalyarchives.network.DialogueBubblePacket;
 import net.mcreator.mcanomalyarchives.network.ClearDialogueBubblePacket;
 
@@ -20,6 +24,7 @@ import java.util.UUID;
  * 服务端对话管理：把台词按顺序变成实体头顶的气泡。
  * 仅限服务端调用；客户端渲染见 DialogueClientState / DialogueBubbleRenderer。
  */
+@EventBusSubscriber(modid = "mcanomalyarchives")
 public final class DialogueManager {
 
 	private DialogueManager() {
@@ -30,6 +35,7 @@ public final class DialogueManager {
 
 	/** 每实体上次开口的游戏时间（防连点刷屏，约 0.5 秒冷却） */
 	private static final Map<UUID, Long> LAST_SPEAK = new HashMap<>();
+	private static final Map<UUID, TaskHandle> NEXT_LINE = new HashMap<>();
 
 	private static final int SPEAK_COOLDOWN_TICKS = 10;
 
@@ -49,6 +55,7 @@ public final class DialogueManager {
 	/** 打断实体的当前对话并清空气泡 */
 	public static void interrupt(Entity speaker) {
 		if (speaker == null) return;
+		cancelNext(speaker.getUUID());
 		SESSIONS.merge(speaker.getUUID(), 1, Integer::sum);
 		if (speaker.level() instanceof ServerLevel level) {
 			sendClear(level, speaker, null);
@@ -58,6 +65,7 @@ public final class DialogueManager {
 	private static void speakInternal(ServerLevel level, Entity speaker, ServerPlayer target, List<DialogueLine> lines) {
 		// 实体已移除：清理记录，避免 Map 无限增长
 		if (speaker.isRemoved()) {
+			cancelNext(speaker.getUUID());
 			SESSIONS.remove(speaker.getUUID());
 			LAST_SPEAK.remove(speaker.getUUID());
 			return;
@@ -67,6 +75,7 @@ public final class DialogueManager {
 			return;
 		}
 		LAST_SPEAK.put(speaker.getUUID(), now);
+		cancelNext(speaker.getUUID());
 		int session = SESSIONS.merge(speaker.getUUID(), 1, Integer::sum);
 		playLine(level, speaker, target, lines, 0, session);
 	}
@@ -76,6 +85,7 @@ public final class DialogueManager {
 			return;
 		}
 		if (index >= lines.size()) {
+			NEXT_LINE.remove(speaker.getUUID());
 			sendClear(level, speaker, target);
 			return;
 		}
@@ -98,7 +108,25 @@ public final class DialogueManager {
 			PacketDistributor.sendToPlayersTrackingEntityAndSelf(speaker, packet);
 		}
 		int duration = Math.max(20, line.durationTicks());
-		McanomalyarchivesMod.queueServerWork(duration, () -> playLine(level, speaker, target, lines, index + 1, session));
+		Runnable next = () -> playLine(level, speaker, target, lines, index + 1, session);
+		TaskHandle task = target == null ? ServerTasks.schedule(duration, next)
+				: ServerTasks.scheduleForPlayer(target, duration, next);
+		NEXT_LINE.put(speaker.getUUID(), task);
+	}
+
+	private static void cancelNext(UUID speaker) {
+		TaskHandle previous = NEXT_LINE.remove(speaker);
+		if (previous != null) {
+			previous.cancel();
+		}
+	}
+
+	@SubscribeEvent
+	public static void onServerStopped(ServerStoppedEvent event) {
+		NEXT_LINE.values().forEach(TaskHandle::cancel);
+		NEXT_LINE.clear();
+		SESSIONS.clear();
+		LAST_SPEAK.clear();
 	}
 
 	private static void sendClear(ServerLevel level, Entity speaker, ServerPlayer target) {

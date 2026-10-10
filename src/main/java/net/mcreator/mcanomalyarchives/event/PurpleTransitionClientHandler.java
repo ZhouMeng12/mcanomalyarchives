@@ -16,6 +16,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PurpleTransitionClientHandler {
 	private static final Set<UUID> LOCKED_PLAYERS = ConcurrentHashMap.newKeySet();
 
+	public static void clear() {
+		LOCKED_PLAYERS.clear();
+	}
+
 	public static void lockPlayer(UUID playerUUID) {
 		LOCKED_PLAYERS.add(playerUUID);
 	}

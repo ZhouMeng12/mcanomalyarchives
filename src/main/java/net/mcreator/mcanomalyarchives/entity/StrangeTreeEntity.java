@@ -56,7 +56,7 @@ public class StrangeTreeEntity extends PathfinderMob {
 		builder.define(BURROW_STATE, 0);
 	}
 
-	/** 持久化钻地状态：退出重进后树保持潜伏（state 2），不会变回脚形态站立 */
+	/** 旧版姿态字段保留兼容；完整恢复快照由手写模块存入 NeoForgeData，重载后安全恢复站立。 */
 	@Override
 	public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag) {
 		super.addAdditionalSaveData(tag);

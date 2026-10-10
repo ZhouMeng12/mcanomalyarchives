@@ -1,19 +1,14 @@
 package net.mcreator.mcanomalyarchives.events;
 
 import net.mcreator.mcanomalyarchives.McanomalyarchivesMod;
-import net.mcreator.mcanomalyarchives.entity.PurpleMonsterEntity;
-import net.mcreator.mcanomalyarchives.entity.PurpleDogEntity;
+import net.mcreator.mcanomalyarchives.anomaly.purple.PurpleStoryModule;
 import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModAttachments;
-import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModEntities;
-import net.mcreator.mcanomalyarchives.network.OpenPurpleGuiPacket;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -32,28 +27,26 @@ public class PurpleMonsterTriggerHandler {
         NeoForge.EVENT_BUS.register(new PurpleMonsterTriggerHandler());
     }
 
-    // 玩家退出时清理所有相关的紫怪和紫狗
+    // 此类只拥有静止计时器；演员清理由会话模块按玩家归属执行。
     @SubscribeEvent
     public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
-        UUID uuid = player.getUUID();
+        stillTimers.remove(player.getUUID());
+    }
 
-        // 清理静止计时器
-        stillTimers.remove(uuid);
+    @SubscribeEvent
+    public void onClone(PlayerEvent.Clone event) {
+        stillTimers.remove(event.getEntity().getUUID());
+    }
 
-        // 查找并移除该玩家触发的所有表演模式紫怪/紫狗
-        ServerLevel serverLevel = (ServerLevel) player.level();
-        for (Entity entity : serverLevel.getAllEntities()) {
-            if (entity instanceof PurpleMonsterEntity pm && pm.isPerformMode()) {
-                entity.remove(Entity.RemovalReason.DISCARDED);
-            }
-            if (entity instanceof PurpleDogEntity dog && dog.isPerformMode()) {
-                entity.remove(Entity.RemovalReason.DISCARDED);
-            }
-        }
+    @SubscribeEvent
+    public void onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+        stillTimers.remove(event.getEntity().getUUID());
+    }
 
-        McanomalyarchivesMod.LOGGER.info("Cleaned up purple entities after player {} logged out",
-            player.getName().getString());
+    @SubscribeEvent
+    public void onServerStopped(ServerStoppedEvent event) {
+        stillTimers.clear();
     }
 
     @SubscribeEvent
@@ -65,6 +58,11 @@ public class PurpleMonsterTriggerHandler {
 
     private void processPlayer(ServerPlayer player) {
         UUID uuid = player.getUUID();
+
+        if (!player.isAlive() || player.isRemoved() || PurpleStoryModule.hasActive(player)) {
+            stillTimers.remove(uuid);
+            return;
+        }
 
         // 1. 仅生存模式
         if (player.gameMode.isCreative() || player.isSpectator()) {
@@ -115,27 +113,7 @@ public class PurpleMonsterTriggerHandler {
     }
 
     private void triggerPurpleMonster(ServerPlayer player) {
-        ServerLevel serverLevel = (ServerLevel) player.level();
-        double yawRad = Math.toRadians(player.getYRot());
-
-        double frontX = -Math.sin(yawRad) * 2.0;
-        double frontZ = Math.cos(yawRad) * 2.0;
-        double spawnX = player.getX() + frontX;
-        double spawnZ = player.getZ() + frontZ;
-        double spawnY = player.getY();
-
-        PurpleMonsterEntity purpleMonster = new PurpleMonsterEntity(
-            McanomalyarchivesModEntities.PURPLE_MONSTER.get(), serverLevel);
-        purpleMonster.setPos(spawnX, spawnY, spawnZ);
-        purpleMonster.setXRot(0.0F);
-        purpleMonster.setYRot(player.getYRot() + 180.0F);
-        purpleMonster.yBodyRot = player.getYRot() + 180.0F;
-        purpleMonster.yHeadRot = player.getYRot() + 180.0F;
-        purpleMonster.setPerformMode(player.getUUID());
-        serverLevel.addFreshEntity(purpleMonster);
-
-        PacketDistributor.sendToPlayer(player,
-            new OpenPurpleGuiPacket(purpleMonster.getId(), 1, 0));
+        if (!PurpleStoryModule.startNatural(player)) return;
 
         player.setData(McanomalyarchivesModAttachments.PURPLE_MONSTER_TRIGGER_COOLDOWN,
             player.level().getGameTime());
