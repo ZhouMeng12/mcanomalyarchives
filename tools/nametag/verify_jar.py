@@ -60,9 +60,9 @@ with zipfile.ZipFile(jar) as zf:
 
     print("\n=== 语言词条 ===")
     for lg, keys in (
-        ("zh_cn", ["item.mcanomalyarchives.baibian_name_tag", "nametag.mcanomalyarchives.need_name",
+        ("zh_cn", ["item.mcanomalyarchives.baibian_name_tag", "nametag.mcanomalyarchives.egg",
                    "codex.mcanomalyarchives.uo008.info"]),
-        ("en_us", ["item.mcanomalyarchives.baibian_name_tag", "nametag.mcanomalyarchives.need_name"]),
+        ("en_us", ["item.mcanomalyarchives.baibian_name_tag", "nametag.mcanomalyarchives.egg"]),
     ):
         path = "assets/mcanomalyarchives/lang/%s.json" % lg
         data = json.loads(zf.read(path).decode("utf-8"))
@@ -73,6 +73,10 @@ with zipfile.ZipFile(jar) as zf:
                 FAILED.append("%s 缺少词条 %s" % (path, k))
         if "辐射污染" in json.dumps(data, ensure_ascii=False):
             FAILED.append("%s 里还残留旧的 UO-008 占位文案（辐射污染）" % path)
+        # 反向检查：作者要求命名牌界面不解释，提示语不许回潮（need_name/not_for_anomaly 2026-10-11 已删）
+        for gone in ("nametag.mcanomalyarchives.need_name", "nametag.mcanomalyarchives.not_for_anomaly"):
+            if gone in data:
+                FAILED.append("%s 里又出现了已删除的提示语 %s" % (path, gone))
 
     print("\n=== mixin 注册（外观不变与转化表现的关键）===")
     mixins = json.loads(zf.read("mcanomalyarchives.mixins.json").decode("utf-8"))

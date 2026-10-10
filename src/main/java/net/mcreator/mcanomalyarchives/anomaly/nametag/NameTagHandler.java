@@ -78,17 +78,12 @@ public final class NameTagHandler {
 		player.getCooldowns().addCooldown(stack.getItem(), NameTagCosts.USE_COOLDOWN_TICKS);
 	}
 
-	/** 拦下这次使用：取消事件、给冷却，并按需要弹一条提示语。 */
-	private static void deny(PlayerInteractEvent.EntityInteract event, ServerPlayer player, String messageKey, Object... args) {
-		denyQuietly(event, player);
-		NameTagNotifier.actionBar(player, messageKey, args);
-	}
-
 	/**
-	 * 拦下这次使用但**不给任何提示**。
+	 * 拦下这次使用，**不给任何提示**。
 	 *
-	 * 作者要求去掉解释性提示（见 {@link NameTagNotifier}），所以"不可逆 / 对玩家无效"
-	 * 这两条只剩行为、没有文字：手上的牌不会被消耗，但照样进冷却。
+	 * 作者要求界面不解释（见 {@link NameTagNotifier}）：不可逆、对本模组实体无效、
+	 * 牌上没写字，这些情形都只剩行为 —— 手上的牌不会被消耗，但照样进冷却。
+	 * 2026-10-11 起最后两条提示语也删了，命名牌不再有任何文字输出。
 	 */
 	private static void denyQuietly(PlayerInteractEvent.EntityInteract event, ServerPlayer player) {
 		event.setCanceled(true);
@@ -137,12 +132,12 @@ public final class NameTagHandler {
 			// 作者 2026-09-13 定的规则里一直有"不作用于本模组异常实体"这一条，但实现里从来没做
 			// （只有上面 instanceof Player 那一层）→ 结果连伪云都能被命名成一头会走路的牛。
 			// 2026-09-18 按原规则补上：本模组自己的实体一律不接受改写。
-			deny(event, player, NameTagNotifier.NOT_FOR_ANOMALY);
+			denyQuietly(event, player);
 			return;
 		}
 		String raw = writtenName(held);
 		if (raw == null || raw.isEmpty()) {
-			deny(event, player, NameTagNotifier.NEED_NAME);
+			denyQuietly(event, player);
 			return;
 		}
 

@@ -25,13 +25,11 @@ CANON = {
     "en_us": "tools/mcreator-guard/canonical/en_us.extra.txt",
 }
 
+# 要加的词条（空列表 = 什么都不做）。**用完就清空**，否则重跑会把已经删掉的词条又加回去。
+# 2026-10-11：上一批的 not_for_anomaly 已被 remove_keys.py 删掉（作者要求命名牌不再有任何提示语）。
 KEYS = {
-    "zh_cn": [
-        ("nametag.mcanomalyarchives.not_for_anomaly", "改写不了——它本身就是异常"),
-    ],
-    "en_us": [
-        ("nametag.mcanomalyarchives.not_for_anomaly", "It cannot be rewritten - it is an anomaly itself"),
-    ],
+    "zh_cn": [],
+    "en_us": [],
 }
 
 

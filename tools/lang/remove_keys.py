@@ -34,20 +34,12 @@ LANG = {
     "en_us": "src/main/resources/assets/mcanomalyarchives/lang/en_us.json",
 }
 
-# 百变命名牌的 11 条提示语 —— 作者要求全部去掉，中英两侧一起删。
-# 保留：need_name、not_for_anomaly、egg。
+# 百变命名牌的提示语 —— 作者要求界面完全不解释（"完全不需要这些提示性文本"）。
+# 2026-09-18 先删掉 11 条解释性提示；2026-10-11 连最后两条也删了，
+# 命名牌只剩 egg（那是产物名字，不是提示）。
 REMOVE = [
-    "nametag.mcanomalyarchives.unknown",
-    "nametag.mcanomalyarchives.applied",
-    "nametag.mcanomalyarchives.locked",
-    "nametag.mcanomalyarchives.erased",
-    "nametag.mcanomalyarchives.planned",
-    "nametag.mcanomalyarchives.unstable",
-    "nametag.mcanomalyarchives.exploded",
-    "nametag.mcanomalyarchives.not_for_player",
-    "nametag.mcanomalyarchives.no_output",
-    "nametag.mcanomalyarchives.draining",
-    "nametag.mcanomalyarchives.dry",
+    "nametag.mcanomalyarchives.need_name",
+    "nametag.mcanomalyarchives.not_for_anomaly",
 ]
 PER_BLOCK = len(REMOVE)  # 每份语言块应当各删掉这么多条
 
