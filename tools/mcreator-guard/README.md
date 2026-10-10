@@ -224,3 +224,36 @@ python tools/structure-fix/inject_language_map.py   # 从 canonical 读词条 �
 ```powershell
 git checkout -- src/main/java/net/mcreator/mcanomalyarchives/   # 生成区被大面积覆盖时
 ```
+
+## 生成区在重构 PR #1 之后新增的漂移点（2026-10-11 核对）
+
+外部 PR #1（server-authoritative-runtime）又动了几处生成区，逐条对着 MCreator 2026.1.14619 的
+生成器模板（`plugins/generator-1.21.1.zip`）核对过：
+
+| 位置 | 重新生成后 | 守卫能否自动修 |
+|---|---|---|
+| `McanomalyarchivesMod.java` 尾部 | `templates/modbase/mod.java.ftl` 结尾那段 `workToBeScheduled` / `workQueue` / `queueServerWork` / `tick()` 整块回来（**在所有用户代码块之外**），`queueServerWork` 变回自己写队列 | 方法体由 `server-task-compatibility-bridge`（block）自动还原；**模板恢复的那三个成员只能按 `no-generated-server-task-state` 的 fixHint 手工删** |
+| `entity/*Entity.java` 里的手写行 | `livingentity.java.ftl` 里**一个用户代码块都没有** → 实体文件的手写改动一律丢（例如 `BlackStangeCloudEntity` 里的 `ServerGameplayConfig.blackCloudTerrainDamage()`） | 否（`black-cloud-behaviour` 是 contains，只报警）→ 手工改回 |
+| `build.gradle` 的 `apply from: 'architecture/runtime-tests.gradle'` | 只在改工作区设置（版本/依赖）时连基础文件一起重写；丢了以后 `gradlew test` 会"成功"但一个测试都不跑 | 否（`runtime-regression-build-hook` 是 contains，只报警）→ 手工加回 |
+| `lang/*.json` | 每次重新生成都用工作区 `language_map` 整文件重写 | 键可补（`lang-*-extra` 是 insertBefore）；**根治要先把词条写进 `language_map`**，见下 |
+
+所以每次「重新生成代码」之后的固定动作是：
+
+```powershell
+pwsh tools/mcreator-guard/guard.ps1 check     # 看漂移
+pwsh tools/mcreator-guard/guard.ps1 apply     # 自动还原能还原的
+# 手工两处：① 主类尾部模板队列的三个成员删掉  ② build.gradle 补回 apply from 那一行
+./gradlew test build
+```
+
+### 词条的三方同步（工作区 language_map / lang json / 守卫基线）
+
+`lang/*.json` 是产物，真正说了算的是工作区 `mcanomalyarchives.mcreator` 里的 `language_map`：
+只要某个键不在 language_map 里，下次重新生成就会把它冲掉（`not_for_anomaly` 2026-10-05 就是这么丢的，
+守卫只能事后补，补进去的文案还可能和 MCreator 生成的不一样）。
+
+```powershell
+python tools/structure-fix/inject_language_map.py   # 把 canonical 里缺的词条写进 language_map（根治）
+python tools/lang/check_canonical_sync.py           # 看守卫基线与当前 json 的文案差异（只诊断，不改文件）
+python tools/lang/remove_keys.py                    # 删词条：工作区、基线、manifest、json 四处一起删
+```

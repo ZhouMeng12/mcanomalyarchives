@@ -1,3 +1,11 @@
+// JUnit 只有 Maven Central 有。本工程 settings.gradle 的 repositories 声明在 Gradle 默认的
+// PREFER_PROJECT 模式下会被项目级仓库整个取代，而 ModDevGradle 会往项目里注册它自己的仓库；
+// 若那个仓库不可达（离线构建、公司网络、国内直连超时），依赖解析会直接失败 —— 所以这里把
+// Central 显式补进项目仓库，并提到最前面，避免先撞上不可达的仓库。
+def centralRepo = repositories.mavenCentral()
+repositories.remove(centralRepo)
+repositories.add(0, centralRepo)
+
 // 不复刻玩法公式：JUnit 直接调用 src/main/java 中真正运行的队列与同步策略。
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
