@@ -13,7 +13,11 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.util.RandomSource;
 import net.minecraft.core.registries.Registries;
 
@@ -91,19 +95,27 @@ public class PurpleArrowEntity extends AbstractArrow implements ItemSupplier {
 
 	@Override
 	protected void onHit(HitResult hitResult) {
-		super.onHit(hitResult);
 		if (hitResult.getType() == HitResult.Type.ENTITY) {
 			Entity entity = ((EntityHitResult) hitResult).getEntity();
 			if (!this.level().isClientSide && entity instanceof LivingEntity living) {
 				Entity owner = this.getOwner();
-				DamageSource source = owner instanceof LivingEntity livingOwner
-						? this.damageSources().mobAttack(livingOwner)
-						: this.damageSources().generic();
-				living.invulnerableTime = 0;
+				DamageSource source = owner instanceof Player player
+						? this.damageSources().playerAttack(player)
+						: owner instanceof LivingEntity livingOwner
+								? this.damageSources().mobAttack(livingOwner)
+								: this.damageSources().generic();
 				living.hurt(source, (float) this.damage);
+				this.level().playSound(null, this.blockPosition(), SoundEvents.PLAYER_ATTACK_STRONG,
+						SoundSource.PLAYERS, 0.8F, 0.85F + this.random.nextFloat() * 0.2F);
+				if (this.level() instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+					serverLevel.sendParticles(ParticleTypes.CRIT, this.getX(), this.getY(), this.getZ(), 8, 0.18, 0.25, 0.18, 0.12);
+					serverLevel.sendParticles(ParticleTypes.PORTAL, this.getX(), this.getY(), this.getZ(), 10, 0.2, 0.3, 0.2, 0.15);
+				}
 			}
 			this.discard();
+			return;
 		}
+		super.onHit(hitResult);
 	}
 
 	@Override

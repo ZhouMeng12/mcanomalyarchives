@@ -29,7 +29,7 @@ public class PurplehandItem extends Item {
         super(new Item.Properties().rarity(Rarity.RARE).attributes(
             ItemAttributeModifiers.builder()
                 .add(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_ID, 20, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
-                .add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_ID, -2.4, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+                .add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_ID, -2.0, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
                 .add(Attributes.ENTITY_INTERACTION_RANGE, new AttributeModifier(REACH_MODIFIER_ID, 4.0, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
                 .build()));
     }
@@ -41,13 +41,16 @@ public class PurplehandItem extends Item {
         if (player.getCooldowns().isOnCooldown(stack.getItem()))
             return InteractionResultHolder.pass(stack);
 
+        // 先在本地立即挥手，避免等服务端回包后才看到攻击动作。
+        player.swing(hand, true);
+
         if (!level.isClientSide) {
             Vec3 look = player.getLookAngle();
             PurpleArrowEntity spike = new PurpleArrowEntity(McanomalyarchivesModEntities.PURPLE_ARROW.get(), player, level, null);
             spike.setPos(player.getX() + look.x * 1.5,
                     player.getEyeY() + look.y * 1.5 - 0.1,
                     player.getZ() + look.z * 1.5);
-            spike.shoot(look.x, look.y, look.z, 3.0F, 0);
+            spike.shoot(look.x, look.y, look.z, 3.6F, 0);
             spike.setDamage(20.0);
             spike.setCritArrow(false);
             spike.pickup = AbstractArrow.Pickup.DISALLOWED;
@@ -56,7 +59,7 @@ public class PurplehandItem extends Item {
             level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     McanomalyarchivesMod.PURPLEHAND_SHOOT.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
 
-            player.getCooldowns().addCooldown(stack.getItem(), 40);
+            player.getCooldowns().addCooldown(stack.getItem(), 32);
         }
 
         return InteractionResultHolder.success(stack);
@@ -66,6 +69,13 @@ public class PurplehandItem extends Item {
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         super.hurtEnemy(stack, target, attacker);
         stack.set(McanomalyarchivesModDataComponents.ATTACK_TIME, System.currentTimeMillis());
+        if (attacker instanceof Player player && attacker.level() instanceof net.minecraft.server.level.ServerLevel level) {
+            net.mcreator.mcanomalyarchives.event.PurplehandAOEHandler.impact(level, target);
+            level.playSound(null, target.blockPosition(), net.minecraft.sounds.SoundEvents.PLAYER_ATTACK_STRONG,
+                    SoundSource.PLAYERS, 0.6F, 0.85F + level.random.nextFloat() * 0.15F);
+            Vec3 away = target.position().subtract(player.position());
+            target.knockback(0.2, -away.x, -away.z);
+        }
         return true;
     }
 }

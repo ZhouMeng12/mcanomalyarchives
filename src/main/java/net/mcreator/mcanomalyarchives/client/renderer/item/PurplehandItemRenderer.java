@@ -45,9 +45,11 @@ public class PurplehandItemRenderer extends BlockEntityWithoutLevelRenderer {
 	// 延迟初始化：RegisterClientExtensionsEvent 在模型层烘焙之前分发，
 	// 所以不能在构造函数中调用 bakeLayer，需要在第一次渲染时才获取模型
 	private AnimatedModel model;
-	private static final float ANIM_DURATION_TICKS = 15.0f;
-	private static final float ANIM_SPEED = 2.0f;
-	private final Map<ItemStack, Float> animStartTick = new WeakHashMap<>();
+	private static final float ANIM_SPEED = 2.5f;
+	private static final float ANIM_DURATION_TICKS = 15.0f / ANIM_SPEED;
+	private static long attackSequence;
+	private final Map<ItemStack, Long> lastAttackSequence = new WeakHashMap<>();
+	private final Map<ItemStack, Double> animStartTick = new WeakHashMap<>();
 	private final Map<ItemStack, Boolean> wasSwinging = new WeakHashMap<>();
 	private float currentAnimTick = 0.0f;
 	private static final Map<ItemStack, Map<Integer, AnimationState>> ANIM_STATE_CACHE = new WeakHashMap<>();
@@ -90,22 +92,30 @@ public class PurplehandItemRenderer extends BlockEntityWithoutLevelRenderer {
 
 	private void updateAnimState(ItemStack stack) {
 		Minecraft mc = Minecraft.getInstance();
-		float now = mc.level != null ? mc.level.getGameTime() : 0;
-		boolean swinging = PurplehandHuiFangTiaoJianProcedure.execute(mc.player);
+		double now = mc.level != null ? mc.level.getGameTime() + mc.getTimer().getGameTimeDeltaPartialTick(false) : 0;
+		boolean held = mc.player != null && (stack == mc.player.getMainHandItem() || stack == mc.player.getOffhandItem());
+		boolean swinging = held && PurplehandHuiFangTiaoJianProcedure.execute(mc.player);
 		boolean prev = Boolean.TRUE.equals(wasSwinging.get(stack));
+		boolean newAttack = held && lastAttackSequence.getOrDefault(stack, attackSequence) != attackSequence;
 
-		if (swinging && !prev) {
+		if (newAttack || (swinging && !prev)) {
 			animStartTick.put(stack, now);
 			ANIM_STATE_CACHE.put(stack, IntStream.range(0, 1).boxed().collect(Collectors.toMap(i -> i, i -> new AnimationState(), (a, b) -> b)));
 		}
+		lastAttackSequence.put(stack, attackSequence);
 		wasSwinging.put(stack, swinging);
 
-		Float startTick = animStartTick.get(stack);
-		float elapsed = startTick != null ? (now - startTick) : 0;
-		boolean shouldAnimate = swinging || (startTick != null && elapsed < ANIM_DURATION_TICKS);
+		Double startTick = animStartTick.get(stack);
+		float elapsed = startTick != null ? (float) (now - startTick) : 0;
+		boolean shouldAnimate = held && startTick != null && elapsed >= 0 && elapsed < ANIM_DURATION_TICKS;
 
 		currentAnimTick = Math.max(0, elapsed);
 		getAnimationState(stack).get(0).animateWhen(shouldAnimate, (int) currentAnimTick);
+	}
+
+	/** 直接由左键输入触发，连续点击不再依赖 swinging 的真假边沿。 */
+	public static void startAttackAnimation() {
+		attackSequence++;
 	}
 
 	private Map<Integer, AnimationState> getAnimationState(ItemStack stack) {
