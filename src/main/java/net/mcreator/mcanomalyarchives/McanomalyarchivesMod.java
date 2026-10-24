@@ -8,17 +8,13 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.fml.util.thread.SidedThreadGroups;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.bus.api.IEventBus;
 
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.server.TickTask;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.codec.StreamCodec;
@@ -36,15 +32,9 @@ import net.mcreator.mcanomalyarchives.client.dialogue.DialogueBubbleRenderer;
 import net.mcreator.mcanomalyarchives.client.SanityMonitorHudOverlay;
 import net.mcreator.mcanomalyarchives.client.SanityClientHandler;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.Queue;
-import java.util.PriorityQueue;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Comparator;
 
-import it.unimi.dsi.fastutil.ints.IntObjectPair;
-import it.unimi.dsi.fastutil.ints.IntObjectImmutablePair;
 
 @Mod("mcanomalyarchives")
 public class McanomalyarchivesMod {
@@ -148,23 +138,8 @@ public class McanomalyarchivesMod {
 		networkingRegistered = true;
 	}
 
-	private static final Queue<IntObjectPair<Runnable>> workToBeScheduled = new ConcurrentLinkedQueue<>();
-	private static final PriorityQueue<TickTask> workQueue = new PriorityQueue<>(Comparator.comparingInt(TickTask::getTick));
-
+	/** 生成区兼容入口，延迟任务由 runtime 管理服务器生命周期。 */
 	public static void queueServerWork(int delay, Runnable action) {
-		if (Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER)
-			workToBeScheduled.add(new IntObjectImmutablePair<>(delay, action));
-	}
-
-	@SubscribeEvent
-	public void tick(ServerTickEvent.Post event) {
-		int currentTick = event.getServer().getTickCount();
-		IntObjectPair<Runnable> work;
-		while ((work = workToBeScheduled.poll()) != null) {
-			workQueue.add(new TickTask(currentTick + work.leftInt(), work.right()));
-		}
-		while (!workQueue.isEmpty() && currentTick >= workQueue.peek().getTick()) {
-			workQueue.poll().run();
-		}
+		net.mcreator.mcanomalyarchives.runtime.ServerTasks.schedule(delay, action);
 	}
 }

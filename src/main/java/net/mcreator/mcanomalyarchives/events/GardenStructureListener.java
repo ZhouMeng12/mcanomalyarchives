@@ -27,12 +27,15 @@ public class GardenStructureListener {
 
 	@SubscribeEvent
 	public void onServerTick(ServerTickEvent.Post event) {
+		if (event.getServer().getTickCount() % 20 != 0) return;
 		for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
 			checkPlayerInGarden(player);
 		}
 	}
 
 	private void checkPlayerInGarden(ServerPlayer player) {
+		AdvancementHolder advancement = player.serverLevel().getServer().getAdvancements().get(GETTOGARDEN_ADVANCEMENT);
+		if (advancement == null || player.getAdvancements().getOrStartProgress(advancement).isDone()) return;
 		BlockPos playerPos = player.blockPosition();
 		
 		// 用Predicate<Holder<Structure>>来检测garden结构

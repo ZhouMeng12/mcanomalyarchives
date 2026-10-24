@@ -49,6 +49,7 @@ public class CloudingEffectHandler {
 	 */
 	@SubscribeEvent
 	public static void onEffectAdded(MobEffectEvent.Added event) {
+		if (event.getEntity().level().isClientSide()) return;
 		if (event.getEffectInstance() == null
 			|| event.getEffectInstance().getEffect().value() != McanomalyarchivesModMobEffects.CLOUDING.get()) return;
 		if (event.getEffectInstance().getAmplifier() < 1) return;
@@ -122,9 +123,11 @@ public class CloudingEffectHandler {
 				MobEffectInstance e = player.getEffect(McanomalyarchivesModMobEffects.CLOUDING);
 				if (e != null && e.getAmplifier() >= 1) {
 					// 仍在云化二级：强制维持飞行，禁止落地
-					player.getAbilities().mayfly = true;
-					player.getAbilities().flying = true;
-					player.onUpdateAbilities();
+					if (!player.getAbilities().mayfly || !player.getAbilities().flying) {
+						player.getAbilities().mayfly = true;
+						player.getAbilities().flying = true;
+						player.onUpdateAbilities();
+					}
 					continue;
 				}
 				// 结束：恢复飞行状态
@@ -177,6 +180,7 @@ public class CloudingEffectHandler {
 	/** 云化效果移除时：恢复玩家飞行状态；生物的 AI 由 tickCloudedMobs 统一恢复 */
 	@SubscribeEvent
 	public static void onEffectRemoved(MobEffectEvent.Remove event) {
+		if (event.getEntity().level().isClientSide()) return;
 		if (event.getEffect() == null
 			|| event.getEffect().value() != McanomalyarchivesModMobEffects.CLOUDING.get()) return;
 
@@ -199,5 +203,11 @@ public class CloudingEffectHandler {
 	private static void sendVisual(LivingEntity entity, boolean gray) {
 		if (entity.level().isClientSide()) return;
 		PacketDistributor.sendToPlayersTrackingEntityAndSelf(entity, new CloudingVisualPacket(entity.getId(), entity.getUUID(), gray));
+	}
+
+	@SubscribeEvent
+	public static void onStopped(net.neoforged.neoforge.event.server.ServerStoppedEvent event) {
+		CLOUDED_PRE_NO_AI.clear();
+		CLOUDED_PLAYERS.clear();
 	}
 }

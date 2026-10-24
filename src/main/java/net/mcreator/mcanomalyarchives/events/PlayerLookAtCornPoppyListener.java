@@ -35,6 +35,8 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PlayerLookAtCornPoppyListener {
+    private static final ResourceLocation MOVEMENT_RESTRICTION_ID = ResourceLocation.fromNamespaceAndPath("mcanomalyarchives", "poppy_movement_restriction");
+    private static final java.util.Set<LivingEntity> trackedNpcs = ConcurrentHashMap.newKeySet();
     private static final int TICKS_PER_SECOND = 20;
     private static final int ADDICTION_TRIGGER_TIME = 10 * TICKS_PER_SECOND;
     private static final int LEVEL_UP_INTERVAL = 10 * TICKS_PER_SECOND;
@@ -73,7 +75,6 @@ public class PlayerLookAtCornPoppyListener {
         boolean isFrozen;
         int bufferTime;
         boolean inBufferPeriod;
-        double originalMoveSpeed;
         boolean speedModified;
         BlockPos poppyPos;
         /**
@@ -98,6 +99,66 @@ public class PlayerLookAtCornPoppyListener {
         NeoForge.EVENT_BUS.register(new PlayerLookAtCornPoppyListener());
     }
 
+    private static void setMovementModifier(net.minecraft.world.entity.ai.attributes.AttributeInstance attribute, double multiplier) {
+        var current = attribute.getModifier(MOVEMENT_RESTRICTION_ID);
+        if (current != null && current.amount() == multiplier - 1.0) return;
+        attribute.removeModifier(MOVEMENT_RESTRICTION_ID);
+        attribute.addTransientModifier(new net.minecraft.world.entity.ai.attributes.AttributeModifier(
+                MOVEMENT_RESTRICTION_ID, multiplier - 1.0,
+                net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
+    }
+
+    @SubscribeEvent
+    public void onJoin(net.neoforged.neoforge.event.entity.EntityJoinLevelEvent event) {
+        if (!event.getLevel().isClientSide() && event.getEntity() instanceof LivingEntity living
+                && !(living instanceof Player) && living.getType().is(NPC_TAG)) {
+            trackedNpcs.add(living);
+        }
+    }
+
+    @SubscribeEvent
+    public void onReload(net.neoforged.neoforge.event.OnDatapackSyncEvent event) {
+        if (event.getPlayer() != null) return;
+        for (LivingEntity previous : trackedNpcs) {
+            if (!previous.getType().is(NPC_TAG)) {
+                var speed = previous.getAttribute(Attributes.MOVEMENT_SPEED);
+                if (speed != null) speed.removeModifier(MOVEMENT_RESTRICTION_ID);
+                npcStates.remove(previous.getUUID());
+                npcCurrentWatchingPoppy.remove(previous.getUUID());
+            }
+        }
+        trackedNpcs.clear();
+        for (ServerLevel level : event.getPlayerList().getServer().getAllLevels()) {
+            for (var entity : level.getAllEntities()) {
+                if (entity instanceof LivingEntity living && !(living instanceof Player) && living.getType().is(NPC_TAG)) {
+                    trackedNpcs.add(living);
+                }
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onLeave(net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent event) {
+        if (event.getLevel().isClientSide() || !(event.getEntity() instanceof LivingEntity living)) return;
+        trackedNpcs.remove(living);
+        var speed = living.getAttribute(Attributes.MOVEMENT_SPEED);
+        if (speed != null) speed.removeModifier(MOVEMENT_RESTRICTION_ID);
+        UUID id = living.getUUID();
+        playerStates.remove(id);
+        currentWatchingPoppy.remove(id);
+        npcStates.remove(id);
+        npcCurrentWatchingPoppy.remove(id);
+    }
+
+    @SubscribeEvent
+    public void onStopped(net.neoforged.neoforge.event.server.ServerStoppedEvent event) {
+        trackedNpcs.clear();
+        playerStates.clear();
+        currentWatchingPoppy.clear();
+        npcStates.clear();
+        npcCurrentWatchingPoppy.clear();
+    }
+
     @SubscribeEvent
     public void onServerTick(ServerTickEvent.Post event) {
         // 节流：每 5 tick 执行一次（判定阈值以真实 tick 计，计数按 5 累加对齐）
@@ -111,7 +172,7 @@ public class PlayerLookAtCornPoppyListener {
             // 红伪云走同一套上瘾逻辑：不盯虞美人时再看它在不在视线里
             boolean isLookingAtCloud = !isLookingAtPoppy && isPlayerLookingAtRedCloud(player);
             state.watchingCloud = isLookingAtCloud;
-            long currentTime = System.currentTimeMillis();
+            long currentTime = event.getServer().overworld().getGameTime();
 
             if (isLookingAtPoppy || isLookingAtCloud) {
                 state.lastLookTime = currentTime;
@@ -130,60 +191,39 @@ public class PlayerLookAtCornPoppyListener {
                 player.setDeltaMovement(Vec3.ZERO);
             }
 
-            if (!player.hasEffect(McanomalyarchivesModMobEffects.SAD)) {
-                if (player.hasEffect(MobEffects.MOVEMENT_SLOWDOWN)) {
-                    player.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
-                }
-                if (player.hasEffect(MobEffects.WEAKNESS)) {
-                    player.removeEffect(MobEffects.WEAKNESS);
-                }
-            }
-
-            cleanupIdleState(playerId, state, playerStates);
+            cleanupIdleState(playerId, state, playerStates, event.getServer().overworld().getGameTime());
         }
 
         // 处理NPC
-        for (ServerLevel level : event.getServer().getAllLevels()) {
-            for (var entity : level.getAllEntities()) {
-                if (!(entity instanceof LivingEntity livingEntity)) continue;
-                if (!(livingEntity.getType().is(NPC_TAG) && !(livingEntity instanceof Player))) continue;
-                UUID npcId = livingEntity.getUUID();
-                PlayerPoppyState npcState = npcStates.computeIfAbsent(npcId, k -> new PlayerPoppyState());
+        for (LivingEntity livingEntity : trackedNpcs) {
+            if (livingEntity.isRemoved() || !livingEntity.getType().is(NPC_TAG)) continue;
+            UUID npcId = livingEntity.getUUID();
+            PlayerPoppyState npcState = npcStates.computeIfAbsent(npcId, k -> new PlayerPoppyState());
 
-                boolean isLookingAtPoppy = isEntityLookingAtCornPoppy(livingEntity);
-                // NPC 也会盯着红伪云上瘾（同一套逻辑；只是它们不会去看方块那一套特例）
-                boolean isLookingAtCloud = !isLookingAtPoppy && isEntityLookingAtRedCloud(livingEntity);
-                npcState.watchingCloud = isLookingAtCloud;
-                long currentTime = System.currentTimeMillis();
+            boolean isLookingAtPoppy = isEntityLookingAtCornPoppy(livingEntity);
+            // NPC 也会盯着红伪云上瘾（同一套逻辑；只是它们不会去看方块那一套特例）
+            boolean isLookingAtCloud = !isLookingAtPoppy && isEntityLookingAtRedCloud(livingEntity);
+            npcState.watchingCloud = isLookingAtCloud;
+            long currentTime = event.getServer().overworld().getGameTime();
 
-                if (isLookingAtPoppy || isLookingAtCloud) {
-                    npcState.lastLookTime = currentTime;
-                    npcState.poppyPos = npcCurrentWatchingPoppy.get(npcId);
-                    handleNPCLookingAtPoppy(livingEntity, npcState);
-                } else {
-                    npcCurrentWatchingPoppy.remove(npcId);
-                    npcState.poppyPos = null;
-                    handleNPCNotLookingAtPoppy(livingEntity, npcState);
-                }
-
-                if (npcState.isFrozen && npcState.frozenPosition != null) {
-                    livingEntity.setPos(npcState.frozenPosition);
-                    livingEntity.setYRot(npcState.frozenYaw);
-                    livingEntity.setXRot(npcState.frozenPitch);
-                    livingEntity.setDeltaMovement(Vec3.ZERO);
-                }
-
-                if (!livingEntity.hasEffect(McanomalyarchivesModMobEffects.SAD)) {
-                    if (livingEntity.hasEffect(MobEffects.MOVEMENT_SLOWDOWN)) {
-                        livingEntity.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
-                    }
-                    if (livingEntity.hasEffect(MobEffects.WEAKNESS)) {
-                        livingEntity.removeEffect(MobEffects.WEAKNESS);
-                    }
-                }
-
-                cleanupIdleState(npcId, npcState, npcStates);
+            if (isLookingAtPoppy || isLookingAtCloud) {
+                npcState.lastLookTime = currentTime;
+                npcState.poppyPos = npcCurrentWatchingPoppy.get(npcId);
+                handleNPCLookingAtPoppy(livingEntity, npcState);
+            } else {
+                npcCurrentWatchingPoppy.remove(npcId);
+                npcState.poppyPos = null;
+                handleNPCNotLookingAtPoppy(livingEntity, npcState);
             }
+
+            if (npcState.isFrozen && npcState.frozenPosition != null) {
+                livingEntity.setPos(npcState.frozenPosition);
+                livingEntity.setYRot(npcState.frozenYaw);
+                livingEntity.setXRot(npcState.frozenPitch);
+                livingEntity.setDeltaMovement(Vec3.ZERO);
+            }
+
+            cleanupIdleState(npcId, npcState, npcStates, event.getServer().overworld().getGameTime());
         }
     }
 
@@ -275,8 +315,8 @@ public class PlayerLookAtCornPoppyListener {
                 }
                 
                 long currentGameTime = level.getGameTime();
-                CornPoppyBlock.setLastWatchedTime(pos, currentGameTime);
-                CornPoppyBlock.clearAngryState(pos);
+                CornPoppyBlock.setLastWatchedTime(level, pos, currentGameTime);
+                CornPoppyBlock.clearAngryState(level, pos);
                 currentWatchingPoppy.put(player.getUUID(), pos);
                 return true;
             }
@@ -290,8 +330,8 @@ public class PlayerLookAtCornPoppyListener {
                     level.setBlock(below, McanomalyarchivesModBlocks.CORN_POPPY.get().defaultBlockState(), 3);
                 }
                 long currentGameTime = level.getGameTime();
-                CornPoppyBlock.setLastWatchedTime(below, currentGameTime);
-                CornPoppyBlock.clearAngryState(below);
+                CornPoppyBlock.setLastWatchedTime(level, below, currentGameTime);
+                CornPoppyBlock.clearAngryState(level, below);
                 currentWatchingPoppy.put(player.getUUID(), below);
                 return true;
             }
@@ -430,11 +470,10 @@ public class PlayerLookAtCornPoppyListener {
             var attribute = serverPlayer.getAttribute(Attributes.MOVEMENT_SPEED);
             if (attribute != null) {
                 if (!state.speedModified) {
-                    state.originalMoveSpeed = attribute.getBaseValue();
                     state.speedModified = true;
                 }
                 double slowMultiplier = Math.max(0.01, 1.0 - effectiveLevel * 0.12);
-                attribute.setBaseValue(state.originalMoveSpeed * slowMultiplier);
+                setMovementModifier(attribute, slowMultiplier);
             }
         }
 
@@ -547,10 +586,9 @@ public class PlayerLookAtCornPoppyListener {
             if (player instanceof ServerPlayer serverPlayer && state.speedModified) {
                 var attribute = serverPlayer.getAttribute(Attributes.MOVEMENT_SPEED);
                 if (attribute != null) {
-                    attribute.setBaseValue(state.originalMoveSpeed);
+                    attribute.removeModifier(MOVEMENT_RESTRICTION_ID);
                 }
                 state.speedModified = false;
-                state.originalMoveSpeed = 0;
             }
         }
     }
@@ -584,8 +622,8 @@ public class PlayerLookAtCornPoppyListener {
                 }
                 
                 long currentGameTime = level.getGameTime();
-                CornPoppyBlock.setLastWatchedTime(pos, currentGameTime);
-                CornPoppyBlock.clearAngryState(pos);
+                CornPoppyBlock.setLastWatchedTime(level, pos, currentGameTime);
+                CornPoppyBlock.clearAngryState(level, pos);
                 npcCurrentWatchingPoppy.put(entity.getUUID(), pos);
                 return true;
             }
@@ -599,8 +637,8 @@ public class PlayerLookAtCornPoppyListener {
                     level.setBlock(below, McanomalyarchivesModBlocks.CORN_POPPY.get().defaultBlockState(), 3);
                 }
                 long currentGameTime = level.getGameTime();
-                CornPoppyBlock.setLastWatchedTime(below, currentGameTime);
-                CornPoppyBlock.clearAngryState(below);
+                CornPoppyBlock.setLastWatchedTime(level, below, currentGameTime);
+                CornPoppyBlock.clearAngryState(level, below);
                 npcCurrentWatchingPoppy.put(entity.getUUID(), below);
                 return true;
             }
@@ -647,7 +685,7 @@ public class PlayerLookAtCornPoppyListener {
                 if (state.poppyPos != null) {
                     entity.level().setBlock(state.poppyPos,
                         McanomalyarchivesModBlocks.DEAD_POPPY.get().defaultBlockState(), 3);
-                    CornPoppyBlock.removeFromAllMaps(state.poppyPos);
+                    CornPoppyBlock.removeFromAllMaps(entity.level(), state.poppyPos);
                     state.poppyPos = null;
                 }
                 state.lookingTime = 0;
@@ -736,11 +774,10 @@ public class PlayerLookAtCornPoppyListener {
             var attribute = entity.getAttribute(Attributes.MOVEMENT_SPEED);
             if (attribute != null) {
                 if (!state.speedModified) {
-                    state.originalMoveSpeed = attribute.getBaseValue();
                     state.speedModified = true;
                 }
                 double slowMultiplier = Math.max(0.01, 1.0 - effectiveLevel * 0.12);
-                attribute.setBaseValue(state.originalMoveSpeed * slowMultiplier);
+                setMovementModifier(attribute, slowMultiplier);
             }
         }
 
@@ -853,10 +890,9 @@ public class PlayerLookAtCornPoppyListener {
             if (state.speedModified) {
                 var attribute = entity.getAttribute(Attributes.MOVEMENT_SPEED);
                 if (attribute != null) {
-                    attribute.setBaseValue(state.originalMoveSpeed);
+                    attribute.removeModifier(MOVEMENT_RESTRICTION_ID);
                 }
                 state.speedModified = false;
-                state.originalMoveSpeed = 0;
             }
         }
     }
@@ -879,15 +915,13 @@ public class PlayerLookAtCornPoppyListener {
         if (state.speedModified) {
             var attribute = player.getAttribute(Attributes.MOVEMENT_SPEED);
             if (attribute != null) {
-                attribute.setBaseValue(state.originalMoveSpeed);
+                attribute.removeModifier(MOVEMENT_RESTRICTION_ID);
             }
             state.speedModified = false;
-            state.originalMoveSpeed = 0;
         }
     }
 
-    private static void cleanupIdleState(UUID id, PlayerPoppyState state, Map<UUID, PlayerPoppyState> statesMap) {
-        long currentTime = System.currentTimeMillis();
+    private static void cleanupIdleState(UUID id, PlayerPoppyState state, Map<UUID, PlayerPoppyState> statesMap, long currentTime) {
         long idleTime = currentTime - state.lastLookTime;
 
         if (idleTime > IDLE_CLEANUP_TIME &&

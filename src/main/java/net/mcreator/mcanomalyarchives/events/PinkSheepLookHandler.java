@@ -94,6 +94,14 @@ public class PinkSheepLookHandler {
 	@SubscribeEvent
 	public static void onSheepLeave(net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent event) {
 		if (event.getEntity() instanceof PinkSheepEntity sheep) {
+			activeSheep.remove(sheep);
+			encounterGranted.remove(sheep);
+			watchedThisTick.remove(sheep);
+			lookingAtSheep.entrySet().removeIf(entry -> {
+				if (entry.getValue() != sheep) return false;
+				lookTicks.remove(entry.getKey());
+				return true;
+			});
 			PinkSheepMechanics.forget(sheep);
 		}
 	}
@@ -106,7 +114,12 @@ public class PinkSheepLookHandler {
 		if (!PinkSheepGameRules.enabled(event.getServer()))
 			return;
 		for (ServerPlayer player : level.getServer().getPlayerList().getPlayers()) {
-			tickPlayer(player, level);
+			if (player.serverLevel() == level) {
+				tickPlayer(player, level);
+			} else {
+				lookingAtSheep.remove(player.getUUID());
+				lookTicks.remove(player.getUUID());
+			}
 		}
 		// 结算：本 tick 被看的羊保持存在；任何未被注视的羊 → 立即消失（观察者效应强规则）。
 		// 同时跳过"附近有创造/旁观玩家"的羊（当作普通羊）。
@@ -116,7 +129,7 @@ public class PinkSheepLookHandler {
 				continue;
 			// 创造/旁观玩家 32 格内 → 普通羊
 			boolean creativeNearby = false;
-			for (Player p : level.players()) {
+			for (Player p : sheep.level().players()) {
 				if (p.distanceToSqr(sheep) < 32.0 * 32.0
 						&& p instanceof net.minecraft.server.level.ServerPlayer sp
 						&& (sp.gameMode.isCreative() || sp.isSpectator())) {
@@ -199,11 +212,21 @@ public class PinkSheepLookHandler {
 
 	/** 玩家视线是否朝向羊（角度 + 视线） */
 	public static boolean isPlayerLookingAt(ServerPlayer player, PinkSheepEntity sheep) {
+		if (player.level() != sheep.level()) return false;
 		Vec3 eye = player.getEyePosition(1.0F);
 		Vec3 center = sheep.position().add(0, sheep.getBbHeight() * 0.5, 0);
 		Vec3 toSheep = center.subtract(eye).normalize();
 		Vec3 look = player.getViewVector(1.0F).normalize();
 		double dot = look.dot(toSheep);
 		return dot > LOOK_ANGLE_DOT && player.hasLineOfSight(sheep);
+	}
+
+	@SubscribeEvent
+	public static void onStopped(net.neoforged.neoforge.event.server.ServerStoppedEvent event) {
+		lookingAtSheep.clear();
+		lookTicks.clear();
+		encounterGranted.clear();
+		watchedThisTick.clear();
+		activeSheep.clear();
 	}
 }

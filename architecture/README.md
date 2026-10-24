@@ -12,6 +12,8 @@
 - `ROUND-3.md`：怪树的阶段状态、恢复快照，以及真实 NBT 和世界内的恢复验证。
 - `ROUND-4.md`：配置归属、旧设置迁移、时长测试和部署注意事项。
 - `PR-FIXES.md`：PR 前自检发现的两个问题，以及修复过程、失败测试和世界回归。
+- `ROUND-5.md`：异常维度隔离、共享窥视者归属、花朵计时存档与性能优化。
+- `ANOMALY-EFFECTS-DESIGN.md`：七类已实现异常的效果与氛围方案，含待确认的强度变化，尚未实施。
 - `adr/0001-server-session-runtime.md`：第一轮的模块分工与生命周期决定。
 - `adr/0002-server-authoritative-purple-story.md`：紫怪会话的状态和结算方式。
 - `adr/0003-strange-tree-recovery-journal.md`：怪树的持久状态和重载恢复策略。

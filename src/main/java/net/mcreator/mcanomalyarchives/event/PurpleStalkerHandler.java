@@ -7,11 +7,9 @@ import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModEntities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -60,6 +58,9 @@ public class PurpleStalkerHandler {
 
 	// 每玩家的下次生成时间戳（gameTime）
 	private static final Map<UUID, Long> nextSpawnTime = new ConcurrentHashMap<>();
+	private static final net.mcreator.mcanomalyarchives.anomaly.purple.SharedStalkerSession<PurpleMonsterEntity> sharedSession =
+		new net.mcreator.mcanomalyarchives.anomaly.purple.SharedStalkerSession<>();
+	private static final String OWNER_KEY = "PurpleStalkerOwner";
 
 	public static void init() {
 		NeoForge.EVENT_BUS.register(new PurpleStalkerHandler());
@@ -70,15 +71,15 @@ public class PurpleStalkerHandler {
 		if (!(event.getEntity() instanceof ServerPlayer player)) return;
 		UUID uuid = player.getUUID();
 		nextSpawnTime.remove(uuid);
-		removeAllStalkers(player.getServer());
+		removeOwnedStalker(uuid);
 	}
 
-	/** 玩家换维度时清理所有窥视者（避免留在旧维度直到超时） */
+	/** 玩家换维度时只清理其关联的窥视者（避免留在旧维度直到超时） */
 	@SubscribeEvent
 	public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
 		if (event.getEntity() instanceof ServerPlayer player) {
 			nextSpawnTime.remove(player.getUUID());
-			removeAllStalkers(player.getServer());
+			removeOwnedStalker(player.getUUID());
 		}
 	}
 
@@ -86,6 +87,8 @@ public class PurpleStalkerHandler {
 	public void onServerTick(ServerTickEvent.Post event) {
 		// 扫描节流：1 秒一次足够（生成间隔最小 120 秒）
 		if (event.getServer().getTickCount() % SCAN_INTERVAL != 0) return;
+		PurpleMonsterEntity active = sharedSession.current();
+		if (active != null && (active.isRemoved() || !active.isAlive() || !active.isStalkerMode())) sharedSession.clear();
 		for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
 			processPlayer(player);
 		}
@@ -101,7 +104,7 @@ public class PurpleStalkerHandler {
 		if (!player.getData(McanomalyarchivesModAttachments.PURPLE_ASSIMILATION_COMPLETED)) return;
 
 		// 检查是否已有窥视者存在（全局同时最多一个）
-		if (hasAnyActiveStalker(player.getServer())) return;
+		if (hasAnyActiveStalker()) return;
 
 		// 检查冷却（下次生成时间）
 		long currentGameTime = player.level().getGameTime();
@@ -140,16 +143,8 @@ public class PurpleStalkerHandler {
 	}
 
 	/** 全局是否已有窥视者存在（任何维度、任何玩家，同时最多一个） */
-	private boolean hasAnyActiveStalker(MinecraftServer server) {
-		if (server == null) return false;
-		for (ServerLevel level : server.getAllLevels()) {
-			for (Entity entity : level.getAllEntities()) {
-				if (entity instanceof PurpleMonsterEntity pm && pm.isStalkerMode()) {
-					return true;
-				}
-			}
-		}
-		return false;
+	private boolean hasAnyActiveStalker() {
+		return sharedSession.current() != null;
 	}
 
 	private void spawnStalker(ServerPlayer player) {
@@ -157,6 +152,7 @@ public class PurpleStalkerHandler {
 		int distance = distanceForSightings(player);
 
 		BlockPos spawnPos = pickScenicSpawnPos(player, serverLevel, distance);
+		if (spawnPos == null) return;
 
 		PurpleMonsterEntity stalker = new PurpleMonsterEntity(
 			McanomalyarchivesModEntities.PURPLE_MONSTER.get(), serverLevel);
@@ -166,6 +162,7 @@ public class PurpleStalkerHandler {
 		stalker.yHeadRot = player.getYRot();
 		stalker.setTextureVariant(1); // 紫色纹理
 		stalker.setStalkerMode(true);
+		stalker.getPersistentData().putUUID(OWNER_KEY, player.getUUID());
 		serverLevel.addFreshEntity(stalker);
 
 		McanomalyarchivesMod.LOGGER.info("Stalker Purple Monster spawned for player {} at ({}, {}, {}), distance={}",
@@ -194,7 +191,7 @@ public class PurpleStalkerHandler {
 			BlockPos fallback = groundPosAt(player, level, distance, rng.nextFloat() * 360f);
 			if (fallback != null) return fallback;
 		}
-		return player.blockPosition();
+		return null;
 	}
 
 	/** 按角度和距离算地面坐标（找不到合适地面返回 null） */
@@ -202,6 +199,7 @@ public class PurpleStalkerHandler {
 		double angleRad = Math.toRadians(angleDeg);
 		double spawnX = player.getX() + (-Math.sin(angleRad) * distance);
 		double spawnZ = player.getZ() + (Math.cos(angleRad) * distance);
+		if (!level.hasChunkAt(BlockPos.containing(spawnX, player.getY(), spawnZ))) return null;
 		int groundY = level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE,
 			BlockPos.containing(spawnX, player.getY(), spawnZ)).getY();
 		if (groundY <= level.getMinBuildHeight() + 1) return null;
@@ -252,15 +250,28 @@ public class PurpleStalkerHandler {
 		return path.contains("glass");
 	}
 
-	/** 跨所有维度清理窥视者（登出/换维度时调用） */
-	private void removeAllStalkers(MinecraftServer server) {
-		if (server == null) return;
-		for (ServerLevel level : server.getAllLevels()) {
-			for (Entity entity : level.getAllEntities()) {
-				if (entity instanceof PurpleMonsterEntity pm && pm.isStalkerMode()) {
-					entity.remove(Entity.RemovalReason.DISCARDED);
-				}
-			}
+	/** 只清理离场玩家关联的共享遭遇（登出/换维度时调用） */
+	private void removeOwnedStalker(UUID owner) {
+		PurpleMonsterEntity stalker = sharedSession.closeForOwner(owner);
+		if (stalker != null) stalker.discard();
+	}
+
+	@SubscribeEvent
+	public void onJoin(net.neoforged.neoforge.event.entity.EntityJoinLevelEvent event) {
+		if (!event.getLevel().isClientSide() && event.getEntity() instanceof PurpleMonsterEntity stalker && stalker.isStalkerMode()) {
+			UUID owner = stalker.getPersistentData().hasUUID(OWNER_KEY) ? stalker.getPersistentData().getUUID(OWNER_KEY) : null;
+			if (!sharedSession.open(stalker.getUUID(), owner, stalker)) event.setCanceled(true);
 		}
+	}
+
+	@SubscribeEvent
+	public void onLeave(net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent event) {
+		if (event.getEntity() instanceof PurpleMonsterEntity stalker) sharedSession.leave(stalker.getUUID());
+	}
+
+	@SubscribeEvent
+	public void onStopped(net.neoforged.neoforge.event.server.ServerStoppedEvent event) {
+		sharedSession.clear();
+		nextSpawnTime.clear();
 	}
 }

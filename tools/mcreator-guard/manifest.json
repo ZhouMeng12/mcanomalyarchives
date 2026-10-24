@@ -1411,6 +1411,66 @@
         "PlacementUndo undo",
         "recordPlacementUndo("
       ]
+    },
+    {
+      "id": "poppy-runtime-files",
+      "kind": "exists",
+      "why": "花朵计时及跨维度恢复需要手写模块和真实回归",
+      "fixHint": "恢复花朵存档和状态模块",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/poppy/PoppyAngerState.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/poppy/PoppyAngerData.java",
+        "src/test/java/net/mcreator/mcanomalyarchives/anomaly/poppy/PoppyAngerStateTest.java",
+        "src/test/java/net/mcreator/mcanomalyarchives/anomaly/purple/SharedStalkerSessionTest.java"
+      ]
+    },
+    {
+      "id": "poppy-generated-state-hooks",
+      "kind": "contains",
+      "why": "生成区应保留维度键、悲伤花转换与持久状态接线",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/block/CornPoppyBlock.java",
+      "fixHint": "恢复 PoppyAngerData 和 onReplacement 接线",
+      "mustContain": [
+        "PoppyAngerData.get(",
+        "state().onReplacement(GlobalPos.of(world.dimension(), pos),",
+        "state().watch(key, time);",
+        "data(level).setDirty();"
+      ]
+    },
+    {
+      "id": "stalker-save-hooks",
+      "kind": "contains",
+      "why": "窥视者模式与已消耗时长必须存档，重载后不能变成普通紫怪",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/PurpleMonsterEntity.java",
+      "fixHint": "恢复窥视者 NBT 保存和加载",
+      "mustContain": [
+        "tag.putBoolean(\"PurpleStalkerMode\", isStalkerMode());",
+        "if (tag.getBoolean(\"PurpleStalkerMode\")) {",
+        "setStalkerMode(true);",
+        "tag.putInt(\"PurpleStalkerSeenTicks\", stalkerSeenTicks);"
+      ]
+    },
+    {
+      "id": "stalker-shared-owner-lifecycle",
+      "kind": "contains",
+      "why": "全服共享遭遇只由关联玩家离场关闭，不能清理无关玩家的窥视者",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/event/PurpleStalkerHandler.java",
+      "fixHint": "恢复共享会话的归属与生命周期接线",
+      "mustContain": [
+        "sharedSession.closeForOwner(owner)",
+        "sharedSession.open(stalker.getUUID(), owner, stalker)",
+        "sharedSession.leave(stalker.getUUID())",
+        "stalker.getPersistentData().putUUID(OWNER_KEY, player.getUUID());"
+      ]
+    },
+    {
+      "id": "poppy-no-global-effect-removal",
+      "kind": "noMatch",
+      "why": "上瘾系统不能按效果类型清除所有来源的缓慢或虚弱",
+      "fixHint": "只清理自有属性修饰器，保留其他来源的效果",
+      "glob": "PlayerLookAtCornPoppyListener.java",
+      "searchRoot": "src/main/java",
+      "pattern": "removeEffect\\(MobEffects\\.(MOVEMENT_SLOWDOWN|WEAKNESS)\\)"
     }
   ]
 }

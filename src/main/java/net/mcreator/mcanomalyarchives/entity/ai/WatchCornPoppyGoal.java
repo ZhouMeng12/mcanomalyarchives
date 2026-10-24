@@ -54,8 +54,8 @@ public class WatchCornPoppyGoal extends Goal {
 		
 		// 记录注视时间，触发注视系统
 		long currentGameTime = mob.level().getGameTime();
-		CornPoppyBlock.setLastWatchedTime(targetPoppy, currentGameTime);
-		CornPoppyBlock.clearAngryState(targetPoppy);
+		CornPoppyBlock.setLastWatchedTime(mob.level(), targetPoppy, currentGameTime);
+		CornPoppyBlock.clearAngryState(mob.level(), targetPoppy);
 	}
 
 	@Override

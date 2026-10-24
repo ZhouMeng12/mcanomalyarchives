@@ -43,35 +43,35 @@ public class CornPoppyAngryListener {
 
 	@SubscribeEvent
 	public void onServerTick(ServerTickEvent.Post event) {
-		ServerLevel overworld = event.getServer().getLevel(Level.OVERWORLD);
-		if (overworld == null) return;
-		
-		long currentTime = overworld.getGameTime();
-		List<BlockPos> toRemove = new ArrayList<>();
+		List<net.minecraft.core.GlobalPos> toRemove = new ArrayList<>();
 
-		for (Map.Entry<BlockPos, Long> entry : CornPoppyBlock.getLastWatchedTimeMap().entrySet()) {
-			BlockPos pos = entry.getKey();
+		for (Map.Entry<net.minecraft.core.GlobalPos, Long> entry : CornPoppyBlock.getLastWatchedTimeMap(event.getServer().overworld()).entrySet()) {
+			ServerLevel overworld = event.getServer().getLevel(entry.getKey().dimension());
+			BlockPos pos = entry.getKey().pos();
+			// 未加载区块保留记录，不为计时强行加载区块。
+			if (overworld == null || !overworld.hasChunkAt(pos)) continue;
+			long currentTime = overworld.getGameTime();
 
 			if (!overworld.isInWorldBounds(pos)) {
-				toRemove.add(pos);
+				toRemove.add(entry.getKey());
 				continue;
 			}
 
 			Block currentBlock = overworld.getBlockState(pos).getBlock();
 			if (currentBlock != McanomalyarchivesModBlocks.CORN_POPPY.get() && 
 				currentBlock != McanomalyarchivesModBlocks.SAD_POPPY.get()) {
-				toRemove.add(pos);
+				toRemove.add(entry.getKey());
 				continue;
 			}
 
 			long lastWatched = entry.getValue();
-			Long angryEnd = CornPoppyBlock.getAngryEndTime(pos);
+			Long angryEnd = CornPoppyBlock.getAngryEndTime(overworld, pos);
 
 			if (angryEnd != null && currentTime > angryEnd) {
 				if (overworld.getBlockState(pos).getBlock() == McanomalyarchivesModBlocks.SAD_POPPY.get()) {
-					overworld.setBlock(pos, McanomalyarchivesModBlocks.CORN_POPPY.get().defaultBlockState(), 3);
+					if (!overworld.setBlock(pos, McanomalyarchivesModBlocks.CORN_POPPY.get().defaultBlockState(), 3)) continue;
 				}
-				toRemove.add(pos);
+				toRemove.add(entry.getKey());
 				continue;
 			}
 
@@ -79,7 +79,7 @@ public class CornPoppyAngryListener {
 				continue;
 			}
 
-			if (!CornPoppyBlock.getHasBeenWatched(pos)) {
+			if (!CornPoppyBlock.getHasBeenWatched(overworld, pos)) {
 				continue;
 			}
 
@@ -88,14 +88,15 @@ public class CornPoppyAngryListener {
 				if (!overworld.getGameRules().getBoolean(McanomalyarchivesModGameRules.CORN_POPPY_SAD)) {
 					continue;
 				}
-				CornPoppyBlock.putAngryEndTime(pos, currentTime + CornPoppyBlock.getAngryDuration());
-				overworld.setBlock(pos, McanomalyarchivesModBlocks.SAD_POPPY.get().defaultBlockState(), 3);
-				applyAngryEffect(overworld, pos);
+				if (overworld.setBlock(pos, McanomalyarchivesModBlocks.SAD_POPPY.get().defaultBlockState(), 3)) {
+					CornPoppyBlock.putAngryEndTime(overworld, pos, currentTime + CornPoppyBlock.getAngryDuration());
+					applyAngryEffect(overworld, pos);
+				}
 			}
 		}
 
-		for (BlockPos pos : toRemove) {
-			CornPoppyBlock.removeFromAllMaps(pos);
+		for (net.minecraft.core.GlobalPos pos : toRemove) {
+			CornPoppyBlock.removeFromAllMaps(event.getServer().overworld(), pos);
 		}
 	}
 

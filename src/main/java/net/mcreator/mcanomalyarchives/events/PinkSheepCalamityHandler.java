@@ -130,6 +130,7 @@ public class PinkSheepCalamityHandler {
 		if (!PinkSheepGameRules.enabled(event.getServer()))
 			return;
 		for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
+			if (player.serverLevel() != level) continue;
 			// 只对生存玩家生效：创造/旁观不受灾厄影响
 			if (player.gameMode.isCreative() || player.isSpectator())
 				continue;
@@ -149,9 +150,8 @@ public class PinkSheepCalamityHandler {
 					markTriggered(sheep, player.getUUID(), lvl);
 				}
 			}
-			// 清理已死羊记录
-			sweepDead();
 		}
+		sweepDead();
 	}
 
 	// ===== 近战攻击羊 =====

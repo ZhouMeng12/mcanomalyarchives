@@ -81,6 +81,7 @@ public class PinkSheepStructureSpawnHandler {
 
 		long now = level.getGameTime();
 		for (ServerPlayer player : level.getServer().getPlayerList().getPlayers()) {
+			if (player.serverLevel() != level) continue;
 			if (player.gameMode.isCreative() || player.isSpectator())
 				continue;
 			Long next = nextScanByPlayer.get(player.getUUID());

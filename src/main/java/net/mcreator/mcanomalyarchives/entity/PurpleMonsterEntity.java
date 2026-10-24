@@ -113,12 +113,34 @@ public class PurpleMonsterEntity extends Monster implements GeoAnimatable {
 		return this.entityData.get(STALKER_MODE);
 	}
 
+	@Override
+	public void addAdditionalSaveData(net.minecraft.nbt.CompoundTag tag) {
+		super.addAdditionalSaveData(tag);
+		tag.putBoolean("PurpleStalkerMode", isStalkerMode());
+		if (isStalkerMode()) tag.putInt("PurpleStalkerTexture", getTextureVariant());
+		tag.putInt("PurpleStalkerTicks", stalkerTickCount);
+		tag.putBoolean("PurpleStalkerSeen", stalkerSeen);
+		tag.putInt("PurpleStalkerSeenTicks", stalkerSeenTicks);
+	}
+
+	@Override
+	public void readAdditionalSaveData(net.minecraft.nbt.CompoundTag tag) {
+		super.readAdditionalSaveData(tag);
+		if (tag.getBoolean("PurpleStalkerMode")) {
+			setStalkerMode(true);
+			setTextureVariant(tag.contains("PurpleStalkerTexture") ? tag.getInt("PurpleStalkerTexture") : 1);
+		}
+		stalkerTickCount = Math.max(0, tag.getInt("PurpleStalkerTicks"));
+		stalkerSeen = tag.getBoolean("PurpleStalkerSeen");
+		stalkerSeenTicks = Math.max(0, tag.getInt("PurpleStalkerSeenTicks"));
+	}
+
 	public void setStalkerMode(boolean stalker) {
 		this.entityData.set(STALKER_MODE, stalker);
 		if (stalker) {
 			this.setNoAi(true);
-			this.goalSelector.getAvailableGoals().forEach(g -> this.goalSelector.removeGoal(g));
-			this.targetSelector.getAvailableGoals().forEach(g -> this.targetSelector.removeGoal(g));
+			java.util.List.copyOf(this.goalSelector.getAvailableGoals()).forEach(g -> this.goalSelector.removeGoal(g));
+			java.util.List.copyOf(this.targetSelector.getAvailableGoals()).forEach(g -> this.targetSelector.removeGoal(g));
 			this.getNavigation().stop();
 		}
 	}
@@ -135,8 +157,8 @@ public class PurpleMonsterEntity extends Monster implements GeoAnimatable {
 			// 禁用AI，防止LookControl覆盖朝向
 			this.setNoAi(true);
 			// 清除所有 AI Goal，停止移动
-			this.goalSelector.getAvailableGoals().forEach(g -> this.goalSelector.removeGoal(g));
-			this.targetSelector.getAvailableGoals().forEach(g -> this.targetSelector.removeGoal(g));
+			java.util.List.copyOf(this.goalSelector.getAvailableGoals()).forEach(g -> this.goalSelector.removeGoal(g));
+			java.util.List.copyOf(this.targetSelector.getAvailableGoals()).forEach(g -> this.targetSelector.removeGoal(g));
 			this.getNavigation().stop();
 			this.setDeltaMovement(0, this.getDeltaMovement().y, 0);
 		} else {
