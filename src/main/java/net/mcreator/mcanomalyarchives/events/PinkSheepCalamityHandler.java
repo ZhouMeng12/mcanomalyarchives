@@ -217,6 +217,8 @@ public class PinkSheepCalamityHandler {
 		if (player == null || !player.isAlive())
 			return;
 		ServerLevel levelWorld = player.serverLevel();
+		if (level >= 1 && level <= 3)
+			net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepFeedback.unlucky(player, level);
 		switch (level) {
 			case 1 -> {
 				// 小惩罚：天降TNT/闪电 或 铁装僵尸骷髅小队

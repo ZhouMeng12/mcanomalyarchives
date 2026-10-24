@@ -33,6 +33,21 @@ class StrangeTreeStateTest {
 	}
 
 	@Test
+	void unrelatedLoggerCannotKeepAnotherPlayersBuriedTreeAliveForever() {
+		bury();
+		state.recordLog(player, base);
+		for (int tick = 0; tick < StrangeTreeState.IDLE_TICKS; tick++) state.tick(true);
+		assertFalse(state.recordLog(UUID.randomUUID(), ground));
+		assertEquals(Effect.RESTORE, state.tick(true));
+	}
+
+	@Test
+	void undergroundDepthDoesNotChangeHorizontalTrackingRange() {
+		assertEquals(4096, new Point(0, -64, 0).horizontalDistanceSquared(new Point(64, 120, 0)));
+		assertEquals(0, new Point(4, -64, 8).horizontalDistanceSquared(new Point(4, 120, 8)));
+	}
+
+	@Test
 	void journalsOriginalTreeAndBuriesOnlyAtSixtyLoadedTicks() {
 		bury();
 		assertEquals(base, state.origin());
@@ -110,7 +125,7 @@ class StrangeTreeStateTest {
 		assertEquals(Phase.CHASE_SWING, state.phase());
 		for (int tick = 0; tick < 40; tick++) assertEquals(Effect.NONE, state.tick(true));
 		assertEquals(Phase.CHASE_WAIT, state.phase());
-		assertEquals(3, state.visualState());
+		assertEquals(5, state.visualState());
 		for (int tick = 1; tick < 30; tick++) assertEquals(Effect.NONE, state.tick(true));
 		assertEquals(Effect.CHECK_CHASE, state.tick(true));
 		assertTrue(state.resolveChase(true, true));

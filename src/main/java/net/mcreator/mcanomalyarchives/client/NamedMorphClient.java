@@ -55,13 +55,21 @@ public final class NamedMorphClient {
 		}
 		ResourceLocation path = ResourceLocation.fromNamespaceAndPath(target.id().getNamespace(),
 				"textures/block/" + target.id().getPath() + ".png");
-		return textureExists(path) ? path : null;
+		if (textureExists(path)) return path;
+		// 草方块、工作台等没有同名贴图，按真实方块模型取材质，不能静默跳过变化。
+		if (!net.minecraft.core.registries.BuiltInRegistries.BLOCK.containsKey(target.id())) return null;
+		var block = net.minecraft.core.registries.BuiltInRegistries.BLOCK.get(target.id());
+		var sprite = Minecraft.getInstance().getBlockRenderer().getBlockModel(block.defaultBlockState())
+				.getParticleIcon(net.neoforged.neoforge.client.model.data.ModelData.EMPTY).contents().name();
+		ResourceLocation fallback = ResourceLocation.fromNamespaceAndPath(sprite.getNamespace(), "textures/" + sprite.getPath() + ".png");
+		return textureExists(fallback) ? fallback : null;
 	}
 
 	/** 第二遍（目标方块贴图）的 alpha：随进度 0 → 255。 */
 	public static int targetAlpha(LivingEntity entity) {
 		float progress = NamedTransformClient.progressOf(entity);
-		int alpha = Math.round(Math.max(0.0f, Math.min(1.0f, progress)) * 255.0f);
+		// 前段就能看出材质侵入，终点仍是完全覆盖，服务端转换时长保持不变。
+		int alpha = Math.round((float) Math.sqrt(Math.max(0.0f, Math.min(1.0f, progress))) * 255.0f);
 		// 太小的时候干脆不画，省一次绘制调用
 		return alpha < 4 ? 0 : Math.min(255, alpha);
 	}

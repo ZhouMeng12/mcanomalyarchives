@@ -149,7 +149,7 @@ public final class PinkSheepBlessings {
 	public static void feast(ServerPlayer player, ServerLevel level) {
 		player.getFoodData().eat(20, 1.0F);
 		player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 1, 0));
-		player.heal(6.0F);
+		player.heal(player.getMaxHealth());
 		ItemStack[] food = { new ItemStack(Items.COOKED_BEEF, 4), new ItemStack(Items.BREAD, 6),
 				new ItemStack(Items.GOLDEN_CARROT, 3), new ItemStack(Items.COOKED_SALMON, 4) };
 		player.drop(food[player.getRandom().nextInt(food.length)], false, false);

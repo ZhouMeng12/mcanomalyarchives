@@ -21,6 +21,10 @@ public final class StrangeTreeState {
 	}
 	public enum Effect { NONE, BURY, BEGIN_SWING, CHECK_CHASE, KILL, RESTORE, RELOCATE }
 	public record Point(int x, int y, int z) {
+		public double horizontalDistanceSquared(Point other) {
+			double dx = (double) x - other.x, dz = (double) z - other.z;
+			return dx * dx + dz * dz;
+		}
 		public boolean withinCube(Point other, int range) {
 			return Math.abs((long) x - other.x) <= range && Math.abs((long) y - other.y) <= range
 					&& Math.abs((long) z - other.z) <= range;
@@ -157,7 +161,8 @@ public final class StrangeTreeState {
 			case STANDING -> 0;
 			case BURROWING, RELOCATING -> 1;
 			case BURIED, RECOVERING -> 2;
-			case EMERGING, CHASE_WAIT -> 3;
+			case EMERGING -> 3;
+			case CHASE_WAIT -> 5; // 等待保持树身，不能每轮重新播放钻出动画。
 			case NORMAL_STRIKE, CHASE_SWING, FINAL_STRIKE -> 4;
 		};
 	}
@@ -188,8 +193,8 @@ public final class StrangeTreeState {
 	/** 保留现有规则：钻地后首次砍树才绑定目标；其他人的砍树不会夺走目标。 */
 	public boolean recordLog(UUID player, Point position) {
 		if (phase != Phase.BURIED) return false;
-		ticks = 0;
 		if (target != null && !target.equals(player)) return false;
+		ticks = 0;
 		target = Objects.requireNonNull(player);
 		ambush = Objects.requireNonNull(position);
 		revision++;

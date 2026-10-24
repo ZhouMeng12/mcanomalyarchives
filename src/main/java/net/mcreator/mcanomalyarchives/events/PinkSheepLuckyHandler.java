@@ -43,6 +43,7 @@ public class PinkSheepLuckyHandler {
 		net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepAdvancements.grantSighting(player);
 		// 1. 原版幸运效果（60s = 1200 tick）
 		player.addEffect(new MobEffectInstance(MobEffects.LUCK, 1200, 0));
+		net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepFeedback.lucky(player, sheep);
 		// 2. 随机奇遇
 		rollFortunateEvent(player, sheep.level());
 	}
@@ -149,8 +150,10 @@ public class PinkSheepLuckyHandler {
 			var bolt = EntityType.LIGHTNING_BOLT.create(level);
 			if (bolt != null) {
 				bolt.moveTo(target.getX(), target.getY(), target.getZ());
-				bolt.setVisualOnly(true); // 只劈怪不炸玩家
+				bolt.setVisualOnly(true); // 闪电实体不造成范围伤害、起火或转化。
 				level.addFreshEntity(bolt);
+				// 幸运收益只结算到抽中的怪物；20 点基础伤害，不强制处决 Boss。
+				target.hurt(level.damageSources().lightningBolt(), 20.0f);
 			}
 		} else {
 			droppedTreasure(player, level); // 没怪就改掉宝

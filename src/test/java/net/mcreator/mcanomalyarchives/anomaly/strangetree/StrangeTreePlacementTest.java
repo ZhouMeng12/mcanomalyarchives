@@ -38,6 +38,38 @@ class StrangeTreePlacementTest {
 	}
 
 	@Test
+	void relocationRejectsObstructedCrownBeforeClearingItsTreeJournal() {
+		World world = new World();
+		world.blocks.put(second, "player-stone");
+		assertFalse(StrangeTreePlacement.applyRelocation(entries, world, plan -> fail("preflight must reject")));
+		assertEquals(0, world.writes);
+		assertEquals("player-stone", world.read(second));
+	}
+
+	@Test
+	void relocationDetectsNewObstructionAndKeepsUndoForPartialWrites() {
+		World world = new World();
+		world.replaceAfterFirstWrite = second;
+		List<Integer> attempted = new ArrayList<>();
+		assertFalse(StrangeTreePlacement.applyRelocation(entries, world, plan -> {
+			attempted.clear(); attempted.addAll(plan);
+		}));
+		assertEquals(List.of(0), attempted);
+		assertTrue(StrangeTreePlacement.rollback(attempted.stream().map(entries::get).toList(), world));
+		assertEquals("air", world.read(first));
+		assertEquals("player-stone", world.read(second));
+	}
+
+	@Test
+	void relocationCanRetryAlreadyPlacedTreeBlocksWithoutDuplicatingThem() {
+		World world = new World();
+		world.blocks.put(first, "tree");
+		assertTrue(StrangeTreePlacement.applyRelocation(entries, world, plan -> { }));
+		assertEquals(1, world.writes);
+		assertEquals("leaves", world.read(second));
+	}
+
+	@Test
 	void actualRejectedWriteCannotReportSuccessfulRestoration() {
 		World world = new World();
 		world.rejectWrite = 1;

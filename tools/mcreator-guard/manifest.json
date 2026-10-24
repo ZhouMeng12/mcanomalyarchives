@@ -1471,6 +1471,45 @@
       "glob": "PlayerLookAtCornPoppyListener.java",
       "searchRoot": "src/main/java",
       "pattern": "removeEffect\\(MobEffects\\.(MOVEMENT_SLOWDOWN|WEAKNESS)\\)"
+    },
+    {
+      "id": "tree-complete-relocation",
+      "kind": "contains",
+      "why": "怪树迁居不能跳过被挡住的树干后仍宣告成功",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeWorld.java",
+      "fixHint": "恢复完整迁居校验与根部暴露采样",
+      "mustContain": ["StrangeTreePlacement.applyRelocation", "StrangeTreeExposure.shouldBurrow", "level.hasChunkAt(point)"]
+    },
+    {
+      "id": "tree-exposure-trigger",
+      "kind": "contains",
+      "why": "根部大面积暴露应触发钻地迁居",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeModule.java",
+      "fixHint": "恢复站立态的每秒暴露检查",
+      "mustContain": ["StrangeTreeWorld.rootsExposed(level, tree.blockPosition())", "begin(tree, level, memory, true, null);"]
+    },
+    {
+      "id": "named-target-model-hook",
+      "kind": "contains",
+      "why": "命名牌已改为目标外观，不能被重新生成覆盖",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/mixin/NamedTransformRenderMixin.java",
+      "fixHint": "恢复目标模型替身渲染与方块材质混合",
+      "mustContain": ["NamedEntityAppearance.render", "NamedMorphClient.blendTexture"]
+    },
+    {
+      "id": "anomaly-feedback-files",
+      "kind": "exists",
+      "why": "跨维钓竿、幸运厄运反馈与命名模型必须随工程保留",
+      "fixHint": "恢复第六轮的手写模块与网络接线",
+      "paths": [
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/fishing/CrossDimensionFishingEffects.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/pinksheep/PinkSheepFeedback.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeExposure.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/FortunePulseClient.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/NamedEntityAppearance.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/NamedAppearanceLifecycle.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/network/FortunePulsePacket.java"
+      ]
     }
   ]
 }

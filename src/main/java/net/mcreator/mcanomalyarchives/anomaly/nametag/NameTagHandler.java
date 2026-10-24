@@ -197,9 +197,7 @@ public final class NameTagHandler {
 				consume(player, held);
 				switch (resolved.kind()) {
 					case ENTITY -> {
-						// 作者定：**瞬间换 AI/类，但模型与材质不变**。
-						// 做法是保留本体、把它整个行为目标换成名字所指生物的那一套（EntityAiSwap），
-						// 所以它的样子一点没变，一动起来却是那只生物。
+						// 行为由服务端接管；2026-10-24 起客户端同时显示目标生物模型。
 						EntityNaming.apply(living, resolved, raw);
 						if (living instanceof net.minecraft.world.entity.PathfinderMob pathfinder) {
 							EntityAiSwap.swap(pathfinder, resolved);
@@ -207,7 +205,7 @@ public final class NameTagHandler {
 						NamedTransformPacket.sendToWatchers(living);
 					}
 					case ITEM -> {
-						// 作者定：命名成物品就直接失去 AI、变成能拿起来用的东西，不换材质。
+						// 命名成物品后成为可拿取的目标物品，并显示目标外观。
 						if (resolved.id().equals(net.minecraft.resources.ResourceLocation.withDefaultNamespace("potato"))) {
 							// 正片开场事故：狗被命名成"土豆"后失去活性、遗体长出土豆嫩芽
 							EntityNaming.toPotato(level, living);
@@ -281,7 +279,7 @@ public final class NameTagHandler {
 					event.setCanceled(true);
 					return;
 				}
-				// 一律"完全转换"：本体换成名字所指的物品，外观由客户端画回源物品
+				// 完全转换：本体和显示外观都使用目标物品；代价与不稳定规则保留。
 				output = convertOrUnstable(left, resolved, raw);
 			}
 			default -> {

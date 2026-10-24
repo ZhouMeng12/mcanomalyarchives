@@ -51,6 +51,13 @@ public abstract class NamedTransformRenderMixin {
 	@Shadow
 	protected EntityModel<?> model;
 
+	@Inject(method = RENDER, at = @At("HEAD"), cancellable = true)
+	private void mcanomalyarchives$renderNamedIdentity(LivingEntity entity, float entityYaw, float partialTick,
+			PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, CallbackInfo ci) {
+		if (net.mcreator.mcanomalyarchives.client.NamedEntityAppearance.render(entity, entityYaw, partialTick,
+				poseStack, bufferSource, packedLight)) ci.cancel();
+	}
+
 	@Inject(method = RENDER, at = @At(value = "INVOKE", target = RENDER_TO_BUFFER, shift = At.Shift.AFTER))
 	private void mcanomalyarchives$overlayTargetTexture(LivingEntity entity, float entityYaw, float partialTick,
 			PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, CallbackInfo ci) {

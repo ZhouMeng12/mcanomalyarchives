@@ -227,6 +227,7 @@ public class StrangeFishingRodLootHandler {
 		Level level = player.level();
 
 		if (!(level instanceof ServerLevel serverLevel)) return;
+		net.mcreator.mcanomalyarchives.anomaly.fishing.CrossDimensionFishingEffects.open(serverLevel, hook, player, weirdness);
 
 		// 触发成就：钓鱼？
 		if (player instanceof ServerPlayer serverPlayer) {
@@ -277,6 +278,8 @@ public class StrangeFishingRodLootHandler {
 		if (RANDOM.nextBoolean()) {
 			ItemStack loot = selectItem(weirdness);
 			if (loot != null && !loot.isEmpty()) {
+				net.mcreator.mcanomalyarchives.anomaly.fishing.CrossDimensionFishingEffects.arrival(serverLevel, hook,
+						BuiltInRegistries.ITEM.getKey(loot.getItem()));
 				if (!player.getInventory().add(loot)) {
 					player.drop(loot, false);
 				}
@@ -284,6 +287,8 @@ public class StrangeFishingRodLootHandler {
 		} else {
 			EntityType<?> mobType = selectMob(weirdness);
 			if (mobType != null) {
+				net.mcreator.mcanomalyarchives.anomaly.fishing.CrossDimensionFishingEffects.arrival(serverLevel, hook,
+						BuiltInRegistries.ENTITY_TYPE.getKey(mobType));
 				BlockPos spawnPos = BlockPos.containing(hook.getX(), hook.getY() + 0.5, hook.getZ());
 				Entity entity = mobType.spawn(serverLevel, spawnPos, MobSpawnType.MOB_SUMMONED);
 				if (entity != null) {

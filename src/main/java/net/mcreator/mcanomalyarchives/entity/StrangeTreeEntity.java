@@ -29,7 +29,7 @@ import net.minecraft.core.BlockPos;
 
 public class StrangeTreeEntity extends PathfinderMob {
 
-	/** 0=站立（脚模型） 1=钻地中（整树模型+动画） 2=已钻地（隐藏） 3=钻出中（整树模型+zuanchu） 4=夹击中（整树模型+jiaren） */
+	/** 0=站立 1=钻地 2=地下 3=钻出 4=夹击 5=现身等待（保持整树，不重播钻出）。 */
 	private static final EntityDataAccessor<Integer> BURROW_STATE =
 			SynchedEntityData.defineId(StrangeTreeEntity.class, EntityDataSerializers.INT);
 

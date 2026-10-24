@@ -56,7 +56,7 @@ public class StrangeTreeRenderer extends MobRenderer<StrangeTreeEntity, EntityMo
 			poseStack.popPose();
 			return;
 		}
-		if (state == 1 || state == 3 || state == 4) {
+		if (state == 1 || state == 3 || state == 4 || state == 5) {
 			// 整树模型垂直偏移（格）：按需微调（偏高减小、偏低增大）
 			this.model = this.treeModel;
 			poseStack.pushPose();
@@ -65,7 +65,17 @@ public class StrangeTreeRenderer extends MobRenderer<StrangeTreeEntity, EntityMo
 			poseStack.popPose();
 			return;
 		}
-		this.model = this.footModel;
+		// 旧版空快照或玩家后来占据原位时，世界里可能已没有树干。
+		// 不凭空改地形；显示完整实体，避免只剩根的视觉残缺。
+		boolean blockBody = false;
+		for (int dy = 0; dy <= 4; dy++) {
+			if (entity.level().getBlockState(entity.blockPosition().above(dy)).is(
+					net.mcreator.mcanomalyarchives.init.McanomalyarchivesModBlocks.STRANGETREELOG.get())) {
+				blockBody = true;
+				break;
+			}
+		}
+		this.model = blockBody ? this.footModel : this.treeModel;
 		super.render(entity, entityYaw, partialTick, poseStack, buffer, packedLight);
 	}
 

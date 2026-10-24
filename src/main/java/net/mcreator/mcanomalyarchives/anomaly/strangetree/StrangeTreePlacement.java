@@ -24,16 +24,31 @@ final class StrangeTreePlacement {
 	private StrangeTreePlacement() { }
 
 	static <S> boolean apply(List<Entry<S>> entries, Access<S> world, Consumer<List<Integer>> beforeWrite) {
+		return apply(entries, world, beforeWrite, false);
+	}
+
+	/** 迁居必须完整放下树身，不能把被挡住的树干当作成功后丢掉快照。 */
+	static <S> boolean applyRelocation(List<Entry<S>> entries, Access<S> world, Consumer<List<Integer>> beforeWrite) {
+		return apply(entries, world, beforeWrite, true);
+	}
+
+	private static <S> boolean apply(List<Entry<S>> entries, Access<S> world,
+			Consumer<List<Integer>> beforeWrite, boolean complete) {
 		List<Entry<S>> pending = new ArrayList<>();
 		for (Entry<S> entry : entries) {
 			if (!world.ready(entry.point)) return false;
-			if (world.isAir(world.read(entry.point))) pending.add(entry);
+			S current = world.read(entry.point);
+			if (world.isAir(current)) pending.add(entry);
+			else if (complete && !Objects.equals(current, entry.state)) return false;
 		}
 		List<Integer> attempted = new ArrayList<>();
 		for (Entry<S> entry : pending) {
 			if (!world.ready(entry.point)) return false;
 			// 前一块的世界回调可能改了后一位置；不要用旧预检结果覆盖后来出现的方块。
-			if (!world.isAir(world.read(entry.point))) continue;
+			if (!world.isAir(world.read(entry.point))) {
+				if (complete && !Objects.equals(world.read(entry.point), entry.state)) return false;
+				continue;
+			}
 			attempted.add(entry.index);
 			beforeWrite.accept(List.copyOf(attempted));
 			boolean accepted;

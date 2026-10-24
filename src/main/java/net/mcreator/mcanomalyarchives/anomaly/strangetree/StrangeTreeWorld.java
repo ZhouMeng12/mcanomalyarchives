@@ -103,7 +103,21 @@ final class StrangeTreeWorld {
 	/** 迁居使用相同生产写入路径，但在每次世界写入之前持久化可撤回的意图。 */
 	static boolean placeRelocation(ServerLevel level, StrangeTreeState state, BlockPos offset,
 			Consumer<List<Integer>> beforeWrite) {
-		return StrangeTreePlacement.apply(entries(state, offset), access(level), beforeWrite);
+		return StrangeTreePlacement.applyRelocation(entries(state, offset), access(level), beforeWrite);
+	}
+
+	static boolean rootsExposed(ServerLevel level, BlockPos base) {
+		int exposed = 0;
+		for (int dy = -2; dy <= -1; dy++) {
+			for (int dx = -1; dx <= 1; dx++) {
+				for (int dz = -1; dz <= 1; dz++) {
+					BlockPos point = base.offset(dx, dy, dz);
+					if (!level.isInWorldBounds(point) || !level.hasChunkAt(point)) return false;
+					if (!level.getBlockState(point).isSolidRender(level, point)) exposed++;
+				}
+			}
+		}
+		return StrangeTreeExposure.shouldBurrow(exposed, StrangeTreeExposure.SAMPLES);
 	}
 
 	static boolean undoRelocation(ServerLevel level, StrangeTreeState state) {

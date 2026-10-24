@@ -44,7 +44,7 @@ public final class EntityNaming {
 	private EntityNaming() {
 	}
 
-	/** 贴身份 + 保留原外观（原模型/贴图/尺寸/血量上限全部不动）。 */
+	/** 贴身份；客户端显示目标外观，服务端尺寸、血量和转换代价保持现有规则。 */
 	public static void apply(LivingEntity target, ResolvedName name, String rawName) {
 		int lifespan = NameTagCosts.lifespanFor(rawName);
 		NamedState.apply(target, name, rawName, lifespan);

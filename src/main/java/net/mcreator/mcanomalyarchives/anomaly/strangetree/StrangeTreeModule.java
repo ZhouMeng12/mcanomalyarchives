@@ -179,13 +179,18 @@ public final class StrangeTreeModule {
 		}
 		if (state.phase() == Phase.BURIED && tick % 5 == 0) {
 			ServerPlayer target = target(level, state.target());
-			if (state.target() != null && (target == null || target.distanceToSqr(tree) > 64 * 64)) {
+			if (state.target() != null && (target == null || StrangeTreeWorld.point(target.blockPosition())
+					.horizontalDistanceSquared(StrangeTreeWorld.point(tree.blockPosition())) > 64 * 64)) {
 				state.targetGone(state.target());
 				target = null;
 			}
 			StrangeTreeWorld.track(level, tree, state, target);
 		}
 		if (state.phase() == Phase.STANDING && tick % 20 == 0) {
+			if (StrangeTreeWorld.rootsExposed(level, tree.blockPosition())) {
+				begin(tree, level, memory, true, null);
+				return;
+			}
 			boolean nearby = !level.getEntitiesOfClass(Player.class, new AABB(tree.blockPosition()).inflate(4)).isEmpty();
 			if (!nearby) memory.loiterSince = -1;
 			else {
