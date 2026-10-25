@@ -15,6 +15,9 @@
 - `ROUND-5.md`：异常维度隔离、共享窥视者归属、花朵计时存档与性能优化。
 - `ANOMALY-EFFECTS-DESIGN.md`：七类已实现异常的原始效果方案；后续已实施部分见第六轮记录。
 - `ROUND-6.md`：怪树残缺与根部暴露、钓竿跨维表现、粉羊幸运厄运反馈及命名牌目标外观。
+- `ROUND-7-DESIGN.md`：跨维来物与保留轮廓的命名异化方向。
+- `ROUND-7-IMPLEMENTATION-PLAN.md`：六档来物、专用模型材质、慢吸收及原时机压缩爆炸的详细方案；交互预览位于 `previews/anomaly-lab/`。
+- `ROUND-7-NAMETAG-AUDIT.md`：按视频案例逐项对照百变命名牌现有代码，记录已实现差异、未实现功能和本轮外观修正。
 - `adr/0001-server-session-runtime.md`：第一轮的模块分工与生命周期决定。
 - `adr/0002-server-authoritative-purple-story.md`：紫怪会话的状态和结算方式。
 - `adr/0003-strange-tree-recovery-journal.md`：怪树的持久状态和重载恢复策略。
