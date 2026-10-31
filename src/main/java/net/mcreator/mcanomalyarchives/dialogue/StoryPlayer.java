@@ -144,9 +144,10 @@ public final class StoryPlayer {
 			stop(player);
 			return;
 		}
-		for (int i = index; i < nodes.size(); i++) {
-			Story.Node node = nodes.get(i);
-			final int next = i + 1;
+		StoryCursor cursor = new StoryCursor(story, nodes, index);
+		for (Story.Node node; (node = cursor.next()) != null;) {
+			final int next = cursor.index();
+			final List<Story.Node> currentNodes = cursor.nodes();
 			switch (node.kind()) {
 				case LINE -> {
 					DialogueLine line = node.image() != null && !node.image().isBlank()
@@ -155,27 +156,20 @@ public final class StoryPlayer {
 					DialogueManager.speakTo(player, speaker, line);
 					// 这条播完再继续（+4 tick 让气泡衔接自然）
 					scheduleNext(player, Math.max(20, line.durationTicks()) + 4,
-							() -> run(player, speaker, storyName, story, nodes, next, session));
+							() -> run(player, speaker, storyName, story, currentNodes, next, session));
 					return;
 				}
 				case WAIT -> {
 					scheduleNext(player, node.ticks(),
-							() -> run(player, speaker, storyName, story, nodes, next, session));
-					return;
-				}
-				case JUMP -> {
-					List<Story.Node> target = story.nodes(node.text());
-					if (target.isEmpty()) {
-						DialogueLog.warn(storyName, "跳转目标为空：" + node.text() + "，剧情结束");
-						stop(player);
-						return;
-					}
-					run(player, speaker, storyName, story, target, 0, session);
+							() -> run(player, speaker, storyName, story, currentNodes, next, session));
 					return;
 				}
 				case CHOICE -> {
-					askChoice(player, speaker, storyName, node);
-					return;
+					if (!node.options().isEmpty()) {
+						askChoice(player, speaker, storyName, node);
+						return;
+					}
+					DialogueLog.warn(storyName, "选项块没有任何选项，已跳过");
 				}
 				case ACTION -> performAction(player, speaker, node.text());
 				case END -> {
@@ -184,6 +178,7 @@ public final class StoryPlayer {
 				}
 			}
 		}
+		if (cursor.failure() != null) DialogueLog.warn(storyName, cursor.failure());
 		// 段落跑完没有显式 [end]：视为结束
 		stop(player);
 	}

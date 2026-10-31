@@ -1497,11 +1497,49 @@
       "mustContain": ["NamedEntityAppearance.render", "NamedMorphClient.blendTexture"]
     },
     {
+      "id": "strange-rod-item",
+      "kind": "full",
+      "why": "钓竿生成薄壳必须保留修复材料和抛竿入口，防止重生成丢失计时接线",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/item/StrangeFishingRodItem.java",
+      "canonical": "StrangeFishingRodItem.java",
+      "expectAll": ["extends FishingRodItem", "isValidRepairItem", "StrangeRodCasting.onCast(serverPlayer);", "super.use(level, player, hand)"]
+    },
+    {
+      "id": "strange-rod-accessor-registration",
+      "kind": "contains",
+      "why": "精确计时字段访问器必须在服务端也启用，不能被生成覆盖后退回猜字段",
+      "path": "src/main/resources/mcanomalyarchives.mixins.json",
+      "fixHint": "在 mixins 列表恢复 FishingHookAccessor",
+      "mustContain": ["\"FishingHookAccessor\""]
+    },
+    {
+      "id": "hardening-runtime-files",
+      "kind": "exists",
+      "why": "钓竿会话与剧情缓存、循环保护需要保留手写实现和回归测试",
+      "fixHint": "从 Git 恢复第八轮加固模块",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/fishing/StrangeRodCasting.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/FishingHookAccessor.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/dialogue/StoryCursor.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/dialogue/StoryRepository.java",
+        "src/test/java/net/mcreator/mcanomalyarchives/dialogue/StoryCursorTest.java",
+        "src/test/java/net/mcreator/mcanomalyarchives/dialogue/StoryRepositoryTest.java"
+      ]
+    },
+    {
+      "id": "animation-player-type-check",
+      "kind": "contains",
+      "why": "动画包的实体 ID 可能已经被其他类型复用，不能直接强转 Player 导致客户端断线",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/network/PlayPlayerAnimationMessage.java",
+      "fixHint": "恢复 instanceof Player player 判断",
+      "mustContain": ["instanceof Player player"]
+    },
+    {
       "id": "anomaly-feedback-files",
       "kind": "exists",
       "why": "跨维钓竿、幸运厄运反馈与命名模型必须随工程保留",
       "fixHint": "恢复第六轮的手写模块与网络接线",
-      "paths": [
+      "exists": [
         "src/main/java/net/mcreator/mcanomalyarchives/anomaly/fishing/CrossDimensionFishingEffects.java",
         "src/main/java/net/mcreator/mcanomalyarchives/anomaly/pinksheep/PinkSheepFeedback.java",
         "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeExposure.java",

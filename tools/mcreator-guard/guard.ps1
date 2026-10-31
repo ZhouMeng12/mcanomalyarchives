@@ -107,8 +107,14 @@ function Test-Item($item) {
             if ($missing.Count) { $r.Status = 'drift'; $r.Detail = '缺少: ' + ($missing -join ' | ') }
         }
         'exists' {
-            $missing = @($item.exists | Where-Object { -not (Test-Path (Resolve-WorkPath $_)) })
-            if ($missing.Count) { $r.Status = 'missing'; $r.Detail = '缺少文件: ' + ($missing -join ' | ') }
+            $targets = @($item.exists)
+            if (-not $targets.Count -or @($targets | Where-Object { [string]::IsNullOrWhiteSpace([string]$_) }).Count) {
+                $r.Status = 'drift'; $r.Detail = '清单配置错误: exists 必须提供非空文件列表'
+            }
+            else {
+                $missing = @($targets | Where-Object { -not (Test-Path (Resolve-WorkPath $_)) })
+                if ($missing.Count) { $r.Status = 'missing'; $r.Detail = '缺少文件: ' + ($missing -join ' | ') }
+            }
         }
         'insertBefore' {
             # 自定义词条：MCreator 重写整个 lang 后，这些键必须还能在（还原时插入回去）

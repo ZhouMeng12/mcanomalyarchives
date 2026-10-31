@@ -34,8 +34,8 @@ public record PlayPlayerAnimationMessage(int player, String animation, boolean o
 	public static void handleData(final PlayPlayerAnimationMessage message, final IPayloadContext context) {
 		if (context.flow() == PacketFlow.CLIENTBOUND) {
 			context.enqueueWork(() -> {
-				Player player = (Player) context.player().level().getEntity(message.player);
-				if (player == null)
+				// 实体可能尚未同步、已移除，或该 ID 已被其他类型复用。
+				if (!(context.player().level().getEntity(message.player) instanceof Player player))
 					return;
 				if (player != context.player())
 					player.noCulling = true;

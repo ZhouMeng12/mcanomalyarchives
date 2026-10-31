@@ -34,13 +34,11 @@ import net.mcreator.mcanomalyarchives.events.SanityEventHandler;
 
 import java.util.*;
 import java.util.function.Supplier;
-import java.lang.reflect.Field;
 
 @EventBusSubscriber
 public class StrangeFishingRodLootHandler {
 
 	private static final Random RANDOM = new Random();
-	private static boolean fieldsPrinted = false;
 
 	// ========== 诡异度计算 ==========
 
@@ -194,39 +192,19 @@ public class StrangeFishingRodLootHandler {
 	public static void onItemFished(ItemFishedEvent event) {
 		FishingHook hook = event.getHookEntity();
 		Player player = hook.getPlayerOwner();
-		if (player == null) return;
+		if (player == null || !(hook.level() instanceof ServerLevel serverLevel)
+				|| player.level() != serverLevel) return;
 
 		// 检查是否使用 StrangeFishingRod
 		boolean hasStrangeRod = player.getMainHandItem().getItem() instanceof net.mcreator.mcanomalyarchives.item.StrangeFishingRodItem
 				|| player.getOffhandItem().getItem() instanceof net.mcreator.mcanomalyarchives.item.StrangeFishingRodItem;
 		if (!hasStrangeRod) return;
 
-		// 首次钓鱼时打印 FishingHook int 字段（用于发现计时字段名）
-		if (!fieldsPrinted) {
-			fieldsPrinted = true;
-			System.out.println("=== FishingHook int fields ===");
-			for (Field field : FishingHook.class.getDeclaredFields()) {
-				if (field.getType() == int.class) {
-					field.setAccessible(true);
-					try {
-						int value = field.getInt(hook);
-						System.out.println("  " + field.getName() + " = " + value);
-					} catch (Exception e) {
-						System.out.println("  " + field.getName() + " = ERROR: " + e.getMessage());
-					}
-				}
-			}
-			System.out.println("=============================");
-		}
-
 		// 取消原版战利品
 		event.setCanceled(true);
 
 		double distance = hook.distanceTo(player);
 		double weirdness = calculateWeirdness(distance);
-		Level level = player.level();
-
-		if (!(level instanceof ServerLevel serverLevel)) return;
 		net.mcreator.mcanomalyarchives.anomaly.fishing.CrossDimensionFishingEffects.open(serverLevel, hook, player, weirdness);
 
 		// 触发成就：钓鱼？
@@ -376,10 +354,10 @@ public class StrangeFishingRodLootHandler {
 
 	private static void triggerVoid(ServerLevel level, Player player) {
 		BlockPos playerPos = player.blockPosition();
-		// 从脚下到 -64 格（世界最低）
+		// 使用当前维度的实际下界；下界、末地和数据包维度不一定从 -64 开始。
 		for (int dx = -1; dx <= 1; dx++) {
 			for (int dz = -1; dz <= 1; dz++) {
-				for (int y = playerPos.getY() - 1; y >= -64; y--) {
+				for (int y = playerPos.getY() - 1; y >= level.getMinBuildHeight(); y--) {
 					level.setBlock(new BlockPos(playerPos.getX() + dx, y, playerPos.getZ() + dz),
 							Blocks.AIR.defaultBlockState(), 3);
 				}
@@ -483,7 +461,7 @@ public class StrangeFishingRodLootHandler {
 		if (candidates.isEmpty()) return null;
 
 		MobEntry selected = candidates.get(RANDOM.nextInt(candidates.size()));
-		return BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(selected.entityId));
+		return BuiltInRegistries.ENTITY_TYPE.getOptional(ResourceLocation.parse(selected.entityId)).orElse(null);
 	}
 
 	// ========== 数据类 ==========

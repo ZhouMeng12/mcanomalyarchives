@@ -18,6 +18,7 @@
 - `ROUND-7-DESIGN.md`：跨维来物与保留轮廓的命名异化方向。
 - `ROUND-7-IMPLEMENTATION-PLAN.md`：六档来物、专用模型材质、慢吸收及原时机压缩爆炸的详细方案；交互预览位于 `previews/anomaly-lab/`。
 - `ROUND-7-NAMETAG-AUDIT.md`：按视频案例逐项对照百变命名牌现有代码，记录已实现差异、未实现功能和本轮外观修正。
+- `ROUND-8.md`：钓竿计时与会话隔离、剧情循环和缓存生命周期、动画包边界与生成区守卫加固。
 - `adr/0001-server-session-runtime.md`：第一轮的模块分工与生命周期决定。
 - `adr/0002-server-authoritative-purple-story.md`：紫怪会话的状态和结算方式。
 - `adr/0003-strange-tree-recovery-journal.md`：怪树的持久状态和重载恢复策略。

@@ -1,5 +1,7 @@
 # MCreator 生成区守卫（tools/mcreator-guard）
 
+守卫自身的负面回归可运行 `./tools/mcreator-guard/selftest.ps1`。它在 `build/` 的隔离目录中验证正常文件、缺文件、误写列表字段和空列表，确保错误清单不会被静默判为通过。
+
 ## 这个目录解决什么问题
 
 粉羊（UO-012 幸运粉羊）的代码分两类：
