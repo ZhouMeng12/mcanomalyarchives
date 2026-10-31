@@ -3,6 +3,7 @@ These are preview sources, not registered Minecraft entities or Java models.
 """
 from pathlib import Path
 from PIL import Image
+import shutil
 import json, random, uuid
 
 ROOT = Path(__file__).parent / 'assets'
@@ -51,7 +52,7 @@ add('redfin','红鳍异鱼','01 / 近岸','熟悉的鱼形，苍白的眼睛；�
  box('dorsal',[0,10,0],[1,3,6],'ivory'),box('fin_l',[-4,5,0],[4,1,4],'flesh',[0,0,-20]),box('fin_r',[4,5,0],[4,1,4],'flesh',[0,0,20]),
  box('eye_l',[-2.6,7,-4],[.4,2,2],'ivory'),box('eye_r',[2.6,7,-4],[.4,2,2],'ivory')])
 add('bloomcow','蒲公英牛','02 / 异域草甸','花从皮肤裂口长出。花茎随呼吸颤动，仍保持食草动物的身体。',[
- box('body',[0,10,0],[9,9,16],'ivory'),box('head',[0,13,-11],[7,7,6],'moss'),box('muzzle',[0,11,-14],[6,3,2],'ivory'),*legs('moss'),
+ box('body',[0,10,0],[9,9,16],'ivory'),box('head',[0,13,-11],[7,7,6],'moss'),*legs('moss'),
  box('horn_l',[-4,17,-10],[1.5,3,1.5],'ivory'),box('horn_r',[4,17,-10],[1.5,3,1.5],'ivory'),
  *[box('stem',[x,17,z],[.7,6,.7],'moss') for x,z in [(-2,-3),(2,3),(-1,5)]],
  *[box('flower_plane_'+axis,[x,23,z],[7,8,.18],'flower',[0,angle,0]) for x,z in [(-2,-3),(2,3),(-1,5)] for axis,angle in [('a',0),('b',90)]],
@@ -161,6 +162,15 @@ def surface(m,p,face,w,h):
  return im
 
 for m in models:
+ if m['id']=='walksquid':
+  m['texture']='walksquid.png';m['textureSize']=[64,32]
+  shutil.copyfile(ROOT/'reference/squid.png',ROOT/m['texture'])
+  for p in m['parts']:
+   sx,sy,sz=[max(1,round(q)) for q in p['size']]
+   u,v=(0,0) if p['name']=='mantle' else (48,0)
+   rects=[(u+sz,v+sz,sx,sy),(u+2*sz+sx,v+sz,sx,sy),(u,v+sz,sz,sy),(u+sz+sx,v+sz,sz,sy),(u+sz,v,sx,sz),(u+sz+sx,v,sx,sz)]
+   p['uv']=[list(r) for r in rects]
+  continue
  packed=Image.new('RGBA',(128,256),(21,30,30,255));x=1;y=1;row=0
  for p in m['parts']:
   sx,sy,sz=[max(1,round(q)) for q in p['size']]
@@ -181,7 +191,7 @@ for m in models:
   el=dict(name=p['name'],from_=[origin[i]-size[i]/2 for i in range(3)],to=[origin[i]+size[i]/2 for i in range(3)],faces={f:dict(uv=uv,texture='#0') for f in ['north','south','east','west','up','down']})
   el['from']=el.pop('from_');elements.append(el)
  # Blockbench free-model source preserves per-part Euler rotation and shared texture.
- bb=dict(meta=dict(format_version='4.10',model_format='free',box_uv=False),name=m['title'],resolution=dict(width=atlas.width,height=16),elements=[dict(name=p['name'],type='cube',uuid=str(uuid.uuid5(uuid.NAMESPACE_URL,f'anomaly/{m["id"]}/{i}')),**{'from':el['from'],'to':el['to']},origin=p['center'],rotation=p['rotation'],faces={f:dict(uv=uv,texture=0) for f,uv in [(f,el['faces'][f]['uv']) for f in el['faces']]}) for i,(p,el) in enumerate(zip(m['parts'],elements))],textures=[dict(name='specimen-atlas.png',path='specimen-atlas.png',id='0',source='data:image/png;base64,'+__import__('base64').b64encode((ROOT/'specimen-atlas.png').read_bytes()).decode())])
+ bb=dict(meta=dict(format_version='4.10',model_format='free',box_uv=False),name=m['title'],resolution=dict(width=m['textureSize'][0],height=m['textureSize'][1]),elements=[dict(name=p['name'],type='cube',uuid=str(uuid.uuid5(uuid.NAMESPACE_URL,f'anomaly/{m["id"]}/{i}')),**{'from':el['from'],'to':el['to']},origin=p['center'],rotation=p['rotation'],faces={f:dict(uv=uv,texture=0) for f,uv in [(f,el['faces'][f]['uv']) for f in el['faces']]}) for i,(p,el) in enumerate(zip(m['parts'],elements))],textures=[dict(name='specimen-atlas.png',path='specimen-atlas.png',id='0',source='data:image/png;base64,'+__import__('base64').b64encode((ROOT/'specimen-atlas.png').read_bytes()).decode())])
  bb['outliner']=[e['uuid'] for e in bb['elements']]
  bb['resolution']={'width':m['textureSize'][0],'height':m['textureSize'][1]}
  facekeys=['north','south','west','east','up','down']
@@ -189,4 +199,25 @@ for m in models:
   for face,uv in zip(facekeys,p['uv']):element['faces'][face]={'uv':[uv[0],uv[1],uv[0]+uv[2],uv[1]+uv[3]],'texture':0}
  bb['textures'][0].update(name=m['texture'],path=m['texture'],uuid=str(uuid.uuid5(uuid.NAMESPACE_URL,'anomaly/'+m['id'])),width=m['textureSize'][0],height=m['textureSize'][1],uv_width=m['textureSize'][0],uv_height=m['textureSize'][1],source='data:image/png;base64,'+__import__('base64').b64encode((ROOT/m['texture']).read_bytes()).decode())
  (ROOT/f'{m["id"]}.bbmodel').write_text(json.dumps(bb,ensure_ascii=False),encoding='utf-8')
+
+# Export the same authored geometry and textures into the mod's GeckoLib resource
+# tree so the in-game entity renderers can consume the exact preview assets.
+GAME_ASSETS = ROOT.parents[2] / 'src' / 'main' / 'resources' / 'assets' / 'mcanomalyarchives'
+for m in models:
+ geo_parts=[]
+ for p in m['parts']:
+  center=p['center'];size=p['size'];uv_names=['north','south','west','east','up','down']
+  uv={name:{'uv':coords[:2],'uv_size':coords[2:]} for name,coords in zip(uv_names,p['uv'])}
+  cube={'origin':[center[i]-size[i]/2 for i in range(3)],'size':size,'uv':uv}
+  bone={'name':p['name'],'pivot':center,'cubes':[cube]}
+  if any(p['rotation']):bone['rotation']=p['rotation']
+  geo_parts.append(bone)
+ geo={'format_version':'1.12.0','minecraft:geometry':[{'description':{
+  'identifier':f'geometry.mcanomalyarchives.{m["id"]}','texture_width':m['textureSize'][0],
+  'texture_height':m['textureSize'][1],'visible_bounds_width':4,'visible_bounds_height':4,
+  'visible_bounds_offset':[0,1,0]},'bones':geo_parts}]}
+ (GAME_ASSETS/'geo'/'anomaly').mkdir(parents=True,exist_ok=True)
+ (GAME_ASSETS/'textures'/'entity'/'anomaly').mkdir(parents=True,exist_ok=True)
+ (GAME_ASSETS/'geo'/'anomaly'/f'{m["id"]}.geo.json').write_text(json.dumps(geo,ensure_ascii=False,indent=2),encoding='utf-8')
+ shutil.copyfile(ROOT/m['texture'],GAME_ASSETS/'textures'/'entity'/'anomaly'/m['texture'])
 print(f'Generated {len(models)} models, {len(keys)} pixel textures, Blockbench sources and shared atlas.')

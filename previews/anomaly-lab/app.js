@@ -16,11 +16,11 @@ function render(t){let dt=Math.min((t-last)/1000,.05);last=t;clock+=dt;if(auto&&
  let compress=mode==='name'&&$('#outcome').value==='compress',p=progress/100,exploded=compress&&p>=.9,scale=compress?1-Math.pow(clamp((p-.25)/.65,0,1),1.4)*.88:1;
  let parts=model.parts;
  let queue=[];if(!exploded){for(let part of parts){let moving={...part,center:[...part.center],rotation:[...part.rotation]};if(mode==='fish'){if(part.name.startsWith('tentacle'))moving.rotation[2]+=Math.sin(clock*2+part.center[2]) *6;if(part.name==='floating_tissue'){moving.center[1]+=Math.sin(clock)*1.3;moving.rotation[1]+=clock*12}}queue.push(...cubeFaces(moving,scale))}}
- queue.sort((a,b)=>b.depth-a.depth);for(let f of queue){let tile=f.uv||data.texture.tiles[f.mat],u=tile[0],v=tile[1],sw=tile[2],sh=tile[3];let uv=[[u,v+sh],[u+sw,v+sh],[u+sw,v],[u,v]];let skin=f.uv?textures[model.id]:atlas;let woolFade=(mode==='name'&&!compress&&model.id==='sheep'&&f.name==='body')?1-.58*clamp((p-.80)/.20,0,1):1;ctx.globalAlpha=woolFade;tri(skin,[uv[0],uv[1],uv[2]],f.points.slice(0,3));tri(skin,[uv[0],uv[2],uv[3]],[f.points[0],f.points[2],f.points[3]]);ctx.globalAlpha=1;if(f.mat!=='flower')poly(f.points,`rgba(0,0,0,${f.shade})`);
+ queue.sort((a,b)=>b.depth-a.depth);for(let f of queue){let tile=f.uv||data.texture.tiles[f.mat],u=tile[0],v=tile[1],sw=tile[2],sh=tile[3];let uv=[[u,v+sh],[u+sw,v+sh],[u+sw,v],[u,v]];let skin=f.uv?textures[model.id]:atlas;tri(skin,[uv[0],uv[1],uv[2]],f.points.slice(0,3));tri(skin,[uv[0],uv[2],uv[3]],[f.points[0],f.points[2],f.points[3]]);if(f.mat!=='flower')poly(f.points,`rgba(0,0,0,${f.shade})`);
  if(mode==='name'&&!compress&&f.name!=='eye_l'&&f.name!=='eye_r'){
   const early=f.name==='head'||f.name==='muzzle'||f.name.startsWith('leg_');
   const local=early?clamp(p/.48,0,1):clamp((p-.58)/.42,0,1);
-  const seed=(f.name.length*37+f.face*13)%17,coverage=local*.46;
+  const seed=(f.name.length*37+f.face*13)%17,coverage=local;
   if(coverage>0){let points=f.points;ctx.save();ctx.beginPath();points.forEach((v,i)=>i?ctx.lineTo(v[0],v[1]):ctx.moveTo(v[0],v[1]));ctx.closePath();ctx.clip();
    for(let j=0;j<5;j++)for(let k=0;k<5;k++){let field=(Math.sin((j+seed)*1.3)*Math.cos((k-seed)*1.1)+1)/2;if(field>coverage)continue;
     function at(a,b){return[points[0][0]*(1-a)*(1-b)+points[1][0]*a*(1-b)+points[2][0]*a*b+points[3][0]*(1-a)*b,points[0][1]*(1-a)*(1-b)+points[1][1]*a*(1-b)+points[2][1]*a*b+points[3][1]*(1-a)*b]}
