@@ -1,0 +1,35 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.remnant.idle": {
+      "loop": true,
+      "animation_length": 2.0,
+      "bones": {
+        "stump": {
+          "rotation": {
+            "0.0": [
+              0,
+              0,
+              0
+            ],
+            "1.0": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "2.0": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      }
+    },
+    "animation.remnant.walk": {
+      "loop": true,
+      "animation_length": 2.0,
+      "bones": {}
+    }
+  }
+}

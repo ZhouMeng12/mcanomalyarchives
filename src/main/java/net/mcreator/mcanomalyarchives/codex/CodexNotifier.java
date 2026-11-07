@@ -28,7 +28,7 @@ public final class CodexNotifier {
 	/** 解锁回调（由 AnomalyCodex.unlock 调用，服务端） */
 	public static void onUnlocked(ServerPlayer player, int index) {
 		AnomalyCodex.Entry entry = AnomalyCodex.get(index);
-		PacketDistributor.sendToPlayer(player, new CodexSyncPacket(AnomalyCodex.getMask(player), false));
+		PacketDistributor.sendToPlayer(player, new CodexSyncPacket(AnomalyCodex.getMask(player), CodexObservations.encoded(player), false));
 		player.playNotifySound(SoundEvents.BOOK_PAGE_TURN, SoundSource.PLAYERS, 0.8F, 1.2F);
 		player.displayClientMessage(Component.translatable("codex." + McanomalyarchivesMod.MODID + ".unlocked",
 				entry.id(), Component.translatable(entry.nameKey())), false);
@@ -36,6 +36,6 @@ public final class CodexNotifier {
 
 	/** 打开界面时调用：只同步状态，不弹提示 */
 	public static void syncTo(ServerPlayer player, boolean openScreen) {
-		PacketDistributor.sendToPlayer(player, new CodexSyncPacket(AnomalyCodex.getMask(player), openScreen));
+		PacketDistributor.sendToPlayer(player, new CodexSyncPacket(AnomalyCodex.getMask(player), CodexObservations.encoded(player), openScreen));
 	}
 }

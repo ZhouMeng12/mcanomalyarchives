@@ -4,11 +4,11 @@ license="GNU General Public License version 3 (GPLv3)"
 
 [[mods]]
 modId="mcanomalyarchives"
-version="1.1.9.1"
+version="1.1.9.8"
 displayName="MC\u8BE1\u5F02\u89C1\u95FB\u5F55"
 displayURL="https://mcreator.net"
 logoFile="logo.png"
-credits="\u4F7F\u7528 MCreator\uFF0C\u5185\u5BB9\u6E90\u4E8EB\u7AD9up\u4E3BSvenTheOrangeBoy\uFF0C\u611F\u8C22\u7FA4\u53CB\u661F\u9645\u6D77\u76D7\u9000\u4F11\u4E2D\u63D0\u4F9B\u7684\u6A21\u578B\uFF01"
+credits="\u4F7F\u7528 MCreator\uFF0C\u5185\u5BB9\u6E90\u4E8EB\u7AD9up\u4E3BSvenTheOrangeBoy\uFF0C\u611F\u8C22\u7FA4\u53CB\u63D0\u4F9B\u7684\u6A21\u578B\u548C\u76AE\u80A4\uFF01"
 authors="\u4E00\u53EA\u5C0F\u6050\u9F99"
 description="MC\u8BE1\u5F02\u89C1\u95FB\u5F55\u7684\u540C\u4EBA\u6A21\u7EC4"
 

@@ -36,16 +36,19 @@ public final class PinkSheepAdvancements {
 
 	/** 目击粉羊并收到它的祝福（由 PinkSheepLuckyHandler 在发放幸运时调用） */
 	public static void grantSighting(ServerPlayer player) {
+		net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "sheep_blessing");
 		award(player, SIGHTING);
 	}
 
 	/** 凝视到粉羊眨眼消失（由 PinkSheepLookHandler 在眨眼转移时调用） */
 	public static void grantBlink(ServerPlayer player) {
+		net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "sheep_blink");
 		award(player, BLINK);
 	}
 
 	/** 惹出最高档灾厄（由 PinkSheepCalamityHandler 在 Lv3 触发时调用） */
 	public static void grantCalamity(ServerPlayer player) {
+		net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "sheep_calamity");
 		award(player, CALAMITY);
 	}
 

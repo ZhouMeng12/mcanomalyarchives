@@ -188,6 +188,7 @@ public final class StrangeTreeModule {
 		}
 		if (state.phase() == Phase.STANDING && tick % 20 == 0) {
 			if (StrangeTreeWorld.rootsExposed(level, tree.blockPosition())) {
+				net.mcreator.mcanomalyarchives.codex.CodexObservations.witness(tree, "tree_exposure");
 				begin(tree, level, memory, true, null);
 				return;
 			}
@@ -359,7 +360,7 @@ public final class StrangeTreeModule {
 					|| !(tree.level() instanceof ServerLevel level)) continue;
 			memory.state.requestRecovery();
 			save(tree, memory);
-			restore(tree, level, memory);
+			if (restore(tree, level, memory)) net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "tree_replant");
 		}
 	}
 

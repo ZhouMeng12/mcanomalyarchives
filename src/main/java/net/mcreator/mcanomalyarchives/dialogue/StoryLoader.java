@@ -17,6 +17,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Optional;
 
 /**
@@ -39,6 +41,7 @@ public final class StoryLoader {
 
     @Nullable
     public static Story get(String name) {
+        ensureEditableCopy(name);
         return REPOSITORY.get(name);
     }
 
@@ -59,6 +62,7 @@ public final class StoryLoader {
     @SubscribeEvent
     public static void onServerStarting(ServerStartingEvent event) {
         REPOSITORY.clear();
+        ensureEditableCopy(event.getServer(), "svan_codex");
     }
 
     @SubscribeEvent
@@ -96,5 +100,34 @@ public final class StoryLoader {
 			return null;
 		}
 	}
+
+    /**
+     * Materialize the packaged story as a config override on first run. MCreator
+     * may regenerate resource files; this editable copy survives regeneration and
+     * is also watched by StoryRepository for hot reloads.
+     */
+    private static void ensureEditableCopy(String name) {
+        MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
+        if (server != null) ensureEditableCopy(server, name);
+    }
+
+    private static void ensureEditableCopy(MinecraftServer server, String name) {
+        if (!"svan_codex".equals(name)) return;
+        Path target = storiesDir().resolve(name + ".txt");
+        if (Files.isRegularFile(target)) return;
+        ResourceLocation location = ResourceLocation.fromNamespaceAndPath(McanomalyarchivesMod.MODID,
+                RESOURCE_PREFIX + name + ".txt");
+        Optional<Resource> resource = server.getResourceManager().getResource(location);
+        if (resource.isEmpty()) return;
+        try {
+            Files.createDirectories(target.getParent());
+            try (var input = resource.get().open()) {
+                Files.copy(input, target, StandardCopyOption.REPLACE_EXISTING);
+            }
+            DialogueLog.info("已创建可编辑剧情副本：" + target);
+        } catch (IOException e) {
+            DialogueLog.error(name, "创建可编辑剧情副本失败：" + target, e);
+        }
+    }
 
 }

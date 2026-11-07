@@ -183,17 +183,52 @@ public final class NameTagHandler {
 		ServerLevel level = (ServerLevel) living.level();
 		switch (NameRules.special(raw)) {
 			case ERASE -> {
+				net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "name_erase");
 				EntityNaming.erase(level, living);
 				consume(player, held);
 			}
-			// 「地球 / 乱码」尚未实装：什么都不发生
-			case EARTH, GARBAGE -> {
+			case EARTH -> {
+			}
+			case GARBAGE -> {
+				net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "name_garbled");
+				garbleEntity(living);
+				consume(player, held);
 			}
 			case NONE -> {
+				// 用在线玩家的账号名命名：保留目标生物外观，让它无延迟复演该玩家的姿态与移动。
+				// 攻击动作只同步动画，不复制伤害、物品栏或玩家操作权限。
+				ServerPlayer imitationTarget = level.getServer().getPlayerList().getPlayerByName(raw);
+				if (imitationTarget != null) {
+					net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "name_mimic");
+				NameImitation.bind(living, imitationTarget);
+					consume(player, held);
+					return;
+				}
+				if (isDiamondPickaxeName(raw)) {
+					net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "name_mining");
+				living.getPersistentData().putBoolean("McanomalyNameTagDiamondPickaxe", true);
+					living.setCustomName(Component.literal(raw));
+					living.setCustomNameVisible(true);
+					if (living instanceof net.minecraft.world.entity.PathfinderMob pathfinder) {
+						EntityAiSwap.installDiamondPickaxe(pathfinder);
+					}
+					NameTagTransform.start(living, level.getGameTime(), NameTagCosts.NAMED_ENTITY_LIFESPAN_TICKS);
+					consume(player, held);
+					return;
+				}
+				// 不存在于生物、物品、方块索引中的名称都归入 UO-002 乱码；
+				// 若名称确实存在但只指向物品/方块，则仍按类型不匹配处理，不误判成乱码。
+				if (NameResolver.candidates(raw) == null) {
+					net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "name_garbled");
+				garbleEntity(living);
+					consume(player, held);
+					return;
+				}
 				ResolvedName resolved = NameResolver.resolve(raw, ResolvedName.Kind.ENTITY);
 				if (resolved == null) {
 					return;
 				}
+				net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "name_rewrite");
 				consume(player, held);
 				switch (resolved.kind()) {
 					case ENTITY -> {
@@ -223,6 +258,18 @@ public final class NameTagHandler {
 				}
 			}
 		}
+	}
+
+	private static boolean isDiamondPickaxeName(String raw) {
+		String normalized = NameResolver.normalize(raw).toLowerCase(java.util.Locale.ROOT);
+		return normalized.equals("钻石镐") || normalized.equals("diamond pickaxe");
+	}
+
+	private static void garbleEntity(LivingEntity living) {
+		living.getPersistentData().putBoolean("McanomalyNameTagGarbled", true);
+		living.setCustomName(Component.literal(net.mcreator.mcanomalyarchives.item.UO002GarbledItem
+				.randomizedName(living.getId() ^ living.level().getGameTime())));
+		living.setCustomNameVisible(true);
 	}
 
 	private static boolean isHarvestTool(ItemStack stack) {
@@ -262,13 +309,25 @@ public final class NameTagHandler {
 		}
 
 		ItemStack output;
+		boolean keepAnomalyDisplayName = false;
 		switch (NameRules.special(raw)) {
-			case ERASE, EARTH, GARBAGE -> {
-				// 物品侧的「无 / 地球 / 乱码」尚未实装（正片里乱码产物与 UO-002 同源，属于后续内容）
+			case ERASE, EARTH -> {
+				// 这两类没有安全的物品侧转化结果；「地球」的世界级结算另待规则设计。
 				event.setCanceled(true);
 				return;
 			}
+			case GARBAGE -> {
+				// 正片：木棍被命名为无规律字符后，立即成为 UO-002 同源的乱码物品。
+				output = net.mcreator.mcanomalyarchives.item.UO002GarbledItem.createRandomStack(left.getCount());
+				keepAnomalyDisplayName = true;
+			}
 			case NONE -> {
+				// 有效注册名（实体、物品或方块）不属于乱码；只有索引完全未命中时才感染成 UO-002。
+				if (NameResolver.candidates(raw) == null) {
+					output = net.mcreator.mcanomalyarchives.item.UO002GarbledItem.createRandomStack(left.getCount());
+					keepAnomalyDisplayName = true;
+					break;
+				}
 				ResolvedName resolved = NameResolver.resolve(raw, ResolvedName.Kind.ITEM);
 				if (resolved == null) {
 					event.setCanceled(true);
@@ -287,7 +346,9 @@ public final class NameTagHandler {
 			}
 		}
 
-		output.set(DataComponents.CUSTOM_NAME, Component.literal(raw));
+		if (!keepAnomalyDisplayName) {
+			output.set(DataComponents.CUSTOM_NAME, Component.literal(raw));
+		}
 		event.setOutput(output);
 		event.setCost(1);
 		event.setMaterialCost(1);
@@ -347,6 +408,7 @@ public final class NameTagHandler {
 		if (!(player.level() instanceof ServerLevel level)) {
 			return;
 		}
+		net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "name_compression");
 		float power = Math.max(1.0f, Math.min(NameTagCosts.EXPLOSION_MAX_POWER, NamedState.unstablePower(stack)));
 		level.explode(null, x, y, z, power,
 				NameTagCosts.EXPLOSION_BREAKS_TERRAIN ? Level.ExplosionInteraction.TNT : Level.ExplosionInteraction.NONE);
@@ -514,6 +576,10 @@ public final class NameTagHandler {
 	public static void onEntityJoin(net.neoforged.neoforge.event.entity.EntityJoinLevelEvent event) {
 		if (!(event.getLevel() instanceof ServerLevel level)) {
 			return;
+		}
+		if (event.getEntity() instanceof net.minecraft.world.entity.PathfinderMob pathfinder
+				&& pathfinder.getPersistentData().getBoolean("McanomalyNameTagDiamondPickaxe")) {
+			EntityAiSwap.installDiamondPickaxe(pathfinder);
 		}
 		if (!(event.getEntity() instanceof net.minecraft.world.entity.animal.Chicken chick) || !chick.isBaby()) {
 			return;

@@ -1,0 +1,31 @@
+{
+  "formatVersion": "1.1",
+  "component": {
+    "group": "net.neoforged",
+    "module": "neoforge",
+    "version": "21.1.190",
+    "attributes": {
+      "org.gradle.status": "release"
+    }
+  },
+  "variants": [
+    {
+      "name": "moddevConfigElements",
+      "capabilities": [
+        {
+          "group": "net.neoforged",
+          "name": "neoforge-moddev-config",
+          "version": "21.1.190"
+        }
+      ],
+      "files": [
+        {
+          "name": "neoforge-21.1.190-moddev-config.json",
+          "url": "neoforge-21.1.190-moddev-config.json",
+          "size": 10209,
+          "sha256": "9a27d09836db6b2f03633178f85b363f4ef08dd509c18e500e44e0008b5b7fd1"
+        }
+      ]
+    }
+  ]
+}

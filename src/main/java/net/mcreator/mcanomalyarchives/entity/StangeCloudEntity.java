@@ -28,6 +28,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -291,7 +292,7 @@ public class StangeCloudEntity extends Monster {
 			}
 			
 			DamageSource damageSource = serverLevel.damageSources().inWall();
-			entity.hurt(damageSource, cloudDamagePerTick);
+			if (entity.hurt(damageSource, cloudDamagePerTick) && entity instanceof ServerPlayer witness) net.mcreator.mcanomalyarchives.codex.CodexObservations.record(witness, "cloud_contact");
 		}
 	}
 	
@@ -333,6 +334,7 @@ public class StangeCloudEntity extends Monster {
 		}
 		
 		if (anyConverted) {
+			net.mcreator.mcanomalyarchives.codex.CodexObservations.witness(this, "cloud_transmute");
 			serverLevel.playSound(null, cloudPos.x, cloudPos.y, cloudPos.z, 
 				SoundEvents.LAVA_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
 		}

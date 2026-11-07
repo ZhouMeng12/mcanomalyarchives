@@ -58,8 +58,16 @@ public class McanomalyarchivesModTabs {
 				tabData.accept(McanomalyarchivesModItems.PINK_SHEEP_SPAWN_EGG.get());
 				tabData.accept(McanomalyarchivesModItems.ANOMALY_CODEX.get());
 				tabData.accept(McanomalyarchivesModItems.BAIBIAN_NAME_TAG.get());
+				tabData.accept(McanomalyarchivesModItems.UO002_GARBLED.get());
 				tabData.accept(McanomalyarchivesModItems.SMALL_STANGE_CLOUD_SPAWN_EGG.get());
 				tabData.accept(McanomalyarchivesModItems.BLACK_STANGE_CLOUD_SPAWN_EGG.get());
 				tabData.accept(McanomalyarchivesModItems.YIFULIN_2_SPAWN_EGG.get());
+				tabData.accept(McanomalyarchivesModBlocks.UO002_MISPLACED.get().asItem());
+				tabData.accept(McanomalyarchivesModItems.REDFIN_SPAWN_EGG.get());
+				tabData.accept(McanomalyarchivesModItems.BLOOMCOW_SPAWN_EGG.get());
+				tabData.accept(McanomalyarchivesModItems.WALKSQUID_SPAWN_EGG.get());
+				tabData.accept(McanomalyarchivesModItems.PALE_SPAWN_EGG.get());
+				tabData.accept(McanomalyarchivesModItems.REMNANT_SPAWN_EGG.get());
+				tabData.accept(McanomalyarchivesModItems.FOLD_SPAWN_EGG.get());
 			}).build());
 }

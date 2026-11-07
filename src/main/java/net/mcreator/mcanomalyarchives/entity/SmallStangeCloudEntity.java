@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -499,7 +500,7 @@ public class SmallStangeCloudEntity extends Monster {
 			if (entity instanceof StangeCloudEntity || entity instanceof SmallStangeCloudEntity) {
 				continue;
 			}
-			entity.hurt(source, DAMAGE_PER_HIT);
+			if (entity.hurt(source, DAMAGE_PER_HIT) && entity instanceof ServerPlayer witness) net.mcreator.mcanomalyarchives.codex.CodexObservations.record(witness, "cloud_contact");
 		}
 	}
 
@@ -523,6 +524,7 @@ public class SmallStangeCloudEntity extends Monster {
 			}
 		}
 		if (anyConverted) {
+			net.mcreator.mcanomalyarchives.codex.CodexObservations.witness(this, "cloud_transmute");
 			serverLevel.playSound(null, this.getX(), this.getY(), this.getZ(),
 					net.minecraft.sounds.SoundEvents.LAVA_EXTINGUISH, net.minecraft.sounds.SoundSource.BLOCKS, 0.6F, 1.2F);
 		}

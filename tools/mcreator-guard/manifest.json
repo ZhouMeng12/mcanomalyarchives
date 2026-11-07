@@ -250,7 +250,7 @@
     {
       "id": "lang-zh-extra",
       "kind": "insertBefore",
-      "why": "MCreator 重写整个 lang 会删掉这些自定义中文词条（端坐者/创造标签页/陨石死亡信息）",
+      "why": "MCreator 重写整个 lang 会删掉这些自定义中文词条（含新异常生物名称）",
       "path": "src/main/resources/assets/mcanomalyarchives/lang/zh_cn.json",
       "canonical": "zh_cn.extra.txt",
       "anchor": "}",
@@ -272,13 +272,80 @@
         "\"entity.mcanomalyarchives.black_stange_cloud\"",
         "\"item.mcanomalyarchives.black_stange_cloud_spawn_egg\"",
         "\"entity.mcanomalyarchives.yifulin_2\"",
-        "\"item.mcanomalyarchives.yifulin_2_spawn_egg\""
+        "\"item.mcanomalyarchives.yifulin_2_spawn_egg\"",
+        "\"codex.mcanomalyarchives.first_sighting\"",
+        "\"codex.mcanomalyarchives.record_number\"",
+        "\"codex.mcanomalyarchives.continue_observing\"",
+        "\"codex.mcanomalyarchives.note_added\"",
+        "\"codex.mcanomalyarchives.encounter.UO-001\"",
+        "\"codex.mcanomalyarchives.encounter.UO-002\"",
+        "\"codex.mcanomalyarchives.encounter.UO-003\"",
+        "\"codex.mcanomalyarchives.encounter.UO-004\"",
+        "\"codex.mcanomalyarchives.encounter.UO-005\"",
+        "\"codex.mcanomalyarchives.encounter.UO-006\"",
+        "\"codex.mcanomalyarchives.encounter.UO-007\"",
+        "\"codex.mcanomalyarchives.encounter.UO-008\"",
+        "\"codex.mcanomalyarchives.encounter.UO-009\"",
+        "\"codex.mcanomalyarchives.encounter.UO-010\"",
+        "\"codex.mcanomalyarchives.encounter.UO-011\"",
+        "\"codex.mcanomalyarchives.encounter.UO-012\"",
+        "\"codex.mcanomalyarchives.note.cloud_small\"",
+        "\"codex.mcanomalyarchives.note.cloud_black\"",
+        "\"codex.mcanomalyarchives.note.garbled_spread\"",
+        "\"codex.mcanomalyarchives.note.poppy_addiction\"",
+        "\"codex.mcanomalyarchives.note.fishing_catch\"",
+        "\"codex.mcanomalyarchives.note.fishing_far\"",
+        "\"codex.mcanomalyarchives.note.purple_arrival\"",
+        "\"codex.mcanomalyarchives.note.purple_change\"",
+        "\"codex.mcanomalyarchives.note.purple_assimilation\"",
+        "\"codex.mcanomalyarchives.note.purple_stalker\"",
+        "\"codex.mcanomalyarchives.note.purple_reward\"",
+        "\"codex.mcanomalyarchives.note.name_rewrite\"",
+        "\"codex.mcanomalyarchives.note.name_garbled\"",
+        "\"codex.mcanomalyarchives.note.name_mining\"",
+        "\"codex.mcanomalyarchives.note.name_erase\"",
+        "\"codex.mcanomalyarchives.note.name_mimic\"",
+        "\"codex.mcanomalyarchives.note.tree_chase\"",
+        "\"codex.mcanomalyarchives.note.sheep_blessing\"",
+        "\"codex.mcanomalyarchives.note.sheep_calamity\"",
+        "\"codex.mcanomalyarchives.note.sheep_blink\"",
+        "\"codex.mcanomalyarchives.note.cloud_contact\"",
+        "\"codex.mcanomalyarchives.note.cloud_transmute\"",
+        "\"codex.mcanomalyarchives.note.cloud_red\"",
+        "\"codex.mcanomalyarchives.note.cloud_erase\"",
+        "\"codex.mcanomalyarchives.note.poppy_withdrawal\"",
+        "\"codex.mcanomalyarchives.note.fishing_living\"",
+        "\"codex.mcanomalyarchives.note.purple_pet\"",
+        "\"codex.mcanomalyarchives.note.name_absorb\"",
+        "\"codex.mcanomalyarchives.note.name_compression\"",
+        "\"codex.mcanomalyarchives.note.tree_replant\"",
+        "\"codex.mcanomalyarchives.note.tree_exposure\"",
+        "\"entity.mcanomalyarchives.redfin\"",
+        "\"entity.mcanomalyarchives.bloomcow\"",
+        "\"entity.mcanomalyarchives.walksquid\"",
+        "\"entity.mcanomalyarchives.pale\"",
+        "\"entity.mcanomalyarchives.remnant\"",
+        "\"entity.mcanomalyarchives.fold\"",
+        "\"item.mcanomalyarchives.redfin_spawn_egg\"",
+        "\"item.mcanomalyarchives.bloomcow_spawn_egg\"",
+        "\"item.mcanomalyarchives.walksquid_spawn_egg\"",
+        "\"item.mcanomalyarchives.pale_spawn_egg\"",
+        "\"item.mcanomalyarchives.remnant_spawn_egg\"",
+        "\"item.mcanomalyarchives.fold_spawn_egg\"",
+        "\"block.mcanomalyarchives.uo002_misplaced\"",
+        "\"item.mcanomalyarchives.uo002_misplaced\"",
+        "\"item.mcanomalyarchives.uo002_garbled.tooltip\"",
+        "\"item.mcanomalyarchives.negative_apple\"",
+        "\"item.mcanomalyarchives.negative_diamond_pickaxe\"",
+        "\"item.mcanomalyarchives.uo002_garbled\"",
+        "\"codex.mcanomalyarchives.note.negative_apple\"",
+        "\"codex.mcanomalyarchives.note.negative_pickaxe\""
       ]
     },
     {
       "id": "lang-en-extra",
       "kind": "insertBefore",
-      "why": "同上（英文侧）：陨石死亡信息会被重生成删掉",
+      "why": "同上（英文侧）：自定义异常生物翻译需要随工作区重生成保留",
       "path": "src/main/resources/assets/mcanomalyarchives/lang/en_us.json",
       "canonical": "en_us.extra.txt",
       "anchor": "}",
@@ -296,7 +363,74 @@
         "\"entity.mcanomalyarchives.black_stange_cloud\"",
         "\"item.mcanomalyarchives.black_stange_cloud_spawn_egg\"",
         "\"entity.mcanomalyarchives.yifulin_2\"",
-        "\"item.mcanomalyarchives.yifulin_2_spawn_egg\""
+        "\"item.mcanomalyarchives.yifulin_2_spawn_egg\"",
+        "\"codex.mcanomalyarchives.first_sighting\"",
+        "\"codex.mcanomalyarchives.record_number\"",
+        "\"codex.mcanomalyarchives.continue_observing\"",
+        "\"codex.mcanomalyarchives.note_added\"",
+        "\"codex.mcanomalyarchives.encounter.UO-001\"",
+        "\"codex.mcanomalyarchives.encounter.UO-002\"",
+        "\"codex.mcanomalyarchives.encounter.UO-003\"",
+        "\"codex.mcanomalyarchives.encounter.UO-004\"",
+        "\"codex.mcanomalyarchives.encounter.UO-005\"",
+        "\"codex.mcanomalyarchives.encounter.UO-006\"",
+        "\"codex.mcanomalyarchives.encounter.UO-007\"",
+        "\"codex.mcanomalyarchives.encounter.UO-008\"",
+        "\"codex.mcanomalyarchives.encounter.UO-009\"",
+        "\"codex.mcanomalyarchives.encounter.UO-010\"",
+        "\"codex.mcanomalyarchives.encounter.UO-011\"",
+        "\"codex.mcanomalyarchives.encounter.UO-012\"",
+        "\"codex.mcanomalyarchives.note.cloud_small\"",
+        "\"codex.mcanomalyarchives.note.cloud_black\"",
+        "\"codex.mcanomalyarchives.note.garbled_spread\"",
+        "\"codex.mcanomalyarchives.note.poppy_addiction\"",
+        "\"codex.mcanomalyarchives.note.fishing_catch\"",
+        "\"codex.mcanomalyarchives.note.fishing_far\"",
+        "\"codex.mcanomalyarchives.note.purple_arrival\"",
+        "\"codex.mcanomalyarchives.note.purple_change\"",
+        "\"codex.mcanomalyarchives.note.purple_assimilation\"",
+        "\"codex.mcanomalyarchives.note.purple_stalker\"",
+        "\"codex.mcanomalyarchives.note.purple_reward\"",
+        "\"codex.mcanomalyarchives.note.name_rewrite\"",
+        "\"codex.mcanomalyarchives.note.name_garbled\"",
+        "\"codex.mcanomalyarchives.note.name_mining\"",
+        "\"codex.mcanomalyarchives.note.name_erase\"",
+        "\"codex.mcanomalyarchives.note.name_mimic\"",
+        "\"codex.mcanomalyarchives.note.tree_chase\"",
+        "\"codex.mcanomalyarchives.note.sheep_blessing\"",
+        "\"codex.mcanomalyarchives.note.sheep_calamity\"",
+        "\"codex.mcanomalyarchives.note.sheep_blink\"",
+        "\"codex.mcanomalyarchives.note.cloud_contact\"",
+        "\"codex.mcanomalyarchives.note.cloud_transmute\"",
+        "\"codex.mcanomalyarchives.note.cloud_red\"",
+        "\"codex.mcanomalyarchives.note.cloud_erase\"",
+        "\"codex.mcanomalyarchives.note.poppy_withdrawal\"",
+        "\"codex.mcanomalyarchives.note.fishing_living\"",
+        "\"codex.mcanomalyarchives.note.purple_pet\"",
+        "\"codex.mcanomalyarchives.note.name_absorb\"",
+        "\"codex.mcanomalyarchives.note.name_compression\"",
+        "\"codex.mcanomalyarchives.note.tree_replant\"",
+        "\"codex.mcanomalyarchives.note.tree_exposure\"",
+        "\"entity.mcanomalyarchives.redfin\"",
+        "\"entity.mcanomalyarchives.bloomcow\"",
+        "\"entity.mcanomalyarchives.walksquid\"",
+        "\"entity.mcanomalyarchives.pale\"",
+        "\"entity.mcanomalyarchives.remnant\"",
+        "\"entity.mcanomalyarchives.fold\"",
+        "\"item.mcanomalyarchives.redfin_spawn_egg\"",
+        "\"item.mcanomalyarchives.bloomcow_spawn_egg\"",
+        "\"item.mcanomalyarchives.walksquid_spawn_egg\"",
+        "\"item.mcanomalyarchives.pale_spawn_egg\"",
+        "\"item.mcanomalyarchives.remnant_spawn_egg\"",
+        "\"item.mcanomalyarchives.fold_spawn_egg\"",
+        "\"block.mcanomalyarchives.uo002_misplaced\"",
+        "\"item.mcanomalyarchives.uo002_misplaced\"",
+        "\"item.mcanomalyarchives.uo002_garbled.tooltip\"",
+        "\"item.mcanomalyarchives.negative_apple\"",
+        "\"item.mcanomalyarchives.negative_diamond_pickaxe\"",
+        "\"item.mcanomalyarchives.uo002_garbled\"",
+        "\"codex.mcanomalyarchives.note.negative_apple\"",
+        "\"codex.mcanomalyarchives.note.negative_pickaxe\""
       ]
     },
     {
@@ -1478,7 +1612,11 @@
       "why": "怪树迁居不能跳过被挡住的树干后仍宣告成功",
       "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeWorld.java",
       "fixHint": "恢复完整迁居校验与根部暴露采样",
-      "mustContain": ["StrangeTreePlacement.applyRelocation", "StrangeTreeExposure.shouldBurrow", "level.hasChunkAt(point)"]
+      "mustContain": [
+        "StrangeTreePlacement.applyRelocation",
+        "StrangeTreeExposure.shouldBurrow",
+        "level.hasChunkAt(point)"
+      ]
     },
     {
       "id": "tree-exposure-trigger",
@@ -1486,7 +1624,10 @@
       "why": "根部大面积暴露应触发钻地迁居",
       "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/strangetree/StrangeTreeModule.java",
       "fixHint": "恢复站立态的每秒暴露检查",
-      "mustContain": ["StrangeTreeWorld.rootsExposed(level, tree.blockPosition())", "begin(tree, level, memory, true, null);"]
+      "mustContain": [
+        "StrangeTreeWorld.rootsExposed(level, tree.blockPosition())",
+        "begin(tree, level, memory, true, null);"
+      ]
     },
     {
       "id": "named-target-model-hook",
@@ -1494,7 +1635,10 @@
       "why": "命名牌已改为目标外观，不能被重新生成覆盖",
       "path": "src/main/java/net/mcreator/mcanomalyarchives/mixin/NamedTransformRenderMixin.java",
       "fixHint": "恢复目标模型替身渲染与方块材质混合",
-      "mustContain": ["NamedEntityAppearance.render", "NamedMorphClient.blendTexture"]
+      "mustContain": [
+        "NamedEntityAppearance.render",
+        "NamedMorphClient.blendTexture"
+      ]
     },
     {
       "id": "strange-rod-item",
@@ -1502,7 +1646,12 @@
       "why": "钓竿生成薄壳必须保留修复材料和抛竿入口，防止重生成丢失计时接线",
       "path": "src/main/java/net/mcreator/mcanomalyarchives/item/StrangeFishingRodItem.java",
       "canonical": "StrangeFishingRodItem.java",
-      "expectAll": ["extends FishingRodItem", "isValidRepairItem", "StrangeRodCasting.onCast(serverPlayer);", "super.use(level, player, hand)"]
+      "expectAll": [
+        "extends FishingRodItem",
+        "isValidRepairItem",
+        "StrangeRodCasting.onCast(serverPlayer);",
+        "super.use(level, player, hand)"
+      ]
     },
     {
       "id": "strange-rod-accessor-registration",
@@ -1510,7 +1659,9 @@
       "why": "精确计时字段访问器必须在服务端也启用，不能被生成覆盖后退回猜字段",
       "path": "src/main/resources/mcanomalyarchives.mixins.json",
       "fixHint": "在 mixins 列表恢复 FishingHookAccessor",
-      "mustContain": ["\"FishingHookAccessor\""]
+      "mustContain": [
+        "\"FishingHookAccessor\""
+      ]
     },
     {
       "id": "hardening-runtime-files",
@@ -1528,11 +1679,14 @@
     },
     {
       "id": "animation-player-type-check",
-      "kind": "contains",
+      "kind": "full",
       "why": "动画包的实体 ID 可能已经被其他类型复用，不能直接强转 Player 导致客户端断线",
       "path": "src/main/java/net/mcreator/mcanomalyarchives/network/PlayPlayerAnimationMessage.java",
       "fixHint": "恢复 instanceof Player player 判断",
-      "mustContain": ["instanceof Player player"]
+      "canonical": "PlayPlayerAnimationMessage.java",
+      "expectAll": [
+        "instanceof Player player"
+      ]
     },
     {
       "id": "anomaly-feedback-files",
@@ -1547,6 +1701,436 @@
         "src/main/java/net/mcreator/mcanomalyarchives/client/NamedEntityAppearance.java",
         "src/main/java/net/mcreator/mcanomalyarchives/client/NamedAppearanceLifecycle.java",
         "src/main/java/net/mcreator/mcanomalyarchives/network/FortunePulsePacket.java"
+      ]
+    },
+    {
+      "id": "uo002-garbled-item-registration",
+      "kind": "contains",
+      "why": "UO-002 乱码物的随机三材质实现与 MCreator 元素必须保留",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModItems.java",
+      "fixHint": "通过 MCreator 元素 UO002Garbled 恢复物品声明和注册",
+      "mustContain": [
+        "UO002_GARBLED",
+        "uo002_garbled"
+      ]
+    },
+    {
+      "id": "uo002-garbled-random-appearance",
+      "kind": "contains",
+      "why": "每个乱码物品栈需要随机选择原版物品拼贴编号",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/item/UO002GarbledItem.java",
+      "fixHint": "恢复 createRandomStack 和 CustomModelData 随机编号",
+      "mustContain": [
+        "createRandomStack",
+        "CustomModelData",
+        "ThreadLocalRandom",
+        "NAME_GLYPHS",
+        "Util.getMillis() / 180L",
+        "i < 10"
+      ]
+    },
+    {
+      "id": "uo002-garbled-gradual-infection",
+      "kind": "contains",
+      "why": "乱码污染先有缓冲，再逐组扩散，不应每秒突变一组",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/GarbledInventoryInfection.java",
+      "mustContain": [
+        "INITIAL_INFECTION_DELAY_TICKS = 100L",
+        "INFECTION_INTERVAL_TICKS = 100L",
+        "NEXT_INFECTION.putIfAbsent"
+      ]
+    },
+    {
+      "id": "uo002-garbled-assets",
+      "kind": "exists",
+      "why": "UO-002 乱码物的元素、模型、纹理和新旧版物品模型定义要一起交付",
+      "fixHint": "从 Git 恢复 UO002Garbled.mod.json 与对应 assets",
+      "exists": [
+        "elements/UO002Garbled.mod.json",
+        "src/main/resources/assets/mcanomalyarchives/items/uo002_garbled.json",
+        "src/main/resources/assets/mcanomalyarchives/models/item/uo002_garbled.json",
+        "src/main/resources/assets/mcanomalyarchives/models/item/uo002_garbled_24.json",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/uo002_garbled.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/uo002_garbled_24.png",
+        "previews/anomaly-lab/assets/reference/items/README.md",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/GarbledInventoryInfection.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/network/GarbledGuiStatePacket.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/GarbledGuiClientTracker.java"
+      ]
+    },
+    {
+      "id": "nametag-player-imitation",
+      "kind": "contains",
+      "why": "命名为在线玩家名称后应继续复演该玩家动作，并且状态在实体存档中持久化",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameImitation.java",
+      "fixHint": "恢复 NameImitation 与 NameTagTicker 的逐 tick 接线",
+      "mustContain": [
+        "TARGET_UUID",
+        "setPos(candidate.x, candidate.y, candidate.z)",
+        "mimic.swing(InteractionHand.MAIN_HAND)"
+      ]
+    },
+    {
+      "id": "uo002-misplaced-block-registration",
+      "kind": "contains",
+      "why": "UO-002 错位方块需保留 MCreator 注册、模型和方块物品入口",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModBlocks.java",
+      "fixHint": "从 Uo002Misplaced.mod.json 恢复 UO002_MISPLACED 注册",
+      "mustContain": [
+        "UO002_MISPLACED",
+        "uo002_misplaced"
+      ]
+    },
+    {
+      "id": "uo002-misplaced-block-assets",
+      "kind": "exists",
+      "why": "错位方块和乱码物品素材必须与对应 MCreator 元素、方块掉落表一起保留",
+      "exists": [
+        "elements/Uo002Misplaced.mod.json",
+        "src/main/resources/assets/mcanomalyarchives/blockstates/uo002_misplaced.json",
+        "src/main/resources/assets/mcanomalyarchives/models/block/uo002_misplaced.json",
+        "src/main/resources/assets/mcanomalyarchives/textures/block/uo002_misplaced.png",
+        "src/main/resources/data/mcanomalyarchives/loot_table/blocks/uo002_misplaced.json"
+      ]
+    },
+    {
+      "id": "anomaly-fauna-entity-registration",
+      "kind": "contains",
+      "why": "六种 UO-002 异种需保留 EntityType 与属性注册",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModEntities.java",
+      "fixHint": "从六个 livingentity 元素恢复实体类型及属性声明",
+      "mustContain": [
+        "REDFIN",
+        "BLOOMCOW",
+        "WALKSQUID",
+        "PALE",
+        "REMNANT",
+        "FOLD",
+        "registerAttributes"
+      ]
+    },
+    {
+      "id": "anomaly-fauna-renderers",
+      "kind": "contains",
+      "why": "六套 Blockbench 标本模型需在客户端使用对应 GeoLib renderer",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModEntityRenderers.java",
+      "fixHint": "恢复 AnomalyWildlifeRenderer 的六个注册入口",
+      "mustContain": [
+        "REDFIN",
+        "BLOOMCOW",
+        "WALKSQUID",
+        "PALE",
+        "REMNANT",
+        "FOLD",
+        "RedfinRenderer::new",
+        "BloomcowRenderer::new",
+        "WalksquidRenderer::new",
+        "PaleRenderer::new",
+        "RemnantRenderer::new",
+        "FoldRenderer::new"
+      ]
+    },
+    {
+      "id": "anomaly-fauna-resources",
+      "kind": "exists",
+      "why": "异种模型、原版衍生材质、动画与 MCreator livingentity 元素需要成套保存",
+      "exists": [
+        "elements/Redfin.mod.json",
+        "elements/Bloomcow.mod.json",
+        "elements/Walksquid.mod.json",
+        "elements/Pale.mod.json",
+        "elements/Remnant.mod.json",
+        "elements/Fold.mod.json",
+        "src/main/java/net/mcreator/mcanomalyarchives/entity/RedfinEntity.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/entity/BloomcowEntity.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/entity/WalksquidEntity.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/entity/PaleEntity.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/entity/RemnantEntity.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/entity/FoldEntity.java",
+        "src/main/resources/assets/mcanomalyarchives/geo/anomaly/redfin.geo.json",
+        "src/main/resources/assets/mcanomalyarchives/geo/anomaly/bloomcow.geo.json",
+        "src/main/resources/assets/mcanomalyarchives/geo/anomaly/walksquid.geo.json",
+        "src/main/resources/assets/mcanomalyarchives/geo/anomaly/pale.geo.json",
+        "src/main/resources/assets/mcanomalyarchives/geo/anomaly/remnant.geo.json",
+        "src/main/resources/assets/mcanomalyarchives/geo/anomaly/fold.geo.json"
+      ]
+    },
+    {
+      "id": "anomaly-fauna-fishing-tiers",
+      "kind": "contains",
+      "why": "同档替换四种常规生物并以低威胁残肢空壳替换两个高威胁名额，不增加钓到生物的总权重",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/events/StrangeFishingRodLootHandler.java",
+      "fixHint": "保持替换后的 Tier 0/1 档，不要重复加权",
+      "mustContain": [
+        "mcanomalyarchives:bloomcow",
+        "mcanomalyarchives:walksquid",
+        "mcanomalyarchives:redfin",
+        "mcanomalyarchives:pale",
+        "mcanomalyarchives:remnant",
+        "mcanomalyarchives:fold"
+      ]
+    },
+    {
+      "id": "purple-encounter-entity",
+      "kind": "full",
+      "why": "保留生成区实体的分段遭遇表现、视线检查和真实性质记录接线",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/PurpleMonsterEntity.java",
+      "canonical": "observations-PurpleMonsterEntity.java",
+      "expectAll": [
+        "PurpleEncounterEffects.watched(this, stalkerSeenTicks)",
+        "visibleToPlayer && lookVec.dot(toStalker)",
+        "CodexObservations.record(sp, \"purple_stalker\")"
+      ]
+    },
+    {
+      "id": "purple-encounter-renderer",
+      "kind": "full",
+      "why": "保留生成区实体的分段遭遇表现、视线检查和真实性质记录接线",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/PurpleMonsterRenderer.java",
+      "canonical": "observations-PurpleMonsterRenderer.java",
+      "expectAll": [
+        "entity.getTextureVariant() == 1",
+        "performRenderer.render("
+      ]
+    },
+    {
+      "id": "codex-large-cloud-hooks",
+      "kind": "full",
+      "why": "保留生成区实体的分段遭遇表现、视线检查和真实性质记录接线",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/StangeCloudEntity.java",
+      "canonical": "observations-StangeCloudEntity.java",
+      "expectAll": [
+        "CodexObservations.record(witness, \"cloud_contact\")",
+        "CodexObservations.witness(this, \"cloud_transmute\")"
+      ]
+    },
+    {
+      "id": "codex-small-cloud-hooks",
+      "kind": "full",
+      "why": "保留生成区实体的分段遭遇表现、视线检查和真实性质记录接线",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/SmallStangeCloudEntity.java",
+      "canonical": "observations-SmallStangeCloudEntity.java",
+      "expectAll": [
+        "CodexObservations.record(witness, \"cloud_contact\")",
+        "CodexObservations.witness(this, \"cloud_transmute\")"
+      ]
+    },
+    {
+      "id": "codex-black-cloud-hooks",
+      "kind": "full",
+      "why": "保留生成区实体的分段遭遇表现、视线检查和真实性质记录接线",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/BlackStangeCloudEntity.java",
+      "canonical": "observations-BlackStangeCloudEntity.java",
+      "expectAll": [
+        "extends SmallStangeCloudEntity",
+        "CodexObservations.witness(this, \"cloud_erase\")"
+      ]
+    },
+    {
+      "id": "codex-observation-files",
+      "kind": "exists",
+      "why": "逐条见闻的状态、紫怪特效和回归测试属于手写模块",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/codex/CodexObservations.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurpleEncounterEffects.java",
+        "src/test/java/net/mcreator/mcanomalyarchives/codex/CodexObservationProgressTest.java"
+      ]
+    },
+    {
+      "id": "codex-observation-sync",
+      "kind": "contains",
+      "why": "性质记录与首次遭遇需要一起同步",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/network/CodexSyncPacket.java",
+      "mustContain": [
+        "String observations",
+        "CodexSyncPacket::observations",
+        "message.observations()"
+      ]
+    },
+    {
+      "id": "codex-observation-respawn",
+      "kind": "contains",
+      "why": "死亡重生后保留逐条记录",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/codex/AnomalyCodex.java",
+      "mustContain": [
+        "CodexObservations.copy(oldPlayer, newPlayer)",
+        "player.hasLineOfSight(e)"
+      ]
+    },
+    {
+      "id": "codex-observation-pages",
+      "kind": "contains",
+      "why": "每条性质按实际发现顺序独立成页",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/client/codex/CodexScreen.java",
+      "mustContain": [
+        "CodexClientHandler.notesFor(selected)",
+        "out.size() % linesPerPage()",
+        "first_sighting"
+      ]
+    },
+    {
+      "id": "anomaly-redfin-renderer",
+      "kind": "full",
+      "why": "Locked renderer wrapper remains compatible with MCreator generated registry",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/RedfinRenderer.java",
+      "canonical": "RedfinRenderer.java",
+      "expectAll": [
+        "extends AnomalyWildlifeRenderer<RedfinEntity>"
+      ]
+    },
+    {
+      "id": "anomaly-bloomcow-renderer",
+      "kind": "full",
+      "why": "Locked renderer wrapper remains compatible with MCreator generated registry",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/BloomcowRenderer.java",
+      "canonical": "BloomcowRenderer.java",
+      "expectAll": [
+        "extends AnomalyWildlifeRenderer<BloomcowEntity>"
+      ]
+    },
+    {
+      "id": "anomaly-walksquid-renderer",
+      "kind": "full",
+      "why": "Locked renderer wrapper remains compatible with MCreator generated registry",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/WalksquidRenderer.java",
+      "canonical": "WalksquidRenderer.java",
+      "expectAll": [
+        "extends AnomalyWildlifeRenderer<WalksquidEntity>"
+      ]
+    },
+    {
+      "id": "anomaly-pale-renderer",
+      "kind": "full",
+      "why": "Locked renderer wrapper remains compatible with MCreator generated registry",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/PaleRenderer.java",
+      "canonical": "PaleRenderer.java",
+      "expectAll": [
+        "extends AnomalyWildlifeRenderer<PaleEntity>"
+      ]
+    },
+    {
+      "id": "anomaly-remnant-renderer",
+      "kind": "full",
+      "why": "Locked renderer wrapper remains compatible with MCreator generated registry",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/RemnantRenderer.java",
+      "canonical": "RemnantRenderer.java",
+      "expectAll": [
+        "extends AnomalyWildlifeRenderer<RemnantEntity>"
+      ]
+    },
+    {
+      "id": "anomaly-fold-renderer",
+      "kind": "full",
+      "why": "Locked renderer wrapper remains compatible with MCreator generated registry",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/FoldRenderer.java",
+      "canonical": "FoldRenderer.java",
+      "expectAll": [
+        "extends AnomalyWildlifeRenderer<FoldEntity>"
+      ]
+    },
+    {
+      "id": "mcreator-redfin-init-contract",
+      "kind": "contains",
+      "why": "Generated entity initialization calls this hook even with natural spawning disabled",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/RedfinEntity.java",
+      "mustContain": [
+        "public static void init(net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent event)"
+      ]
+    },
+    {
+      "id": "mcreator-bloomcow-init-contract",
+      "kind": "contains",
+      "why": "Generated entity initialization calls this hook even with natural spawning disabled",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/BloomcowEntity.java",
+      "mustContain": [
+        "public static void init(net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent event)"
+      ]
+    },
+    {
+      "id": "mcreator-walksquid-init-contract",
+      "kind": "contains",
+      "why": "Generated entity initialization calls this hook even with natural spawning disabled",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/WalksquidEntity.java",
+      "mustContain": [
+        "public static void init(net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent event)"
+      ]
+    },
+    {
+      "id": "mcreator-pale-init-contract",
+      "kind": "contains",
+      "why": "Generated entity initialization calls this hook even with natural spawning disabled",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/PaleEntity.java",
+      "mustContain": [
+        "public static void init(net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent event)"
+      ]
+    },
+    {
+      "id": "mcreator-remnant-init-contract",
+      "kind": "contains",
+      "why": "Generated entity initialization calls this hook even with natural spawning disabled",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/RemnantEntity.java",
+      "mustContain": [
+        "public static void init(net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent event)"
+      ]
+    },
+    {
+      "id": "mcreator-fold-init-contract",
+      "kind": "contains",
+      "why": "Generated entity initialization calls this hook even with natural spawning disabled",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/FoldEntity.java",
+      "mustContain": [
+        "public static void init(net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent event)"
+      ]
+    },
+    {
+      "id": "mcreator-generated-source-repair",
+      "kind": "contains",
+      "why": "Restore known generated template regressions before Java compilation",
+      "path": "architecture/mcreator-workspace.gradle",
+      "mustContain": [
+        "apply from: 'architecture/mcreator-source-compat.gradle'"
+      ]
+    },
+    {
+      "id": "mcreator-config-cache-safe-source-repair",
+      "kind": "contains",
+      "why": "编译前生成源码修复任务不能在执行阶段访问 Task.project",
+      "path": "architecture/mcreator-source-compat.gradle",
+      "mustContain": [
+        "getWorkspaceDirectory()",
+        "new File(workspace, relativePath)"
+      ]
+    },
+    {
+      "id": "mcreator-garbled-item-constructor",
+      "kind": "contains",
+      "why": "Generated item registration uses a no-argument constructor reference",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/item/UO002GarbledItem.java",
+      "mustContain": [
+        "public UO002GarbledItem()"
+      ]
+    },
+    {
+      "id": "mcreator-offline-support-files",
+      "kind": "exists",
+      "why": "Offline run preparation and template repair need workspace-owned support files",
+      "exists": [
+        "architecture/mcreator-workspace.gradle",
+        "architecture/mcreator-source-compat.gradle",
+        "architecture/mcreator-imports.json",
+        "tools/repair-mcreator-offline-cache.ps1",
+        "tools/offline-maven/net/neoforged/neoforge/21.1.190/neoforge-21.1.190-moddev-config.json",
+        "tools/offline-maven/net/neoforged/neoforge/21.1.190/neoforge-21.1.190.module"
+      ]
+    },
+    {
+      "id": "mcreator-run-config-repo-scope",
+      "kind": "contains",
+      "why": "The standalone run-config metadata must only affect the dedicated config configuration",
+      "path": "architecture/mcreator-workspace.gradle",
+      "mustContain": [
+        "onlyForConfigurations('neoForgeConfigOnly')",
+        "url = layout.projectDirectory.dir('tools/offline-maven')"
       ]
     }
   ]

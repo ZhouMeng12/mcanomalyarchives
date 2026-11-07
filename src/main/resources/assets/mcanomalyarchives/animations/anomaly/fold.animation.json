@@ -1,0 +1,35 @@
+{
+  "format_version": "1.8.0",
+  "animations": {
+    "animation.fold.idle": {
+      "loop": true,
+      "animation_length": 2.0,
+      "bones": {
+        "frame_0": {
+          "rotation": {
+            "0.0": [
+              0,
+              0,
+              0
+            ],
+            "1.0": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "2.0": [
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      }
+    },
+    "animation.fold.walk": {
+      "loop": true,
+      "animation_length": 2.0,
+      "bones": {}
+    }
+  }
+}

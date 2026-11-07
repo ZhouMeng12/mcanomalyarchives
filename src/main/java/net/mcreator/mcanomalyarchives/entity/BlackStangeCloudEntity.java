@@ -148,9 +148,11 @@ public class BlackStangeCloudEntity extends SmallStangeCloudEntity {
 		}
 		Collections.shuffle(candidates, new java.util.Random(level.random.nextLong()));
 		int count = Math.min(candidates.size(), ERASE_MIN + level.random.nextInt(ERASE_MAX - ERASE_MIN + 1));
+		boolean erased = false;
 		for (int i = 0; i < count; i++) {
-			level.destroyBlock(candidates.get(i), false); // 不掉落
+			erased |= level.destroyBlock(candidates.get(i), false); // 不掉落
 		}
+		if (erased) net.mcreator.mcanomalyarchives.codex.CodexObservations.witness(this, "cloud_erase");
 	}
 
 	/**

@@ -59,6 +59,27 @@ public final class NameTagTicker {
 		if (living.level().isClientSide()) {
 			return;
 		}
+		if (living.getPersistentData().getBoolean("McanomalyNameTagDiamondPickaxe")
+				&& living.level() instanceof ServerLevel miningLevel
+				&& living.tickCount % STRIDE == 0
+				&& NameTagTransform.progressOf(living, miningLevel.getGameTime()) >= 1.0f) {
+			dieOfExhaustion(miningLevel, living);
+			return;
+		}
+		if (living.getPersistentData().getBoolean("McanomalyNameTagGarbled")) {
+			if (living.tickCount % 4 == 0) {
+				living.setCustomName(Component.literal(net.mcreator.mcanomalyarchives.item.UO002GarbledItem
+						.randomizedName((living.getId() * 0x9E3779B9L) ^ (living.level().getGameTime() / 4))));
+			}
+			if (living.tickCount % 40 == 0 && living.level() instanceof ServerLevel garbledLevel) {
+				garbledLevel.sendParticles(ParticleTypes.PORTAL, living.getX(), living.getY() + living.getBbHeight() * 0.5,
+						living.getZ(), 6, 0.25, 0.3, 0.25, 0.02);
+			}
+			return;
+		}
+		if (living.level() instanceof ServerLevel serverLevel && NameImitation.isMimic(living)) {
+			NameImitation.tick(serverLevel, living);
+		}
 		if (living.tickCount % STRIDE != 0 || living.isDeadOrDying()) {
 			return;
 		}

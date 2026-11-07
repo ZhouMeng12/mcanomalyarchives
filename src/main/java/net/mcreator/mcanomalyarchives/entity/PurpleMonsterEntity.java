@@ -243,14 +243,15 @@ public class PurpleMonsterEntity extends Monster implements GeoAnimatable {
 		}
 		// 玩家直视或靠近 → 计数一次遭遇，然后遁走
 		double distSqr = this.distanceToSqr(nearestPlayer);
-		boolean isClose = distSqr < 64; // 8格内
+		boolean visibleToPlayer = nearestPlayer.hasLineOfSight(this);
+		boolean isClose = distSqr < 64 && visibleToPlayer; // 8格内
 		boolean isLookedAt = false;
-		if (distSqr < 900) { // 30格内才检测视角
+		if (distSqr <= 1600) { // 与 40 格玩家检测范围一致，包含初次 30 格出现的距离
 			Vec3 lookVec = nearestPlayer.getLookAngle();
 			Vec3 toStalker = new Vec3(this.getX() - nearestPlayer.getX(),
 				this.getEyeY() - nearestPlayer.getEyeY(),
 				this.getZ() - nearestPlayer.getZ()).normalize();
-			isLookedAt = lookVec.dot(toStalker) > 0.95;
+			isLookedAt = visibleToPlayer && lookVec.dot(toStalker) > 0.95;
 		}
 		if (isClose || isLookedAt) {
 			// 被看到：只计数一次，然后进入"延迟消失"（不立刻消失）
@@ -258,11 +259,13 @@ public class PurpleMonsterEntity extends Monster implements GeoAnimatable {
 				stalkerSeen = true;
 				if (nearestPlayer instanceof ServerPlayer sp) {
 					countSighting(sp);
+					net.mcreator.mcanomalyarchives.codex.CodexObservations.record(sp, "purple_stalker");
 				}
 			}
 		}
 		if (stalkerSeen) {
 			stalkerSeenTicks++;
+			net.mcreator.mcanomalyarchives.anomaly.purple.PurpleEncounterEffects.watched(this, stalkerSeenTicks);
 			if (stalkerSeenTicks >= STALKER_SEEN_DISAPPEAR_TICKS) {
 				vanish();
 			}
@@ -271,12 +274,7 @@ public class PurpleMonsterEntity extends Monster implements GeoAnimatable {
 
 	/** 遁走：播放粒子（+音效）后消失 */
 	private void vanish() {
-		if (this.level() instanceof ServerLevel serverLevel) {
-			serverLevel.sendParticles(ParticleTypes.SMOKE,
-					this.getX(), this.getY() + 1.0, this.getZ(),
-					12, 0.3, 0.4, 0.3, 0.02);
-			serverLevel.playSound(null, this.blockPosition(), SoundEvents.PLAYER_TELEPORT, SoundSource.PLAYERS, 0.5f, 1.1f);
-		}
+		net.mcreator.mcanomalyarchives.anomaly.purple.PurpleEncounterEffects.dissolve(this);
 		this.remove(Entity.RemovalReason.DISCARDED);
 	}
 

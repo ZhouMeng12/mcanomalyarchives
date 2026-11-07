@@ -30,5 +30,6 @@ gradle.beforeProject { project ->
         project.dependencies {
             implementation 'software.bernie.geckolib:geckolib-neoforge-1.21.1:4.6.6'
         }
+        project.apply(from: project.file('architecture/mcreator-workspace.gradle'))
     }
 }

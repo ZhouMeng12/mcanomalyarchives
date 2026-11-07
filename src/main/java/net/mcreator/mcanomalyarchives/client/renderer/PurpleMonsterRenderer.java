@@ -30,7 +30,8 @@ public class PurpleMonsterRenderer extends HumanoidMobRenderer<PurpleMonsterEnti
 
 	@Override
 	public ResourceLocation getTextureLocation(PurpleMonsterEntity entity) {
-		return NORMAL_TEXTURE;
+		return entity.getTextureVariant() == 1
+				? ResourceLocation.parse("mcanomalyarchives:textures/entities/purple.png") : NORMAL_TEXTURE;
 	}
 
 	@Override

@@ -26,7 +26,7 @@ import java.util.List;
  * </ol>
  *
  * <p><b>剧情写在哪：</b>{@code config/mcanomalyarchives/stories/svan_codex.txt}
- * （首次启动自动生成，含全部台词与分支）。改完存盘，游戏里约 5 秒自动生效，
+ * （首次启动自动生成，含全部台词与分支）。改完存盘，游戏里约 10 秒自动生效，
  * 不用重启也不用重新编译。语法见该文件开头的注释。
  *
  * 【工程层归属】codex 包（非 MCreator 生成区）。

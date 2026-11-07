@@ -1,0 +1,18 @@
+// Loaded from settings.gradle. MCreator recreates mcreator.gradle on each run.
+if (extensions.extraProperties.has('mcanomalyWorkspaceConfigured')) return
+extensions.extraProperties.set('mcanomalyWorkspaceConfigured', true)
+
+apply from: 'architecture/mcreator-source-compat.gradle'
+
+// This standalone metadata only describes the pinned NeoForge run configuration.
+def cachedRunConfig = repositories.maven {
+    name = 'workspaceNeoForgeRunConfig'
+    url = layout.projectDirectory.dir('tools/offline-maven')
+    metadataSources { gradleMetadata(); mavenPom(); artifact() }
+    content {
+        includeModule('net.neoforged', 'neoforge')
+        onlyForConfigurations('neoForgeConfigOnly')
+    }
+}
+repositories.remove(cachedRunConfig)
+repositories.add(0, cachedRunConfig)

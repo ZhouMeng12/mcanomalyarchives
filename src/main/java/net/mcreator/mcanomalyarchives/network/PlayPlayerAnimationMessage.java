@@ -1,9 +1,10 @@
 package net.mcreator.mcanomalyarchives.network;
 
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
+
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.resources.ResourceLocation;
@@ -15,6 +16,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.nbt.CompoundTag;
 
 import net.mcreator.mcanomalyarchives.McanomalyarchivesMod;
+
+import java.lang.reflect.Type;
 
 @EventBusSubscriber
 public record PlayPlayerAnimationMessage(int player, String animation, boolean override, boolean firstPerson) implements CustomPacketPayload {
@@ -34,7 +37,6 @@ public record PlayPlayerAnimationMessage(int player, String animation, boolean o
 	public static void handleData(final PlayPlayerAnimationMessage message, final IPayloadContext context) {
 		if (context.flow() == PacketFlow.CLIENTBOUND) {
 			context.enqueueWork(() -> {
-				// 实体可能尚未同步、已移除，或该 ID 已被其他类型复用。
 				if (!(context.player().level().getEntity(message.player) instanceof Player player))
 					return;
 				if (player != context.player())

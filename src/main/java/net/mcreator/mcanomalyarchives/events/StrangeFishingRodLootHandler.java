@@ -104,6 +104,8 @@ public class StrangeFishingRodLootHandler {
 		ITEM_POOL.add(new LootEntry(() -> Items.TRIDENT, 0.45, 0.75));
 		ITEM_POOL.add(new LootEntry(() -> Items.NETHERITE_INGOT, 0.45, 0.75));
 		ITEM_POOL.add(new LootEntry(() -> Items.ENCHANTED_GOLDEN_APPLE, 0.45, 0.75));
+		ITEM_POOL.add(new LootEntry(net.mcreator.mcanomalyarchives.init.UO007Items.NEGATIVE_APPLE, 0.45, 0.75));
+		ITEM_POOL.add(new LootEntry(net.mcreator.mcanomalyarchives.init.UO007Items.NEGATIVE_DIAMOND_PICKAXE, 0.45, 0.75));
 
 		// Tier 3: 诡异度 0.70~1.00 — 极限物品 (~11-15格)
 		ITEM_POOL.add(new LootEntry(() -> Items.BEDROCK, 0.70, 1.00));
@@ -150,12 +152,12 @@ public class StrangeFishingRodLootHandler {
 	static {
 		// Tier 0: 诡异度 0.00~0.30 — 友善 + 敌对普通生物 (~2-6格)
 		MOB_POOL.add(new MobEntry("minecraft:pig", 0.00, 0.30));
-		MOB_POOL.add(new MobEntry("minecraft:cow", 0.00, 0.30));
+		MOB_POOL.add(new MobEntry("mcanomalyarchives:bloomcow", 0.00, 0.30));
 		MOB_POOL.add(new MobEntry("minecraft:sheep", 0.00, 0.30));
 		MOB_POOL.add(new MobEntry("minecraft:chicken", 0.00, 0.30));
 		MOB_POOL.add(new MobEntry("minecraft:rabbit", 0.00, 0.30));
-		MOB_POOL.add(new MobEntry("minecraft:cod", 0.00, 0.30));
-		MOB_POOL.add(new MobEntry("minecraft:salmon", 0.00, 0.30));
+		MOB_POOL.add(new MobEntry("mcanomalyarchives:walksquid", 0.00, 0.30));
+		MOB_POOL.add(new MobEntry("mcanomalyarchives:redfin", 0.00, 0.30));
 		MOB_POOL.add(new MobEntry("minecraft:zombie", 0.00, 0.30));
 		MOB_POOL.add(new MobEntry("minecraft:skeleton", 0.00, 0.30));
 		MOB_POOL.add(new MobEntry("minecraft:spider", 0.00, 0.30));
@@ -165,7 +167,7 @@ public class StrangeFishingRodLootHandler {
 		MOB_POOL.add(new MobEntry("minecraft:slime", 0.00, 0.30));
 
 		// Tier 1: 诡异度 0.25~0.50 — 下界/末地生物 (~5-9格)
-		MOB_POOL.add(new MobEntry("minecraft:enderman", 0.25, 0.50));
+		MOB_POOL.add(new MobEntry("mcanomalyarchives:pale", 0.25, 0.50));
 		MOB_POOL.add(new MobEntry("minecraft:blaze", 0.25, 0.50));
 		MOB_POOL.add(new MobEntry("minecraft:ghast", 0.25, 0.50));
 		MOB_POOL.add(new MobEntry("minecraft:magma_cube", 0.25, 0.50));
@@ -173,17 +175,19 @@ public class StrangeFishingRodLootHandler {
 		MOB_POOL.add(new MobEntry("minecraft:piglin_brute", 0.25, 0.50));
 
 		// Tier 2: 诡异度 0.45~0.75 — Boss/模组生物 (~8-12格)
-		MOB_POOL.add(new MobEntry("minecraft:elder_guardian", 0.45, 0.75));
-		MOB_POOL.add(new MobEntry("minecraft:ravager", 0.45, 0.75));
-		MOB_POOL.add(new MobEntry("minecraft:evoker", 0.45, 0.75));
+		MOB_POOL.add(new MobEntry("mcanomalyarchives:remnant", 0.45, 0.75));
+		MOB_POOL.add(new MobEntry("mcanomalyarchives:fold", 0.45, 0.75));
+		MOB_POOL.add(new MobEntry("minecraft:evoker", 0.45, 1.00));
 		MOB_POOL.add(new MobEntry("mcanomalyarchives:anbula", 0.45, 0.75));
 		MOB_POOL.add(new MobEntry("mcanomalyarchives:prisoner", 0.45, 0.75));
 		MOB_POOL.add(new MobEntry("mcanomalyarchives:svan", 0.45, 0.75));
 		MOB_POOL.add(new MobEntry("mcanomalyarchives:qu", 0.45, 0.75));
 
 		// Tier 3: 诡异度 0.70~1.00 — 终极Boss (~11-15格)
-		MOB_POOL.add(new MobEntry("minecraft:wither", 0.70, 1.00));
-		MOB_POOL.add(new MobEntry("minecraft:warden", 0.70, 1.00));
+		// Keep a regular Tier 3 alternative eligible so these boss weights reduce
+		// their absolute catch odds instead of merely choosing between two bosses.
+		MOB_POOL.add(new MobEntry("minecraft:wither", 0.70, 1.00, 0.005));
+		MOB_POOL.add(new MobEntry("minecraft:warden", 0.70, 1.00, 0.01));
 	}
 
 	// ========== 事件处理 ==========
@@ -205,6 +209,10 @@ public class StrangeFishingRodLootHandler {
 
 		double distance = hook.distanceTo(player);
 		double weirdness = calculateWeirdness(distance);
+		if (player instanceof ServerPlayer witness) {
+			net.mcreator.mcanomalyarchives.codex.CodexObservations.record(witness, "fishing_catch");
+			if (weirdness >= .70) net.mcreator.mcanomalyarchives.codex.CodexObservations.record(witness, "fishing_far");
+		}
 		net.mcreator.mcanomalyarchives.anomaly.fishing.CrossDimensionFishingEffects.open(serverLevel, hook, player, weirdness);
 
 		// 触发成就：钓鱼？
@@ -270,13 +278,14 @@ public class StrangeFishingRodLootHandler {
 				BlockPos spawnPos = BlockPos.containing(hook.getX(), hook.getY() + 0.5, hook.getZ());
 				Entity entity = mobType.spawn(serverLevel, spawnPos, MobSpawnType.MOB_SUMMONED);
 				if (entity != null) {
+					if (player instanceof ServerPlayer witness) net.mcreator.mcanomalyarchives.codex.CodexObservations.record(witness, "fishing_living");
 					// Sanity loss for Tier 3 mobs (weirdness >= 0.70)
 					if (weirdness >= 0.70 && player instanceof ServerPlayer serverPlayer) {
 						SanityEventHandler.onFishingTier3(serverPlayer);
 					}
 					Vec3 pull = player.position().subtract(entity.position());
 					double dist = pull.length();
-					if (dist > 0.1) {
+					if (dist > 0.1 && !(entity instanceof net.mcreator.mcanomalyarchives.entity.RemnantEntity)) {
 						pull = pull.normalize().scale(Math.min(dist * 0.3, 2.5));
 						entity.setDeltaMovement(pull.x, pull.y + 0.5, pull.z);
 						entity.hurtMarked = true;
@@ -460,7 +469,15 @@ public class StrangeFishingRodLootHandler {
 
 		if (candidates.isEmpty()) return null;
 
-		MobEntry selected = candidates.get(RANDOM.nextInt(candidates.size()));
+		double totalWeight = candidates.stream().mapToDouble(entry -> entry.weight).sum();
+		double roll = RANDOM.nextDouble() * totalWeight;
+		for (MobEntry candidate : candidates) {
+			roll -= candidate.weight;
+			if (roll <= 0.0) {
+				return BuiltInRegistries.ENTITY_TYPE.getOptional(ResourceLocation.parse(candidate.entityId)).orElse(null);
+			}
+		}
+		MobEntry selected = candidates.get(candidates.size() - 1);
 		return BuiltInRegistries.ENTITY_TYPE.getOptional(ResourceLocation.parse(selected.entityId)).orElse(null);
 	}
 
@@ -482,11 +499,17 @@ public class StrangeFishingRodLootHandler {
 		final String entityId;
 		final double minWeirdness;
 		final double maxWeirdness;
+		final double weight;
 
 		MobEntry(String entityId, double minWeirdness, double maxWeirdness) {
+			this(entityId, minWeirdness, maxWeirdness, 1.0);
+		}
+
+		MobEntry(String entityId, double minWeirdness, double maxWeirdness, double weight) {
 			this.entityId = entityId;
 			this.minWeirdness = minWeirdness;
 			this.maxWeirdness = maxWeirdness;
+			this.weight = weight;
 		}
 	}
 

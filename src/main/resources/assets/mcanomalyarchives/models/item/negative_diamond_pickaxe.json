@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "mcanomalyarchives:item/negative_diamond_pickaxe"
+  }
+}

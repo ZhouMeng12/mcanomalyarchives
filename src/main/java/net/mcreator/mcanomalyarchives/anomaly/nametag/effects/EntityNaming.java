@@ -121,6 +121,7 @@ public final class EntityNaming {
 			}
 		}
 		if (seized > 0) {
+			net.mcreator.mcanomalyarchives.codex.CodexObservations.witness(living, "name_absorb");
 			NamedState.setSeizedPoints(living, already + seized);
 		}
 		return seized;

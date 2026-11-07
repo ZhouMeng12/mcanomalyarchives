@@ -1,5 +1,8 @@
 package net.mcreator.mcanomalyarchives;
 
+import net.neoforged.fml.common.Mod;
+import net.neoforged.bus.api.IEventBus;
+
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -8,13 +11,13 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.bus.api.IEventBus;
 
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.server.TickTask;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.codec.StreamCodec;
@@ -32,9 +35,12 @@ import net.mcreator.mcanomalyarchives.client.dialogue.DialogueBubbleRenderer;
 import net.mcreator.mcanomalyarchives.client.SanityMonitorHudOverlay;
 import net.mcreator.mcanomalyarchives.client.SanityClientHandler;
 
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.Queue;
+import java.util.PriorityQueue;
 import java.util.Map;
 import java.util.HashMap;
-
+import java.util.Comparator;
 
 @Mod("mcanomalyarchives")
 public class McanomalyarchivesMod {
@@ -51,7 +57,7 @@ public class McanomalyarchivesMod {
 		net.mcreator.mcanomalyarchives.config.ServerGameplayConfig.register();
 		net.mcreator.mcanomalyarchives.config.ComfortConfig.register();
 		// End of user code block mod constructor
-		NeoForge.EVENT_BUS.register(this);
+		// No instance event subscribers remain after the generated tick handler is removed.
 		modEventBus.addListener(this::registerNetworking);
 		McanomalyarchivesModSounds.REGISTRY.register(modEventBus);
 		McanomalyarchivesModBlocks.REGISTRY.register(modEventBus);
@@ -65,6 +71,7 @@ public class McanomalyarchivesMod {
 		// Start of user code block mod init
 		McanomalyarchivesModAttachments.REGISTRY.register(modEventBus);
 		McanomalyarchivesModDataComponents.REGISTRY.register(modEventBus);
+		net.mcreator.mcanomalyarchives.init.UO007Items.REGISTRY.register(modEventBus);
 		// 注册 AnbulaEntity 的 ITEM_HANDLER capability（供 TACZ reload 使用）
 		modEventBus.addListener((RegisterCapabilitiesEvent event) -> {
 			event.registerEntity(Capabilities.ItemHandler.ENTITY, McanomalyarchivesModEntities.ANBULA.get(), (entity, ctx) -> entity instanceof AnbulaEntity a ? a.getAmmoHandler() : null);
@@ -138,8 +145,9 @@ public class McanomalyarchivesMod {
 		networkingRegistered = true;
 	}
 
-	/** 生成区兼容入口，延迟任务由 runtime 管理服务器生命周期。 */
 	public static void queueServerWork(int delay, Runnable action) {
 		net.mcreator.mcanomalyarchives.runtime.ServerTasks.schedule(delay, action);
 	}
+
+
 }

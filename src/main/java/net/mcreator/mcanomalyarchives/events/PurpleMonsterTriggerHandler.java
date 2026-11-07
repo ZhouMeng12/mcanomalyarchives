@@ -22,6 +22,7 @@ public class PurpleMonsterTriggerHandler {
 
     // 每个玩家的静止 tick 计数（不持久化）
     private static final Map<UUID, Integer> stillTimers = new ConcurrentHashMap<>();
+    private static final Map<UUID, net.minecraft.world.phys.Vec3> lastPositions = new ConcurrentHashMap<>();
 
     public static void init() {
         NeoForge.EVENT_BUS.register(new PurpleMonsterTriggerHandler());
@@ -32,21 +33,25 @@ public class PurpleMonsterTriggerHandler {
     public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         stillTimers.remove(player.getUUID());
+        lastPositions.remove(player.getUUID());
     }
 
     @SubscribeEvent
     public void onClone(PlayerEvent.Clone event) {
         stillTimers.remove(event.getEntity().getUUID());
+        lastPositions.remove(event.getEntity().getUUID());
     }
 
     @SubscribeEvent
     public void onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
         stillTimers.remove(event.getEntity().getUUID());
+        lastPositions.remove(event.getEntity().getUUID());
     }
 
     @SubscribeEvent
     public void onServerStopped(ServerStoppedEvent event) {
         stillTimers.clear();
+        lastPositions.clear();
     }
 
     @SubscribeEvent
@@ -58,6 +63,8 @@ public class PurpleMonsterTriggerHandler {
 
     private void processPlayer(ServerPlayer player) {
         UUID uuid = player.getUUID();
+        var previous = lastPositions.put(uuid, player.position());
+        boolean moved = previous != null && previous.distanceToSqr(player.position()) > .0004;
 
         if (!player.isAlive() || player.isRemoved() || PurpleStoryModule.hasActive(player)) {
             stillTimers.remove(uuid);
@@ -89,12 +96,12 @@ public class PurpleMonsterTriggerHandler {
         }
 
         // 4. 静止检测
-        if (isPlayerStill(player)) {
+        if (!moved && isPlayerStill(player)) {
             int timer = stillTimers.getOrDefault(uuid, 0) + 1;
             stillTimers.put(uuid, timer);
+            net.mcreator.mcanomalyarchives.anomaly.purple.PurpleEncounterEffects.warning(player, STILL_TIME_REQUIRED - timer);
 
-            if (timer >= STILL_TIME_REQUIRED) {
-                triggerPurpleMonster(player);
+            if (timer >= STILL_TIME_REQUIRED && timer % 20 == 0 && triggerPurpleMonster(player)) {
                 stillTimers.remove(uuid);
             }
         } else {
@@ -104,7 +111,7 @@ public class PurpleMonsterTriggerHandler {
 
     private boolean isPlayerStill(ServerPlayer player) {
         // 有移动输入
-        if (player.xxa != 0 || player.zza != 0) return false;
+        if (player.xxa != 0 || player.zza != 0 || player.getDeltaMovement().horizontalDistanceSqr() > .0004) return false;
         // 刚受伤
         if (player.hurtTime > 0) return false;
         // 在骑乘
@@ -112,8 +119,8 @@ public class PurpleMonsterTriggerHandler {
         return true;
     }
 
-    private void triggerPurpleMonster(ServerPlayer player) {
-        if (!PurpleStoryModule.startNatural(player)) return;
+    private boolean triggerPurpleMonster(ServerPlayer player) {
+        if (!PurpleStoryModule.startNatural(player)) return false;
 
         player.setData(McanomalyarchivesModAttachments.PURPLE_MONSTER_TRIGGER_COOLDOWN,
             player.level().getGameTime());
@@ -122,5 +129,6 @@ public class PurpleMonsterTriggerHandler {
             + "(sanity={}, hp={})", player.getName().getString(),
             player.getData(McanomalyarchivesModAttachments.PLAYER_SANITY).getSanity(),
             String.format("%.0f%%", player.getHealth() / player.getMaxHealth() * 100));
+        return true;
     }
 }

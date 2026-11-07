@@ -38,8 +38,8 @@ public class PurpleStalkerHandler {
 	private static final int SIGHTINGS_PER_TIER = 2;
 
 	/** 生成角度：玩家背后/视野边缘（±90°~±180°） */
-	private static final float ANGLE_OFFSET_MIN = 45f;
-	private static final float ANGLE_OFFSET_MAX = 45f;
+	private static final float ANGLE_OFFSET_MIN = 70f;
+	private static final float ANGLE_OFFSET_MAX = 60f;
 
 	/** 亮度阈值：低于此亮度视为"夜晚/低亮度"（高概率刷新） */
 	private static final int DARK_BRIGHTNESS_THRESHOLD = 8;
@@ -163,7 +163,8 @@ public class PurpleStalkerHandler {
 		stalker.setTextureVariant(1); // 紫色纹理
 		stalker.setStalkerMode(true);
 		stalker.getPersistentData().putUUID(OWNER_KEY, player.getUUID());
-		serverLevel.addFreshEntity(stalker);
+		if (!serverLevel.addFreshEntity(stalker)) return;
+		net.mcreator.mcanomalyarchives.anomaly.purple.PurpleEncounterEffects.materialize(stalker);
 
 		McanomalyarchivesMod.LOGGER.info("Stalker Purple Monster spawned for player {} at ({}, {}, {}), distance={}",
 			player.getName().getString(),
@@ -202,10 +203,13 @@ public class PurpleStalkerHandler {
 		if (!level.hasChunkAt(BlockPos.containing(spawnX, player.getY(), spawnZ))) return null;
 		int groundY = level.getHeightmapPos(Heightmap.Types.WORLD_SURFACE,
 			BlockPos.containing(spawnX, player.getY(), spawnZ)).getY();
-		if (groundY <= level.getMinBuildHeight() + 1) return null;
-		BlockPos pos = new BlockPos((int) Math.floor(spawnX), groundY, (int) Math.floor(spawnZ));
-		// 只接受"正常"的生成点，避免出现在树上/卡墙里/水上等奇怪位置
-		return isValidStalkerSpot(level, pos) ? pos : null;
+		int top = Math.min(groundY, player.blockPosition().getY() + 8);
+		int bottom = Math.max(level.getMinBuildHeight() + 1, player.blockPosition().getY() - 12);
+		for (int y = top; y >= bottom; y--) {
+			BlockPos pos = BlockPos.containing(spawnX, y, spawnZ);
+			if (isValidStalkerSpot(level, pos)) return pos;
+		}
+		return null;
 	}
 
 	/**
@@ -219,7 +223,7 @@ public class PurpleStalkerHandler {
 		}
 		for (int i = 0; i < 3; i++) {
 			BlockState state = level.getBlockState(pos.above(i));
-			if (state.isSolid() || !state.getFluidState().isEmpty()) {
+			if (!state.getCollisionShape(level, pos.above(i)).isEmpty() || !state.getFluidState().isEmpty()) {
 				return false;
 			}
 		}

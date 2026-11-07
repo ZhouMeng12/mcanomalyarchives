@@ -216,6 +216,7 @@ public class PinkSheepCalamityHandler {
 	public static void triggerCalamity(ServerPlayer player, int level) {
 		if (player == null || !player.isAlive())
 			return;
+		if (level >= 1 && level <= 3) net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "sheep_calamity");
 		ServerLevel levelWorld = player.serverLevel();
 		if (level >= 1 && level <= 3)
 			net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepFeedback.unlucky(player, level);

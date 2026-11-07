@@ -3,12 +3,13 @@
  */
 package net.mcreator.mcanomalyarchives.init;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.bus.api.SubscribeEvent;
+
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.event.entity.RegisterSpawnPlacementsEvent;
 import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.bus.api.SubscribeEvent;
 
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.EntityType;
@@ -86,6 +87,30 @@ public class McanomalyarchivesModEntities {
 			EntityType.Builder.<Yifulin2Entity>of(Yifulin2Entity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
 
 					.ridingOffset(-0.6f).sized(0.6f, 1.8f));
+	public static final DeferredHolder<EntityType<?>, EntityType<RedfinEntity>> REDFIN = register("redfin",
+			EntityType.Builder.<RedfinEntity>of(RedfinEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
+
+					.ridingOffset(-0.6f).sized(0.7f, 0.4f));
+	public static final DeferredHolder<EntityType<?>, EntityType<BloomcowEntity>> BLOOMCOW = register("bloomcow",
+			EntityType.Builder.<BloomcowEntity>of(BloomcowEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
+
+					.ridingOffset(-0.6f).sized(0.9f, 1.4f));
+	public static final DeferredHolder<EntityType<?>, EntityType<WalksquidEntity>> WALKSQUID = register("walksquid",
+			EntityType.Builder.<WalksquidEntity>of(WalksquidEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
+
+					.ridingOffset(-0.6f).sized(0.8f, 0.8f));
+	public static final DeferredHolder<EntityType<?>, EntityType<PaleEntity>> PALE = register("pale",
+			EntityType.Builder.<PaleEntity>of(PaleEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
+
+					.ridingOffset(-0.6f).sized(0.6f, 2.9f));
+	public static final DeferredHolder<EntityType<?>, EntityType<RemnantEntity>> REMNANT = register("remnant",
+			EntityType.Builder.<RemnantEntity>of(RemnantEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
+
+					.ridingOffset(-0.6f).sized(0.7f, 1.6f));
+	public static final DeferredHolder<EntityType<?>, EntityType<FoldEntity>> FOLD = register("fold",
+			EntityType.Builder.<FoldEntity>of(FoldEntity::new, MobCategory.CREATURE).setShouldReceiveVelocityUpdates(true).setTrackingRange(64).setUpdateInterval(3)
+
+					.ridingOffset(-0.6f).sized(0.8f, 1.4f));
 
 	// Start of user code block custom entities
 	// End of user code block custom entities
@@ -111,6 +136,12 @@ public class McanomalyarchivesModEntities {
 		SmallStangeCloudEntity.init(event);
 		BlackStangeCloudEntity.init(event);
 		Yifulin2Entity.init(event);
+		RedfinEntity.init(event);
+		BloomcowEntity.init(event);
+		WalksquidEntity.init(event);
+		PaleEntity.init(event);
+		RemnantEntity.init(event);
+		FoldEntity.init(event);
 	}
 
 	@SubscribeEvent
@@ -131,5 +162,11 @@ public class McanomalyarchivesModEntities {
 		event.put(SMALL_STANGE_CLOUD.get(), SmallStangeCloudEntity.createAttributes().build());
 		event.put(BLACK_STANGE_CLOUD.get(), BlackStangeCloudEntity.createAttributes().build());
 		event.put(YIFULIN_2.get(), Yifulin2Entity.createAttributes().build());
+		event.put(REDFIN.get(), RedfinEntity.createAttributes().build());
+		event.put(BLOOMCOW.get(), BloomcowEntity.createAttributes().build());
+		event.put(WALKSQUID.get(), WalksquidEntity.createAttributes().build());
+		event.put(PALE.get(), PaleEntity.createAttributes().build());
+		event.put(REMNANT.get(), RemnantEntity.createAttributes().build());
+		event.put(FOLD.get(), FoldEntity.createAttributes().build());
 	}
 }

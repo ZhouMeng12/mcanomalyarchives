@@ -12,12 +12,20 @@ import net.minecraft.world.entity.ai.goal.PanicGoal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.tags.BlockTags;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -126,6 +134,83 @@ public final class EntityAiSwap {
 			mob.targetSelector.removeAllGoals(goal -> true);
 			return false;
 		}
+	}
+
+	/** A creature named "Diamond Pickaxe" single-mindedly seeks and mines nearby ore. */
+	public static void installDiamondPickaxe(PathfinderMob mob) {
+		mob.goalSelector.removeAllGoals(goal -> true);
+		mob.targetSelector.removeAllGoals(goal -> true);
+		mob.goalSelector.addGoal(0, new FloatGoal(mob));
+		mob.goalSelector.addGoal(1, new OreMiningGoal(mob));
+	}
+
+	private static final class OreMiningGoal extends Goal {
+		private static final int SEARCH_RADIUS = 8;
+		private final PathfinderMob mob;
+		private BlockPos target;
+		private long nextSearch;
+
+		private OreMiningGoal(PathfinderMob mob) {
+			this.mob = mob;
+			this.setFlags(java.util.EnumSet.of(Goal.Flag.MOVE, Goal.Flag.LOOK));
+		}
+
+		@Override
+		public boolean canUse() {
+			if (mob.level().getGameTime() < nextSearch) return false;
+			nextSearch = mob.level().getGameTime() + 40;
+			target = findNearestOre();
+			return target != null;
+		}
+
+		@Override
+		public boolean canContinueToUse() {
+			return target != null && isOre(mob.level().getBlockState(target))
+					&& mob.distanceToSqr(target.getX() + .5, target.getY() + .5, target.getZ() + .5) < 400;
+		}
+
+		@Override
+		public void tick() {
+			if (target == null) return;
+			mob.getLookControl().setLookAt(target.getX() + .5, target.getY() + .5, target.getZ() + .5);
+			double distance = mob.distanceToSqr(target.getX() + .5, target.getY() + .5, target.getZ() + .5);
+			if (distance > 4.0) {
+				mob.getNavigation().moveTo(target.getX() + .5, target.getY(), target.getZ() + .5, 1.15);
+				return;
+			}
+			mob.getNavigation().stop();
+			mob.swing(net.minecraft.world.InteractionHand.MAIN_HAND);
+			if (mob.tickCount % 10 == 0 && mob.level() instanceof net.minecraft.server.level.ServerLevel server) {
+				BlockState state = server.getBlockState(target);
+				if (isOre(state)) {
+					Block.dropResources(state, server, target, null, mob, ItemStack.EMPTY);
+					server.destroyBlock(target, false, mob);
+					server.sendParticles(ParticleTypes.CRIT, target.getX() + .5, target.getY() + .5, target.getZ() + .5,
+							8, .2, .2, .2, .02);
+					server.playSound(null, target, SoundEvents.STONE_BREAK, SoundSource.NEUTRAL, .7f, .7f);
+					target = null;
+				}
+			}
+		}
+
+		private BlockPos findNearestOre() {
+			BlockPos origin = mob.blockPosition();
+			BlockPos best = null;
+			double bestDistance = Double.MAX_VALUE;
+			for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-SEARCH_RADIUS, -4, -SEARCH_RADIUS),
+					origin.offset(SEARCH_RADIUS, 4, SEARCH_RADIUS))) {
+				if (!mob.level().hasChunkAt(pos) || !isOre(mob.level().getBlockState(pos))) continue;
+				double d = pos.distToCenterSqr(mob.position());
+				if (d < bestDistance) { best = pos.immutable(); bestDistance = d; }
+			}
+			return best;
+		}
+	}
+
+	private static boolean isOre(BlockState state) {
+		return state.is(BlockTags.COAL_ORES) || state.is(BlockTags.IRON_ORES) || state.is(BlockTags.COPPER_ORES)
+				|| state.is(BlockTags.GOLD_ORES) || state.is(BlockTags.REDSTONE_ORES) || state.is(BlockTags.LAPIS_ORES)
+				|| state.is(BlockTags.DIAMOND_ORES) || state.is(BlockTags.EMERALD_ORES);
 	}
 
 	private static final org.slf4j.Logger LOGGER = org.slf4j.LoggerFactory.getLogger("mcanomalyarchives/nametag");

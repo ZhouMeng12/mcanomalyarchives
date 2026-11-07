@@ -1,0 +1,83 @@
+import org.gradle.api.DefaultTask
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.file.DirectoryProperty
+import org.gradle.api.tasks.Internal
+import org.gradle.api.tasks.TaskAction
+import org.gradle.work.DisableCachingByDefault
+import groovy.json.JsonSlurper
+
+// MCreator recreates these two generated sections outside its user-code blocks.
+// Repair only the known template fragments before Java's input snapshot is taken.
+@DisableCachingByDefault(because = 'Repairs generated workspace sources in place')
+abstract class RepairMcreatorGeneratedSources extends DefaultTask {
+    @Internal abstract RegularFileProperty getModSource()
+    @Internal abstract RegularFileProperty getAnimationSource()
+    @Internal abstract DirectoryProperty getWorkspaceDirectory()
+
+    static String replaceMethod(String text, String signature, String replacement, boolean annotation = false) {
+        int start = text.indexOf(signature)
+        if (start < 0) return text
+        int open = text.indexOf('{', start)
+        int depth = 1, end = open + 1
+        while (end < text.length() && depth > 0) {
+            char c = text.charAt(end++)
+            if (c == '{') depth++
+            if (c == '}') depth--
+        }
+        if (depth != 0) throw new GradleException("Unbalanced generated method: ${signature}")
+        if (annotation) {
+            int marker = text.lastIndexOf('@SubscribeEvent', start)
+            if (marker >= 0 && text.substring(marker + '@SubscribeEvent'.length(), start).trim().isEmpty()) start = marker
+        }
+        return text.substring(0, start) + replacement + text.substring(end)
+    }
+
+    @TaskAction
+    void repair() {
+        File workspace = workspaceDirectory.get().asFile
+        File importManifest = new File(workspace, 'architecture/mcreator-imports.json')
+        Map<String, List<String>> importRepairs = (Map<String, List<String>>) new JsonSlurper().parse(importManifest)
+        importRepairs.each { relativePath, expectedImports ->
+            File source = new File(workspace, relativePath)
+            String sourceText = source.getText('UTF-8')
+            List<String> missingImports = expectedImports.findAll { !sourceText.contains(it) }
+            if (!missingImports.isEmpty()) {
+                int packageEnd = sourceText.indexOf(';', sourceText.indexOf('package ')) + 1
+                if (packageEnd <= 0) throw new GradleException("Missing package declaration in ${relativePath}")
+                sourceText = sourceText.substring(0, packageEnd) + '\n\n' + missingImports.join('\n') + '\n' + sourceText.substring(packageEnd).replaceFirst('^\\s*\\n', '\n')
+                source.setText(sourceText, 'UTF-8')
+                logger.lifecycle("Restored ${missingImports.size()} imports after MCreator regeneration: ${relativePath}")
+            }
+        }
+
+        File mod = modSource.get().asFile
+        String before = mod.getText('UTF-8')
+        String fixed = replaceMethod(before, 'public static void queueServerWork(int delay, Runnable action)',
+                'public static void queueServerWork(int delay, Runnable action) {\n\t\tnet.mcreator.mcanomalyarchives.runtime.ServerTasks.schedule(delay, action);\n\t}')
+        fixed = replaceMethod(fixed, 'public void tick(ServerTickEvent.Post event)', '', true)
+        fixed = fixed.replace('NeoForge.EVENT_BUS.register(this);', '// No instance event subscribers remain after the generated tick handler is removed.')
+        fixed = fixed.replaceAll('(?m)^\\s*private static final Queue<IntObjectPair<Runnable>> workToBeScheduled = [^\\r\\n]*\\r?\\n', '')
+        fixed = fixed.replaceAll('(?m)^\\s*private static final PriorityQueue<TickTask> workQueue = [^\\r\\n]*\\r?\\n', '')
+        fixed = fixed.replaceAll('(?m)^[\\t ]+$', '')
+        if (fixed != before) {
+            mod.setText(fixed, 'UTF-8')
+            logger.lifecycle('Restored server-task lifecycle delegation after MCreator regeneration.')
+        }
+
+        File animation = animationSource.get().asFile
+        before = animation.getText('UTF-8')
+        fixed = before.replaceAll('Player player = \\(Player\\) context\\.player\\(\\)\\.level\\(\\)\\.getEntity\\(message\\.player\\);\\s*if \\(player == null\\)\\s*return;',
+                'if (!(context.player().level().getEntity(message.player) instanceof Player player))\n\t\t\t\t\treturn;')
+        if (fixed != before) {
+            animation.setText(fixed, 'UTF-8')
+            logger.lifecycle('Restored animation entity type validation after MCreator regeneration.')
+        }
+    }
+}
+
+def sourceRepair = tasks.register('repairMcreatorGeneratedSources', RepairMcreatorGeneratedSources) {
+    workspaceDirectory.set(layout.projectDirectory)
+    modSource.set(layout.projectDirectory.file('src/main/java/net/mcreator/mcanomalyarchives/McanomalyarchivesMod.java'))
+    animationSource.set(layout.projectDirectory.file('src/main/java/net/mcreator/mcanomalyarchives/network/PlayPlayerAnimationMessage.java'))
+}
+tasks.named('compileJava').configure { dependsOn(sourceRepair) }

@@ -1,0 +1,152 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mcanomalyarchives:item/uo002_garbled_01"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "custom_model_data": 1
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_01"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 2
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_02"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 3
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_03"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 4
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_04"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 5
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_05"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 6
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_06"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 7
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_07"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 8
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_08"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 9
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_09"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 10
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_10"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 11
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_11"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 12
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_12"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 13
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_13"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 14
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_14"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 15
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_15"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 16
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_16"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 17
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_17"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 18
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_18"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 19
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_19"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 20
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_20"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 21
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_21"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 22
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_22"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 23
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_23"
+    },
+    {
+      "predicate": {
+        "custom_model_data": 24
+      },
+      "model": "mcanomalyarchives:item/uo002_garbled_24"
+    }
+  ]
+}

@@ -2,16 +2,17 @@ package net.mcreator.mcanomalyarchives;
 
 import org.checkerframework.checker.units.qual.t;
 import org.checkerframework.checker.units.qual.min;
-
-import net.neoforged.neoforge.client.event.RenderHandEvent;
-import net.neoforged.neoforge.client.event.RenderArmEvent;
-import net.neoforged.neoforge.client.entity.animation.json.AnimationLoader;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.ModList;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.api.distmarker.Dist;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+
+import net.neoforged.neoforge.client.event.RenderHandEvent;
+import net.neoforged.neoforge.client.event.RenderArmEvent;
+import net.neoforged.neoforge.client.entity.animation.json.AnimationLoader;
 
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.entity.player.Player;
@@ -29,8 +30,6 @@ import java.util.ArrayList;
 import java.nio.file.Path;
 import java.nio.file.Files;
 import java.nio.charset.StandardCharsets;
-
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonObject;

@@ -21,13 +21,14 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  * {@code openScreen} 为真时顺带把界面打开的请求一起带过去（省一个包）。
  */
 @EventBusSubscriber
-public record CodexSyncPacket(int mask, boolean openScreen) implements CustomPacketPayload {
+public record CodexSyncPacket(int mask, String observations, boolean openScreen) implements CustomPacketPayload {
 
 	public static final Type<CodexSyncPacket> TYPE = new Type<>(
 			ResourceLocation.fromNamespaceAndPath(McanomalyarchivesMod.MODID, "codex_sync"));
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, CodexSyncPacket> STREAM_CODEC = StreamCodec.composite(
 			ByteBufCodecs.VAR_INT, CodexSyncPacket::mask,
+			ByteBufCodecs.STRING_UTF8, CodexSyncPacket::observations,
 			ByteBufCodecs.BOOL, CodexSyncPacket::openScreen,
 			CodexSyncPacket::new);
 
@@ -39,7 +40,7 @@ public record CodexSyncPacket(int mask, boolean openScreen) implements CustomPac
 	public static void handleData(final CodexSyncPacket message, final IPayloadContext context) {
 		if (context.flow() == PacketFlow.CLIENTBOUND) {
 			context.enqueueWork(() -> net.mcreator.mcanomalyarchives.client.codex.CodexClientHandler
-					.onSync(message.mask(), message.openScreen()));
+					.onSync(message.mask(), message.observations(), message.openScreen()));
 		}
 	}
 

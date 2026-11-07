@@ -51,7 +51,8 @@ public final class NameRules {
 		if (EARTH.contains(lower) || EARTH.contains(name)) {
 			return Special.EARTH;
 		}
-		if (looksLikeGarbage(name)) {
+		// 先尊重注册表索引：名称即使含标点，只要确实对应生物/物品/方块，就不是乱码。
+		if (looksLikeGarbage(name) && NameResolver.candidates(name) == null) {
 			return Special.GARBAGE;
 		}
 		return Special.NONE;

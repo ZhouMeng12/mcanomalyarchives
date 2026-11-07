@@ -69,7 +69,7 @@ public final class AnomalyCodex {
 			new Entry("UO-001", key("uo001.name"), key("uo001.info"), key("uo001.trait"), key("uo001.level"),
 					key("uo001.protocol"), Unlock.ENTITY, "mcanomalyarchives:stange_cloud|mcanomalyarchives:small_stange_cloud|mcanomalyarchives:black_stange_cloud"),
 			new Entry("UO-002", key("uo002.name"), key("uo002.info"), key("uo002.trait"), key("uo002.level"),
-					key("uo002.protocol"), Unlock.PLANNED, ""),
+					key("uo002.protocol"), Unlock.ITEM, "mcanomalyarchives:uo002_garbled"),
 			new Entry("UO-003", key("uo003.name"), key("uo003.info"), key("uo003.trait"), key("uo003.level"),
 					key("uo003.protocol"), Unlock.ITEM, "mcanomalyarchives:corn_poppy"),
 			new Entry("UO-004", key("uo004.name"), key("uo004.info"), key("uo004.trait"), key("uo004.level"),
@@ -79,7 +79,7 @@ public final class AnomalyCodex {
 			new Entry("UO-006", key("uo006.name"), key("uo006.info"), key("uo006.trait"), key("uo006.level"),
 					key("uo006.protocol"), Unlock.PLANNED, ""),
 			new Entry("UO-007", key("uo007.name"), key("uo007.info"), key("uo007.trait"), key("uo007.level"),
-					key("uo007.protocol"), Unlock.PLANNED, ""),
+					key("uo007.protocol"), Unlock.ITEM, "mcanomalyarchives:negative_apple|mcanomalyarchives:negative_diamond_pickaxe"),
 			new Entry("UO-008", key("uo008.name"), key("uo008.info"), key("uo008.trait"), key("uo008.level"),
 					key("uo008.protocol"), Unlock.ITEM, "mcanomalyarchives:baibian_name_tag"),
 			new Entry("UO-009", key("uo009.name"), key("uo009.info"), key("uo009.trait"), key("uo009.level"),
@@ -143,6 +143,7 @@ public final class AnomalyCodex {
 	/** 死亡重生时搬运（PlayerEvent.Clone 里调用） */
 	public static void copyOnRespawn(ServerPlayer oldPlayer, ServerPlayer newPlayer) {
 		newPlayer.getPersistentData().putInt(TAG_MASK, oldPlayer.getPersistentData().getInt(TAG_MASK));
+		CodexObservations.copy(oldPlayer, newPlayer);
 	}
 
 	// ===== 扫描（自动解锁）=====
@@ -155,14 +156,46 @@ public final class AnomalyCodex {
 		if (!(player.level() instanceof ServerLevel level))
 			return;
 		AABB box = player.getBoundingBox().inflate(SCAN_RADIUS);
+		List<Entity> visible = level.getEntitiesOfClass(Entity.class, box, e -> e instanceof net.minecraft.world.entity.LivingEntity && e != player && e.isAlive()
+				&& BuiltInRegistries.ENTITY_TYPE.getKey(e.getType()).getNamespace().equals(McanomalyarchivesMod.MODID)
+				&& !e.isInvisible() && player.distanceToSqr(e) <= SCAN_RADIUS * SCAN_RADIUS
+				&& player.hasLineOfSight(e)
+				&& player.getLookAngle().dot(e.getBoundingBox().getCenter().subtract(player.getEyePosition()).normalize()) > 0.5);
+		for (Entity seen : visible) {
+			String id = BuiltInRegistries.ENTITY_TYPE.getKey(seen.getType()).toString();
+			if (seen instanceof net.mcreator.mcanomalyarchives.entity.SmallStangeCloudEntity small && small.isRed()) CodexObservations.record(player, "cloud_red");
+			if (id.equals("mcanomalyarchives:small_stange_cloud")) CodexObservations.record(player, "cloud_small");
+			if (id.equals("mcanomalyarchives:black_stange_cloud")) CodexObservations.record(player, "cloud_black");
+			if (seen instanceof net.mcreator.mcanomalyarchives.entity.StrangeTreeEntity tree
+					&& (tree.getBurrowState() == 1 || tree.getBurrowState() == 3 || tree.getBurrowState() == 4))
+				CodexObservations.record(player, "tree_chase");
+		}
+		for (ItemStack held : player.getInventory().items) {
+			if (net.mcreator.mcanomalyarchives.anomaly.nametag.NamedState.isNamed(held)) {
+				CodexObservations.record(player, "name_rewrite");
+				break;
+			}
+		}
+		var hit = player.pick(12, 0, false);
+		if (hit instanceof net.minecraft.world.phys.BlockHitResult blockHit) {
+			String block = BuiltInRegistries.BLOCK.getKey(level.getBlockState(blockHit.getBlockPos()).getBlock()).toString();
+			if (block.equals("mcanomalyarchives:corn_poppy")) unlock(player, 2, level);
+		}
 		for (int i = 0; i < TOTAL; i++) {
 			Entry entry = ENTRIES.get(i);
 			if (entry.unlock() == Unlock.PLANNED || isUnlocked(player, i))
 				continue;
 			if (entry.unlock() == Unlock.ITEM) {
-				Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(entry.match()));
-				if (item != null && item != net.minecraft.world.item.Items.AIR && player.getInventory().contains(new ItemStack(item))) {
-					unlock(player, i, level);
+				// match supports multiple item ids separated by '|', like ENTITY entries.
+				for (String token : entry.match().split("\\|")) {
+					if (token.isEmpty())
+						continue;
+					Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(token));
+					if (item != null && item != net.minecraft.world.item.Items.AIR
+							&& player.getInventory().contains(new ItemStack(item))) {
+						unlock(player, i, level);
+						break;
+					}
 				}
 			} else if (entry.unlock() == Unlock.ENTITY) {
 				// match 允许用 | 分隔多个 id：UO-001 的伪云与小伪云算同一条目，
@@ -171,7 +204,7 @@ public final class AnomalyCodex {
 					if (token.isEmpty())
 						continue;
 					EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(token));
-					if (type != null && !level.getEntitiesOfClass(Entity.class, box, e -> e.getType() == type).isEmpty()) {
+					if (type != null && visible.stream().anyMatch(e -> e.getType() == type)) {
 						unlock(player, i, level);
 						break;
 					}

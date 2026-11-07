@@ -1,0 +1,109 @@
+{
+  "src/main/java/net/mcreator/mcanomalyarchives/McanomalyarchivesMod.java": [
+    "import net.neoforged.fml.common.Mod;",
+    "import net.neoforged.bus.api.IEventBus;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/McanomalyarchivesModPlayerAnimationAPI.java": [
+    "import org.checkerframework.checker.units.qual.t;",
+    "import org.checkerframework.checker.units.qual.min;",
+    "import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;",
+    "import net.neoforged.fml.common.EventBusSubscriber;",
+    "import net.neoforged.fml.ModList;",
+    "import net.neoforged.bus.api.SubscribeEvent;",
+    "import net.neoforged.bus.api.EventPriority;",
+    "import net.neoforged.api.distmarker.Dist;",
+    "import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModBlockEntities.java": [
+    "import net.neoforged.fml.common.EventBusSubscriber;",
+    "import net.neoforged.bus.api.SubscribeEvent;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModBlocks.java": [
+    "import net.neoforged.fml.common.EventBusSubscriber;",
+    "import net.neoforged.bus.api.SubscribeEvent;",
+    "import net.neoforged.api.distmarker.Dist;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModEntities.java": [
+    "import net.neoforged.fml.common.EventBusSubscriber;",
+    "import net.neoforged.bus.api.SubscribeEvent;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModEntityRenderers.java": [
+    "import net.neoforged.fml.common.EventBusSubscriber;",
+    "import net.neoforged.bus.api.SubscribeEvent;",
+    "import net.neoforged.api.distmarker.Dist;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModFluids.java": [
+    "import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;",
+    "import net.neoforged.fml.common.EventBusSubscriber;",
+    "import net.neoforged.bus.api.SubscribeEvent;",
+    "import net.neoforged.api.distmarker.Dist;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModGameRules.java": [
+    "import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;",
+    "import net.neoforged.fml.common.EventBusSubscriber;",
+    "import net.neoforged.bus.api.SubscribeEvent;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModItems.java": [
+    "import net.neoforged.fml.common.EventBusSubscriber;",
+    "import net.neoforged.bus.api.SubscribeEvent;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/init/McanomalyarchivesModModels.java": [
+    "import net.neoforged.fml.common.EventBusSubscriber;",
+    "import net.neoforged.bus.api.SubscribeEvent;",
+    "import net.neoforged.api.distmarker.Dist;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/mixin/CameraAccessor.java": [
+    "import org.spongepowered.asm.mixin.gen.Accessor;",
+    "import org.spongepowered.asm.mixin.Mixin;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/mixin/EntityRenderDispatcherMixin.java": [
+    "import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;",
+    "import org.spongepowered.asm.mixin.injection.Inject;",
+    "import org.spongepowered.asm.mixin.injection.At;",
+    "import org.spongepowered.asm.mixin.Mixin;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/mixin/ItemInHandLayerMixin.java": [
+    "import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;",
+    "import org.spongepowered.asm.mixin.injection.Inject;",
+    "import org.spongepowered.asm.mixin.injection.At;",
+    "import org.spongepowered.asm.mixin.Mixin;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/mixin/ItemInHandRendererMixin.java": [
+    "import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;",
+    "import org.spongepowered.asm.mixin.injection.Inject;",
+    "import org.spongepowered.asm.mixin.injection.At;",
+    "import org.spongepowered.asm.mixin.Mixin;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/mixin/LevelRendererMixin.java": [
+    "import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;",
+    "import org.spongepowered.asm.mixin.injection.Inject;",
+    "import org.spongepowered.asm.mixin.injection.At;",
+    "import org.spongepowered.asm.mixin.Mixin;",
+    "import org.joml.Matrix4f;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/mixin/LivingEntityRendererMixin.java": [
+    "import org.spongepowered.asm.mixin.injection.At;",
+    "import org.spongepowered.asm.mixin.Mixin;",
+    "import org.objectweb.asm.Opcodes;",
+    "import org.checkerframework.checker.units.qual.g;",
+    "import com.llamalad7.mixinextras.injector.ModifyExpressionValue;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/mixin/PlayerAnimationMixin.java": [
+    "import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;",
+    "import org.spongepowered.asm.mixin.injection.Inject;",
+    "import org.spongepowered.asm.mixin.injection.At;",
+    "import org.spongepowered.asm.mixin.Mixin;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/mixin/PlayerAnimationRendererMixin.java": [
+    "import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;",
+    "import org.spongepowered.asm.mixin.injection.Inject;",
+    "import org.spongepowered.asm.mixin.injection.At;",
+    "import org.spongepowered.asm.mixin.Mixin;",
+    "import org.checkerframework.checker.units.qual.g;"
+  ],
+  "src/main/java/net/mcreator/mcanomalyarchives/network/PlayPlayerAnimationMessage.java": [
+    "import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;",
+    "import net.neoforged.fml.common.EventBusSubscriber;",
+    "import net.neoforged.bus.api.SubscribeEvent;"
+  ]
+}

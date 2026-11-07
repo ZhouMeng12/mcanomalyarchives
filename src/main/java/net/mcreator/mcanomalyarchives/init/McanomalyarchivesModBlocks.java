@@ -3,12 +3,13 @@
  */
 package net.mcreator.mcanomalyarchives.init;
 
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.api.distmarker.Dist;
+
+import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 
 import net.minecraft.world.level.block.Block;
 
@@ -34,6 +35,7 @@ public class McanomalyarchivesModBlocks {
 	public static final DeferredBlock<Block> CLOUD_ORE;
 	public static final DeferredBlock<Block> STRANGETREELOG;
 	public static final DeferredBlock<Block> STRANGETREELEAVES;
+	public static final DeferredBlock<Block> UO002_MISPLACED;
 	static {
 		CLOUD_STONE = REGISTRY.register("cloud_stone", CloudStoneBlock::new);
 		CLOUD_DEM_PORTAL = REGISTRY.register("cloud_dem_portal", CloudDemPortalBlock::new);
@@ -52,6 +54,7 @@ public class McanomalyarchivesModBlocks {
 		CLOUD_ORE = REGISTRY.register("cloud_ore", CloudOreBlock::new);
 		STRANGETREELOG = REGISTRY.register("strangetreelog", StrangetreelogBlock::new);
 		STRANGETREELEAVES = REGISTRY.register("strangetreeleaves", StrangetreeleavesBlock::new);
+		UO002_MISPLACED = REGISTRY.register("uo002_misplaced", Uo002MisplacedBlock::new);
 	}
 
 	// Start of user code block custom blocks

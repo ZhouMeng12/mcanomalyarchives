@@ -101,8 +101,8 @@ for m in models:
    if n=='mantle':p['size']=[12,16,12];p['center'][1]=17
    if n.startswith('tentacle'):p['size'][1]=18;p['center'][1]=0
   if m['id']=='pale':
-   if n=='head':p['size']=[8,8,8];p['center'][1]=42
-   if n.startswith('eye_'):p['center'][1]=42;p['center'][2]=-4.1
+   if n=='head':p['size']=[8,8,8];p['center'][1]=40
+   if n.startswith('eye_'):p['center'][1]=40;p['center'][2]=-4.1
    if n=='pelvis':p['center'][1]=25
    if n=='spine':p['center'][1]=31
    if n=='rib':p['center'][1]+=9
@@ -164,7 +164,14 @@ def surface(m,p,face,w,h):
 for m in models:
  if m['id']=='walksquid':
   m['texture']='walksquid.png';m['textureSize']=[64,32]
-  shutil.copyfile(ROOT/'reference/squid.png',ROOT/m['texture'])
+  im=Image.open(ROOT/'reference/squid.png').convert('RGBA'); px=im.load()
+  for yy in range(im.height):
+   for xx in range(im.width):
+    rr,gg,bb,aa=px[xx,yy]
+    if aa:
+     lum=(rr*30+gg*59+bb*11)//100
+     px[xx,yy]=(max(12,lum+75),max(12,int(lum*.42)),max(12,lum+58),aa)
+  im.save(ROOT/m['texture'])
   for p in m['parts']:
    sx,sy,sz=[max(1,round(q)) for q in p['size']]
    u,v=(0,0) if p['name']=='mantle' else (48,0)
@@ -187,11 +194,11 @@ manifest=dict(format='anomaly-cuboids-v1',units='1/16 block',coordinates='right-
 for m in models:
  elements=[]
  for p in m['parts']:
-  origin=p['center'];size=p['size'];uv=[keys.index(p['material'])*16,0,keys.index(p['material'])*16+16,16]
+  origin=p['center'];pivot=p.get('pivot',origin);size=p['size'];uv=[keys.index(p['material'])*16,0,keys.index(p['material'])*16+16,16]
   el=dict(name=p['name'],from_=[origin[i]-size[i]/2 for i in range(3)],to=[origin[i]+size[i]/2 for i in range(3)],faces={f:dict(uv=uv,texture='#0') for f in ['north','south','east','west','up','down']})
   el['from']=el.pop('from_');elements.append(el)
  # Blockbench free-model source preserves per-part Euler rotation and shared texture.
- bb=dict(meta=dict(format_version='4.10',model_format='free',box_uv=False),name=m['title'],resolution=dict(width=m['textureSize'][0],height=m['textureSize'][1]),elements=[dict(name=p['name'],type='cube',uuid=str(uuid.uuid5(uuid.NAMESPACE_URL,f'anomaly/{m["id"]}/{i}')),**{'from':el['from'],'to':el['to']},origin=p['center'],rotation=p['rotation'],faces={f:dict(uv=uv,texture=0) for f,uv in [(f,el['faces'][f]['uv']) for f in el['faces']]}) for i,(p,el) in enumerate(zip(m['parts'],elements))],textures=[dict(name='specimen-atlas.png',path='specimen-atlas.png',id='0',source='data:image/png;base64,'+__import__('base64').b64encode((ROOT/'specimen-atlas.png').read_bytes()).decode())])
+ bb=dict(meta=dict(format_version='4.10',model_format='free',box_uv=False),name=m['title'],resolution=dict(width=m['textureSize'][0],height=m['textureSize'][1]),elements=[dict(name=p['name'],type='cube',uuid=str(uuid.uuid5(uuid.NAMESPACE_URL,f'anomaly/{m["id"]}/{i}')),**{'from':el['from'],'to':el['to']},origin=p.get('pivot',p['center']),rotation=p['rotation'],faces={f:dict(uv=uv,texture=0) for f,uv in [(f,el['faces'][f]['uv']) for f in el['faces']]}) for i,(p,el) in enumerate(zip(m['parts'],elements))],textures=[dict(name='specimen-atlas.png',path='specimen-atlas.png',id='0',source='data:image/png;base64,'+__import__('base64').b64encode((ROOT/'specimen-atlas.png').read_bytes()).decode())])
  bb['outliner']=[e['uuid'] for e in bb['elements']]
  bb['resolution']={'width':m['textureSize'][0],'height':m['textureSize'][1]}
  facekeys=['north','south','west','east','up','down']
@@ -209,7 +216,7 @@ for m in models:
   center=p['center'];size=p['size'];uv_names=['north','south','west','east','up','down']
   uv={name:{'uv':coords[:2],'uv_size':coords[2:]} for name,coords in zip(uv_names,p['uv'])}
   cube={'origin':[center[i]-size[i]/2 for i in range(3)],'size':size,'uv':uv}
-  bone={'name':p['name'],'pivot':center,'cubes':[cube]}
+  bone={'name':p['name'],'pivot':p.get('pivot',center),'cubes':[cube]}
   if any(p['rotation']):bone['rotation']=p['rotation']
   geo_parts.append(bone)
  geo={'format_version':'1.12.0','minecraft:geometry':[{'description':{

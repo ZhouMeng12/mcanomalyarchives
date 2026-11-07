@@ -11,6 +11,12 @@ package net.mcreator.mcanomalyarchives.client.codex;
 public final class CodexClientHandler {
 
 	private static volatile int mask = 0;
+	private static java.util.Set<String> observations = java.util.Set.of();
+	public static boolean observed(String id) { return observations.contains(id); }
+	public static java.util.List<net.mcreator.mcanomalyarchives.codex.CodexObservations.Note> notesFor(int entry) {
+		return observations.stream().map(net.mcreator.mcanomalyarchives.codex.CodexObservations::note)
+				.filter(note -> note != null && note.entry() == entry).toList();
+	}
 
 	private CodexClientHandler() {
 	}
@@ -21,8 +27,9 @@ public final class CodexClientHandler {
 	}
 
 	/** 由网络包调用（客户端主线程） */
-	public static void onSync(int newMask, boolean openScreen) {
+	public static void onSync(int newMask, String encoded, boolean openScreen) {
 		mask = newMask;
+		observations = net.mcreator.mcanomalyarchives.codex.CodexObservations.decode(encoded);
 		if (openScreen) {
 			CodexScreen.open();
 		}

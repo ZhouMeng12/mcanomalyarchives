@@ -83,8 +83,8 @@ public class CodexScreen extends Screen {
 
 	private float scale() {
 		float s = Math.min((this.width - 20) / 394.0F, (this.height - 40) / (float) BOOK_SIZE);
-		// 下限 0.9：再小的话左页 12 行（每行 9px）会挤在一起
-		return Mth.clamp(s, 0.9F, 1.6F);
+		// 文字与书页使用同一局部缩放，小窗口中也保持排版和点击位置一致。
+		return Mth.clamp(s, 0.5F, 1.6F);
 	}
 
 	private int pageSize() {
@@ -103,19 +103,9 @@ public class CodexScreen extends Screen {
 		return (this.height - pageSize()) / 2;
 	}
 
-	/** 第 pageIndex 页的页内文字区（屏幕坐标）：{x, y, w, h} */
-	private int[] textArea(int pageIndex) {
-		float s = scale();
-		return new int[] {
-				bookX(pageIndex) + Math.round(TEXT_X * s),
-				bookY() + Math.round(TEXT_Y * s),
-				Math.round(TEXT_W * s),
-				Math.round(TEXT_H * s) };
-	}
-
 	/** 每页能放几行 */
 	private int linesPerPage() {
-		return Math.max(4, textArea(1)[3] / LINE_H);
+		return TEXT_H / LINE_H;
 	}
 
 	@Override
@@ -179,23 +169,29 @@ public class CodexScreen extends Screen {
 
 	/** 左页：一行一条异常（未解明显示 ???，编号仍可见） */
 	private void renderList(GuiGraphics gui, int mouseX, int mouseY) {
-		int[] area = textArea(0);
-		int x = area[0], y = area[1], w = area[2];
+		gui.pose().pushPose();
+		gui.pose().translate(bookX(0), bookY(), 0);
+		gui.pose().scale(scale(), scale(), 1);
+		int x = TEXT_X, y = TEXT_Y, w = TEXT_W;
+		float localMouseX = (mouseX - bookX(0)) / scale();
+		float localMouseY = (mouseY - bookY()) / scale();
 
 		gui.drawString(this.font, this.title, x, y, INK_TITLE, false);
 		Component progress = Component.translatable(key("progress"), Integer.bitCount(CodexClientHandler.mask()),
 				AnomalyCodex.TOTAL);
-		gui.drawString(this.font, progress, x + w - this.font.width(progress), y, INK_DIM, false);
+		gui.drawString(this.font, this.font.plainSubstrByWidth(progress.getString(), w),
+				x, BOOK_SIZE - PAGE_INDICATOR_UP, INK_DIM, false);
 
-		int rowTop = y + 12;
-		int rowH = Math.min(LINE_H, Math.max(7, (area[3] - 12) / AnomalyCodex.TOTAL));
+		gui.fill(x, y + 10, x + w, y + 11, 0x406B4E39);
+		int rowTop = y + 14;
+		int rowH = LINE_H;
 		int mask = CodexClientHandler.mask();
 
 		for (int i = 0; i < AnomalyCodex.TOTAL; i++) {
 			AnomalyCodex.Entry entry = AnomalyCodex.get(i);
 			boolean unlocked = (mask & (1 << i)) != 0;
 			int ry = rowTop + i * rowH;
-			boolean hovered = mouseX >= x - 2 && mouseX <= x + w + 2 && mouseY >= ry && mouseY < ry + rowH;
+			boolean hovered = localMouseX >= x - 2 && localMouseX <= x + w + 2 && localMouseY >= ry && localMouseY < ry + rowH;
 
 			if (i == selected) {
 				gui.fill(x - 3, ry - 1, x + w + 3, ry + rowH - 2, HILITE_SELECTED);
@@ -205,16 +201,19 @@ public class CodexScreen extends Screen {
 			gui.drawString(this.font, entry.id(), x, ry, unlocked ? INK_ACCENT : INK_DIM, false);
 			Component name = unlocked ? Component.translatable(entry.nameKey())
 					: Component.translatable(key("locked"));
-			gui.drawString(this.font, name, x + 42, ry, unlocked ? INK : INK_DIM, false);
+			gui.drawString(this.font, this.font.plainSubstrByWidth(name.getString(), Math.max(20, w - 54)), x + 42, ry, unlocked ? INK : INK_DIM, false);
+			int notes = CodexClientHandler.notesFor(i).size();
+			if (notes > 0) gui.drawString(this.font, Integer.toString(notes), x + w - 5, ry, INK_ACCENT, false);
 		}
+		gui.pose().popPose();
 	}
 
 	/**
-	 * 把选中档案排成"行"（供分页）：名称/等级/协议 头部 + 摘要 + 特征。
+	 * 把选中档案排成"行"（供分页）：初见页 + 按发现顺序追加的独立性质页。
 	 * 排版是纯函数，每帧重算（只有一条档案，开销可以忽略）。
 	 */
 	private List<FormattedCharSequence> buildDetailLines() {
-		int w = textArea(1)[2];
+		int w = TEXT_W;
 		List<FormattedCharSequence> out = new ArrayList<>();
 		AnomalyCodex.Entry entry = AnomalyCodex.get(this.selected);
 		int mask = CodexClientHandler.mask();
@@ -228,24 +227,31 @@ public class CodexScreen extends Screen {
 			return out;
 		}
 
-		out.add(Component.translatable(entry.nameKey()).getVisualOrderText());
+		out.addAll(this.font.split(Component.translatable(entry.nameKey()), w - 42));
 		out.add(Component.empty().getVisualOrderText());
 		out.addAll(this.font.split(Component.translatable(key("level")).append(" ")
 				.append(Component.translatable(entry.levelKey())).append("    ")
 				.append(Component.translatable(key("protocol")).append(" "))
 				.append(Component.translatable(entry.protocolKey())).withStyle(ChatFormatting.DARK_GRAY), w));
 		out.add(Component.empty().getVisualOrderText());
-		out.addAll(this.font.split(Component.translatable(entry.infoKey()), w));
-		out.add(Component.empty().getVisualOrderText());
-		out.add(Component.translatable(key("traits")).withStyle(ChatFormatting.DARK_GRAY).getVisualOrderText());
-		out.addAll(this.font.split(Component.translatable(entry.traitKey()), w));
+		out.addAll(this.font.split(Component.translatable(key("first_sighting")).withStyle(ChatFormatting.DARK_PURPLE), w));
+		out.addAll(this.font.split(Component.translatable(key("encounter." + entry.id())), w));
+		int number = 0;
+		for (var note : CodexClientHandler.notesFor(selected)) {
+			while (out.size() % linesPerPage() != 0) out.add(Component.empty().getVisualOrderText());
+			out.addAll(this.font.split(Component.translatable(key("record_number"), ++number)
+					.withStyle(ChatFormatting.DARK_PURPLE), w));
+			out.addAll(this.font.split(Component.translatable(note.key()), w));
+		}
 		return out;
 	}
 
 	/** 右页：当前页的正文（颜色由组件自带的样式决定，这里给墨色打底） */
 	private void renderDetail(GuiGraphics gui, List<FormattedCharSequence> lines, int perPage, int pageCount) {
-		int[] area = textArea(1);
-		int x = area[0], y = area[1], w = area[2];
+		gui.pose().pushPose();
+		gui.pose().translate(bookX(1), bookY(), 0);
+		gui.pose().scale(scale(), scale(), 1);
+		int x = TEXT_X, y = TEXT_Y, w = TEXT_W;
 		int from = this.page * perPage;
 		int to = Math.min(lines.size(), from + perPage);
 		AnomalyCodex.Entry entry = AnomalyCodex.get(this.selected);
@@ -261,25 +267,31 @@ public class CodexScreen extends Screen {
 		if (this.page == 0 && unlocked) {
 			gui.drawString(this.font, entry.id(), x + w - this.font.width(entry.id()), y, INK_ACCENT, false);
 		}
+		gui.pose().popPose();
 	}
 
 	/** 页码指示（原版书写界面底部那个 "1/2"） */
 	private void renderPageIndicator(GuiGraphics gui, int pageCount) {
 		Component indicator = Component.literal((this.page + 1) + "/" + pageCount);
-		int cx = bookX(1) + pageSize() / 2 - this.font.width(indicator) / 2;
-		int cy = bookY() + pageSize() - Math.round(PAGE_INDICATOR_UP * scale());
+		gui.pose().pushPose();
+		gui.pose().translate(bookX(1), bookY(), 0);
+		gui.pose().scale(scale(), scale(), 1);
+		int cx = BOOK_SIZE / 2 - this.font.width(indicator) / 2;
+		int cy = BOOK_SIZE - PAGE_INDICATOR_UP;
 		gui.drawString(this.font, indicator, cx, cy, INK_DIM, false);
+		gui.pose().popPose();
 	}
 
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
-		int[] area = textArea(0);
-		int x = area[0], y = area[1], w = area[2];
-		int rowTop = y + 12;
-		int rowH = Math.min(LINE_H, Math.max(7, (area[3] - 12) / AnomalyCodex.TOTAL));
-		if (mouseX >= x - 3 && mouseX <= x + w + 3 && mouseY >= rowTop
-				&& mouseY < rowTop + AnomalyCodex.TOTAL * rowH) {
-			int idx = (int) ((mouseY - rowTop) / rowH);
+		double localMouseX = (mouseX - bookX(0)) / scale();
+		double localMouseY = (mouseY - bookY()) / scale();
+		int x = TEXT_X, y = TEXT_Y, w = TEXT_W;
+		int rowTop = y + 14;
+		int rowH = LINE_H;
+		if (button == 0 && localMouseX >= x - 3 && localMouseX <= x + w + 3 && localMouseY >= rowTop
+				&& localMouseY < rowTop + AnomalyCodex.TOTAL * rowH) {
+			int idx = (int) ((localMouseY - rowTop) / rowH);
 			if (idx >= 0 && idx < AnomalyCodex.TOTAL) {
 				if (idx != this.selected) {
 					this.selected = idx;

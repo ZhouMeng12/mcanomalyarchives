@@ -3,10 +3,11 @@
  */
 package net.mcreator.mcanomalyarchives.init;
 
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.api.distmarker.Dist;
+
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 
 import net.mcreator.mcanomalyarchives.client.renderer.*;
 
@@ -31,5 +32,11 @@ public class McanomalyarchivesModEntityRenderers {
 		event.registerEntityRenderer(McanomalyarchivesModEntities.SMALL_STANGE_CLOUD.get(), SmallStangeCloudRenderer::new);
 		event.registerEntityRenderer(McanomalyarchivesModEntities.BLACK_STANGE_CLOUD.get(), BlackStangeCloudRenderer::new);
 		event.registerEntityRenderer(McanomalyarchivesModEntities.YIFULIN_2.get(), Yifulin2Renderer::new);
+		event.registerEntityRenderer(McanomalyarchivesModEntities.REDFIN.get(), RedfinRenderer::new);
+		event.registerEntityRenderer(McanomalyarchivesModEntities.BLOOMCOW.get(), BloomcowRenderer::new);
+		event.registerEntityRenderer(McanomalyarchivesModEntities.WALKSQUID.get(), WalksquidRenderer::new);
+		event.registerEntityRenderer(McanomalyarchivesModEntities.PALE.get(), PaleRenderer::new);
+		event.registerEntityRenderer(McanomalyarchivesModEntities.REMNANT.get(), RemnantRenderer::new);
+		event.registerEntityRenderer(McanomalyarchivesModEntities.FOLD.get(), FoldRenderer::new);
 	}
 }

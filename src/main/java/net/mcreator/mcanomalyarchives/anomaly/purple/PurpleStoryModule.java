@@ -58,7 +58,9 @@ public final class PurpleStoryModule {
 	}
 
 	public static boolean startNatural(ServerPlayer player) {
-		return start(player, 1);
+		boolean started = start(player, 1);
+		if (started) net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "purple_arrival");
+		return started;
 	}
 
 	/** 只从已校验权限的 /purplegui 命令调用。第五阶段仍是无奖励的界面预览。 */
@@ -76,6 +78,7 @@ public final class PurpleStoryModule {
 		if (!isCurrent(player) || !player.isAlive() || player.isRemoved() || hasActive(player)) return false;
 		Actors actors = spawnActors(player, phase);
 		if (actors == null) return false;
+		PurpleEncounterEffects.materialize(actors.purple);
 		Stage opening = phase == 1 ? Stage.QUESTION : phase == 4 ? Stage.ANIMAL : Stage.REVENGE;
 		sessions.open(player.getUUID(), dimension(player.serverLevel()), actor(actors.purple), actor(actors.dog), opening);
 		PacketDistributor.sendToPlayer(player, new OpenPurpleGuiPacket(actors.purple.getId(), phase,
@@ -87,6 +90,7 @@ public final class PurpleStoryModule {
 		Session session = authorized(player);
 		if (session == null || !session.advanceToPhase2(purpleId)) return;
 		PurpleMonsterEntity purple = purple(session);
+		net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "purple_change");
 		purple.setTextureVariant(1); // 原客户端只改本地贴图，现在同步服务器权威表现。
 		PacketDistributor.sendToPlayer(player, new OpenPurpleGuiPacket(purpleId, 2, 0));
 	}
@@ -106,6 +110,7 @@ public final class PurpleStoryModule {
 	public static void completePetting(ServerPlayer player, int purpleId, int dogId) {
 		Session session = authorized(player);
 		if (session == null || !session.completePetting(purpleId, dogId, server.getTickCount())) return;
+		net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "purple_pet");
 		// 丢弃准确的主手槽，而不是按物品相等从背包里移除其他同类物品。
 		ItemStack held = player.getMainHandItem().copy();
 		if (!held.isEmpty()) {
@@ -136,9 +141,11 @@ public final class PurpleStoryModule {
 		sessions.close(player.getUUID());
 		try {
 			if (outcome == Outcome.ASSIMILATED || outcome == Outcome.REWARDED) {
+				net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "purple_assimilation");
 				player.setData(McanomalyarchivesModAttachments.PURPLE_ASSIMILATION_COMPLETED, true);
 			}
 			if (outcome == Outcome.REWARDED) {
+				net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "purple_reward");
 				ItemStack reward = new ItemStack(McanomalyarchivesModItems.PURPLEHAND.get());
 				if (!player.getInventory().add(reward)) player.drop(reward, false);
 			}
@@ -301,7 +308,10 @@ public final class PurpleStoryModule {
 				&& session.player().equals(pm.getPerformTargetUUID())
 				|| entity instanceof PurpleDogEntity pd && pd.isPerformMode()
 				&& session.player().equals(pd.getPerformTargetUUID());
-		if (owned) entity.discard();
+		if (owned) {
+			if (entity instanceof PurpleMonsterEntity) PurpleEncounterEffects.dissolve(entity);
+			entity.discard();
+		}
 	}
 
 	private record Actors(PurpleMonsterEntity purple, PurpleDogEntity dog) { }
@@ -316,15 +326,18 @@ public final class PurpleStoryModule {
 		double front = phase == 4 ? 1.5 : 2.0;
 		double side = phase == 4 ? 1.0 : 0.0;
 		PurpleMonsterEntity purple = new PurpleMonsterEntity(McanomalyarchivesModEntities.PURPLE_MONSTER.get(), level);
-		place(purple, player, player.getX() - Math.sin(yaw) * front + Math.cos(yaw) * side,
-				player.getZ() + Math.cos(yaw) * front + Math.sin(yaw) * side);
+		if (!place(purple, player, player.getX() - Math.sin(yaw) * front + Math.cos(yaw) * side,
+				player.getZ() + Math.cos(yaw) * front + Math.sin(yaw) * side)) return null;
 		purple.setPerformMode(player.getUUID());
 		purple.setTextureVariant(phase == 4 ? 1 : 0);
 		if (!level.addFreshEntity(purple)) return null;
 		PurpleDogEntity dog = null;
 		if (phase == 4) {
 			dog = new PurpleDogEntity(McanomalyarchivesModEntities.PURPLE_DOG.get(), level);
-			place(dog, player, player.getX() - Math.sin(yaw) * 1.5, player.getZ() + Math.cos(yaw) * 1.5);
+			if (!place(dog, player, player.getX() - Math.sin(yaw) * 1.5, player.getZ() + Math.cos(yaw) * 1.5)) {
+				purple.discard();
+				return null;
+			}
 			dog.setPerformMode(player.getUUID());
 			if (!level.addFreshEntity(dog)) {
 				purple.discard();
@@ -334,13 +347,29 @@ public final class PurpleStoryModule {
 		return new Actors(purple, dog);
 	}
 
-	private static void place(Entity entity, ServerPlayer player, double x, double z) {
-		entity.setPos(x, player.getY(), z);
+	private static boolean place(Entity entity, ServerPlayer player, double x, double z) {
+		var level = player.serverLevel();
+		boolean found = false;
+		double[][] offsets = {{0, 0}, {.8, 0}, {-.8, 0}, {0, .8}, {0, -.8}, {1.4, 0}, {-1.4, 0}};
+		outer: for (double[] offset : offsets) {
+			for (int dy : new int[] {0, 1, -1}) {
+				entity.setPos(x + offset[0], player.getY() + dy, z + offset[1]);
+				var feet = entity.blockPosition();
+				if (level.hasChunkAt(feet) && level.noCollision(entity, entity.getBoundingBox())
+						&& level.getFluidState(feet).isEmpty()
+						&& !level.noCollision(entity, entity.getBoundingBox().move(0, -.1, 0))) {
+					found = true;
+					break outer;
+				}
+			}
+		}
+		if (!found) return false;
 		entity.setXRot(0.0F);
 		entity.setYRot(player.getYRot() + 180.0F);
 		if (entity instanceof net.minecraft.world.entity.LivingEntity living) {
 			living.yBodyRot = entity.getYRot();
 			living.yHeadRot = entity.getYRot();
 		}
+		return true;
 	}
 }

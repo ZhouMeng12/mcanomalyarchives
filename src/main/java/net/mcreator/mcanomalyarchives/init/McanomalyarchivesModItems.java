@@ -3,6 +3,9 @@
  */
 package net.mcreator.mcanomalyarchives.init;
 
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.bus.api.SubscribeEvent;
+
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -10,8 +13,6 @@ import net.neoforged.neoforge.fluids.capability.wrappers.FluidBucketWrapper;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.bus.api.SubscribeEvent;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.Item;
@@ -68,9 +69,17 @@ public class McanomalyarchivesModItems {
 	public static final DeferredItem<Item> PINK_SHEEP_SPAWN_EGG;
 	public static final DeferredItem<Item> ANOMALY_CODEX;
 	public static final DeferredItem<Item> BAIBIAN_NAME_TAG;
+	public static final DeferredItem<Item> UO002_GARBLED;
 	public static final DeferredItem<Item> SMALL_STANGE_CLOUD_SPAWN_EGG;
 	public static final DeferredItem<Item> BLACK_STANGE_CLOUD_SPAWN_EGG;
 	public static final DeferredItem<Item> YIFULIN_2_SPAWN_EGG;
+	public static final DeferredItem<Item> UO002_MISPLACED;
+	public static final DeferredItem<Item> REDFIN_SPAWN_EGG;
+	public static final DeferredItem<Item> BLOOMCOW_SPAWN_EGG;
+	public static final DeferredItem<Item> WALKSQUID_SPAWN_EGG;
+	public static final DeferredItem<Item> PALE_SPAWN_EGG;
+	public static final DeferredItem<Item> REMNANT_SPAWN_EGG;
+	public static final DeferredItem<Item> FOLD_SPAWN_EGG;
 	static {
 		STANGE_CLOUD_SPAWN_EGG = REGISTRY.register("stange_cloud_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.STANGE_CLOUD, -1, -1, new Item.Properties()));
 		CLOUD_STONE = block(McanomalyarchivesModBlocks.CLOUD_STONE);
@@ -117,9 +126,17 @@ public class McanomalyarchivesModItems {
 		PINK_SHEEP_SPAWN_EGG = REGISTRY.register("pink_sheep_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.PINK_SHEEP, -1, -26164, new Item.Properties()));
 		ANOMALY_CODEX = REGISTRY.register("anomaly_codex", AnomalyCodexItem::new);
 		BAIBIAN_NAME_TAG = REGISTRY.register("baibian_name_tag", BaibianNameTagItem::new);
+		UO002_GARBLED = REGISTRY.register("uo002_garbled", UO002GarbledItem::new);
 		SMALL_STANGE_CLOUD_SPAWN_EGG = REGISTRY.register("small_stange_cloud_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.SMALL_STANGE_CLOUD, -1, -1, new Item.Properties()));
 		BLACK_STANGE_CLOUD_SPAWN_EGG = REGISTRY.register("black_stange_cloud_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.BLACK_STANGE_CLOUD, -1, -1, new Item.Properties()));
 		YIFULIN_2_SPAWN_EGG = REGISTRY.register("yifulin_2_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.YIFULIN_2, -1, -1, new Item.Properties()));
+		UO002_MISPLACED = block(McanomalyarchivesModBlocks.UO002_MISPLACED);
+		REDFIN_SPAWN_EGG = REGISTRY.register("redfin_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.REDFIN, 6503736, 14082261, new Item.Properties()));
+		BLOOMCOW_SPAWN_EGG = REGISTRY.register("bloomcow_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.BLOOMCOW, 4876097, 15128435, new Item.Properties()));
+		WALKSQUID_SPAWN_EGG = REGISTRY.register("walksquid_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.WALKSQUID, 5858923, 7981509, new Item.Properties()));
+		PALE_SPAWN_EGG = REGISTRY.register("pale_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.PALE, 15197402, 3877180, new Item.Properties()));
+		REMNANT_SPAWN_EGG = REGISTRY.register("remnant_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.REMNANT, 1053205, 4408906, new Item.Properties()));
+		FOLD_SPAWN_EGG = REGISTRY.register("fold_spawn_egg", () -> new DeferredSpawnEggItem(McanomalyarchivesModEntities.FOLD, 13946036, 7693150, new Item.Properties()));
 	}
 
 	// Start of user code block custom items

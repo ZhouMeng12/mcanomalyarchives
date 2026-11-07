@@ -377,6 +377,7 @@ public class PlayerLookAtCornPoppyListener {
             state.sadLevel = 0;
             state.shouldApplySad = false;
             state.hasAddiction = true;
+            if (player instanceof ServerPlayer witness) net.mcreator.mcanomalyarchives.codex.CodexObservations.record(witness, "poppy_addiction");
             state.addictionLevel = 1;
             state.timeAfterMaxLevel = 0;
             state.isFrozen = false;
@@ -392,6 +393,7 @@ public class PlayerLookAtCornPoppyListener {
 
         if (!state.hasAddiction && state.lookingTime >= ADDICTION_TRIGGER_TIME) {
             state.hasAddiction = true;
+            if (player instanceof ServerPlayer witness) net.mcreator.mcanomalyarchives.codex.CodexObservations.record(witness, "poppy_addiction");
             state.addictionLevel = 1;
             state.timeAfterMaxLevel = 0;
             player.addEffect(new MobEffectInstance(
@@ -536,6 +538,7 @@ public class PlayerLookAtCornPoppyListener {
 
                     int sadDuration = SAD_BASE_DURATION + (state.sadLevel * SAD_DURATION_PER_LEVEL);
                     int sadEffectLevel = Math.min(state.sadLevel, MAX_SAD_LEVEL);
+                    if (player instanceof ServerPlayer witness) net.mcreator.mcanomalyarchives.codex.CodexObservations.record(witness, "poppy_withdrawal");
 
                     player.removeEffect(McanomalyarchivesModMobEffects.ADDICTE);
                     player.addEffect(new MobEffectInstance(

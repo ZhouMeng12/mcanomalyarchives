@@ -2,10 +2,9 @@ package net.mcreator.mcanomalyarchives.mixin;
 
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.Mixin;
-
 import org.objectweb.asm.Opcodes;
-
 import org.checkerframework.checker.units.qual.g;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,8 +20,6 @@ import net.mcreator.mcanomalyarchives.McanomalyarchivesModPlayerAnimationAPI;
 import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin {

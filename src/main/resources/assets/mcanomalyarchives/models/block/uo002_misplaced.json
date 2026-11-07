@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "mcanomalyarchives:block/uo002_misplaced",
+    "up": "mcanomalyarchives:block/uo002_top",
+    "down": "mcanomalyarchives:block/uo002_misplaced",
+    "north": "mcanomalyarchives:block/uo002_front",
+    "south": "mcanomalyarchives:block/uo002_back",
+    "east": "mcanomalyarchives:block/uo002_right",
+    "west": "mcanomalyarchives:block/uo002_left"
+  }
+}
