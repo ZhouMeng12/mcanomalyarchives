@@ -18,7 +18,8 @@ public class StangeCloudRenderer extends MobRenderer<StangeCloudEntity, ModelStr
 
 	@Override
 	public ResourceLocation getTextureLocation(StangeCloudEntity entity) {
-		return entityTexture;
+		return entity.level().dimension().location().equals(ResourceLocation.parse("mcanomalyarchives:cloud_dem"))
+				? ResourceLocation.parse("mcanomalyarchives:textures/entities/cloud_black.png") : entityTexture;
 	}
 
 	@Override

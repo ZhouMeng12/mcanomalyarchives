@@ -1,0 +1,24 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:name_tag"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "title": {
+      "translate": "advancements.name_garbled.title",
+      "obfuscated": true
+    },
+    "description": {
+      "translate": "advancements.name_garbled.descr"
+    },
+    "frame": "goal",
+    "hidden": true
+  },
+  "criteria": {
+    "name_garbled_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "mcanomalyarchives:name_first"
+}

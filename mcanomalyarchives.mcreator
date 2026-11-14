@@ -180,7 +180,7 @@
       "name": "StrangeStone",
       "type": "achievement",
       "compiles": true,
-      "locked_code": false,
+      "locked_code": true,
       "registry_name": "strange_stone",
       "metadata": {
         "files": [
@@ -193,7 +193,7 @@
       "name": "StrangeWater",
       "type": "achievement",
       "compiles": true,
-      "locked_code": false,
+      "locked_code": true,
       "registry_name": "strange_water",
       "metadata": {
         "files": [
@@ -206,7 +206,7 @@
       "name": "ReturnHome1",
       "type": "achievement",
       "compiles": true,
-      "locked_code": false,
+      "locked_code": true,
       "registry_name": "return_home_1",
       "metadata": {
         "files": [
@@ -219,7 +219,7 @@
       "name": "ReturnHome2",
       "type": "achievement",
       "compiles": true,
-      "locked_code": false,
+      "locked_code": true,
       "registry_name": "return_home_2",
       "metadata": {
         "files": [
@@ -314,7 +314,7 @@
       "name": "Welcome",
       "type": "achievement",
       "compiles": true,
-      "locked_code": false,
+      "locked_code": true,
       "registry_name": "welcome",
       "metadata": {
         "files": [
@@ -343,7 +343,7 @@
       "name": "Gettogarden",
       "type": "achievement",
       "compiles": true,
-      "locked_code": false,
+      "locked_code": true,
       "registry_name": "gettogarden",
       "metadata": {
         "files": [
@@ -397,7 +397,7 @@
       "name": "Sobeautiful",
       "type": "achievement",
       "compiles": true,
-      "locked_code": false,
+      "locked_code": true,
       "registry_name": "sobeautiful",
       "metadata": {
         "files": [
@@ -429,7 +429,7 @@
       "name": "Watchdeath",
       "type": "achievement",
       "compiles": true,
-      "locked_code": false,
+      "locked_code": true,
       "registry_name": "watchdeath",
       "metadata": {
         "files": [
@@ -442,7 +442,7 @@
       "name": "Whyletmesad",
       "type": "achievement",
       "compiles": true,
-      "locked_code": false,
+      "locked_code": true,
       "registry_name": "whyletmesad",
       "metadata": {
         "files": [
@@ -982,7 +982,7 @@
       "registry_name": "shangyu",
       "metadata": {
         "files": [
-          "src/main/resources/data/strangerecord/advancement/shangyu.json"
+          "src/main/resources/data/mcanomalyarchives/advancement/shangyu.json"
         ]
       },
       "path": "~/StrangeFishingRod"
@@ -995,7 +995,7 @@
       "registry_name": "whatthe",
       "metadata": {
         "files": [
-          "src/main/resources/data/strangerecord/advancement/whatthe.json"
+          "src/main/resources/data/mcanomalyarchives/advancement/whatthe.json"
         ]
       },
       "path": "~/StrangeFishingRod"
@@ -1285,7 +1285,7 @@
       "name": "Cloudarmadv",
       "type": "achievement",
       "compiles": true,
-      "locked_code": false,
+      "locked_code": true,
       "registry_name": "cloudarmadv",
       "metadata": {
         "files": [
@@ -1297,7 +1297,7 @@
       "name": "Purplehandadv",
       "type": "achievement",
       "compiles": true,
-      "locked_code": false,
+      "locked_code": true,
       "registry_name": "purplehandadv",
       "metadata": {
         "files": [
@@ -1425,7 +1425,7 @@
       "name": "PinkSheepSighting",
       "type": "achievement",
       "compiles": true,
-      "locked_code": false,
+      "locked_code": true,
       "registry_name": "pink_sheep_sighting",
       "metadata": {
         "files": [
@@ -1438,7 +1438,7 @@
       "name": "PinkSheepBlink",
       "type": "achievement",
       "compiles": true,
-      "locked_code": false,
+      "locked_code": true,
       "registry_name": "pink_sheep_blink",
       "metadata": {
         "files": [
@@ -1451,7 +1451,7 @@
       "name": "PinkSheepCalamity",
       "type": "achievement",
       "compiles": true,
-      "locked_code": false,
+      "locked_code": true,
       "registry_name": "pink_sheep_calamity",
       "metadata": {
         "files": [
@@ -1603,7 +1603,7 @@
       "name": "Uo002Misplaced",
       "type": "block",
       "compiles": true,
-      "locked_code": false,
+      "locked_code": true,
       "registry_name": "uo002_misplaced",
       "metadata": {
         "files": [
@@ -1728,6 +1728,409 @@
           "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/FoldRenderer.java"
         ]
       }
+    },
+    {
+      "name": "ArchiveCodexReceived",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "codex_received",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/codex_received.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveFirstNote",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "first_note",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/first_note.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveFourAnomalies",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "four_anomalies",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/four_anomalies.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveAllAnomalies",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "all_anomalies",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/all_anomalies.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveGarbledGet",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "garbled_get",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/garbled_get.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveGarbledInfect",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "garbled_infect",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/garbled_infect.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveGarbledBlock",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "garbled_block",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/garbled_block.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchivePoppyRecover",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "poppy_recover",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/poppy_recover.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchivePurpleArrival",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "purple_arrival",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/purple_arrival.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchivePurpleChange",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "purple_change",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/purple_change.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchivePurpleStalker",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "purple_stalker",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/purple_stalker.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveTreeChase",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "tree_chase",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/tree_chase.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveTreeReplant",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "tree_replant",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/tree_replant.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveTreeBurrow",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "tree_burrow",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/tree_burrow.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveSheepLucky",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "sheep_lucky",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/sheep_lucky.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveSheepBoth",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "sheep_both",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/sheep_both.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveNegativeGet",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "negative_get",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/negative_get.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveNegativeApple",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "negative_apple",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/negative_apple.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveNegativeBow",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "negative_bow",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/negative_bow.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveNegativeSpace",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "negative_space",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/negative_space.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveNegativeZero",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "negative_zero",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/negative_zero.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveNegativeReturn",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "negative_return",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/negative_return.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveDiscRewind",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "disc_rewind",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/disc_rewind.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveDiscSpent",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "disc_spent",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/disc_spent.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveNameFirst",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "name_first",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/name_first.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveNameAbsorb",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "name_absorb",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/name_absorb.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveNameCompress",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "name_compress",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/name_compress.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveNameGarbled",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "name_garbled",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/name_garbled.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveEarthName",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "earth_name",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/earth_name.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveEarthCancel",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "earth_cancel",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/earth_cancel.json"
+        ]
+      },
+      "path": "~/chengjiu"
+    },
+    {
+      "name": "ArchiveEarthSurvive",
+      "type": "achievement",
+      "compiles": true,
+      "locked_code": true,
+      "registry_name": "earth_survive",
+      "metadata": {
+        "files": [
+          "src/main/resources/data/mcanomalyarchives/advancement/earth_survive.json"
+        ]
+      },
+      "path": "~/chengjiu"
     }
   ],
   "variable_elements": [],
@@ -1791,32 +2194,32 @@
   "tab_element_order": {},
   "language_map": {
     "en_us": {
-      "advancements.cloudarmadv.descr": "get",
-      "advancements.cloudarmadv.title": "Cloud armor on body",
-      "advancements.gettogarden.descr": "A beautiful garden",
-      "advancements.gettogarden.title": "Arrive at the garden",
-      "advancements.purplehandadv.descr": "Get the purple hand",
-      "advancements.purplehandadv.title": "A Hand?",
-      "advancements.return_home_1.descr": "Drink the cloud water",
-      "advancements.return_home_1.title": "Return Home",
-      "advancements.return_home_2.descr": "Welcome Home.",
-      "advancements.return_home_2.title": "Return Home.",
-      "advancements.shangyu.descr": "Fish by strange fishing rod",
-      "advancements.shangyu.title": "Fishing",
-      "advancements.sobeautiful.descr": "Watch the flower",
-      "advancements.sobeautiful.title": "So beautiful",
-      "advancements.strange_stone.descr": "Get a strange stone",
-      "advancements.strange_stone.title": "Strange Stone?",
-      "advancements.strange_water.descr": "Get a strange water",
-      "advancements.strange_water.title": "Strange Water?",
-      "advancements.watchdeath.descr": "Watch the flower until death",
-      "advancements.watchdeath.title": "Rotted",
-      "advancements.welcome.descr": "Welcome to mc anomaly archives!",
-      "advancements.welcome.title": "Welcome to mc anomaly archives!",
-      "advancements.whatthe.descr": "Fish something strange",
-      "advancements.whatthe.title": "What the hell",
-      "advancements.whyletmesad.descr": "Stop watching for a long time",
-      "advancements.whyletmesad.title": "Why do you break my heart?",
+      "advancements.cloudarmadv.descr": "获得全套云锭套装",
+      "advancements.cloudarmadv.title": "云雾缠身",
+      "advancements.gettogarden.descr": "一个美丽的花园",
+      "advancements.gettogarden.title": "到达花园",
+      "advancements.purplehandadv.descr": "获得紫怪触手",
+      "advancements.purplehandadv.title": "一只手？",
+      "advancements.return_home_1.descr": "喝下云水",
+      "advancements.return_home_1.title": "归乡",
+      "advancements.return_home_2.descr": "欢迎回家。",
+      "advancements.return_home_2.title": "归乡。",
+      "advancements.shangyu.descr": "使用跨维钓竿钓鱼",
+      "advancements.shangyu.title": "钓鱼？",
+      "advancements.sobeautiful.descr": "观赏花朵",
+      "advancements.sobeautiful.title": "多么美丽！",
+      "advancements.strange_stone.descr": "获得一块奇怪的石头",
+      "advancements.strange_stone.title": "奇怪的石头?",
+      "advancements.strange_water.descr": "获得一瓶奇怪的水",
+      "advancements.strange_water.title": "奇怪的水?",
+      "advancements.watchdeath.descr": "观赏花朵直到死亡",
+      "advancements.watchdeath.title": "已腐烂",
+      "advancements.welcome.descr": "欢迎来到诡异见闻录！",
+      "advancements.welcome.title": "欢迎来到诡异见闻录！",
+      "advancements.whatthe.descr": "钓出奇怪的东西",
+      "advancements.whatthe.title": "什么鬼",
+      "advancements.whyletmesad.descr": "停止看花一段时间",
+      "advancements.whyletmesad.title": "为什么要让我心碎！",
       "biome.mcanomalyarchives.cloudroom": "Cloudroom",
       "block.mcanomalyarchives.chair": "Chair",
       "block.mcanomalyarchives.cloud_dem_portal": "Cloud Dem Portal",
@@ -1917,12 +2320,12 @@
       "subtitles.anbula_berserk": "[black]",
       "item.mcanomalyarchives.pink_sheep_spawn_egg": "Pink Sheep Spawn Egg",
       "entity.mcanomalyarchives.pink_sheep": "Pink Sheep",
-      "advancements.pink_sheep_sighting.title": "Lucky Pink Sheep",
-      "advancements.pink_sheep_sighting.descr": "Witness the pink sheep and receive its luck",
-      "advancements.pink_sheep_calamity.descr": "Provoke the pink sheep into its highest calamity",
-      "advancements.pink_sheep_calamity.title": "Wonder of U",
-      "advancements.pink_sheep_blink.descr": "Stare at the pink sheep until it vanishes between two blinks",
-      "advancements.pink_sheep_blink.title": "Blink of an Eye",
+      "advancements.pink_sheep_sighting.title": "幸运粉羊",
+      "advancements.pink_sheep_sighting.descr": "看到粉羊，收获好运",
+      "advancements.pink_sheep_calamity.descr": "触发致命灾厄",
+      "advancements.pink_sheep_calamity.title": "奇迹与你",
+      "advancements.pink_sheep_blink.descr": "盯着粉色羊看，直到它在眨眼之间消失",
+      "advancements.pink_sheep_blink.title": "眨眼",
       "codex.mcanomalyarchives.title": "The Archive",
       "codex.mcanomalyarchives.progress": "Deciphered %1$s / %2$s",
       "codex.mcanomalyarchives.locked": "???",
@@ -2050,14 +2453,109 @@
       "codex.mcanomalyarchives.note.name_compression": "An unstable named object exploded when used. The requested change appears to have exceeded what the original object could support.",
       "codex.mcanomalyarchives.note.tree_replant": "Planting a sapling during pursuit interrupted the tree\u0027s tracking. Replanting appears connected with its response.",
       "codex.mcanomalyarchives.note.tree_exposure": "The tree began burrowing after much of its root area became exposed. Ground cover affects whether it stays.",
-      "block.mcanomalyarchives.uo002_misplaced": "Error Item",
+      "block.mcanomalyarchives.uo002_misplaced": "§k错位异变乱码虚无界面§r",
       "item.mcanomalyarchives.uo002_garbled.tooltip": "An error item gradually infects items in the same open interface.",
       "item.mcanomalyarchives.negative_apple": "Negative Apple",
       "item.mcanomalyarchives.negative_diamond_pickaxe": "Negative Diamond Pickaxe",
-      "item.mcanomalyarchives.uo002_garbled": "Error Item",
-      "item.mcanomalyarchives.uo002_misplaced": "Error Item",
+      "item.mcanomalyarchives.uo002_garbled": "§k错位异变乱码虚无界面§r",
+      "item.mcanomalyarchives.uo002_misplaced": "§k错位异变乱码虚无界面§r",
       "codex.mcanomalyarchives.note.negative_apple": "Eating a negative apple deepened hunger, while the number of negative apples increased.",
-      "codex.mcanomalyarchives.note.negative_pickaxe": "The negative diamond pickaxe barely wore down. Nearby stone changed, and a displaced stone later appeared in a nearby cave."
+      "codex.mcanomalyarchives.note.negative_pickaxe": "The negative diamond pickaxe barely wore down. Nearby stone changed, and a displaced stone later appeared in a nearby cave.",
+      "item.mcanomalyarchives.negative_bow": "Negative Bow",
+      "item.mcanomalyarchives.negative_arrow": "Negative Arrow",
+      "entity.mcanomalyarchives.negative_return_arrow": "Arrow",
+      "codex.mcanomalyarchives.note.negative_bow_release": "Releasing the negative bow produced no outgoing arrow. Instead, an ordinary arrow returned to my inventory.",
+      "codex.mcanomalyarchives.note.negative_bow_return": "After a delay, an arrow flew back at high speed from the aimed direction toward its shooter. Releasing the bow was not the end of the shot.",
+      "item.mcanomalyarchives.negative_music_disc": "Negative Music Disc",
+      "jukebox_song.mcanomalyarchives.negative_cat": "C418 — cat (Reversed)",
+      "codex.mcanomalyarchives.note.negative_disc_sound": "The disc muffled the surrounding sounds. Colours inverted and a ripple crossed the frozen space.",
+      "codex.mcanomalyarchives.note.negative_disc_rewind": "Blocks, creatures and items within roughly fifty blocks returned to the recorded past, up to ten seconds ago. My discoveries remained.",
+      "codex.mcanomalyarchives.note.negative_disc_wear": "Rewinding cannot repair the disc itself. Each successful rewind uses one charge; it vanishes after ten uses.",
+      "message.mcanomalyarchives.rewind.warming": "No past recorded yet. Wait briefly near the jukebox, then reinsert. Available history is rewound, up to ten seconds.",
+      "message.mcanomalyarchives.rewind.chunks": "Surrounding chunks are not loaded. Cancelled without wear.",
+      "message.mcanomalyarchives.rewind.machine": "A nearby block entity cannot be fully recorded. Cancelled without wear.",
+      "message.mcanomalyarchives.rewind.menu": "Transient crafting inputs interrupted recording. Clear the crafting grid, close the menu and wait briefly.",
+      "message.mcanomalyarchives.rewind.boundary": "Objects or items crossed the rewind boundary during the last ten seconds. Cancelled without wear.",
+      "message.mcanomalyarchives.rewind.busy": "Too many changes to record, or another rewind is active. No wear applied.",
+      "message.mcanomalyarchives.rewind.worn": "This disc is exhausted.",
+      "item.mcanomalyarchives.negative_dirt": "Negative Dirt",
+      "item.mcanomalyarchives.negative_oak_log": "Negative Oak Log",
+      "item.mcanomalyarchives.negative_oak_planks": "Negative Oak Planks",
+      "block.mcanomalyarchives.negative_space": "Negative Space",
+      "codex.mcanomalyarchives.note.negative_block_place": "Placing a negative block leaves black space instead of its material. It dissolves gradually and vanishes after about thirty seconds.",
+      "codex.mcanomalyarchives.note.negative_space_contact": "Touching the black space causes lethal damage.",
+      "item.mcanomalyarchives.negative_wooden_pickaxe": "Negative Wooden Pickaxe",
+      "block.mcanomalyarchives.liquid_cobblestone": "Liquid Cobblestone",
+      "codex.mcanomalyarchives.note.negative_block_return": "After the negative space dissolved, its ordinary material reappeared in an empty spot in a nearby cave.",
+      "codex.mcanomalyarchives.note.name_liquid_stone": "Cobblestone named water spread into a sticky grey layer and evaporated into dust. It dissipated after about eleven minutes.",
+      "codex.mcanomalyarchives.note.name_potato": "The creature named potato stopped moving, gradually became tuber-like, sprouted and finally left potatoes behind.",
+      "message.mcanomalyarchives.earth.active": "An Earth anomaly is already active in this dimension. The name tag was not consumed.",
+      "codex.mcanomalyarchives.note.name_earth": "The accepted name warped local space with yellow light. The event persisted independently of its anchor.",
+      "codex.mcanomalyarchives.note.earth_pull": "Gravity dragged me toward the collapsing ground. Escaping became harder closer to the center.",
+      "codex.mcanomalyarchives.note.earth_blast": "After a vast crater formed, its center exploded and the collapse spread farther outward.",
+      "codex.mcanomalyarchives.note.earth_rewind": "Only a record preceding the naming removes Earth. Rewinding to a later point merely delays the catastrophe.",
+      "advancements.codex_received.title": "见闻录",
+      "advancements.codex_received.descr": "获得一本见闻录",
+      "advancements.first_note.title": "见习记录员",
+      "advancements.first_note.descr": "记录一条异常性质",
+      "advancements.four_anomalies.title": "精英研究员",
+      "advancements.four_anomalies.descr": "记录四种不同的异常",
+      "advancements.all_anomalies.title": "首席研究员",
+      "advancements.all_anomalies.descr": "记录当前已实装的九种异常",
+      "advancements.garbled_get.title": "错位异变乱码虚无界面",
+      "advancements.garbled_get.descr": "获得一个乱码物品",
+      "advancements.garbled_infect.title": "感染",
+      "advancements.garbled_infect.descr": "背包或打开的容器里，一个物品被感染成乱码",
+      "advancements.garbled_block.title": "方块感染",
+      "advancements.garbled_block.descr": "目睹错误方块感染旁边的方块",
+      "advancements.poppy_recover.title": "戒断",
+      "advancements.poppy_recover.descr": "摆脱虞美人的上瘾效果",
+      "advancements.purple_arrival.title": "你哪位？",
+      "advancements.purple_arrival.descr": "目睹紫怪出现",
+      "advancements.purple_change.title": "哎呀，骇死我力",
+      "advancements.purple_change.descr": "目睹紫怪改变形态",
+      "advancements.purple_stalker.title": "视奸",
+      "advancements.purple_stalker.descr": "被紫怪窥视者盯上",
+      "advancements.tree_chase.title": "树恨你",
+      "advancements.tree_chase.descr": "被怪树追赶",
+      "advancements.tree_replant.title": "森林守护者",
+      "advancements.tree_replant.descr": "通过补种结束怪树的追击",
+      "advancements.tree_burrow.title": "跑路了？",
+      "advancements.tree_burrow.descr": "目睹根部暴露的怪树钻回地下",
+      "advancements.sheep_lucky.title": "好运",
+      "advancements.sheep_lucky.descr": "得到粉羊带来的好运",
+      "advancements.sheep_both.title": "666背刺被制裁了",
+      "advancements.sheep_both.descr": "分别经历粉羊带来的好运和厄运",
+      "advancements.negative_get.title": "品物",
+      "advancements.negative_get.descr": "获得一件负值物品",
+      "advancements.negative_apple.title": "这苹果太烧心了",
+      "advancements.negative_apple.descr": "吃下一个负苹果",
+      "advancements.negative_bow.title": "有的人",
+      "advancements.negative_bow.descr": "用负弓补充箭",
+      "advancements.negative_space.title": "这是滚木？",
+      "advancements.negative_space.descr": "放置一个负值方块，留下黑色空间",
+      "advancements.negative_zero.title": "修坏了",
+      "advancements.negative_zero.descr": "将一件负值工具用到零耐久",
+      "advancements.negative_return.title": " ¿ 木滚是这",
+      "advancements.negative_return.descr": "目睹黑色空间消散后，普通方块在别处出现",
+      "advancements.disc_rewind.title": "杀手皇后 第三炸弹 败者食尘",
+      "advancements.disc_rewind.descr": "用负值唱片完成一次回溯",
+      "advancements.disc_spent.title": "玩坏了！",
+      "advancements.disc_spent.descr": "用坏一张负值唱片",
+      "advancements.name_first.title": "转化",
+      "advancements.name_first.descr": "用百变命名牌完成一次转化",
+      "advancements.name_absorb.title": "完全转化",
+      "advancements.name_absorb.descr": "目睹一次材料吸收完成",
+      "advancements.name_compress.title": "炸了？",
+      "advancements.name_compress.descr": "目睹一次压缩爆炸",
+      "advancements.name_garbled.title": "错位异变乱码虚无界面",
+      "advancements.name_garbled.descr": "用一个无法匹配的名字制造乱码",
+      "advancements.earth_name.title": "C-moon!",
+      "advancements.earth_name.descr": "将一个生物命名为“地球”，引发引力异常",
+      "advancements.earth_cancel.title": "撤回！",
+      "advancements.earth_cancel.descr": "用负值唱片回到命名之前，阻止“地球”爆炸",
+      "advancements.earth_survive.title": "这能活？",
+      "advancements.earth_survive.descr": "在生存模式下身处“地球”的影响范围，活到爆炸的余震结束"
     },
     "zh_cn": {
       "advancements.cloudarmadv.descr": "获得全套云锭套装",
@@ -2319,14 +2817,109 @@
       "codex.mcanomalyarchives.note.name_compression": "一次命名产生的不稳定物体在使用时爆炸。名称所要求的变化似乎超出了原物体能够承受的程度。",
       "codex.mcanomalyarchives.note.tree_replant": "追踪期间种下树苗后，怪树的追踪被中止了。补种与它的反应有关。",
       "codex.mcanomalyarchives.note.tree_exposure": "根部大面积暴露后，怪树开始钻入地下。地面的包覆程度会影响它是否停留。",
-      "block.mcanomalyarchives.uo002_misplaced": "错误物品",
+      "block.mcanomalyarchives.uo002_misplaced": "§k错位异变乱码虚无界面§r",
       "item.mcanomalyarchives.uo002_garbled.tooltip": "错误物品会逐渐感染同一界面内的物品。",
       "item.mcanomalyarchives.negative_apple": "负值苹果",
       "item.mcanomalyarchives.negative_diamond_pickaxe": "负值钻石镐",
-      "item.mcanomalyarchives.uo002_garbled": "错误物品",
-      "item.mcanomalyarchives.uo002_misplaced": "错误物品",
+      "item.mcanomalyarchives.uo002_garbled": "§k错位异变乱码虚无界面§r",
+      "item.mcanomalyarchives.uo002_misplaced": "§k错位异变乱码虚无界面§r",
       "codex.mcanomalyarchives.note.negative_apple": "吃下负值苹果后，饥饿感反而加深；手中的负值苹果数量也增加了。",
-      "codex.mcanomalyarchives.note.negative_pickaxe": "负值钻石镐挖掘时几乎没有损耗，附近石层却发生了替换；一块石材随后在附近洞穴重新出现。"
+      "codex.mcanomalyarchives.note.negative_pickaxe": "负值钻石镐挖掘时几乎没有损耗，附近石层却发生了替换；一块石材随后在附近洞穴重新出现。",
+      "item.mcanomalyarchives.negative_bow": "负值弓",
+      "item.mcanomalyarchives.negative_arrow": "负值箭",
+      "entity.mcanomalyarchives.negative_return_arrow": "箭",
+      "codex.mcanomalyarchives.note.negative_bow_release": "负值弓松弦后，没有箭从弓上飞出，反而补回了一支普通箭。",
+      "codex.mcanomalyarchives.note.negative_bow_return": "延迟后，一支箭从瞄准的方向高速飞回射手。一次放箭并没有在松弦时结束。",
+      "item.mcanomalyarchives.negative_music_disc": "负值唱片",
+      "jukebox_song.mcanomalyarchives.negative_cat": "C418 — cat（倒流）",
+      "codex.mcanomalyarchives.note.negative_disc_sound": "唱片响起时，周围的声音被压低，颜色翻转，波纹穿过静止的空间。",
+      "codex.mcanomalyarchives.note.negative_disc_rewind": "波纹收回后，周围约五十格内的方块、生物与物品回到了过去，最远约十秒前。我的见闻仍然保留。",
+      "codex.mcanomalyarchives.note.negative_disc_wear": "回溯无法修复唱片自身的损耗。每次成功倒流消耗一次，十次后消失。",
+      "message.mcanomalyarchives.rewind.warming": "尚无可回溯的记录：请在唱片机附近稍等后重新插入。有多少历史就回溯多少，最多十秒。",
+      "message.mcanomalyarchives.rewind.chunks": "周围尚未完全加载，倒流中止；唱片未损耗。",
+      "message.mcanomalyarchives.rewind.machine": "附近存在无法完整记录的方块实体，倒流中止；唱片未损耗。",
+      "message.mcanomalyarchives.rewind.menu": "临时合成栏打断了记录。清空合成格并关闭工作界面，稍等后再试。",
+      "message.mcanomalyarchives.rewind.boundary": "过去十秒内有物体或物品跨越回溯边界，倒流中止；唱片未损耗。",
+      "message.mcanomalyarchives.rewind.busy": "变化超过记录容量，或已有倒流正在进行；唱片未损耗。",
+      "message.mcanomalyarchives.rewind.worn": "这张唱片已经耗尽。",
+      "item.mcanomalyarchives.negative_dirt": "负值泥土",
+      "item.mcanomalyarchives.negative_oak_log": "负值橡木原木",
+      "item.mcanomalyarchives.negative_oak_planks": "负值橡木木板",
+      "block.mcanomalyarchives.negative_space": "负空间",
+      "codex.mcanomalyarchives.note.negative_block_place": "负值方块没有留下对应的物质，而是形成黑色空间。黑色空间逐渐溶解，约三十秒后消失。",
+      "codex.mcanomalyarchives.note.negative_space_contact": "接触黑色空间会遭遇致命伤害。",
+      "item.mcanomalyarchives.negative_wooden_pickaxe": "负值木镐",
+      "block.mcanomalyarchives.liquid_cobblestone": "液态原石",
+      "codex.mcanomalyarchives.note.negative_block_return": "负空间消散后，附近洞穴的空位出现了对应的普通物质。",
+      "codex.mcanomalyarchives.note.name_liquid_stone": "命名为水的原石蔓延成灰色液层，黏附接触者并不断化为粉尘。约十一分钟后消散。",
+      "codex.mcanomalyarchives.note.name_potato": "被命名为土豆的生物先停止活动，身体逐渐块茎化并发芽，最后留下土豆。",
+      "message.mcanomalyarchives.earth.active": "这个维度已有地球异常正在发生，命名牌未消耗。",
+      "codex.mcanomalyarchives.note.name_earth": "名字被接受后，局部空间扭曲并泛起黄光。异常没有随着兔子的死亡或离开而消失。",
+      "codex.mcanomalyarchives.note.earth_pull": "巨大的吸引力将我拖向中心；地面持续坍陷，越靠近中心越难逃离。",
+      "codex.mcanomalyarchives.note.earth_blast": "坍陷形成巨坑后，中心爆炸，冲击继续撕开更远的地面。",
+      "codex.mcanomalyarchives.note.earth_rewind": "回到命名前的记录，才能解除地球异常。只倒退到灾变中的时间，灾变仍会继续。",
+      "advancements.codex_received.title": "见闻录",
+      "advancements.codex_received.descr": "获得一本见闻录",
+      "advancements.first_note.title": "见习记录员",
+      "advancements.first_note.descr": "记录一条异常性质",
+      "advancements.four_anomalies.title": "精英研究员",
+      "advancements.four_anomalies.descr": "记录四种不同的异常",
+      "advancements.all_anomalies.title": "首席研究员",
+      "advancements.all_anomalies.descr": "记录当前已实装的九种异常",
+      "advancements.garbled_get.title": "错位异变乱码虚无界面",
+      "advancements.garbled_get.descr": "获得一个乱码物品",
+      "advancements.garbled_infect.title": "感染",
+      "advancements.garbled_infect.descr": "背包或打开的容器里，一个物品被感染成乱码",
+      "advancements.garbled_block.title": "方块感染",
+      "advancements.garbled_block.descr": "目睹错误方块感染旁边的方块",
+      "advancements.poppy_recover.title": "戒断",
+      "advancements.poppy_recover.descr": "摆脱虞美人的上瘾效果",
+      "advancements.purple_arrival.title": "你哪位？",
+      "advancements.purple_arrival.descr": "目睹紫怪出现",
+      "advancements.purple_change.title": "哎呀，骇死我力",
+      "advancements.purple_change.descr": "目睹紫怪改变形态",
+      "advancements.purple_stalker.title": "视奸",
+      "advancements.purple_stalker.descr": "被紫怪窥视者盯上",
+      "advancements.tree_chase.title": "树恨你",
+      "advancements.tree_chase.descr": "被怪树追赶",
+      "advancements.tree_replant.title": "森林守护者",
+      "advancements.tree_replant.descr": "通过补种结束怪树的追击",
+      "advancements.tree_burrow.title": "跑路了？",
+      "advancements.tree_burrow.descr": "目睹根部暴露的怪树钻回地下",
+      "advancements.sheep_lucky.title": "好运",
+      "advancements.sheep_lucky.descr": "得到粉羊带来的好运",
+      "advancements.sheep_both.title": "666背刺被制裁了",
+      "advancements.sheep_both.descr": "分别经历粉羊带来的好运和厄运",
+      "advancements.negative_get.title": "品物",
+      "advancements.negative_get.descr": "获得一件负值物品",
+      "advancements.negative_apple.title": "这苹果太烧心了",
+      "advancements.negative_apple.descr": "吃下一个负苹果",
+      "advancements.negative_bow.title": "有的人",
+      "advancements.negative_bow.descr": "用负弓补充箭",
+      "advancements.negative_space.title": "这是滚木？",
+      "advancements.negative_space.descr": "放置一个负值方块，留下黑色空间",
+      "advancements.negative_zero.title": "修坏了",
+      "advancements.negative_zero.descr": "将一件负值工具用到零耐久",
+      "advancements.negative_return.title": " ¿ 木滚是这",
+      "advancements.negative_return.descr": "目睹黑色空间消散后，普通方块在别处出现",
+      "advancements.disc_rewind.title": "杀手皇后 第三炸弹 败者食尘",
+      "advancements.disc_rewind.descr": "用负值唱片完成一次回溯",
+      "advancements.disc_spent.title": "玩坏了！",
+      "advancements.disc_spent.descr": "用坏一张负值唱片",
+      "advancements.name_first.title": "转化",
+      "advancements.name_first.descr": "用百变命名牌完成一次转化",
+      "advancements.name_absorb.title": "完全转化",
+      "advancements.name_absorb.descr": "目睹一次材料吸收完成",
+      "advancements.name_compress.title": "炸了？",
+      "advancements.name_compress.descr": "目睹一次压缩爆炸",
+      "advancements.name_garbled.title": "错位异变乱码虚无界面",
+      "advancements.name_garbled.descr": "用一个无法匹配的名字制造乱码",
+      "advancements.earth_name.title": "C-moon!",
+      "advancements.earth_name.descr": "将一个生物命名为“地球”，引发引力异常",
+      "advancements.earth_cancel.title": "撤回！",
+      "advancements.earth_cancel.descr": "用负值唱片回到命名之前，阻止“地球”爆炸",
+      "advancements.earth_survive.title": "这能活？",
+      "advancements.earth_survive.descr": "在生存模式下身处“地球”的影响范围，活到爆炸的余震结束"
     }
   },
   "metadata": {
@@ -2412,13 +3005,17 @@
       {
         "name": "pinksheep",
         "children": []
+      },
+      {
+        "name": "chengjiu",
+        "children": []
       }
     ]
   },
   "workspaceSettings": {
     "modid": "mcanomalyarchives",
     "modName": "MC诡异见闻录",
-    "version": "1.1.9.8",
+    "version": "1.2.0",
     "description": "MC诡异见闻录的同人模组",
     "author": "一只小恐龙",
     "websiteURL": "https://mcreator.net",

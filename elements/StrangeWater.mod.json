@@ -2,8 +2,8 @@
   "_fv": 85,
   "_type": "achievement",
   "definition": {
-    "achievementName": "Strange Water?",
-    "achievementDescription": "Get a strange water",
+    "achievementName": "奇怪的水?",
+    "achievementDescription": "获得一瓶奇怪的水",
     "achievementIcon": {
       "value": "CUSTOM:CloudWaterButtle"
     },

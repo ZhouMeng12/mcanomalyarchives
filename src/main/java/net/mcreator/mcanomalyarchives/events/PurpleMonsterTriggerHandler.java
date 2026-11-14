@@ -66,7 +66,9 @@ public class PurpleMonsterTriggerHandler {
         var previous = lastPositions.put(uuid, player.position());
         boolean moved = previous != null && previous.distanceToSqr(player.position()) > .0004;
 
-        if (!player.isAlive() || player.isRemoved() || PurpleStoryModule.hasActive(player)) {
+        if (!player.isAlive() || player.isRemoved() || PurpleStoryModule.hasActive(player)
+                || player.getData(McanomalyarchivesModAttachments.PURPLE_ASSIMILATION_COMPLETED)
+                || net.mcreator.mcanomalyarchives.event.PurpleStalkerHandler.hasActiveEncounter()) {
             stillTimers.remove(uuid);
             return;
         }

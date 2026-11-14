@@ -2,8 +2,8 @@
   "_fv": 85,
   "_type": "achievement",
   "definition": {
-    "achievementName": "Lucky Pink Sheep",
-    "achievementDescription": "Witness the pink sheep and receive its luck",
+    "achievementName": "幸运粉羊",
+    "achievementDescription": "看到粉羊，收获好运",
     "achievementIcon": {
       "value": "Blocks.WOOL#6"
     },
@@ -17,7 +17,7 @@
     "rewardXP": 20,
     "achievementType": "task",
     "parent": {
-      "value": "CUSTOM:Welcome"
+      "value": "CUSTOM:ArchiveCodexReceived"
     },
     "triggerxml": "<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"advancement_trigger\" deletable=\"false\" x=\"40\" y=\"80\"><next><block type=\"custom_trigger\"></block></next></block></xml>"
   }

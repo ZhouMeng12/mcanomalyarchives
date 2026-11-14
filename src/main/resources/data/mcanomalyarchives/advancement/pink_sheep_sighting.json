@@ -22,5 +22,5 @@
   "rewards": {
     "experience": 20
   },
-  "parent": "mcanomalyarchives:welcome"
+  "parent": "mcanomalyarchives:codex_received"
 }

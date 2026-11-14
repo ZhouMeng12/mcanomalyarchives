@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:book"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "title": {
+      "translate": "advancements.four_anomalies.title"
+    },
+    "description": {
+      "translate": "advancements.four_anomalies.descr"
+    },
+    "frame": "goal",
+    "hidden": false
+  },
+  "criteria": {
+    "four_anomalies_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "mcanomalyarchives:first_note"
+}

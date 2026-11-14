@@ -26,7 +26,7 @@ public final class NameImitation {
 	}
 
 	public static void bind(LivingEntity mimic, ServerPlayer target) {
-		mimic.getPersistentData().putString(TARGET_UUID, target.getUUID().toString());
+		mimic.getPersistentData().putUUID(TARGET_UUID, target.getUUID());
 		mimic.getPersistentData().putBoolean(SWINGING, false);
 		mimic.setCustomName(target.getGameProfile().getName().isBlank()
 				? target.getName() : net.minecraft.network.chat.Component.literal(target.getGameProfile().getName()));
@@ -38,8 +38,18 @@ public final class NameImitation {
 	}
 
 	public static boolean isMimic(LivingEntity entity) {
-		return entity.getPersistentData().hasUUID(TARGET_UUID);
+		return readTarget(entity.getPersistentData()) != null;
 	}
+
+    public static UUID readTarget(net.minecraft.nbt.CompoundTag data) {
+        if (data.hasUUID(TARGET_UUID)) return data.getUUID(TARGET_UUID);
+        if (!data.contains(TARGET_UUID, net.minecraft.nbt.Tag.TAG_STRING)) return null;
+        try {
+            UUID id = UUID.fromString(data.getString(TARGET_UUID));
+            data.putUUID(TARGET_UUID, id); // Migrate creatures bound by the old string writer.
+            return id;
+        } catch (IllegalArgumentException ignored) { return null; }
+    }
 
 	/** Runs every entity tick for exact, no-delay action mirroring. */
 	public static void tick(ServerLevel level, LivingEntity mimic) {

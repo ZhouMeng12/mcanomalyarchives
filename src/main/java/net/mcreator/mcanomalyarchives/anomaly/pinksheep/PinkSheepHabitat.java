@@ -94,6 +94,10 @@ public final class PinkSheepHabitat {
 			double angle = random.nextDouble() * Math.PI * 2;
 			double x = baseX + Math.cos(angle) * dist;
 			double z = baseZ + Math.sin(angle) * dist;
+			boolean loaded = true;
+			for (int dx : new int[] {-4, 4}) for (int dz : new int[] {-4, 4})
+				loaded &= level.hasChunkAt(BlockPos.containing(x + dx, 0, z + dz));
+			if (!loaded) continue;
 			int y = level.getHeight(heightmap, (int) Math.floor(x), (int) Math.floor(z));
 			if (y <= level.getMinBuildHeight() + 2)
 				continue;
@@ -102,10 +106,22 @@ public final class PinkSheepHabitat {
 				continue;
 			if (!isFlat(level, pos))
 				continue;
+			Vec3 arrival = Vec3.atBottomCenterOf(pos);
+			if (!level.getWorldBorder().isWithinBounds(pos)
+					|| !level.noCollision(new AABB(arrival.x - .45, arrival.y, arrival.z - .45,
+							arrival.x + .45, arrival.y + 1.4, arrival.z + .45))) continue;
+			if (exclude != null && level.players().stream().anyMatch(player -> {
+				Vec3 eye = player.getEyePosition(), to = arrival.add(0, .7, 0).subtract(eye);
+				return to.lengthSqr() < 96 * 96 && player.getLookAngle().dot(to.normalize()) > .7
+						&& level.clip(new net.minecraft.world.level.ClipContext(eye, arrival.add(0, .7, 0),
+								net.minecraft.world.level.ClipContext.Block.COLLIDER,
+								net.minecraft.world.level.ClipContext.Fluid.NONE, player)).getType()
+								== net.minecraft.world.phys.HitResult.Type.MISS;
+			})) continue;
 			// 区域唯一：UNIQUE_RADIUS 内已有另一只活粉羊则换点
 			if (findSheepNear(level, x, z, UNIQUE_RADIUS, exclude) != null)
 				continue;
-			return new Vec3(x + 0.5, y + 0.5, z + 0.5);
+			return arrival;
 		}
 		return null;
 	}

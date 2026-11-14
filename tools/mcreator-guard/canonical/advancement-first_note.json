@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:book"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "title": {
+      "translate": "advancements.first_note.title"
+    },
+    "description": {
+      "translate": "advancements.first_note.descr"
+    },
+    "frame": "task",
+    "hidden": false
+  },
+  "criteria": {
+    "first_note_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "mcanomalyarchives:codex_received"
+}

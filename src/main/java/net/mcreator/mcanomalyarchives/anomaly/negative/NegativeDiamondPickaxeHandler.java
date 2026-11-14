@@ -21,8 +21,10 @@ import net.mcreator.mcanomalyarchives.runtime.ServerTasks;
 /** Implements the restrained UO-007 stone-only replacement and cave reappearance loop. */
 @EventBusSubscriber(modid = McanomalyarchivesMod.MODID)
 public final class NegativeDiamondPickaxeHandler {
-	private static final List<Block> STONES = List.of(
-			Blocks.STONE, Blocks.DEEPSLATE, Blocks.GRANITE, Blocks.DIORITE, Blocks.ANDESITE, Blocks.TUFF);
+    private static final List<Block> REPLACEMENTS = List.of(
+            Blocks.STONE, Blocks.DEEPSLATE, Blocks.GRANITE, Blocks.DIORITE, Blocks.ANDESITE, Blocks.TUFF,
+            Blocks.CALCITE, Blocks.DIRT, Blocks.MOSS_BLOCK, Blocks.RED_WOOL, Blocks.BLUE_WOOL,
+            Blocks.ICE, Blocks.OBSIDIAN, Blocks.PRISMARINE, Blocks.GLASS);
 
 	private NegativeDiamondPickaxeHandler() { }
 
@@ -30,7 +32,7 @@ public final class NegativeDiamondPickaxeHandler {
 	public static void onNaturalStoneBroken(BlockEvent.BreakEvent event) {
 		Player player = event.getPlayer();
 		if (!(player instanceof ServerPlayer serverPlayer) || !(player.level() instanceof ServerLevel level)) return;
-		if (!player.getMainHandItem().is(UO007Items.NEGATIVE_DIAMOND_PICKAXE.get())
+		if (!(player.getMainHandItem().getItem() instanceof net.mcreator.mcanomalyarchives.item.NegativeDiamondPickaxeItem)
 				|| !event.getState().is(BlockTags.BASE_STONE_OVERWORLD)) return;
 
 		BlockPos origin = event.getPos().immutable();
@@ -51,7 +53,10 @@ public final class NegativeDiamondPickaxeHandler {
 			if (candidate.equals(origin) || !level.hasChunkAt(candidate)) continue;
 			BlockState current = level.getBlockState(candidate);
 			if (!current.is(BlockTags.BASE_STONE_OVERWORLD) || current.hasBlockEntity()) continue;
-			BlockState replacement = STONES.get(random.nextInt(STONES.size())).defaultBlockState();
+            int choice = random.nextInt(REPLACEMENTS.size() + 1);
+            BlockState replacement = (choice == REPLACEMENTS.size()
+                    ? net.mcreator.mcanomalyarchives.init.McanomalyarchivesModBlocks.UO002_MISPLACED.get()
+                    : REPLACEMENTS.get(choice)).defaultBlockState();
 			if (replacement.is(current.getBlock())) continue;
 			BlockPos changedPos = candidate.immutable();
 			if (!level.setBlock(changedPos, replacement, Block.UPDATE_ALL)) continue;
@@ -60,7 +65,7 @@ public final class NegativeDiamondPickaxeHandler {
 				if (!level.hasChunkAt(changedPos)) return;
 				BlockPos returnPos = findCaveAir(level, changedPos);
 				if (returnPos == null) returnPos = changedPos;
-				if (level.getBlockState(returnPos).isAir()) level.setBlock(returnPos, sourceState, Block.UPDATE_ALL);
+				if (level.getBlockState(returnPos).isAir()) level.setBlock(returnPos, current, Block.UPDATE_ALL);
 			});
 			return;
 		}

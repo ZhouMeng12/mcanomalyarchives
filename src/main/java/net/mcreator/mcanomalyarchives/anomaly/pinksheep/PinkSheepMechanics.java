@@ -47,6 +47,7 @@ public final class PinkSheepMechanics {
 		public int graceTicks;
 		public int wanderTicks;
 		public boolean everWatched;
+		public long lastTeleport = Long.MIN_VALUE;
 	}
 
 	private PinkSheepMechanics() {
@@ -73,7 +74,9 @@ public final class PinkSheepMechanics {
 
 	/** 一旦被注视过 → 游荡期结束，转为严格观察者效应 */
 	public static void markWatchedOnce(PinkSheepEntity sheep) {
-		stateOf(sheep).everWatched = true;
+		State state = stateOf(sheep);
+		state.everWatched = true;
+		state.graceTicks = 0;
 	}
 
 	/** 进入/重置游荡期（出生、转移后调用） */
@@ -132,6 +135,8 @@ public final class PinkSheepMechanics {
 	public static void teleportAway(PinkSheepEntity sheep) {
 		if (!(sheep.level() instanceof ServerLevel level))
 			return;
+		if (sheep.isRemoved() || stateOf(sheep).lastTeleport == level.getGameTime()) return;
+		stateOf(sheep).lastTeleport = level.getGameTime();
 		Player nearest = level.getNearestPlayer(sheep, 64.0);
 		double baseX = nearest != null ? nearest.getX() : sheep.getX();
 		double baseZ = nearest != null ? nearest.getZ() : sheep.getZ();
@@ -143,10 +148,6 @@ public final class PinkSheepMechanics {
 			sheep.discard();
 			return;
 		}
-		// 消散演出
-		level.sendParticles(ParticleTypes.SCULK_SOUL, sheep.getX(), sheep.getY() + 0.6, sheep.getZ(), 24, 0.4, 0.4, 0.4,
-				0.02);
-		sheep.playSound(SoundEvents.SCULK_BLOCK_SPREAD, 1.0F, 1.0F);
 
 		sheep.teleportTo(target.x, target.y, target.z);
 
@@ -158,9 +159,5 @@ public final class PinkSheepMechanics {
 		// 新位置对该玩家可重新触发各档灾厄
 		teleportCallback.accept(sheep);
 
-		// 出现演出
-		level.sendParticles(ParticleTypes.SCULK_SOUL, sheep.getX(), sheep.getY() + 0.6, sheep.getZ(), 24, 0.4, 0.4, 0.4,
-				0.02);
-		sheep.playSound(SoundEvents.SCULK_CATALYST_BLOOM, 1.0F, 1.0F);
 	}
 }

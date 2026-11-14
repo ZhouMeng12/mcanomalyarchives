@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:poppy"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "title": {
+      "translate": "advancements.poppy_recover.title"
+    },
+    "description": {
+      "translate": "advancements.poppy_recover.descr"
+    },
+    "frame": "challenge",
+    "hidden": true
+  },
+  "criteria": {
+    "poppy_recover_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "mcanomalyarchives:whyletmesad"
+}

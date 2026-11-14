@@ -1,0 +1,18 @@
+{
+  "targets": [
+    "earth_swap"
+  ],
+  "passes": [
+    {
+      "name": "mcanomalyarchives:earth",
+      "intarget": "minecraft:main",
+      "outtarget": "earth_swap",
+      "auxtargets": [
+        {
+          "name": "DepthSampler",
+          "id": "minecraft:main:depth"
+        }
+      ]
+    }
+  ]
+}

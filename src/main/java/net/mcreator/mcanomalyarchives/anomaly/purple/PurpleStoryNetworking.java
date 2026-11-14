@@ -25,7 +25,13 @@ public final class PurpleStoryNetworking {
 	@SubscribeEvent
 	public static void register(RegisterPayloadHandlersEvent event) {
 		// 与原双向注册区分；服务端和客户端必须同时使用这一轮构建，旧载荷字段/注册名不变。
-		PayloadRegistrar registrar = event.registrar("purple-story-2");
+		PayloadRegistrar registrar = event.registrar("purple-story-3");
+		registrar.playToClient(net.mcreator.mcanomalyarchives.network.PurpleAssimilationPacket.TYPE,
+				net.mcreator.mcanomalyarchives.network.PurpleAssimilationPacket.STREAM_CODEC,
+				net.mcreator.mcanomalyarchives.network.PurpleAssimilationPacket::handle);
+		registrar.playToServer(net.mcreator.mcanomalyarchives.network.CancelPurpleStoryPacket.TYPE,
+				net.mcreator.mcanomalyarchives.network.CancelPurpleStoryPacket.STREAM_CODEC,
+				net.mcreator.mcanomalyarchives.network.CancelPurpleStoryPacket::handle);
 		registrar.playToServer(AdvanceToPhase2Packet.TYPE, AdvanceToPhase2Packet.STREAM_CODEC, AdvanceToPhase2Packet::handleData);
 		registrar.playToServer(TransitionToPhase2Packet.TYPE, TransitionToPhase2Packet.STREAM_CODEC, TransitionToPhase2Packet::handleData);
 		registrar.playToServer(AdvanceToPhase4Packet.TYPE, AdvanceToPhase4Packet.STREAM_CODEC, AdvanceToPhase4Packet::handleData);

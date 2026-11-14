@@ -24,5 +24,6 @@ public class PoppyEdgeEventListener {
 	@SubscribeEvent
 	public void onRenderGuiOverlay(RenderGuiEvent.Post event) {
 		PoppyEdgeRenderer.renderHUD(event.getGuiGraphics());
+        net.mcreator.mcanomalyarchives.client.render.PoppyScareOverlay.render(event.getGuiGraphics());
 	}
 }

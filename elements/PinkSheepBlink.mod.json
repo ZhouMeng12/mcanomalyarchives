@@ -2,8 +2,8 @@
   "_fv": 85,
   "_type": "achievement",
   "definition": {
-    "achievementName": "Blink of an Eye",
-    "achievementDescription": "Stare at the pink sheep until it vanishes between two blinks",
+    "achievementName": "眨眼",
+    "achievementDescription": "盯着粉色羊看，直到它在眨眼之间消失",
     "achievementIcon": {
       "value": "Items.ENDER_EYE"
     },

@@ -2,8 +2,8 @@
   "_fv": 85,
   "_type": "achievement",
   "definition": {
-    "achievementName": "Cloud armor on body",
-    "achievementDescription": "get",
+    "achievementName": "云雾缠身",
+    "achievementDescription": "获得全套云锭套装",
     "achievementIcon": {
       "value": "CUSTOM:CloudArmor.body"
     },

@@ -63,6 +63,7 @@ public class StangeCloudEntity extends Monster {
 	private double currentZDir = 0.0D;
 	private int directionTimer = 0;
 	private boolean isFirstSpawn = true;
+	private final net.mcreator.mcanomalyarchives.anomaly.cloud.CloudEscapeMotion escape = new net.mcreator.mcanomalyarchives.anomaly.cloud.CloudEscapeMotion();
 
 	public StangeCloudEntity(EntityType<StangeCloudEntity> type, Level world) {
 		super(type, world);
@@ -119,6 +120,10 @@ public class StangeCloudEntity extends Monster {
 
 	@Override
 	public boolean hurt(DamageSource damagesource, float amount) {
+		if (!this.level().isClientSide() && amount > 0 && damagesource.getDirectEntity() != null) {
+			Entity threat = damagesource.getEntity() != null ? damagesource.getEntity() : damagesource.getDirectEntity();
+			escape.disturb(getX() - threat.getX(), getZ() - threat.getZ());
+		}
 		if (damagesource.is(DamageTypes.IN_FIRE))
 			return false;
 		if (damagesource.getDirectEntity() instanceof AbstractArrow)
@@ -187,6 +192,9 @@ public class StangeCloudEntity extends Monster {
 		super.addAdditionalSaveData(tag);
 		tag.putBoolean("FirstSpawn", isFirstSpawn);
 		tag.putDouble("FixedYLevel", fixedYLevel);
+		tag.putDouble("CloudDirectionX", currentXDir);
+		tag.putDouble("CloudDirectionZ", currentZDir);
+		tag.putInt("CloudDirectionTimer", directionTimer);
 	}
 
 	@Override
@@ -198,12 +206,23 @@ public class StangeCloudEntity extends Monster {
 		if (tag.contains("FixedYLevel")) {
 			fixedYLevel = tag.getDouble("FixedYLevel");
 		}
+		if (tag.contains("CloudDirectionX") && tag.contains("CloudDirectionZ")) {
+			double x = tag.getDouble("CloudDirectionX");
+			double z = tag.getDouble("CloudDirectionZ");
+			if ((Math.abs(x) == 1.0D && z == 0.0D) || (x == 0.0D && Math.abs(z) == 1.0D)) {
+				currentXDir = x;
+				currentZDir = z;
+			}
+		}
+		directionTimer = Math.clamp(tag.getInt("CloudDirectionTimer"), 0, directionChangeInterval - 1);
 	}
 
 	@Override
 	public void aiStep() {
 		super.aiStep();
 		this.setNoGravity(true);
+		// Movement and random turns belong to the server; clients use entity interpolation.
+		if (this.level().isClientSide()) return;
 		
 		// 初始化固定飞行高度
 		if (isFirstSpawn) {
@@ -217,7 +236,12 @@ public class StangeCloudEntity extends Monster {
 		double newY = (Math.abs(yDiff) > 0.1D) ? currentY + yDiff * 0.05D : currentY;
 		
 		// 更新方向
-		if (enableRandomDirectionChange) {
+		escape.tick();
+		if (escape.fleeing()) {
+			currentXDir = escape.x(); currentZDir = escape.z();
+			directionTimer = 0;
+		}
+		if (enableRandomDirectionChange && !escape.fleeing() && !escape.reacting()) {
 			directionTimer++;
 			if (directionTimer >= directionChangeInterval) {
 				directionTimer = 0;
@@ -226,9 +250,9 @@ public class StangeCloudEntity extends Monster {
 		}
 		
 		// 计算水平移动
-		double baseSpeed = this.getAttributeValue(Attributes.FLYING_SPEED);
-		double newX = this.getX() + baseSpeed * xSpeedFactor * currentXDir;
-		double newZ = this.getZ() + baseSpeed * zSpeedFactor * currentZDir;
+		Vec3 drift = cloudDrift();
+		double newX = this.getX() + drift.x;
+		double newZ = this.getZ() + drift.z;
 		
 		// 单次 setPos 避免双倍位置更新抽搐
 		this.setPos(newX, newY, newZ);
@@ -241,9 +265,16 @@ public class StangeCloudEntity extends Monster {
 		}
 		
 		applyCloudDamage();
-		convertLavaAndWaterToCloudBlocks();
+		// Stagger large scans across clouds, including during flight.
+		if (Math.floorMod(this.tickCount + this.getId(), 5) == 0) convertLavaAndWaterToCloudBlocks();
 	}
 	
+	/** Same server-side velocity is used by clouded animals bound to this cloud. */
+	public Vec3 cloudDrift() {
+		double speed = getAttributeValue(Attributes.FLYING_SPEED) * escape.multiplier();
+		return new Vec3(speed * xSpeedFactor * currentXDir, 0, speed * zSpeedFactor * currentZDir);
+	}
+
 	private void changeRandomDirection() {
 		RandomSource random = this.getRandom();
 		
@@ -316,23 +347,21 @@ public class StangeCloudEntity extends Monster {
 		
 		boolean anyConverted = false;
 		
-		for (double x = cloudPos.x - checkRadiusX; x <= cloudPos.x + checkRadiusX; x++) {
-			for (double y = cloudPos.y - cloudDamageRadiusY; y <= cloudPos.y + cloudDamageRadiusY; y++) {
-				for (double z = cloudPos.z - checkRadiusZ; z <= cloudPos.z + checkRadiusZ; z++) {
-					BlockPos pos = new BlockPos((int)x, (int)y, (int)z);
-					BlockState state = serverLevel.getBlockState(pos);
-					
-					if (state.is(Blocks.LAVA)) {
-						serverLevel.setBlock(pos, McanomalyarchivesModBlocks.CLOUD_STONE.get().defaultBlockState(), 3);
-						anyConverted = true;
-					} else if (state.is(Blocks.WATER)) {
-						serverLevel.setBlock(pos, McanomalyarchivesModBlocks.CLOUD_WATER.get().defaultBlockState(), 3);
-						anyConverted = true;
-					}
-				}
+		for (BlockPos pos : BlockPos.betweenClosed(
+				BlockPos.containing(cloudPos.x - checkRadiusX, cloudPos.y - cloudDamageRadiusY, cloudPos.z - checkRadiusZ),
+				BlockPos.containing(cloudPos.x + checkRadiusX, cloudPos.y + cloudDamageRadiusY, cloudPos.z + checkRadiusZ))) {
+			// Do not load neighbouring chunks just to convert their fluids.
+			if (!serverLevel.hasChunkAt(pos)) continue;
+			BlockState state = serverLevel.getBlockState(pos);
+			if (state.is(Blocks.LAVA)) {
+				serverLevel.setBlock(pos, McanomalyarchivesModBlocks.CLOUD_STONE.get().defaultBlockState(), 3);
+				anyConverted = true;
+			} else if (state.is(Blocks.WATER)) {
+				serverLevel.setBlock(pos, McanomalyarchivesModBlocks.CLOUD_WATER.get().defaultBlockState(), 3);
+				anyConverted = true;
 			}
 		}
-		
+
 		if (anyConverted) {
 			net.mcreator.mcanomalyarchives.codex.CodexObservations.witness(this, "cloud_transmute");
 			serverLevel.playSound(null, cloudPos.x, cloudPos.y, cloudPos.z, 

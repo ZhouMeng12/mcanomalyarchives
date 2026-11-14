@@ -50,6 +50,10 @@ public final class NamedMorphClient {
 		}
 		String token = NamedTransformClient.targetOf(entity);
 		ResolvedName target = token == null ? null : ResolvedName.parse(token);
+        if (target != null && target.kind() == ResolvedName.Kind.ITEM
+                && target.id().equals(ResourceLocation.withDefaultNamespace("potato"))) {
+            return ResourceLocation.withDefaultNamespace("textures/block/brown_mushroom_block.png");
+        }
 		if (target == null || target.kind() != ResolvedName.Kind.BLOCK) {
 			return null;
 		}

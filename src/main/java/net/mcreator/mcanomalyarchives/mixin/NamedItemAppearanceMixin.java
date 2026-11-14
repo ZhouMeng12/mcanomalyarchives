@@ -21,6 +21,11 @@ public abstract class NamedItemAppearanceMixin {
 	private void mcanomalyarchives$drawTargetAppearance(ItemStack stack, Level level, LivingEntity entity, int seed,
 			CallbackInfoReturnable<BakedModel> cir) {
 		// 2026-10-24：改为目标外观；稳定产物本体已是目标，直接用原版模型。
+        if (stack.is(net.minecraft.world.item.Items.NETHERITE_PICKAXE)
+                && net.minecraft.resources.ResourceLocation.withDefaultNamespace("wooden_shovel").equals(NamedState.appearanceOf(stack))) {
+            cir.setReturnValue(((ItemRenderer)(Object)this).getModel(new ItemStack(net.minecraft.world.item.Items.WOODEN_SHOVEL), level, entity, seed));
+            return;
+        }
 		if (!NamedState.isUnstable(stack)) return;
 		var target = NamedState.targetOf(stack);
 		if (target == null) return;

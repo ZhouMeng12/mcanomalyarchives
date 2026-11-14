@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:ender_pearl"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "title": {
+      "translate": "advancements.earth_survive.title"
+    },
+    "description": {
+      "translate": "advancements.earth_survive.descr"
+    },
+    "frame": "challenge",
+    "hidden": true
+  },
+  "criteria": {
+    "earth_survive_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "mcanomalyarchives:earth_name"
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    {
+      "item": "mcanomalyarchives:negative_oak_log"
+    }
+  ],
+  "result": {
+    "id": "mcanomalyarchives:negative_oak_planks",
+    "count": 4
+  }
+}

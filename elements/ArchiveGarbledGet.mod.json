@@ -1,0 +1,24 @@
+{
+  "_fv": 85,
+  "_type": "achievement",
+  "definition": {
+    "achievementIcon": {
+      "value": "Items.BARRIER"
+    },
+    "background": "Default",
+    "disableDisplay": false,
+    "showPopup": true,
+    "announceToChat": true,
+    "rewardLoot": [],
+    "rewardRecipes": [],
+    "rewardXP": 0,
+    "triggerxml": "<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"advancement_trigger\" deletable=\"false\" x=\"40\" y=\"80\"><next><block type=\"custom_trigger\"></block></next></block></xml>",
+    "achievementName": "错位异变乱码虚无界面",
+    "achievementDescription": "获得一个乱码物品",
+    "achievementType": "task",
+    "hideIfNotCompleted": false,
+    "parent": {
+      "value": "CUSTOM:ArchiveCodexReceived"
+    }
+  }
+}

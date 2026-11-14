@@ -2,8 +2,8 @@
   "_fv": 85,
   "_type": "achievement",
   "definition": {
-    "achievementName": "What the hell",
-    "achievementDescription": "Fish something strange",
+    "achievementName": "什么鬼",
+    "achievementDescription": "钓出奇怪的东西",
     "achievementIcon": {
       "value": "CUSTOM:StrangeFishingRod"
     },

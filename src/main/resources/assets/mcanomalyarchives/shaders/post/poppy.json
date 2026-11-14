@@ -1,0 +1,12 @@
+{
+  "targets": [
+    "poppy_swap"
+  ],
+  "passes": [
+    {
+      "name": "mcanomalyarchives:poppy",
+      "intarget": "minecraft:main",
+      "outtarget": "poppy_swap"
+    }
+  ]
+}

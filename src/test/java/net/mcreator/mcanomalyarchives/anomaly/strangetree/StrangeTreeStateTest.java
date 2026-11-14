@@ -87,14 +87,14 @@ class StrangeTreeStateTest {
 	}
 
 	@Test
-	void normalAttackHasSingleKillAtTwentyOneAndRestoresAtForty() {
+	void normalAttackHasSingleKillAtTwentyThreeAndRestoresAtForty() {
 		emerge(false);
 		for (int tick = 1; tick < 30; tick++) assertEquals(Effect.NONE, state.tick(true));
 		assertEquals(Effect.BEGIN_SWING, state.tick(true));
 		assertEquals(4, state.visualState());
 		for (int tick = 1; tick <= 40; tick++) {
 			Effect effect = state.tick(true);
-			if (tick == 21) {
+			if (tick == 23) {
 				assertEquals(Effect.KILL, effect);
 				assertEquals(player, state.consumeKillTarget());
 				assertNull(state.consumeKillTarget());
@@ -133,16 +133,16 @@ class StrangeTreeStateTest {
 	}
 
 	@Test
-	void chaseFinalStrikeKillsOnceAndRestoresAtSixtyOne() {
+	void chaseFinalStrikeKillsOnceAndRestoresAtSixtyThree() {
 		emerge(true);
 		for (int tick = 0; tick < 30; tick++) state.tick(true);
 		state.resolveChase(true, true);
-		for (int tick = 1; tick <= 61; tick++) {
+		for (int tick = 1; tick <= 63; tick++) {
 			Effect effect = state.tick(true);
-			if (tick == 21) {
+			if (tick == 23) {
 				assertEquals(Effect.KILL, effect);
 				assertEquals(player, state.consumeKillTarget());
-			} else if (tick == 61) assertEquals(Effect.RESTORE, effect);
+			} else if (tick == 63) assertEquals(Effect.RESTORE, effect);
 			else assertEquals(Effect.NONE, effect);
 		}
 	}
@@ -245,7 +245,7 @@ class StrangeTreeStateTest {
 	@Test
 	void loadNeverResumesAttackOrReplaysAlreadyDeliveredHit() {
 		emerge(false);
-		for (int tick = 0; tick < 30 + 21; tick++) state.tick(true);
+		for (int tick = 0; tick < 30 + 23; tick++) state.tick(true);
 		state.consumeKillTarget();
 		StrangeTreeState restored = StrangeTreeState.fromSnapshot(state.snapshot());
 		restored.recoverAfterLoad();

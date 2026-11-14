@@ -1,0 +1,1 @@
+Built-in image_gen. Edit vanilla music_disc_13: preserve 16x16 logical silhouette and grooves; invert to white/light grey vinyl with dark indigo label; transparent outside; flat solid pixel colors; no gradients, shadows, glow, or extra details. Result is a preview draft only; generated glow and imperfect pixel alignment remain.

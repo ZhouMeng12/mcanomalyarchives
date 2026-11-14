@@ -14,8 +14,14 @@ public final class UO007CreativeTabHandler {
 	@SubscribeEvent
 	public static void addUO007Items(BuildCreativeModeTabContentsEvent event) {
 		if (event.getTabKey().equals(McanomalyarchivesModTabs.ANOMALY_ARCHIVES.getKey())) {
+            event.accept(UO007Items.NEGATIVE_DIRT.get());
+            event.accept(UO007Items.NEGATIVE_OAK_LOG.get());
+            event.accept(UO007Items.NEGATIVE_OAK_PLANKS.get());
 			event.accept(UO007Items.NEGATIVE_APPLE.get());
 			event.accept(UO007Items.NEGATIVE_DIAMOND_PICKAXE.get());
+            event.accept(UO007Items.NEGATIVE_WOODEN_PICKAXE.get());
+			event.accept(UO007Items.NEGATIVE_BOW.get());
+			event.accept(UO007Items.NEGATIVE_MUSIC_DISC.get());
 		}
 	}
 }

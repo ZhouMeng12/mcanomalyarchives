@@ -26,6 +26,11 @@ public final class CodexScanner {
 
 	@SubscribeEvent
 	public static void onServerTick(ServerTickEvent.Post event) {
+        // Remember acquisition even if the book is put away before the next observation scan.
+        for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
+            CodexOriginStory.hasReceived(player);
+            ArchiveAdvancements.checkSurvivor(player);
+        }
 		if (event.getServer().getTickCount() % SCAN_INTERVAL != 0)
 			return;
 		// 剧情脚本热重载：文件被改过就重新解析（详见 dialogue/StoryLoader）
@@ -33,6 +38,7 @@ public final class CodexScanner {
 		for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
 			// 创造/旁观也算"见过"：作者调试与旁观玩家同样应该能记录档案
 			AnomalyCodex.scan(player);
+            ArchiveAdvancements.tick(player);
 		}
 	}
 

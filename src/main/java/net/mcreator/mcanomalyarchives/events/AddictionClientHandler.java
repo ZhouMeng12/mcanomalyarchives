@@ -1,130 +1,131 @@
 package net.mcreator.mcanomalyarchives.events;
 
-import net.mcreator.mcanomalyarchives.McanomalyarchivesMod;
-import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModBlocks;
-import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModMobEffects;
+import net.mcreator.mcanomalyarchives.anomaly.poppy.PoppyAddictionRules;
+import net.mcreator.mcanomalyarchives.anomaly.poppy.PoppyScareSequence;
+import net.mcreator.mcanomalyarchives.network.PoppyAddictionPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.core.BlockPos;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.fml.loading.FMLEnvironment;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.sounds.SoundEvents;
+import net.mcreator.mcanomalyarchives.client.render.PoppyPostEffect;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.gui.screens.DeathScreen;
+import net.neoforged.neoforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
-public class AddictionClientHandler {
-
-    private static boolean isSensitivityModified;
-    private static double originalSensitivity;
-    private static BlockPos cachedPoppy;
-    private static int cachedPoppyTick = Integer.MIN_VALUE;
-
-    public static void init() {
-        if (FMLEnvironment.dist.isClient()) {
-            McanomalyarchivesMod.LOGGER.info("=== AddictionClientHandler INITIALIZED ===");
-            NeoForge.EVENT_BUS.register(new AddictionClientHandler());
-        }
-    }
-
-    private static BlockPos findNearestPoppy(LocalPlayer player) {
-        Level level = player.level();
-        Vec3 eyePos = player.getEyePosition(1f);
-        
-        double searchRadius = 10.0;
-        BlockPos nearest = null;
-        double nearestDistSq = Double.MAX_VALUE;
-        
-        for (int x = (int) (eyePos.x - searchRadius); x <= (int) (eyePos.x + searchRadius); x++) {
-            for (int y = (int) (eyePos.y - searchRadius); y <= (int) (eyePos.y + searchRadius); y++) {
-                for (int z = (int) (eyePos.z - searchRadius); z <= (int) (eyePos.z + searchRadius); z++) {
-                    BlockPos pos = new BlockPos(x, y, z);
-                    Block block = level.getBlockState(pos).getBlock();
-                    if (block == McanomalyarchivesModBlocks.CORN_POPPY.get()) {
-                        Vec3 center = new Vec3(x + 0.5, y + 0.5, z + 0.5);
-                        double distSq = eyePos.distanceToSqr(center);
-                        if (distSq < nearestDistSq) {
-                            nearestDistSq = distSq;
-                            nearest = pos;
-                        }
-                    }
-                }
-            }
-        }
-        return nearest;
-    }
-
-    private static float[] getLookAtAngles(LocalPlayer player, BlockPos targetPos) {
-        Vec3 eyePos = player.getEyePosition(1f);
-        Vec3 targetCenter = new Vec3(targetPos.getX() + 0.5, targetPos.getY() + 0.5, targetPos.getZ() + 0.5);
-        Vec3 direction = targetCenter.subtract(eyePos).normalize();
-
-        double x = direction.x;
-        double y = direction.y;
-        double z = direction.z;
-
-        double horizontalDistance = Math.sqrt(x * x + z * z);
-        
-        float yaw = (float) (Math.toDegrees(Math.atan2(z, x)) - 90.0f);
-        float pitch = (float) -Math.toDegrees(Math.atan2(y, horizontalDistance));
-        
-        return new float[]{yaw, pitch};
-    }
-
-    @SubscribeEvent
-    public void onClientTick(ClientTickEvent.Post event) {
+/** One authoritative source, one camera controller; never writes sensitivity settings. */
+public final class AddictionClientHandler {
+    private static PoppyAddictionPacket state;
+    private static ClientLevel world;
+    private static LocalPlayer owner;
+    private static int age;
+    private static float intensity, previousIntensity, fade;
+    private static long cameraTime;
+    private static boolean scareSoundPlayed, warningSoundPlayed;
+    public static void init() { NeoForge.EVENT_BUS.register(new AddictionClientHandler()); }
+    public static void accept(PoppyAddictionPacket packet) {
         Minecraft mc = Minecraft.getInstance();
-        LocalPlayer player = mc.player;
-        if (player == null) return;
-
-        MobEffectInstance effect = player.getEffect(McanomalyarchivesModMobEffects.ADDICTE);
-        boolean hasAddiction = effect != null;
-        int addictionLevel = hasAddiction ? effect.getAmplifier() + 1 : 0;
-
-        if (hasAddiction && addictionLevel > 0) {
-            if (!isSensitivityModified) {
-                originalSensitivity = mc.options.sensitivity().get();
-                isSensitivityModified = true;
-            }
-
-            int effectiveLevel = Math.min(addictionLevel, 6);
-            double sensitivityMultiplier = Math.max(0.005, 1.0 - effectiveLevel * 0.15);
-            mc.options.sensitivity().set(originalSensitivity * sensitivityMultiplier);
-
-            // 方块扫描结果缓存 5 tick（镜头牵引仍每 tick 平滑）
-            if (Math.abs(player.tickCount - cachedPoppyTick) >= 5) {
-                cachedPoppy = findNearestPoppy(player);
-                cachedPoppyTick = player.tickCount;
-            }
-            BlockPos poppyPos = cachedPoppy;
-            if (poppyPos != null) {
-                float[] angles = getLookAtAngles(player, poppyPos);
-                float targetYaw = angles[0];
-                float targetPitch = angles[1];
-                
-                float currentYaw = player.getYRot();
-                float currentPitch = player.getXRot();
-                
-                float recoveryStrength = effectiveLevel * 0.3f;
-                float yawDiff = currentYaw - targetYaw;
-                float pitchDiff = currentPitch - targetPitch;
-                
-                while (yawDiff > 180) yawDiff -= 360;
-                while (yawDiff < -180) yawDiff += 360;
-                
-                float newYaw = currentYaw - yawDiff * recoveryStrength;
-                float newPitch = currentPitch - pitchDiff * recoveryStrength;
-                player.setYRot(newYaw);
-                player.setXRot(newPitch);
-            }
-
+        if (mc.level == null || mc.player == null || !mc.player.isAlive() || mc.screen instanceof DeathScreen) { clear(); return; }
+        if (world != mc.level || owner != mc.player) clear();
+        if (state == null || state.seed() != packet.seed() || state.route() != packet.route()) {
+            scareSoundPlayed = warningSoundPlayed = false;
+            net.mcreator.mcanomalyarchives.McanomalyarchivesMod.LOGGER.debug(
+                    "Poppy client state: route={}, ticks={}, redCloud={}",packet.route(),packet.ticks(),packet.entityId()>=0);
+        }
+        world = mc.level; owner = mc.player; state = packet; age = 0;
+    }
+    public static void clear() {
+        state = null; world = null; owner = null; age = 0; intensity = previousIntensity = fade = 0; cameraTime = 0;
+        scareSoundPlayed = warningSoundPlayed = false;
+        PoppyPostEffect.clear();
+    }
+    public static boolean shouldRender() {
+        Minecraft mc = Minecraft.getInstance();
+        return mc.player != null && mc.player == owner && mc.level == world && mc.player.isAlive()
+                && !(mc.screen instanceof DeathScreen) && fade > 0;
+    }
+    @SubscribeEvent public void screenOpening(ScreenEvent.Opening event) {
+        if (event.getNewScreen() instanceof DeathScreen) clear();
+    }
+    @SubscribeEvent public void logout(ClientPlayerNetworkEvent.LoggingOut event) { clear(); }
+    public static int route() { return state == null ? -1 : state.route(); }
+    public static long seed() { return state == null ? 0 : state.seed(); }
+    public static boolean cloud() { return state != null && state.entityId() >= 0; }
+    public static int level() { return state == null ? 0 : PoppyAddictionRules.level(state.ticks()); }
+    public static float intensity(float partial) { return Mth.lerp(partial, previousIntensity, intensity); }
+    public static float fade() { return fade; }
+    public static float execution() { return state == null ? 0 : Mth.clamp((state.ticks() + Math.min(age, 5) - 2000) / 200f, 0, 1); }
+    public static float scare() { return state == null || cloud() || age >= 40 ? 0 : PoppyAddictionRules.scare(state.ticks() + Math.min(age, 5)); }
+    public static Vec3 base() {
+        if (state == null) return Vec3.ZERO;
+        Minecraft mc = Minecraft.getInstance();
+        if (cloud() && mc.level != null) {
+            var entity = mc.level.getEntity(state.entityId());
+            if (entity != null) return entity.position().add(0, -.33, 0);
+        }
+        return new Vec3(state.x(), state.y(), state.z());
+    }
+    public static Vec3 focus() {
+        Vec3 base = base();
+        if (cloud()) return base;
+        return base.add(0, .5, 0);
+    }
+    @SubscribeEvent public void tick(ClientTickEvent.Post event) {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.level == null || mc.player == null || mc.player != owner || mc.level != world || !mc.player.isAlive()
+                || mc.screen instanceof DeathScreen) { clear(); return; }
+        if (mc.isPaused()) return;
+        age++;
+        previousIntensity = intensity;
+        boolean active = state != null && state.ticks() >= 200 && age < 40;
+        float target = active ? PoppyAddictionRules.intensity(state.ticks() + Math.min(age, 5)) : 0;
+        intensity += Mth.clamp(target - intensity, -.4f, .15f);
+        fade = Mth.clamp(fade + (active ? .1f : -.08f), 0, 1);
+        if(!active)scareSoundPlayed=warningSoundPlayed=false;
+        if (scare() > 0 && !scareSoundPlayed) {
+            scareSoundPlayed = true;
+            mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.WARDEN_ROAR, .68f, .8f));
+        }
+        if (PoppyScareSequence.stage(scare()) == PoppyScareSequence.Stage.WARNINGS && !warningSoundPlayed) {
+            warningSoundPlayed = true;
+            mc.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.ELDER_GUARDIAN_CURSE, .8f, .65f));
+        }
+        if (active && mc.player.tickCount % Math.max(35, 110 - level() * 6) == 0) {
+            Vec3 p = base();
+            mc.level.playLocalSound(p.x, p.y, p.z, net.minecraft.sounds.SoundEvents.AZALEA_LEAVES_STEP,
+                    net.minecraft.sounds.SoundSource.AMBIENT, .18f + level() * .015f, .65f, false);
+        }
+    }
+    @SubscribeEvent public void input(MovementInputUpdateEvent event) {
+        if (!shouldRender() || Minecraft.getInstance().screen != null || event.getEntity() != owner || level() < 4 || age >= 40) return;
+        event.getInput().jumping = false;
+        if (level() >= 7) { event.getInput().forwardImpulse = 0; event.getInput().leftImpulse = 0; }
+    }
+    /** Called after mouse input, before the camera is set up for this frame. */
+    public static void controlGaze() {
+        long now = System.nanoTime();
+        float dt = cameraTime == 0 ? .016f : Math.min(.05f, (now - cameraTime) / 1_000_000_000f);
+        cameraTime = now;
+        Minecraft mc = Minecraft.getInstance();
+        int level = level();
+        if (!shouldRender() || level == 0 || age >= 40 || mc.screen != null || mc.isPaused()) return;
+        Vec3 d = focus().subtract(mc.player.getEyePosition());
+        float yaw = (float) Math.toDegrees(Math.atan2(d.z, d.x)) - 90;
+        float pitch = Mth.clamp((float) -Math.toDegrees(Math.atan2(d.y, d.horizontalDistance())), -90, 90);
+        if (level >= 4) {
+            float limit = level >= 7 ? 0 : new float[]{12, 8, 5}[level - 4];
+            mc.player.setYRot(yaw + Mth.clamp(Mth.wrapDegrees(mc.player.getYRot() - yaw), -limit, limit));
+            mc.player.setXRot(pitch + Mth.clamp(mc.player.getXRot() - pitch, -limit, limit));
         } else {
-            if (isSensitivityModified) {
-                mc.options.sensitivity().set(originalSensitivity);
-                isSensitivityModified = false;
-            }
+            float step = new float[]{160, 220, 300}[level - 1] * dt;
+            mc.player.setYRot(PoppyAddictionRules.approachAngle(mc.player.getYRot(), yaw, step));
+            mc.player.setXRot(PoppyAddictionRules.approachAngle(mc.player.getXRot(), pitch, step));
         }
     }
 }

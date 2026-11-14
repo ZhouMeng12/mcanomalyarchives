@@ -66,7 +66,7 @@ public class BlackStangeCloudEntity extends SmallStangeCloudEntity {
 		}
 		// ⓪ 刚被门吐出来的那 40 tick 先不干活：此时身体还压在门框那一片，
 		//    立刻开咬既会看起来像"门什么都没吐出来"，也会把自己的门咬坏
-		if (isLaunching()) {
+		if (this.tickCount < 40 || isLaunching()) {
 			return;
 		}
 		// ① 接触判定：身体范围内有没有"实体方块"（水、空气、草不算）

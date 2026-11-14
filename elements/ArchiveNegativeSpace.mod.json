@@ -1,0 +1,24 @@
+{
+  "_fv": 85,
+  "_type": "achievement",
+  "definition": {
+    "achievementIcon": {
+      "value": "Items.DIAMOND_PICKAXE"
+    },
+    "background": "Default",
+    "disableDisplay": false,
+    "showPopup": true,
+    "announceToChat": true,
+    "rewardLoot": [],
+    "rewardRecipes": [],
+    "rewardXP": 0,
+    "triggerxml": "<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"advancement_trigger\" deletable=\"false\" x=\"40\" y=\"80\"><next><block type=\"custom_trigger\"></block></next></block></xml>",
+    "achievementName": "这是滚木？",
+    "achievementDescription": "放置一个负值方块，留下黑色空间",
+    "achievementType": "task",
+    "hideIfNotCompleted": false,
+    "parent": {
+      "value": "CUSTOM:ArchiveNegativeGet"
+    }
+  }
+}

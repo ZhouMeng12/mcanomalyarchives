@@ -1,0 +1,6 @@
+{
+  "sound_event": {"sound_id": "mcanomalyarchives_rewind:rewind", "range": 50.0},
+  "description": {"translate": "jukebox_song.mcanomalyarchives.negative_cat"},
+  "length_in_seconds": 3.0,
+  "comparator_output": 1
+}

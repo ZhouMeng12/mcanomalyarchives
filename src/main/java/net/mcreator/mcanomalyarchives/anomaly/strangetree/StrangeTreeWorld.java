@@ -272,32 +272,34 @@ final class StrangeTreeWorld {
 		double distance = Math.sqrt(dx * dx + dz * dz);
 		if (distance > 5 && playerDistance > 25) {
 			double oldX = tree.getX(), oldZ = tree.getZ();
-			double speed = speed(level, tree.blockPosition());
-			if (speed <= 0) {
-				double step = 3.1 / 20 * 5, px = -dz / distance, pz = dx / distance;
-				BlockPos first = tree.blockPosition().offset((int) Math.round(px * step), 0, (int) Math.round(pz * step));
-				BlockPos second = tree.blockPosition().offset((int) Math.round(-px * step), 0, (int) Math.round(-pz * step));
-				if (speed(level, first) > 0) tree.setPos(oldX + px * step, tree.getY(), oldZ + pz * step);
-				else if (speed(level, second) > 0) tree.setPos(oldX - px * step, tree.getY(), oldZ - pz * step);
-			} else {
-				double step = Math.min(distance, speed / 20 * 5);
-				double x = oldX + dx / distance * step, z = oldZ + dz / distance * step;
-				if (level.hasChunkAt(BlockPos.containing(x, tree.getY(), z))) tree.setPos(x, tree.getY(), z);
+			double ux = dx / distance, uz = dz / distance;
+			if (!moveUnderground(level, tree, ux, uz, distance)) {
+				// A blocked forward path may slide along the barrier, never through it.
+				if (!moveUnderground(level, tree, -uz, ux, distance))
+					moveUnderground(level, tree, uz, -ux, distance);
 			}
 			if (tree.getX() != oldX || tree.getZ() != oldZ) quake(tree, 0.08f, 10);
 		}
 		double remaining = Math.pow(destination.x() + 0.5 - tree.getX(), 2) + Math.pow(destination.z() + 0.5 - tree.getZ(), 2);
 		if (remaining <= 25 || playerDistance <= 25) {
 			state.arrive();
-			quake(tree, 0.12f, 30);
+			quake(tree, 0, 0);
 		}
 	}
 
+	private static boolean moveUnderground(ServerLevel level, StrangeTreeEntity tree, double ux, double uz, double distance) {
+		double step = StrangeTreeMotion.step(tree.getX(), tree.getY(), tree.getZ(), ux, uz,
+				Math.min(distance, 3.1 / 4), point -> speed(level, pos(point)));
+		if (step <= 0) return false;
+		tree.setPos(tree.getX() + ux * step, tree.getY(), tree.getZ() + uz * step);
+		return true;
+	}
+
 	private static double speed(ServerLevel level, BlockPos position) {
-		if (!level.hasChunkAt(position)) return 0;
-		BlockState ground = level.getBlockState(new BlockPos(position.getX(), groundY(level, position.getX(), position.getZ()), position.getZ()));
-		if (ground.is(Blocks.BEDROCK)) return 0;
-		if (ground.is(Blocks.OBSIDIAN)) return 0.4;
+		if (!level.isInWorldBounds(position) || !level.hasChunkAt(position)) return 0;
+		BlockState ground = level.getBlockState(position);
+		if (ground.is(Blocks.BEDROCK) || ground.getDestroySpeed(level, position) < 0) return 0;
+		if (ground.is(Blocks.OBSIDIAN) || ground.is(Blocks.CRYING_OBSIDIAN)) return 0.4;
 		if (ground.is(BlockTags.BASE_STONE_OVERWORLD) || ground.is(Blocks.COBBLESTONE)) return 1.5;
 		return 3.1;
 	}

@@ -339,7 +339,41 @@
         "\"item.mcanomalyarchives.negative_diamond_pickaxe\"",
         "\"item.mcanomalyarchives.uo002_garbled\"",
         "\"codex.mcanomalyarchives.note.negative_apple\"",
-        "\"codex.mcanomalyarchives.note.negative_pickaxe\""
+        "\"codex.mcanomalyarchives.note.negative_pickaxe\"",
+        "\"item.mcanomalyarchives.negative_bow\"",
+        "\"item.mcanomalyarchives.negative_arrow\"",
+        "\"entity.mcanomalyarchives.negative_return_arrow\"",
+        "\"codex.mcanomalyarchives.note.negative_bow_release\"",
+        "\"codex.mcanomalyarchives.note.negative_bow_return\"",
+        "\"item.mcanomalyarchives.negative_music_disc\"",
+        "\"jukebox_song.mcanomalyarchives.negative_cat\"",
+        "\"codex.mcanomalyarchives.note.negative_disc_sound\"",
+        "\"codex.mcanomalyarchives.note.negative_disc_rewind\"",
+        "\"codex.mcanomalyarchives.note.negative_disc_wear\"",
+        "\"message.mcanomalyarchives.rewind.warming\"",
+        "\"message.mcanomalyarchives.rewind.chunks\"",
+        "\"message.mcanomalyarchives.rewind.machine\"",
+        "\"message.mcanomalyarchives.rewind.menu\"",
+        "\"message.mcanomalyarchives.rewind.boundary\"",
+        "\"message.mcanomalyarchives.rewind.busy\"",
+        "\"message.mcanomalyarchives.rewind.worn\"",
+        "\"item.mcanomalyarchives.negative_dirt\"",
+        "\"item.mcanomalyarchives.negative_oak_log\"",
+        "\"item.mcanomalyarchives.negative_oak_planks\"",
+        "\"block.mcanomalyarchives.negative_space\"",
+        "\"codex.mcanomalyarchives.note.negative_block_place\"",
+        "\"codex.mcanomalyarchives.note.negative_space_contact\"",
+        "\"item.mcanomalyarchives.negative_wooden_pickaxe\"",
+        "\"block.mcanomalyarchives.liquid_cobblestone\"",
+        "\"codex.mcanomalyarchives.note.negative_block_return\"",
+        "\"codex.mcanomalyarchives.note.name_liquid_stone\"",
+        "\"codex.mcanomalyarchives.note.name_potato\"",
+        "\"message.mcanomalyarchives.sheep_tired_eyes\"",
+        "\"message.mcanomalyarchives.earth.active\"",
+        "\"codex.mcanomalyarchives.note.name_earth\"",
+        "\"codex.mcanomalyarchives.note.earth_pull\"",
+        "\"codex.mcanomalyarchives.note.earth_blast\"",
+        "\"codex.mcanomalyarchives.note.earth_rewind\""
       ]
     },
     {
@@ -430,7 +464,41 @@
         "\"item.mcanomalyarchives.negative_diamond_pickaxe\"",
         "\"item.mcanomalyarchives.uo002_garbled\"",
         "\"codex.mcanomalyarchives.note.negative_apple\"",
-        "\"codex.mcanomalyarchives.note.negative_pickaxe\""
+        "\"codex.mcanomalyarchives.note.negative_pickaxe\"",
+        "\"item.mcanomalyarchives.negative_bow\"",
+        "\"item.mcanomalyarchives.negative_arrow\"",
+        "\"entity.mcanomalyarchives.negative_return_arrow\"",
+        "\"codex.mcanomalyarchives.note.negative_bow_release\"",
+        "\"codex.mcanomalyarchives.note.negative_bow_return\"",
+        "\"item.mcanomalyarchives.negative_music_disc\"",
+        "\"jukebox_song.mcanomalyarchives.negative_cat\"",
+        "\"codex.mcanomalyarchives.note.negative_disc_sound\"",
+        "\"codex.mcanomalyarchives.note.negative_disc_rewind\"",
+        "\"codex.mcanomalyarchives.note.negative_disc_wear\"",
+        "\"message.mcanomalyarchives.rewind.warming\"",
+        "\"message.mcanomalyarchives.rewind.chunks\"",
+        "\"message.mcanomalyarchives.rewind.machine\"",
+        "\"message.mcanomalyarchives.rewind.menu\"",
+        "\"message.mcanomalyarchives.rewind.boundary\"",
+        "\"message.mcanomalyarchives.rewind.busy\"",
+        "\"message.mcanomalyarchives.rewind.worn\"",
+        "\"item.mcanomalyarchives.negative_dirt\"",
+        "\"item.mcanomalyarchives.negative_oak_log\"",
+        "\"item.mcanomalyarchives.negative_oak_planks\"",
+        "\"block.mcanomalyarchives.negative_space\"",
+        "\"codex.mcanomalyarchives.note.negative_block_place\"",
+        "\"codex.mcanomalyarchives.note.negative_space_contact\"",
+        "\"item.mcanomalyarchives.negative_wooden_pickaxe\"",
+        "\"block.mcanomalyarchives.liquid_cobblestone\"",
+        "\"codex.mcanomalyarchives.note.negative_block_return\"",
+        "\"codex.mcanomalyarchives.note.name_liquid_stone\"",
+        "\"codex.mcanomalyarchives.note.name_potato\"",
+        "\"message.mcanomalyarchives.sheep_tired_eyes\"",
+        "\"message.mcanomalyarchives.earth.active\"",
+        "\"codex.mcanomalyarchives.note.name_earth\"",
+        "\"codex.mcanomalyarchives.note.earth_pull\"",
+        "\"codex.mcanomalyarchives.note.earth_blast\"",
+        "\"codex.mcanomalyarchives.note.earth_rewind\""
       ]
     },
     {
@@ -972,9 +1040,8 @@
       "kind": "contains",
       "why": "「看红伪云会上瘾」接在既有虞美人上瘾系统里（同一套 10 秒上瘾/升级/定身/丧命）；红伪云不是独立生物，靠 SmallStangeCloudEntity.isRed() 这个同步标记区分",
       "path": "src/main/java/net/mcreator/mcanomalyarchives/events/PlayerLookAtCornPoppyListener.java",
-      "fixHint": "补回 isPlayerLookingAtRedCloud / isEntityLookingAtRedCloud / findRedCloudInView 与 watchingCloud 标记",
+      "fixHint": "恢复 NPC 的 isEntityLookingAtRedCloud / findRedCloudInView 与 watchingCloud 标记；玩家入口由 PoppyAddictionSystem 管理",
       "mustContain": [
-        "isPlayerLookingAtRedCloud(",
         "isEntityLookingAtRedCloud(",
         "findRedCloudInView(",
         "CLOUD_COS_LIMIT",
@@ -1138,9 +1205,9 @@
       "kind": "contains",
       "why": "紫怪请求与客户端演出必须单向注册，不允许旧客户端使用不同的会话协议",
       "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurpleStoryNetworking.java",
-      "fixHint": "恢复全部七个服务端请求、三个客户端通知及 purple-story-2 协议版本",
+      "fixHint": "恢复 purple-story-3 的单向注册、取消请求和同化同步",
       "mustContain": [
-        "event.registrar(\"purple-story-2\")",
+        "event.registrar(\"purple-story-3\")",
         "playToServer(AdvanceToPhase2Packet.TYPE",
         "playToServer(TransitionToPhase2Packet.TYPE",
         "playToServer(AdvanceToPhase4Packet.TYPE",
@@ -1150,7 +1217,9 @@
         "playToServer(RemovePurpleMonsterPacket.TYPE",
         "playToClient(OpenPurpleGuiPacket.TYPE",
         "playToClient(StartPettingClientPacket.TYPE",
-        "playToClient(PurpleStoryEndedPacket.TYPE"
+        "playToClient(PurpleStoryEndedPacket.TYPE",
+        "CancelPurpleStoryPacket.TYPE",
+        "PurpleAssimilationPacket.TYPE"
       ]
     },
     {
@@ -1725,7 +1794,7 @@
         "CustomModelData",
         "ThreadLocalRandom",
         "NAME_GLYPHS",
-        "Util.getMillis() / 180L",
+        "ChatFormatting.OBFUSCATED",
         "i < 10"
       ]
     },
@@ -1878,7 +1947,7 @@
       "canonical": "observations-PurpleMonsterEntity.java",
       "expectAll": [
         "PurpleEncounterEffects.watched(this, stalkerSeenTicks)",
-        "visibleToPlayer && lookVec.dot(toStalker)",
+        "PurpleStalkerWorld.visible(world, viewer, getEyePosition())",
         "CodexObservations.record(sp, \"purple_stalker\")"
       ]
     },
@@ -1901,7 +1970,11 @@
       "canonical": "observations-StangeCloudEntity.java",
       "expectAll": [
         "CodexObservations.record(witness, \"cloud_contact\")",
-        "CodexObservations.witness(this, \"cloud_transmute\")"
+        "CodexObservations.witness(this, \"cloud_transmute\")",
+        "escape.disturb(",
+        "public Vec3 cloudDrift()",
+        "CloudDirectionTimer",
+        "BlockPos.containing(cloudPos.x - checkRadiusX"
       ]
     },
     {
@@ -2131,6 +2204,1159 @@
       "mustContain": [
         "onlyForConfigurations('neoForgeConfigOnly')",
         "url = layout.projectDirectory.dir('tools/offline-maven')"
+      ]
+    },
+    {
+      "id": "poppy-visual-runtime-files",
+      "kind": "exists",
+      "why": "Keep edge hallucination, desaturation and the final two-shot scare through MCreator regeneration",
+      "fixHint": "Restore the handwritten poppy runtime and its material asset from Git",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/poppy/PoppyAddictionSystem.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/poppy/PoppyAddictionRules.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/poppy/PoppyFlowerGeometry.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/poppy/PoppyFlowerOutline.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/poppy/PoppyScareSequence.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/render/PoppyFlowerMaterial.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/render/PoppyPostEffect.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/render/PoppyScareOverlay.java",
+        "src/main/resources/assets/mcanomalyarchives/shaders/post/poppy.json",
+        "src/main/resources/assets/mcanomalyarchives/textures/entity/poppy_illusion.png",
+        "tools/assets/source/poppy-head.png"
+      ]
+    },
+    {
+      "id": "poppy-visual-mixin-hooks",
+      "kind": "contains",
+      "why": "The edge hallucination gaze controller needs its client mixin registration",
+      "path": "src/main/resources/mcanomalyarchives.mixins.json",
+      "fixHint": "Restore PoppyMouseMixin in the client array",
+      "mustContain": [
+        "\"PoppyMouseMixin\""
+      ]
+    },
+    {
+      "id": "poppy-visual-server-delegation",
+      "kind": "contains",
+      "why": "Player watching must use the synchronized poppy runtime",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/events/PlayerLookAtCornPoppyListener.java",
+      "fixHint": "Restore the PoppyAddictionSystem tick delegation",
+      "mustContain": [
+        "PoppyAddictionSystem.tick(event.getServer())"
+      ]
+    },
+    {
+      "id": "poppy-red-cloud-player-acquisition",
+      "kind": "contains",
+      "why": "Player red-cloud addiction moved out of the NPC listener and must preserve identity and visibility checks",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/poppy/PoppyAddictionSystem.java",
+      "fixHint": "Restore red-cloud target acquisition and source validation in PoppyAddictionSystem",
+      "mustContain": [
+        "cloud.isRed()",
+        "player.hasLineOfSight(cloud)",
+        "s.cloud = nearest.getUUID()",
+        "s.entityId = nearest.getId()"
+      ]
+    },
+    {
+      "id": "negative-item-native-count-hook",
+      "kind": "contains",
+      "why": "Negative item counts must use the native decoration label without a duplicate red overlay",
+      "path": "src/main/resources/mcanomalyarchives.mixins.json",
+      "mustContain": [
+        "\"NegativeItemCountMixin\""
+      ]
+    },
+    {
+      "id": "negative-bow-registration",
+      "kind": "contains",
+      "why": "Register the handwritten return projectile inside the preserved mod init block",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/McanomalyarchivesMod.java",
+      "mustContain": [
+        "UO007Entities.REGISTRY.register(modEventBus)"
+      ]
+    },
+    {
+      "id": "negative-bow-assets-and-runtime",
+      "kind": "exists",
+      "why": "Keep return arrow behavior, native bow predicates and vanilla inverted materials during regeneration",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/init/UO007Entities.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/item/NegativeBowItem.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/item/NegativeArrowItem.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/item/NegativeCountItem.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/negative/NegativeBowReturn.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/entity/NegativeReturnArrowEntity.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/NegativeBowClient.java",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_bow.json",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_bow_pulling_0.json",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_bow_pulling_1.json",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_bow_pulling_2.json",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_arrow.json",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/negative_bow.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/negative_bow_pulling_0.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/negative_bow_pulling_1.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/negative_bow_pulling_2.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/negative_arrow.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/entity/projectiles/negative_arrow.png"
+      ]
+    },
+    {
+      "id": "negative-item-runtime-files",
+      "kind": "exists",
+      "why": "Keep signed quantities, negative durability and native presentation during regeneration",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/negative/NegativeItemValues.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/item/NegativeAppleItem.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/item/NegativeDiamondPickaxeItem.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/NegativeItemCountMixin.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/init/UO007Items.java"
+      ]
+    },
+    {
+      "id": "negative-disc-runtime",
+      "kind": "exists",
+      "why": "Preserve local time rewind code, audio and resources through MCreator regeneration",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/rewind/DiscUsageData.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/rewind/RewindService.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/rewind/RewindSnapshot.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/rewind/RewindWindow.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/rewind/RewindClient.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/rewind/RewindRenderer.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/RewindBlockEntityTickMixin.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/RewindChunkMixin.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/RewindJukeboxMixin.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/RewindNeighborMixin.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/RewindParticleMixin.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/RewindPlayerPacketMixin.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/RewindRandomTickMixin.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/RewindScheduledTickMixin.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/RewindSoundMixin.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/network/RewindVisualPacket.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/item/NegativeMusicDiscItem.java",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_music_disc.json",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/negative_music_disc.png",
+        "src/main/resources/data/mcanomalyarchives/jukebox_song/negative_cat.json",
+        "src/main/resources/assets/mcanomalyarchives_rewind/sounds.json",
+        "src/main/resources/assets/mcanomalyarchives_rewind/sounds/rewind.ogg",
+        "src/main/resources/assets/mcanomalyarchives/shaders/post/rewind.json",
+        "src/main/resources/assets/mcanomalyarchives/shaders/program/rewind.fsh",
+        "src/main/resources/assets/mcanomalyarchives/shaders/program/rewind.json",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/negative_music_disc_wear_1.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/negative_music_disc_wear_2.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/negative_music_disc_wear_3.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/negative_music_disc_wear_4.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/negative_music_disc_wear_5.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/negative_music_disc_wear_6.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/negative_music_disc_wear_7.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/negative_music_disc_wear_8.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/negative_music_disc_wear_9.png",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_music_disc_wear_1.json",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_music_disc_wear_2.json",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_music_disc_wear_3.json",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_music_disc_wear_4.json",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_music_disc_wear_5.json",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_music_disc_wear_6.json",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_music_disc_wear_7.json",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_music_disc_wear_8.json",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_music_disc_wear_9.json",
+        "tools/assets/build-negative-disc-wear.py"
+      ]
+    },
+    {
+      "id": "negative-disc-hooks",
+      "kind": "contains",
+      "why": "Keep rewind hooks registered",
+      "path": "src/main/resources/mcanomalyarchives.mixins.json",
+      "mustContain": [
+        "\"RewindBlockEntityTickMixin\"",
+        "\"RewindChunkMixin\"",
+        "\"RewindJukeboxMixin\"",
+        "\"RewindNeighborMixin\"",
+        "\"RewindParticleMixin\"",
+        "\"RewindPlayerPacketMixin\"",
+        "\"RewindRandomTickMixin\"",
+        "\"RewindScheduledTickMixin\"",
+        "\"RewindSoundMixin\""
+      ]
+    },
+    {
+      "id": "cloud-dimension-atmosphere",
+      "kind": "full",
+      "why": "Keep the black sky and readable lightmap across MCreator regeneration.",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/world/dimension/CloudDemDimension.java",
+      "canonical": "cloud-CloudDemDimension.java",
+      "expectAll": [
+        "Float.NaN",
+        "SkyType.NONE, true, true",
+        "return false;"
+      ]
+    },
+    {
+      "id": "cloud-dimension-renderer",
+      "kind": "full",
+      "why": "Cloud dimension uses black silhouettes without introducing a new entity variant.",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/StangeCloudRenderer.java",
+      "canonical": "cloud-StangeCloudRenderer.java",
+      "expectAll": [
+        "cloud_dem",
+        "cloud_black.png",
+        "entityTranslucent"
+      ]
+    },
+    {
+      "id": "negative-block-runtime",
+      "kind": "exists",
+      "why": "Keep signed negative block items and timed lethal black space",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/init/UO007Blocks.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/block/NegativeSpaceBlock.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/item/NegativeBlockItem.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/negative/NegativeSpaceLifetime.java",
+        "src/main/resources/assets/mcanomalyarchives/blockstates/negative_space.json",
+        "src/main/resources/assets/mcanomalyarchives/textures/block/negative_space_0.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/block/negative_space_1.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/block/negative_space_2.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/block/negative_space_3.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/block/negative_space_4.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/block/negative_space_5.png",
+        "src/main/resources/assets/mcanomalyarchives/models/block/negative_space_0.json",
+        "src/main/resources/assets/mcanomalyarchives/models/block/negative_space_1.json",
+        "src/main/resources/assets/mcanomalyarchives/models/block/negative_space_2.json",
+        "src/main/resources/assets/mcanomalyarchives/models/block/negative_space_3.json",
+        "src/main/resources/assets/mcanomalyarchives/models/block/negative_space_4.json",
+        "src/main/resources/assets/mcanomalyarchives/models/block/negative_space_5.json",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_dirt.json",
+        "src/main/resources/assets/mcanomalyarchives/textures/block/negative_dirt.png",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_oak_log.json",
+        "src/main/resources/assets/mcanomalyarchives/textures/block/negative_oak_log.png",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_oak_planks.json",
+        "src/main/resources/assets/mcanomalyarchives/textures/block/negative_oak_planks.png",
+        "src/main/resources/assets/mcanomalyarchives/textures/block/negative_oak_log_top.png",
+        "src/main/resources/data/mcanomalyarchives/recipe/negative_oak_planks.json"
+      ]
+    },
+    {
+      "id": "negative-block-registration",
+      "kind": "contains",
+      "why": "Preserve negative block registry inside user init section",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/McanomalyarchivesMod.java",
+      "mustContain": [
+        "UO007Blocks.REGISTRY.register(modEventBus)"
+      ]
+    },
+    {
+      "id": "tree-complete-body-renderer",
+      "kind": "full",
+      "why": "Preserve tree animation and complete-body fallback after MCreator regeneration",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/client/renderer/StrangeTreeRenderer.java",
+      "canonical": "tree-StrangeTreeRenderer.java",
+      "expectAll": [
+        "dy < 5",
+        "boolean crown",
+        "strangetreeAnimation.jiaren"
+      ]
+    },
+    {
+      "id": "named-material-process-runtime",
+      "kind": "exists",
+      "why": "Keep approved potato, liquid stone and negative wooden pickaxe processes",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/PotatoTransformation.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NamedMaterialRules.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/NamedPotatoClient.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/init/NamedMaterialBlocks.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/block/LiquidCobblestoneBlock.java",
+        "src/main/resources/assets/mcanomalyarchives/blockstates/liquid_cobblestone.json",
+        "src/main/resources/assets/mcanomalyarchives/models/block/liquid_cobblestone.json",
+        "src/main/resources/assets/mcanomalyarchives/models/item/liquid_cobblestone.json",
+        "src/main/resources/assets/mcanomalyarchives/textures/item/negative_wooden_pickaxe.png",
+        "src/main/resources/assets/mcanomalyarchives/models/item/negative_wooden_pickaxe.json",
+        "src/main/resources/data/mcanomalyarchives/recipe/negative_wooden_pickaxe.json"
+      ]
+    },
+    {
+      "id": "named-material-registration",
+      "kind": "contains",
+      "why": "Keep named material registries in preserved mod initialization",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/McanomalyarchivesMod.java",
+      "mustContain": [
+        "NamedMaterialBlocks.BLOCKS.register(modEventBus)",
+        "NamedMaterialBlocks.ITEMS.register(modEventBus)"
+      ]
+    },
+    {
+      "id": "pink-sheep-contextual-chains",
+      "kind": "exists",
+      "why": "Contextual lucky chains and multiplayer observation must survive regeneration",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/pinksheep/PinkSheepLuckyChains.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/pinksheep/PinkSheepObservation.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/pinksheep/PinkSheepFortuneHistory.java"
+      ],
+      "fixHint": "Restore the handwritten pink sheep mechanics and regression tests"
+    },
+    {
+      "id": "earth-runtime",
+      "kind": "exists",
+      "why": "Preserve Earth event, packet and depth-safe rendering assets outside MCreator generated elements",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/earth/EarthData.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/earth/EarthRules.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/earth/EarthService.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/earth/EarthClient.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/earth/EarthRenderer.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/network/EarthVisualPacket.java",
+        "src/main/resources/assets/mcanomalyarchives/shaders/post/earth.json",
+        "src/main/resources/assets/mcanomalyarchives/shaders/program/earth.json",
+        "src/main/resources/assets/mcanomalyarchives/shaders/program/earth.fsh",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/earth/EarthShaderSource.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/earth/EarthTerrainWarp.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/EarthProgramMixin.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/EarthShaderUniformMixin.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/EarthWorldPassMixin.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/mixin/EarthFrustumMixin.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/earth/EarthEjecta.java"
+      ]
+    },
+    {
+      "id": "earth-name-hook",
+      "kind": "contains",
+      "why": "Earth naming must remain connected",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/nametag/NameTagHandler.java",
+      "mustContain": [
+        "EarthService.start(player, living, raw)"
+      ]
+    },
+    {
+      "id": "earth-terrain-mixins",
+      "kind": "contains",
+      "why": "Keep world-only geometry deformation hooks",
+      "path": "src/main/resources/mcanomalyarchives.mixins.json",
+      "mustContain": [
+        "EarthProgramMixin",
+        "EarthShaderUniformMixin",
+        "EarthWorldPassMixin",
+        "EarthFrustumMixin"
+      ]
+    },
+    {
+      "id": "pink-sheep-accident-runtime",
+      "kind": "exists",
+      "why": "Scene-dependent incident sequences and fixed meteor trajectories",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/pinksheep/PinkSheepAccidents.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/pinksheep/PinkSheepAccidentSequence.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/pinksheep/PinkSheepMeteorFlight.java"
+      ],
+      "fixHint": "Restore incident director and regression tests"
+    },
+    {
+      "id": "pink-sheep-accident-wiring",
+      "kind": "contains",
+      "why": "Use scene-dependent incidents and actual meteor impact positions",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/events/PinkSheepCalamityHandler.java",
+      "mustContain": [
+        "PinkSheepAccidents.start(player, severity)",
+        "PinkSheepAccidents.tick(event.getServer())",
+        "PinkSheepMeteor.onMeteorImpact(projectile, hit.getLocation())"
+      ],
+      "fixHint": "Restore incident dispatch and collision location forwarding"
+    },
+    {
+      "id": "pink-sheep-no-forced-meteor-kill",
+      "kind": "noMatch",
+      "why": "Meteor damage must come from the actual explosion, not victim-specific execution",
+      "pattern": "GUARANTEED_DAMAGE|victim\\.hurt|invulnerableTime|updateTarget\\(",
+      "fixHint": "Remove forced victim damage and homing updates",
+      "searchRoot": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/pinksheep",
+      "glob": "PinkSheepMeteor.java"
+    },
+    {
+      "id": "archive-advancement-cloudarmadv",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/cloudarmadv.json",
+      "canonical": "advancement-cloudarmadv.json",
+      "expectAll": [
+        "\"translate\": \"advancements.cloudarmadv.title\"",
+        "\"translate\": \"advancements.cloudarmadv.descr\"",
+        "\"frame\": \"challenge\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:return_home_2\""
+      ]
+    },
+    {
+      "id": "archive-advancement-gettogarden",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/gettogarden.json",
+      "canonical": "advancement-gettogarden.json",
+      "expectAll": [
+        "\"translate\": \"advancements.gettogarden.title\"",
+        "\"translate\": \"advancements.gettogarden.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:codex_received\""
+      ]
+    },
+    {
+      "id": "archive-advancement-pink_sheep_blink",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/pink_sheep_blink.json",
+      "canonical": "advancement-pink_sheep_blink.json",
+      "expectAll": [
+        "\"translate\": \"advancements.pink_sheep_blink.title\"",
+        "\"translate\": \"advancements.pink_sheep_blink.descr\"",
+        "\"frame\": \"challenge\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:pink_sheep_sighting\""
+      ]
+    },
+    {
+      "id": "archive-advancement-pink_sheep_calamity",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/pink_sheep_calamity.json",
+      "canonical": "advancement-pink_sheep_calamity.json",
+      "expectAll": [
+        "\"translate\": \"advancements.pink_sheep_calamity.title\"",
+        "\"translate\": \"advancements.pink_sheep_calamity.descr\"",
+        "\"frame\": \"challenge\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:pink_sheep_sighting\""
+      ]
+    },
+    {
+      "id": "archive-advancement-pink_sheep_sighting",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/pink_sheep_sighting.json",
+      "canonical": "advancement-pink_sheep_sighting.json",
+      "expectAll": [
+        "\"translate\": \"advancements.pink_sheep_sighting.title\"",
+        "\"translate\": \"advancements.pink_sheep_sighting.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:codex_received\""
+      ]
+    },
+    {
+      "id": "archive-advancement-purplehandadv",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/purplehandadv.json",
+      "canonical": "advancement-purplehandadv.json",
+      "expectAll": [
+        "\"translate\": \"advancements.purplehandadv.title\"",
+        "\"translate\": \"advancements.purplehandadv.descr\"",
+        "\"frame\": \"challenge\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:purple_change\""
+      ]
+    },
+    {
+      "id": "archive-advancement-return_home_1",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/return_home_1.json",
+      "canonical": "advancement-return_home_1.json",
+      "expectAll": [
+        "\"translate\": \"advancements.return_home_1.title\"",
+        "\"translate\": \"advancements.return_home_1.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": true",
+        "\"parent\": \"mcanomalyarchives:strange_water\""
+      ]
+    },
+    {
+      "id": "archive-advancement-return_home_2",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/return_home_2.json",
+      "canonical": "advancement-return_home_2.json",
+      "expectAll": [
+        "\"translate\": \"advancements.return_home_2.title\"",
+        "\"translate\": \"advancements.return_home_2.descr\"",
+        "\"frame\": \"challenge\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:return_home_1\""
+      ]
+    },
+    {
+      "id": "archive-advancement-shangyu",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/shangyu.json",
+      "canonical": "advancement-shangyu.json",
+      "expectAll": [
+        "\"translate\": \"advancements.shangyu.title\"",
+        "\"translate\": \"advancements.shangyu.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:codex_received\""
+      ]
+    },
+    {
+      "id": "archive-advancement-sobeautiful",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/sobeautiful.json",
+      "canonical": "advancement-sobeautiful.json",
+      "expectAll": [
+        "\"translate\": \"advancements.sobeautiful.title\"",
+        "\"translate\": \"advancements.sobeautiful.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:gettogarden\""
+      ]
+    },
+    {
+      "id": "archive-advancement-strange_stone",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/strange_stone.json",
+      "canonical": "advancement-strange_stone.json",
+      "expectAll": [
+        "\"translate\": \"advancements.strange_stone.title\"",
+        "\"translate\": \"advancements.strange_stone.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:codex_received\""
+      ]
+    },
+    {
+      "id": "archive-advancement-strange_water",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/strange_water.json",
+      "canonical": "advancement-strange_water.json",
+      "expectAll": [
+        "\"translate\": \"advancements.strange_water.title\"",
+        "\"translate\": \"advancements.strange_water.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": true",
+        "\"parent\": \"mcanomalyarchives:strange_stone\""
+      ]
+    },
+    {
+      "id": "archive-advancement-watchdeath",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/watchdeath.json",
+      "canonical": "advancement-watchdeath.json",
+      "expectAll": [
+        "\"translate\": \"advancements.watchdeath.title\"",
+        "\"translate\": \"advancements.watchdeath.descr\"",
+        "\"frame\": \"challenge\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:sobeautiful\""
+      ]
+    },
+    {
+      "id": "archive-advancement-welcome",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/welcome.json",
+      "canonical": "advancement-welcome.json",
+      "expectAll": [
+        "\"translate\": \"advancements.welcome.title\"",
+        "\"translate\": \"advancements.welcome.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false"
+      ]
+    },
+    {
+      "id": "archive-advancement-whatthe",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/whatthe.json",
+      "canonical": "advancement-whatthe.json",
+      "expectAll": [
+        "\"translate\": \"advancements.whatthe.title\"",
+        "\"translate\": \"advancements.whatthe.descr\"",
+        "\"frame\": \"challenge\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:shangyu\""
+      ]
+    },
+    {
+      "id": "archive-advancement-whyletmesad",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/whyletmesad.json",
+      "canonical": "advancement-whyletmesad.json",
+      "expectAll": [
+        "\"translate\": \"advancements.whyletmesad.title\"",
+        "\"translate\": \"advancements.whyletmesad.descr\"",
+        "\"frame\": \"challenge\",",
+        "\"hidden\": true",
+        "\"parent\": \"mcanomalyarchives:sobeautiful\""
+      ]
+    },
+    {
+      "id": "archive-advancement-codex_received",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/codex_received.json",
+      "canonical": "advancement-codex_received.json",
+      "expectAll": [
+        "\"translate\": \"advancements.codex_received.title\"",
+        "\"translate\": \"advancements.codex_received.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:welcome\""
+      ]
+    },
+    {
+      "id": "archive-advancement-first_note",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/first_note.json",
+      "canonical": "advancement-first_note.json",
+      "expectAll": [
+        "\"translate\": \"advancements.first_note.title\"",
+        "\"translate\": \"advancements.first_note.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:codex_received\""
+      ]
+    },
+    {
+      "id": "archive-advancement-four_anomalies",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/four_anomalies.json",
+      "canonical": "advancement-four_anomalies.json",
+      "expectAll": [
+        "\"translate\": \"advancements.four_anomalies.title\"",
+        "\"translate\": \"advancements.four_anomalies.descr\"",
+        "\"frame\": \"goal\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:first_note\""
+      ]
+    },
+    {
+      "id": "archive-advancement-all_anomalies",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/all_anomalies.json",
+      "canonical": "advancement-all_anomalies.json",
+      "expectAll": [
+        "\"translate\": \"advancements.all_anomalies.title\"",
+        "\"translate\": \"advancements.all_anomalies.descr\"",
+        "\"frame\": \"challenge\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:four_anomalies\""
+      ]
+    },
+    {
+      "id": "archive-advancement-garbled_get",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/garbled_get.json",
+      "canonical": "advancement-garbled_get.json",
+      "expectAll": [
+        "\"translate\": \"advancements.garbled_get.title\",",
+        "\"obfuscated\": true",
+        "\"translate\": \"advancements.garbled_get.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:codex_received\""
+      ]
+    },
+    {
+      "id": "archive-advancement-garbled_infect",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/garbled_infect.json",
+      "canonical": "advancement-garbled_infect.json",
+      "expectAll": [
+        "\"translate\": \"advancements.garbled_infect.title\"",
+        "\"translate\": \"advancements.garbled_infect.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:garbled_get\""
+      ]
+    },
+    {
+      "id": "archive-advancement-garbled_block",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/garbled_block.json",
+      "canonical": "advancement-garbled_block.json",
+      "expectAll": [
+        "\"translate\": \"advancements.garbled_block.title\"",
+        "\"translate\": \"advancements.garbled_block.descr\"",
+        "\"frame\": \"goal\",",
+        "\"hidden\": true",
+        "\"parent\": \"mcanomalyarchives:garbled_get\""
+      ]
+    },
+    {
+      "id": "archive-advancement-poppy_recover",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/poppy_recover.json",
+      "canonical": "advancement-poppy_recover.json",
+      "expectAll": [
+        "\"translate\": \"advancements.poppy_recover.title\"",
+        "\"translate\": \"advancements.poppy_recover.descr\"",
+        "\"frame\": \"challenge\",",
+        "\"hidden\": true",
+        "\"parent\": \"mcanomalyarchives:whyletmesad\""
+      ]
+    },
+    {
+      "id": "archive-advancement-purple_arrival",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/purple_arrival.json",
+      "canonical": "advancement-purple_arrival.json",
+      "expectAll": [
+        "\"translate\": \"advancements.purple_arrival.title\"",
+        "\"translate\": \"advancements.purple_arrival.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:codex_received\""
+      ]
+    },
+    {
+      "id": "archive-advancement-purple_change",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/purple_change.json",
+      "canonical": "advancement-purple_change.json",
+      "expectAll": [
+        "\"translate\": \"advancements.purple_change.title\"",
+        "\"translate\": \"advancements.purple_change.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:purple_arrival\""
+      ]
+    },
+    {
+      "id": "archive-advancement-purple_stalker",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/purple_stalker.json",
+      "canonical": "advancement-purple_stalker.json",
+      "expectAll": [
+        "\"translate\": \"advancements.purple_stalker.title\"",
+        "\"translate\": \"advancements.purple_stalker.descr\"",
+        "\"frame\": \"goal\",",
+        "\"hidden\": true",
+        "\"parent\": \"mcanomalyarchives:purple_arrival\""
+      ]
+    },
+    {
+      "id": "archive-advancement-tree_chase",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/tree_chase.json",
+      "canonical": "advancement-tree_chase.json",
+      "expectAll": [
+        "\"translate\": \"advancements.tree_chase.title\"",
+        "\"translate\": \"advancements.tree_chase.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:codex_received\""
+      ]
+    },
+    {
+      "id": "archive-advancement-tree_replant",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/tree_replant.json",
+      "canonical": "advancement-tree_replant.json",
+      "expectAll": [
+        "\"translate\": \"advancements.tree_replant.title\"",
+        "\"translate\": \"advancements.tree_replant.descr\"",
+        "\"frame\": \"goal\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:tree_chase\""
+      ]
+    },
+    {
+      "id": "archive-advancement-tree_burrow",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/tree_burrow.json",
+      "canonical": "advancement-tree_burrow.json",
+      "expectAll": [
+        "\"translate\": \"advancements.tree_burrow.title\"",
+        "\"translate\": \"advancements.tree_burrow.descr\"",
+        "\"frame\": \"goal\",",
+        "\"hidden\": true",
+        "\"parent\": \"mcanomalyarchives:tree_chase\""
+      ]
+    },
+    {
+      "id": "archive-advancement-sheep_lucky",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/sheep_lucky.json",
+      "canonical": "advancement-sheep_lucky.json",
+      "expectAll": [
+        "\"translate\": \"advancements.sheep_lucky.title\"",
+        "\"translate\": \"advancements.sheep_lucky.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:pink_sheep_sighting\""
+      ]
+    },
+    {
+      "id": "archive-advancement-sheep_both",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/sheep_both.json",
+      "canonical": "advancement-sheep_both.json",
+      "expectAll": [
+        "\"translate\": \"advancements.sheep_both.title\"",
+        "\"translate\": \"advancements.sheep_both.descr\"",
+        "\"frame\": \"challenge\",",
+        "\"hidden\": true",
+        "\"parent\": \"mcanomalyarchives:sheep_lucky\""
+      ]
+    },
+    {
+      "id": "archive-advancement-negative_get",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/negative_get.json",
+      "canonical": "advancement-negative_get.json",
+      "expectAll": [
+        "\"translate\": \"advancements.negative_get.title\"",
+        "\"translate\": \"advancements.negative_get.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:codex_received\""
+      ]
+    },
+    {
+      "id": "archive-advancement-negative_apple",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/negative_apple.json",
+      "canonical": "advancement-negative_apple.json",
+      "expectAll": [
+        "\"translate\": \"advancements.negative_apple.title\"",
+        "\"translate\": \"advancements.negative_apple.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:negative_get\""
+      ]
+    },
+    {
+      "id": "archive-advancement-negative_bow",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/negative_bow.json",
+      "canonical": "advancement-negative_bow.json",
+      "expectAll": [
+        "\"translate\": \"advancements.negative_bow.title\"",
+        "\"translate\": \"advancements.negative_bow.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:negative_get\""
+      ]
+    },
+    {
+      "id": "archive-advancement-negative_space",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/negative_space.json",
+      "canonical": "advancement-negative_space.json",
+      "expectAll": [
+        "\"translate\": \"advancements.negative_space.title\"",
+        "\"translate\": \"advancements.negative_space.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:negative_get\""
+      ]
+    },
+    {
+      "id": "archive-advancement-negative_zero",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/negative_zero.json",
+      "canonical": "advancement-negative_zero.json",
+      "expectAll": [
+        "\"translate\": \"advancements.negative_zero.title\"",
+        "\"translate\": \"advancements.negative_zero.descr\"",
+        "\"frame\": \"goal\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:negative_get\""
+      ]
+    },
+    {
+      "id": "archive-advancement-negative_return",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/negative_return.json",
+      "canonical": "advancement-negative_return.json",
+      "expectAll": [
+        "\"translate\": \"advancements.negative_return.title\"",
+        "\"translate\": \"advancements.negative_return.descr\"",
+        "\"frame\": \"goal\",",
+        "\"hidden\": true",
+        "\"parent\": \"mcanomalyarchives:negative_space\""
+      ]
+    },
+    {
+      "id": "archive-advancement-disc_rewind",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/disc_rewind.json",
+      "canonical": "advancement-disc_rewind.json",
+      "expectAll": [
+        "\"translate\": \"advancements.disc_rewind.title\"",
+        "\"translate\": \"advancements.disc_rewind.descr\"",
+        "\"frame\": \"goal\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:negative_get\""
+      ]
+    },
+    {
+      "id": "archive-advancement-disc_spent",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/disc_spent.json",
+      "canonical": "advancement-disc_spent.json",
+      "expectAll": [
+        "\"translate\": \"advancements.disc_spent.title\"",
+        "\"translate\": \"advancements.disc_spent.descr\"",
+        "\"frame\": \"challenge\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:disc_rewind\""
+      ]
+    },
+    {
+      "id": "archive-advancement-name_first",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/name_first.json",
+      "canonical": "advancement-name_first.json",
+      "expectAll": [
+        "\"translate\": \"advancements.name_first.title\"",
+        "\"translate\": \"advancements.name_first.descr\"",
+        "\"frame\": \"task\",",
+        "\"hidden\": false",
+        "\"parent\": \"mcanomalyarchives:codex_received\""
+      ]
+    },
+    {
+      "id": "archive-advancement-name_absorb",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/name_absorb.json",
+      "canonical": "advancement-name_absorb.json",
+      "expectAll": [
+        "\"translate\": \"advancements.name_absorb.title\"",
+        "\"translate\": \"advancements.name_absorb.descr\"",
+        "\"frame\": \"goal\",",
+        "\"hidden\": true",
+        "\"parent\": \"mcanomalyarchives:name_first\""
+      ]
+    },
+    {
+      "id": "archive-advancement-name_compress",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/name_compress.json",
+      "canonical": "advancement-name_compress.json",
+      "expectAll": [
+        "\"translate\": \"advancements.name_compress.title\"",
+        "\"translate\": \"advancements.name_compress.descr\"",
+        "\"frame\": \"goal\",",
+        "\"hidden\": true",
+        "\"parent\": \"mcanomalyarchives:name_first\""
+      ]
+    },
+    {
+      "id": "archive-advancement-name_garbled",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/name_garbled.json",
+      "canonical": "advancement-name_garbled.json",
+      "expectAll": [
+        "\"translate\": \"advancements.name_garbled.title\",",
+        "\"obfuscated\": true",
+        "\"translate\": \"advancements.name_garbled.descr\"",
+        "\"frame\": \"goal\",",
+        "\"hidden\": true",
+        "\"parent\": \"mcanomalyarchives:name_first\""
+      ]
+    },
+    {
+      "id": "archive-advancement-earth_name",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/earth_name.json",
+      "canonical": "advancement-earth_name.json",
+      "expectAll": [
+        "\"translate\": \"advancements.earth_name.title\"",
+        "\"translate\": \"advancements.earth_name.descr\"",
+        "\"frame\": \"goal\",",
+        "\"hidden\": true",
+        "\"parent\": \"mcanomalyarchives:name_first\""
+      ]
+    },
+    {
+      "id": "archive-advancement-earth_cancel",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/earth_cancel.json",
+      "canonical": "advancement-earth_cancel.json",
+      "expectAll": [
+        "\"translate\": \"advancements.earth_cancel.title\"",
+        "\"translate\": \"advancements.earth_cancel.descr\"",
+        "\"frame\": \"challenge\",",
+        "\"hidden\": true",
+        "\"parent\": \"mcanomalyarchives:earth_name\""
+      ]
+    },
+    {
+      "id": "archive-advancement-earth_survive",
+      "kind": "full",
+      "why": "保留玩家命名、分支与混淆标题；对应 MCreator 元素已锁定",
+      "path": "src/main/resources/data/mcanomalyarchives/advancement/earth_survive.json",
+      "canonical": "advancement-earth_survive.json",
+      "expectAll": [
+        "\"translate\": \"advancements.earth_survive.title\"",
+        "\"translate\": \"advancements.earth_survive.descr\"",
+        "\"frame\": \"challenge\",",
+        "\"hidden\": true",
+        "\"parent\": \"mcanomalyarchives:earth_name\""
+      ]
+    },
+    {
+      "id": "archive-custom-triggers",
+      "kind": "contains",
+      "why": "新增进度必须连接到实际玩法，不能只有静态进度树",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/codex/ArchiveAdvancements.java",
+      "mustContain": [
+        "CodexOriginStory.hasReceived(player)",
+        "public static void observation",
+        "public static void blockInfected",
+        "public static void earthEnd",
+        "sheep_both",
+        "all_anomalies"
+      ]
+    },
+    {
+      "id": "purple-encounter-upgrade-files",
+      "kind": "exists",
+      "why": "紫怪遭遇升级的状态机、世界查询和客户端表现不能丢失",
+      "fixHint": "恢复紫怪升级模块与测试",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurplePettingProgress.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurpleStalkerObservation.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurpleStalkerWorld.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurpleExecutionSequence.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/purple/PurpleAssimilationClient.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/purple/PurpleExecutionRenderer.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/purple/PurpleExecutionCamera.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/network/CancelPurpleStoryPacket.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/network/PurpleAssimilationPacket.java"
+      ]
+    },
+    {
+      "id": "purple-player-mixins",
+      "kind": "contains",
+      "path": "src/main/resources/mcanomalyarchives.mixins.json",
+      "why": "第一与第三人称同化外观需要渲染接线",
+      "fixHint": "恢复紫怪玩家渲染 mixin 注册",
+      "mustContain": [
+        "PurplePlayerBodyMixin",
+        "PurplePlayerHandMixin"
+      ]
+    },
+    {
+      "id": "purple-upgrade-lifecycle",
+      "kind": "contains",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurpleStoryModule.java",
+      "why": "防止演出卡住、重复结算和卸载演员残留",
+      "fixHint": "恢复会话时限、处决时间轴和临时演员清理",
+      "mustContain": [
+        "session.pettingExpired(server.getTickCount())",
+        "session.execution().tick()",
+        "event.loadedFromDisk()",
+        "PurpleTransientActor",
+        "pettingRoute(player, entity)",
+        "syncAppearance(player);"
+      ]
+    },
+    {
+      "id": "purple-dog-transient",
+      "kind": "contains",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/PurpleDogEntity.java",
+      "why": "重载的剧情紫狗不能变成无归属普通实体",
+      "fixHint": "恢复临时演员标记",
+      "mustContain": [
+        "putBoolean(\"PurpleTransientActor\", targetUUID != null)"
+      ]
+    },
+    {
+      "id": "earth-persistent-recall",
+      "kind": "contains",
+      "why": "地球专属回溯必须保存命名前基准，不能退回十秒唱片录制",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/rewind/EarthCheckpoint.java",
+      "mustContain": [
+        "extends SavedData",
+        "putIfAbsent",
+        "ActivationDisc",
+        "restoreEarthActors",
+        "DiscUsageData.get(level).consume(d.disc)"
+      ]
+    },
+    {
+      "id": "earth-checkpoint-start-hook",
+      "kind": "contains",
+      "why": "必须在修改地球锚点前保存基准",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/earth/EarthService.java",
+      "mustContain": [
+        "EarthCheckpoint.capture(level, anchor.blockPosition())",
+        "hideForRecall",
+        "地球 v12"
+      ]
+    },
+    {
+      "id": "earth-warp-growth",
+      "kind": "contains",
+      "why": "视觉从十格扩大到完整范围并保留蓄力黄光",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/client/earth/EarthRenderer.java",
+      "mustContain": [
+        "EarthRules.visualRadius(age)",
+        "boolean charging = age < 600",
+        "shellAlpha = charging"
+      ]
+    },
+    {
+      "id": "earth-recall-visible-sequence",
+      "kind": "contains",
+      "why": "专属回溯需要实体轨迹和可恢复的错误状态，不能只发空列表后跳变",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/rewind/EarthCheckpoint.java",
+      "mustContain": [
+        "EarthRecallVisual.progress",
+        "d.preview(level,progress)",
+        "EarthService.previewRecall",
+        "d.paused=true",
+        "reversed().entrySet()"
+      ]
+    },
+    {
+      "id": "rewind-live-entity-recreation",
+      "kind": "contains",
+      "why": "恢复存活记录时重新创建生物，清理客户端死亡姿态及服务端死亡标记",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/rewind/RewindService.java",
+      "mustContain": [
+        "RewindLifeState.forRestore",
+        "entity.stopRiding(); entity.discard(); entity = null;",
+        "previousCapture",
+        "actual.isAir() && state.isAir()"
       ]
     }
   ]
