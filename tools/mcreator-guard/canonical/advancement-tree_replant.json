@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:oak_sapling"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "title": {
+      "translate": "advancements.tree_replant.title"
+    },
+    "description": {
+      "translate": "advancements.tree_replant.descr"
+    },
+    "frame": "goal",
+    "hidden": false
+  },
+  "criteria": {
+    "tree_replant_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "mcanomalyarchives:tree_chase"
+}

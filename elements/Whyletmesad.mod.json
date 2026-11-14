@@ -2,8 +2,8 @@
   "_fv": 85,
   "_type": "achievement",
   "definition": {
-    "achievementName": "Why do you break my heart?",
-    "achievementDescription": "Stop watching for a long time",
+    "achievementName": "为什么要让我心碎！",
+    "achievementDescription": "停止看花一段时间",
     "achievementIcon": {
       "value": "CUSTOM:Sadicon"
     },

@@ -9,9 +9,18 @@
         "CloudPortalPassMixin",
         "FishingHookAccessor",
         "GameRulesMixin",
-        "StrangeTreeEggMixin"
+        "RewindChunkMixin",
+        "RewindJukeboxMixin",
+        "RewindBlockEntityTickMixin",
+        "RewindScheduledTickMixin",
+        "RewindRandomTickMixin",
+        "RewindPlayerPacketMixin",
+        "StrangeTreeEggMixin",
+        "RewindNeighborMixin"
     ],
     "client": [
+        "PurplePlayerBodyMixin",
+        "PurplePlayerHandMixin",
         "CameraAccessor",
         "CameraShakeMixin",
         "CatRendererMixin",
@@ -19,6 +28,14 @@
         "LevelRendererMixin",
         "NamedItemAppearanceMixin",
         "NamedTransformRenderMixin",
-        "PlayerSlowSwingMixin"
+        "NegativeItemCountMixin",
+        "PlayerSlowSwingMixin",
+        "PoppyMouseMixin",
+        "RewindParticleMixin",
+        "RewindSoundMixin",
+        "EarthProgramMixin",
+        "EarthShaderUniformMixin",
+        "EarthWorldPassMixin",
+        "EarthFrustumMixin"
     ]
 }

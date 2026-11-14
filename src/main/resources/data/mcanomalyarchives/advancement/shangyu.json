@@ -19,5 +19,5 @@
       "trigger": "minecraft:impossible"
     }
   },
-  "parent": "mcanomalyarchives:welcome"
+  "parent": "mcanomalyarchives:codex_received"
 }

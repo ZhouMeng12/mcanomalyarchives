@@ -33,7 +33,8 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 
-import net.mcreator.mcanomalyarchives.event.PurpleBossFightTrigger;
+import net.mcreator.mcanomalyarchives.anomaly.purple.PurpleStalkerObservation;
+import net.mcreator.mcanomalyarchives.anomaly.purple.PurpleStalkerWorld;
 import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModAttachments;
 import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModEntities;
 
@@ -60,6 +61,10 @@ public class PurpleMonsterEntity extends Monster implements GeoAnimatable {
 		SynchedEntityData.defineId(PurpleMonsterEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> STALKER_MODE =
 		SynchedEntityData.defineId(PurpleMonsterEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Integer> EXECUTION_TARGET =
+		SynchedEntityData.defineId(PurpleMonsterEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> EXECUTION_TICKS =
+		SynchedEntityData.defineId(PurpleMonsterEntity.class, EntityDataSerializers.INT);
 
 	@Nullable
 	private UUID performTargetUUID;
@@ -68,7 +73,8 @@ public class PurpleMonsterEntity extends Monster implements GeoAnimatable {
 	private static final int STALKER_MAX_TICKS = 1200; // 60秒后自动消失
 	private boolean stalkerSeen = false; // 是否已被玩家看到（计数后进入延迟消失）
 	private int stalkerSeenTicks = 0; // 被看到后的等待 tick
-	private static final int STALKER_SEEN_DISAPPEAR_TICKS = 80; // 被看到后 4 秒才消失
+	private static final int STALKER_SEEN_DISAPPEAR_TICKS = 40;
+	private final PurpleStalkerObservation observation = new PurpleStalkerObservation();
 
 	// ===== GeckoLib 动画缓存 =====
 	private final AnimatableInstanceCache animatableInstanceCache = GeckoLibUtil.createInstanceCache(this);
@@ -87,7 +93,16 @@ public class PurpleMonsterEntity extends Monster implements GeoAnimatable {
 		builder.define(PLAYING_SWAYHAND, false);
 		builder.define(MODEL_VARIANT, 0);
 		builder.define(STALKER_MODE, false);
+		builder.define(EXECUTION_TARGET, 0);
+		builder.define(EXECUTION_TICKS, 0);
 	}
+
+	public void setExecution(int target, int ticks) {
+		entityData.set(EXECUTION_TARGET, target);
+		entityData.set(EXECUTION_TICKS, ticks);
+	}
+	public int executionTarget() { return entityData.get(EXECUTION_TARGET); }
+	public int executionTicks() { return entityData.get(EXECUTION_TICKS); }
 
 	public boolean isPerformMode() {
 		return this.entityData.get(PERFORM_MODE);
@@ -151,6 +166,7 @@ public class PurpleMonsterEntity extends Monster implements GeoAnimatable {
 	}
 
 	public void setPerformMode(@Nullable UUID targetUUID) {
+		getPersistentData().putBoolean("PurpleTransientActor", targetUUID != null);
 		this.entityData.set(PERFORM_MODE, targetUUID != null);
 		this.performTargetUUID = targetUUID;
 		if (targetUUID != null) {
@@ -213,13 +229,13 @@ public class PurpleMonsterEntity extends Monster implements GeoAnimatable {
 		stalkerTickCount++;
 		if (this.level().isClientSide()) return;
 
-		// 找最近玩家
-		Player nearestPlayer = this.level().getNearestPlayer(this, 40);
-		if (nearestPlayer == null) {
-			// 无人：超时后遁走
-			if (stalkerTickCount >= STALKER_MAX_TICKS) {
-				vanish();
-			}
+		ServerLevel world = (ServerLevel)level();
+		ServerPlayer nearestPlayer = getPersistentData().hasUUID("PurpleStalkerOwner")
+				? world.getServer().getPlayerList().getPlayer(getPersistentData().getUUID("PurpleStalkerOwner")) : null;
+		if (nearestPlayer == null || nearestPlayer.level() != world || !nearestPlayer.isAlive()
+				|| nearestPlayer.isCreative() || nearestPlayer.isSpectator()
+				|| distanceToSqr(nearestPlayer) > 48 * 48) {
+			vanish();
 			return;
 		}
 		// 盯着玩家：头部（含上下俯仰）对准玩家眼睛，躯干跟随
@@ -241,27 +257,20 @@ public class PurpleMonsterEntity extends Monster implements GeoAnimatable {
 			vanish();
 			return;
 		}
-		// 玩家直视或靠近 → 计数一次遭遇，然后遁走
-		double distSqr = this.distanceToSqr(nearestPlayer);
-		boolean visibleToPlayer = nearestPlayer.hasLineOfSight(this);
-		boolean isClose = distSqr < 64 && visibleToPlayer; // 8格内
-		boolean isLookedAt = false;
-		if (distSqr <= 1600) { // 与 40 格玩家检测范围一致，包含初次 30 格出现的距离
-			Vec3 lookVec = nearestPlayer.getLookAngle();
-			Vec3 toStalker = new Vec3(this.getX() - nearestPlayer.getX(),
-				this.getEyeY() - nearestPlayer.getEyeY(),
-				this.getZ() - nearestPlayer.getZ()).normalize();
-			isLookedAt = visibleToPlayer && lookVec.dot(toStalker) > 0.95;
+		var watchers = new java.util.ArrayList<PurpleStalkerObservation.Watcher>();
+		for (ServerPlayer viewer : world.players()) {
+			double distance = distanceToSqr(viewer);
+			if (distance > 1600) continue;
+			boolean eligible = viewer.isAlive() && !viewer.isCreative() && !viewer.isSpectator();
+			double dot = viewer.getLookAngle().dot(getEyePosition().subtract(viewer.getEyePosition()).normalize());
+			watchers.add(new PurpleStalkerObservation.Watcher(viewer.getUUID(), eligible,
+					eligible && dot > .95 && PurpleStalkerWorld.visible(world, viewer, getEyePosition()), distance, dot));
 		}
-		if (isClose || isLookedAt) {
-			// 被看到：只计数一次，然后进入"延迟消失"（不立刻消失）
-			if (!stalkerSeen) {
-				stalkerSeen = true;
-				if (nearestPlayer instanceof ServerPlayer sp) {
-					countSighting(sp);
-					net.mcreator.mcanomalyarchives.codex.CodexObservations.record(sp, "purple_stalker");
-				}
-			}
+		if (!stalkerSeen && observation.tick(watchers)) {
+			stalkerSeen = true;
+			ServerPlayer sp = nearestPlayer; // Discovery can come from anyone; progress belongs to the owner.
+			countSighting(sp);
+			net.mcreator.mcanomalyarchives.codex.CodexObservations.record(sp, "purple_stalker");
 		}
 		if (stalkerSeen) {
 			stalkerSeenTicks++;
@@ -287,13 +296,8 @@ public class PurpleMonsterEntity extends Monster implements GeoAnimatable {
 	@Override
 	public boolean hurt(DamageSource source, float amount) {
 		if (isStalkerMode()) {
-			// 窥视者无敌；被玩家攻击 → 触发 Boss 战（占位钩子），成功后遁走
-			if (!this.level().isClientSide() && source.getEntity() instanceof ServerPlayer player) {
-				if (PurpleBossFightTrigger.tryTriggerBossFight(player)) {
-					vanish();
-					return false;
-				}
-			}
+			// 攻击结束本次窥视；不调用尚未实现的 Boss 占位。
+			if (!this.level().isClientSide() && source.getEntity() instanceof ServerPlayer) vanish();
 			return false;
 		}
 		return super.hurt(source, amount);

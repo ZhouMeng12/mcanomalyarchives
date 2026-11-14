@@ -1,0 +1,62 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mcanomalyarchives:item/negative_music_disc"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "mcanomalyarchives:disc_wear": 0.1
+      },
+      "model": "mcanomalyarchives:item/negative_music_disc_wear_1"
+    },
+    {
+      "predicate": {
+        "mcanomalyarchives:disc_wear": 0.2
+      },
+      "model": "mcanomalyarchives:item/negative_music_disc_wear_2"
+    },
+    {
+      "predicate": {
+        "mcanomalyarchives:disc_wear": 0.3
+      },
+      "model": "mcanomalyarchives:item/negative_music_disc_wear_3"
+    },
+    {
+      "predicate": {
+        "mcanomalyarchives:disc_wear": 0.4
+      },
+      "model": "mcanomalyarchives:item/negative_music_disc_wear_4"
+    },
+    {
+      "predicate": {
+        "mcanomalyarchives:disc_wear": 0.5
+      },
+      "model": "mcanomalyarchives:item/negative_music_disc_wear_5"
+    },
+    {
+      "predicate": {
+        "mcanomalyarchives:disc_wear": 0.6
+      },
+      "model": "mcanomalyarchives:item/negative_music_disc_wear_6"
+    },
+    {
+      "predicate": {
+        "mcanomalyarchives:disc_wear": 0.7
+      },
+      "model": "mcanomalyarchives:item/negative_music_disc_wear_7"
+    },
+    {
+      "predicate": {
+        "mcanomalyarchives:disc_wear": 0.8
+      },
+      "model": "mcanomalyarchives:item/negative_music_disc_wear_8"
+    },
+    {
+      "predicate": {
+        "mcanomalyarchives:disc_wear": 0.9
+      },
+      "model": "mcanomalyarchives:item/negative_music_disc_wear_9"
+    }
+  ]
+}

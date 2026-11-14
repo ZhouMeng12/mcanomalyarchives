@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "mcanomalyarchives:block/negative_oak_log",
+    "end": "mcanomalyarchives:block/negative_oak_log_top"
+  }
+}

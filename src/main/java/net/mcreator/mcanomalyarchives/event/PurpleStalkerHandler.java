@@ -4,6 +4,8 @@ import net.mcreator.mcanomalyarchives.McanomalyarchivesMod;
 import net.mcreator.mcanomalyarchives.entity.PurpleMonsterEntity;
 import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModAttachments;
 import net.mcreator.mcanomalyarchives.init.McanomalyarchivesModEntities;
+import net.mcreator.mcanomalyarchives.anomaly.purple.PurpleStalkerWorld;
+import net.mcreator.mcanomalyarchives.anomaly.purple.PurpleStoryModule;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,24 +22,22 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class PurpleStalkerHandler {
 
 	// ==================== 可调配置 ====================
 
-	/** 两次窥视之间的间隔（tick）：60~300 秒 */
-	private static final int MIN_INTERVAL = 600;
-	private static final int MAX_INTERVAL = 2400;
+	/** 两次窥视之间的间隔（tick）：3~6 分钟 */
+	private static final int MIN_INTERVAL = 3600;
+	private static final int MAX_INTERVAL = 7200;
 
 	/** 渐进逼近的距离档位（格）：遭遇次数越多越近 */
 	private static final int[] DISTANCE_TIERS = { 30, 20, 12 };
 	/** 每多少遭遇次数降一档距离 */
 	private static final int SIGHTINGS_PER_TIER = 2;
 
-	/** 生成角度：玩家背后/视野边缘（±90°~±180°） */
+	/** 生成角度：视野边缘（±70°~±130°），之后再检查所有观察者视线。 */
 	private static final float ANGLE_OFFSET_MIN = 70f;
 	private static final float ANGLE_OFFSET_MAX = 60f;
 
@@ -46,7 +46,7 @@ public class PurpleStalkerHandler {
 	/** 夜晚/低亮度刷新概率 */
 	private static final float DARK_SPAWN_CHANCE = 1.0f;
 	/** 亮处刷新概率（较低，但不会完全不刷） */
-	private static final float BRIGHT_SPAWN_CHANCE = 0.8f;
+	private static final float BRIGHT_SPAWN_CHANCE = 0.2f;
 
 	/** 场景化生成点的尝试次数（树后/窗外），失败回退随机点 */
 	private static final int SCENIC_ATTEMPTS = 12;
@@ -56,8 +56,8 @@ public class PurpleStalkerHandler {
 
 	// ===================================================
 
-	// 每玩家的下次生成时间戳（gameTime）
-	private static final Map<UUID, Long> nextSpawnTime = new ConcurrentHashMap<>();
+	// 轮转扫描游标；玩家冷却保存在附件中，重登不会立即补刷。
+	private static int playerCursor;
 	private static final net.mcreator.mcanomalyarchives.anomaly.purple.SharedStalkerSession<PurpleMonsterEntity> sharedSession =
 		new net.mcreator.mcanomalyarchives.anomaly.purple.SharedStalkerSession<>();
 	private static final String OWNER_KEY = "PurpleStalkerOwner";
@@ -67,10 +67,19 @@ public class PurpleStalkerHandler {
 	}
 
 	@SubscribeEvent
+	public void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
+		if (event.getEntity() instanceof ServerPlayer player
+				&& player.getData(McanomalyarchivesModAttachments.PURPLE_ASSIMILATION_COMPLETED)) {
+			player.setData(McanomalyarchivesModAttachments.PURPLE_STALKER_NEXT,
+					Math.max(player.getData(McanomalyarchivesModAttachments.PURPLE_STALKER_NEXT),
+							player.level().getGameTime() + MIN_INTERVAL));
+		}
+	}
+
+	@SubscribeEvent
 	public void onPlayerLoggedOut(PlayerEvent.PlayerLoggedOutEvent event) {
 		if (!(event.getEntity() instanceof ServerPlayer player)) return;
 		UUID uuid = player.getUUID();
-		nextSpawnTime.remove(uuid);
 		removeOwnedStalker(uuid);
 	}
 
@@ -78,27 +87,27 @@ public class PurpleStalkerHandler {
 	@SubscribeEvent
 	public void onPlayerChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
 		if (event.getEntity() instanceof ServerPlayer player) {
-			nextSpawnTime.remove(player.getUUID());
 			removeOwnedStalker(player.getUUID());
 		}
 	}
 
 	@SubscribeEvent
 	public void onServerTick(ServerTickEvent.Post event) {
-		// 扫描节流：1 秒一次足够（生成间隔最小 120 秒）
+		// 扫描节流：1 秒一次；轮换首位，避免共享名额总被同一玩家占用。
 		if (event.getServer().getTickCount() % SCAN_INTERVAL != 0) return;
 		PurpleMonsterEntity active = sharedSession.current();
 		if (active != null && (active.isRemoved() || !active.isAlive() || !active.isStalkerMode())) sharedSession.clear();
-		for (ServerPlayer player : event.getServer().getPlayerList().getPlayers()) {
-			processPlayer(player);
-		}
+		if (PurpleStoryModule.hasAnyActive()) { dismissActive(); return; }
+		var players = event.getServer().getPlayerList().getPlayers();
+		if (players.isEmpty()) return;
+		int first = Math.floorMod(playerCursor++, players.size());
+		for (int i = 0; i < players.size(); i++) processPlayer(players.get((first + i) % players.size()));
 	}
 
 	private void processPlayer(ServerPlayer player) {
-		UUID uuid = player.getUUID();
-
 		// 仅生存模式
-		if (player.gameMode.isCreative() || player.isSpectator()) return;
+		if (!player.isAlive() || player.isRemoved() || player.gameMode.isCreative() || player.isSpectator()
+				|| PurpleStoryModule.hasAnyActive()) return;
 
 		// 检查同化完成标记
 		if (!player.getData(McanomalyarchivesModAttachments.PURPLE_ASSIMILATION_COMPLETED)) return;
@@ -108,14 +117,18 @@ public class PurpleStalkerHandler {
 
 		// 检查冷却（下次生成时间）
 		long currentGameTime = player.level().getGameTime();
-		long nextTime = nextSpawnTime.getOrDefault(uuid, 0L);
+		long nextTime = player.getData(McanomalyarchivesModAttachments.PURPLE_STALKER_NEXT);
+		if (nextTime == 0) {
+			player.setData(McanomalyarchivesModAttachments.PURPLE_STALKER_NEXT, currentGameTime + nextInterval(player));
+			return;
+		}
 		if (currentGameTime < nextTime) return;
 
 		// 夜晚/低亮度高概率，亮处低概率（抽不到就顺延一个间隔）
 		boolean dark = isDarkArea(player);
 		float chance = dark ? DARK_SPAWN_CHANCE : BRIGHT_SPAWN_CHANCE;
 		if (player.getRandom().nextFloat() >= chance) {
-			nextSpawnTime.put(uuid, currentGameTime + nextInterval(player));
+			player.setData(McanomalyarchivesModAttachments.PURPLE_STALKER_NEXT, currentGameTime + nextInterval(player));
 			return;
 		}
 
@@ -123,7 +136,7 @@ public class PurpleStalkerHandler {
 		spawnStalker(player);
 
 		// 设置下次生成时间
-		nextSpawnTime.put(uuid, currentGameTime + nextInterval(player));
+		player.setData(McanomalyarchivesModAttachments.PURPLE_STALKER_NEXT, currentGameTime + nextInterval(player));
 	}
 
 	private long nextInterval(ServerPlayer player) {
@@ -144,7 +157,17 @@ public class PurpleStalkerHandler {
 
 	/** 全局是否已有窥视者存在（任何维度、任何玩家，同时最多一个） */
 	private boolean hasAnyActiveStalker() {
-		return sharedSession.current() != null;
+		return hasActiveEncounter();
+	}
+
+	public static boolean hasActiveEncounter() {
+		return sharedSession.current() != null && !sharedSession.current().isRemoved();
+	}
+
+	public static void dismissActive() {
+		PurpleMonsterEntity actor = sharedSession.current();
+		sharedSession.clear();
+		if (actor != null) actor.discard();
 	}
 
 	private void spawnStalker(ServerPlayer player) {
@@ -173,11 +196,15 @@ public class PurpleStalkerHandler {
 	}
 
 	/**
-	 * 场景化生成点：优先"树后/窗外"（邻接原木/树叶/玻璃类方块），
-	 * 多次尝试失败后回退普通随机点（保证一定会出现）。
+	 * 真正窗位单独验证；其余候选为树边或露天位置，失败则本轮不出现。
 	 */
 	private BlockPos pickScenicSpawnPos(ServerPlayer player, ServerLevel level, int distance) {
 		RandomSource rng = player.getRandom();
+		if (player.getData(McanomalyarchivesModAttachments.PURPLE_STALKER_SIGHTINGS) >= 4
+				&& rng.nextFloat() < (level.isRaining() && level.isNight() ? .9f : .5f)) {
+			BlockPos window = PurpleStalkerWorld.window(player);
+			if (window != null) return window;
+		}
 		// 优先背后/视野边缘的角度
 		for (int attempt = 0; attempt < SCENIC_ATTEMPTS; attempt++) {
 			float angleOffset = ANGLE_OFFSET_MIN + rng.nextFloat() * ANGLE_OFFSET_MAX;
@@ -207,34 +234,18 @@ public class PurpleStalkerHandler {
 		int bottom = Math.max(level.getMinBuildHeight() + 1, player.blockPosition().getY() - 12);
 		for (int y = top; y >= bottom; y--) {
 			BlockPos pos = BlockPos.containing(spawnX, y, spawnZ);
-			if (isValidStalkerSpot(level, pos)) return pos;
+			if (PurpleStalkerWorld.canStand(level, pos)
+					&& PurpleStalkerWorld.outdoors(level, pos)
+					&& !PurpleStalkerWorld.watched(level, PurpleStalkerWorld.eyeAt(pos))) return pos;
 		}
 		return null;
 	}
 
-	/**
-	 * 生成点有效性：脚下是实心地面（不是树叶/液体），
-	 * 站立点与头顶 2 格可通行（不卡进树冠/墙里）。
-	 */
-	private boolean isValidStalkerSpot(ServerLevel level, BlockPos pos) {
-		BlockState below = level.getBlockState(pos.below());
-		if (!below.isSolid() || !below.getFluidState().isEmpty() || below.getBlock() instanceof LeavesBlock) {
-			return false;
-		}
-		for (int i = 0; i < 3; i++) {
-			BlockState state = level.getBlockState(pos.above(i));
-			if (!state.getCollisionShape(level, pos.above(i)).isEmpty() || !state.getFluidState().isEmpty()) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/** 判断候选点是否"贴景"：邻接原木/树叶（树后），或邻接玻璃/玻璃板（窗外） */
+	/** 窗位不在这里猜测，只给树林候选加权。 */
 	private boolean isScenicSpot(ServerLevel level, BlockPos pos) {
 		for (Direction dir : Direction.Plane.HORIZONTAL) {
 			BlockState adj = level.getBlockState(pos.relative(dir));
-			if (isTreeCover(adj) || isGlass(adj)) return true;
+			if (isTreeCover(adj)) return true;
 		}
 		// 头顶有树叶也算（树冠下）
 		if (level.getBlockState(pos.above()).getBlock() instanceof LeavesBlock) return true;
@@ -249,11 +260,6 @@ public class PurpleStalkerHandler {
 		return path.contains("log") || path.contains("stem");
 	}
 
-	private boolean isGlass(BlockState state) {
-		String path = net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath();
-		return path.contains("glass");
-	}
-
 	/** 只清理离场玩家关联的共享遭遇（登出/换维度时调用） */
 	private void removeOwnedStalker(UUID owner) {
 		PurpleMonsterEntity stalker = sharedSession.closeForOwner(owner);
@@ -263,6 +269,7 @@ public class PurpleStalkerHandler {
 	@SubscribeEvent
 	public void onJoin(net.neoforged.neoforge.event.entity.EntityJoinLevelEvent event) {
 		if (!event.getLevel().isClientSide() && event.getEntity() instanceof PurpleMonsterEntity stalker && stalker.isStalkerMode()) {
+			if (PurpleStoryModule.hasAnyActive()) { event.setCanceled(true); return; }
 			UUID owner = stalker.getPersistentData().hasUUID(OWNER_KEY) ? stalker.getPersistentData().getUUID(OWNER_KEY) : null;
 			if (!sharedSession.open(stalker.getUUID(), owner, stalker)) event.setCanceled(true);
 		}
@@ -270,12 +277,20 @@ public class PurpleStalkerHandler {
 
 	@SubscribeEvent
 	public void onLeave(net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent event) {
-		if (event.getEntity() instanceof PurpleMonsterEntity stalker) sharedSession.leave(stalker.getUUID());
+		if (!event.getLevel().isClientSide() && event.getEntity() instanceof PurpleMonsterEntity stalker) {
+			sharedSession.leave(stalker.getUUID());
+			if (stalker.isStalkerMode() && stalker.getPersistentData().hasUUID(OWNER_KEY)) {
+				ServerPlayer owner = ((ServerLevel)event.getLevel()).getServer().getPlayerList()
+						.getPlayer(stalker.getPersistentData().getUUID(OWNER_KEY));
+				if (owner != null) owner.setData(McanomalyarchivesModAttachments.PURPLE_STALKER_NEXT,
+						owner.level().getGameTime() + nextInterval(owner));
+			}
+		}
 	}
 
 	@SubscribeEvent
 	public void onStopped(net.neoforged.neoforge.event.server.ServerStoppedEvent event) {
 		sharedSession.clear();
-		nextSpawnTime.clear();
+		playerCursor = 0;
 	}
 }

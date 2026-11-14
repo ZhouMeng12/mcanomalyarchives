@@ -45,7 +45,7 @@ public class PurpleMonsterPhase1ClientHandler {
 	public static void onClientTick(ClientTickEvent.Pre event) {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
-		if (player == null) return;
+		if (player == null || mc.isPaused()) return;
 
 		Phase1Transition transition = TRANSITIONS.get(player.getUUID());
 		if (transition == null) return;
@@ -57,6 +57,7 @@ public class PurpleMonsterPhase1ClientHandler {
 
 		Entity entity = mc.level.getEntity(transition.purpleEntityId);
 		if (entity instanceof PurpleMonsterEntity monster) {
+			transition.missingTicks = 0;
 			transition.tick++;
 
 			switch (transition.phase) {
@@ -91,8 +92,12 @@ public class PurpleMonsterPhase1ClientHandler {
 					break;
 			}
 		} else {
-			// 实体已经不存在，直接清理
-			TRANSITIONS.remove(player.getUUID());
+			// Entity tracking can arrive after the GUI packet. Bound the wait and cancel the server session too.
+			if (++transition.missingTicks >= 40) {
+				PacketDistributor.sendToServer(new net.mcreator.mcanomalyarchives.network.CancelPurpleStoryPacket(
+						transition.purpleEntityId, 0));
+				net.mcreator.mcanomalyarchives.client.screen.PurpleGuiClientHandler.close();
+			}
 		}
 	}
 
@@ -100,6 +105,7 @@ public class PurpleMonsterPhase1ClientHandler {
 		final int purpleEntityId;
 		int phase = Phase.PLAY_ANIM;
 		int tick = 0;
+		int missingTicks;
 
 		Phase1Transition(int purpleEntityId) {
 			this.purpleEntityId = purpleEntityId;

@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:music_disc_cat"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "title": {
+      "translate": "advancements.disc_rewind.title"
+    },
+    "description": {
+      "translate": "advancements.disc_rewind.descr"
+    },
+    "frame": "goal",
+    "hidden": false
+  },
+  "criteria": {
+    "disc_rewind_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "mcanomalyarchives:negative_get"
+}

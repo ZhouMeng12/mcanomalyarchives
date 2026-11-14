@@ -2,8 +2,8 @@
   "_fv": 85,
   "_type": "achievement",
   "definition": {
-    "achievementName": "Fishing",
-    "achievementDescription": "Fish by strange fishing rod",
+    "achievementName": "钓鱼？",
+    "achievementDescription": "使用跨维钓竿钓鱼",
     "achievementIcon": {
       "value": "CUSTOM:StrangeFishingRod"
     },
@@ -17,7 +17,7 @@
     "rewardXP": 0,
     "achievementType": "task",
     "parent": {
-      "value": "CUSTOM:Welcome"
+      "value": "CUSTOM:ArchiveCodexReceived"
     },
     "triggerxml": "<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"advancement_trigger\" deletable=\"false\" x=\"40\" y=\"80\"><next><block type=\"custom_trigger\"></block></next></block></xml>"
   }

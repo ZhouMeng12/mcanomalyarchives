@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:diamond_pickaxe"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "title": {
+      "translate": "advancements.negative_zero.title"
+    },
+    "description": {
+      "translate": "advancements.negative_zero.descr"
+    },
+    "frame": "goal",
+    "hidden": false
+  },
+  "criteria": {
+    "negative_zero_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "mcanomalyarchives:negative_get"
+}

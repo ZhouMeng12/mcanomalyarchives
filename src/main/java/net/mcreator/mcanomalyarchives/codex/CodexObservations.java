@@ -16,12 +16,15 @@ public final class CodexObservations {
         new Note("cloud_contact", 0), new Note("cloud_transmute", 0),
         new Note("cloud_red", 0), new Note("cloud_erase", 0),
         new Note("garbled_spread", 1), new Note("poppy_addiction", 2), new Note("poppy_withdrawal", 2),
-        new Note("negative_apple", 6), new Note("negative_pickaxe", 6),
+        new Note("negative_block_return", 6), new Note("name_liquid_stone", 7), new Note("name_potato", 7), new Note("negative_block_place", 6), new Note("negative_space_contact", 6), new Note("negative_apple", 6), new Note("negative_pickaxe", 6),
+        new Note("negative_bow_release", 6), new Note("negative_bow_return", 6),
+        new Note("negative_disc_sound", 6), new Note("negative_disc_rewind", 6), new Note("negative_disc_wear", 6),
         new Note("fishing_catch", 3), new Note("fishing_far", 3), new Note("fishing_living", 3),
         new Note("purple_arrival", 4), new Note("purple_change", 4),
         new Note("purple_assimilation", 4), new Note("purple_stalker", 4),
         new Note("purple_reward", 4), new Note("purple_pet", 4), new Note("name_rewrite", 7),
         new Note("name_garbled", 7), new Note("name_mining", 7),
+        new Note("name_earth", 7), new Note("earth_pull", 7), new Note("earth_blast", 7), new Note("earth_rewind", 7),
         new Note("name_erase", 7), new Note("name_mimic", 7),
         new Note("name_absorb", 7), new Note("name_compression", 7),
         new Note("tree_chase", 10), new Note("tree_replant", 10), new Note("tree_exposure", 10),
@@ -67,7 +70,8 @@ public final class CodexObservations {
     /** Called at the effect's actual execution point; repeated experiences add no duplicate records. */
     public static void record(ServerPlayer player, String id) {
         Note note = note(id);
-        if (player == null || note == null) return;
+        if (player == null || note == null || !CodexOriginStory.hasReceived(player)) return;
+        ArchiveAdvancements.observation(player, id);
         String before = encoded(player);
         if (decode(before).contains(id)) return;
         player.getPersistentData().putString(TAG, append(before, id));

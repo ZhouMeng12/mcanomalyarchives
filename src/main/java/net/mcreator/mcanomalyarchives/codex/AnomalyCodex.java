@@ -79,7 +79,7 @@ public final class AnomalyCodex {
 			new Entry("UO-006", key("uo006.name"), key("uo006.info"), key("uo006.trait"), key("uo006.level"),
 					key("uo006.protocol"), Unlock.PLANNED, ""),
 			new Entry("UO-007", key("uo007.name"), key("uo007.info"), key("uo007.trait"), key("uo007.level"),
-					key("uo007.protocol"), Unlock.ITEM, "mcanomalyarchives:negative_apple|mcanomalyarchives:negative_diamond_pickaxe"),
+					key("uo007.protocol"), Unlock.ITEM, "mcanomalyarchives:negative_dirt|mcanomalyarchives:negative_oak_log|mcanomalyarchives:negative_oak_planks|mcanomalyarchives:negative_apple|mcanomalyarchives:negative_diamond_pickaxe|mcanomalyarchives:negative_wooden_pickaxe|mcanomalyarchives:negative_bow|mcanomalyarchives:negative_arrow|mcanomalyarchives:negative_music_disc"),
 			new Entry("UO-008", key("uo008.name"), key("uo008.info"), key("uo008.trait"), key("uo008.level"),
 					key("uo008.protocol"), Unlock.ITEM, "mcanomalyarchives:baibian_name_tag"),
 			new Entry("UO-009", key("uo009.name"), key("uo009.info"), key("uo009.trait"), key("uo009.level"),
@@ -130,7 +130,7 @@ public final class AnomalyCodex {
 	 * @return true = 这次是新解锁（调用方可以放提示音/弹成就）
 	 */
 	public static boolean unlock(ServerPlayer player, int index, ServerLevel level) {
-		if (index < 0 || index >= TOTAL)
+		if (!CodexOriginStory.hasReceived(player) || index < 0 || index >= TOTAL)
 			return false;
 		int mask = getMask(player);
 		if ((mask & (1 << index)) != 0)
@@ -144,6 +144,7 @@ public final class AnomalyCodex {
 	public static void copyOnRespawn(ServerPlayer oldPlayer, ServerPlayer newPlayer) {
 		newPlayer.getPersistentData().putInt(TAG_MASK, oldPlayer.getPersistentData().getInt(TAG_MASK));
 		CodexObservations.copy(oldPlayer, newPlayer);
+        CodexOriginStory.copyReceived(oldPlayer, newPlayer);
 	}
 
 	// ===== 扫描（自动解锁）=====
@@ -153,6 +154,7 @@ public final class AnomalyCodex {
 	 * 由 {@link CodexScanner} 每 2 秒跑一次，不做每 tick 扫描。
 	 */
 	public static void scan(ServerPlayer player) {
+        if (!CodexOriginStory.hasReceived(player)) return;
 		if (!(player.level() instanceof ServerLevel level))
 			return;
 		AABB box = player.getBoundingBox().inflate(SCAN_RADIUS);

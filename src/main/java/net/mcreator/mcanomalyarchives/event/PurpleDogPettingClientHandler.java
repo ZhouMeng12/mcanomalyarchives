@@ -45,7 +45,7 @@ public class PurpleDogPettingClientHandler {
 	public static void onClientTick(ClientTickEvent.Pre event) {
 		Minecraft mc = Minecraft.getInstance();
 		LocalPlayer player = mc.player;
-		if (player == null) return;
+		if (player == null || mc.isPaused()) return;
 
 		PettingState state = PETTING_STATES.get(player.getUUID());
 		if (state == null) return;
@@ -56,6 +56,15 @@ public class PurpleDogPettingClientHandler {
 		}
 
 		Entity dogEntity = mc.level.getEntity(state.dogEntityId);
+		double remaining = state.phase == 4
+				? Math.hypot(state.startX - player.getX(), state.startZ - player.getZ())
+				: dogEntity == null ? 0 : Math.hypot(dogEntity.getX() - player.getX(), dogEntity.getZ() - player.getZ());
+		if (!player.isAlive() || !state.progress.tick(state.phase, dogEntity != null, remaining)) {
+			PacketDistributor.sendToServer(new net.mcreator.mcanomalyarchives.network.CancelPurpleStoryPacket(
+					state.purpleEntityId, state.dogEntityId));
+			net.mcreator.mcanomalyarchives.client.screen.PurpleGuiClientHandler.close();
+			return;
+		}
 		if (dogEntity == null) {
 			// 追踪包尚未到达时等待；真正丢失演员由服务端结束会话，不能把“看不到狗”当作完成。
 			return;
@@ -142,6 +151,8 @@ public class PurpleDogPettingClientHandler {
 	}
 
 	private static class PettingState {
+		final net.mcreator.mcanomalyarchives.anomaly.purple.PurplePettingProgress progress =
+				new net.mcreator.mcanomalyarchives.anomaly.purple.PurplePettingProgress();
 		final int purpleEntityId;
 		final int dogEntityId;
 		final double startX;

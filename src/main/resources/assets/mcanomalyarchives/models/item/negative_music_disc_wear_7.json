@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "mcanomalyarchives:item/negative_music_disc_wear_7"
+  }
+}

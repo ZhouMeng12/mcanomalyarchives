@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "PPP",
+    " L ",
+    " L "
+  ],
+  "key": {
+    "P": {
+      "item": "mcanomalyarchives:negative_oak_planks"
+    },
+    "L": {
+      "item": "mcanomalyarchives:negative_oak_log"
+    }
+  },
+  "result": {
+    "id": "mcanomalyarchives:negative_wooden_pickaxe",
+    "count": 1
+  }
+}

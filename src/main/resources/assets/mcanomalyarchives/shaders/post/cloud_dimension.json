@@ -1,0 +1,12 @@
+{
+  "targets": [
+    "cloud_swap"
+  ],
+  "passes": [
+    {
+      "name": "mcanomalyarchives:cloud_dimension",
+      "intarget": "minecraft:main",
+      "outtarget": "cloud_swap"
+    }
+  ]
+}

@@ -29,8 +29,6 @@ import java.util.UUID;
 @EventBusSubscriber
 public class CloudingEffectHandler {
 
-	private static final double DRIFT_SPEED = 0.04;
-
 	/**
 	 * 被云化二级剥夺 AI 的生物记录：UUID → 施加云化前的 isNoAi 状态。
 	 * 效果结束后按此表恢复"原来的 AI"（而不是无条件 setNoAi(false)）。
@@ -103,6 +101,7 @@ public class CloudingEffectHandler {
 				}
 				// 效果结束/降级/被黑名单：恢复原来的 AI
 				if (living instanceof Mob mob) {
+					net.mcreator.mcanomalyarchives.anomaly.cloud.CloudDriftBinding.clear(living);
 					mob.setNoAi(entry.getValue());
 					mob.setNoGravity(false);
 					mob.noPhysics = false;
@@ -143,12 +142,10 @@ public class CloudingEffectHandler {
 		}
 	}
 
-	/** 云化生物：沿 X 轴正方向水平漂移（无上下浮动），并冻结走路/摆动动画 */
+	/** 云化生物：绑定附近伪云的方向和速度，保持相对位置，并冻结走路动画。 */
 	private static void drift(LivingEntity entity) {
-		entity.setPos(entity.getX() + DRIFT_SPEED, entity.getY(), entity.getZ());
-		entity.xo = entity.getX();
-		entity.yo = entity.getY();
-		entity.zo = entity.getZ();
+		var velocity = net.mcreator.mcanomalyarchives.anomaly.cloud.CloudDriftBinding.velocity(entity);
+		entity.setPos(entity.getX() + velocity.x, entity.getY(), entity.getZ() + velocity.z);
 		entity.hurtMarked = true;
 		// 冻结动画：walkAnimation 速度置 0，摆臂/迈腿幅度归零，不再播放行走动画
 		entity.walkAnimation.setSpeed(0f);

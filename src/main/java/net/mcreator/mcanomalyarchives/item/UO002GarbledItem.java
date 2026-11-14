@@ -7,7 +7,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomModelData;
-import net.minecraft.Util;
 
 import java.util.List;
 import java.util.Random;
@@ -33,9 +32,7 @@ public final class UO002GarbledItem extends Item {
 
 	@Override
 	public Component getName(ItemStack stack) {
-		long phase = Util.getMillis() / 180L;
-		long variant = stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.DEFAULT).value();
-		return Component.literal(randomizedName(phase ^ (variant * 0x9E3779B97F4A7C15L) ^ stack.getCount()));
+		return Component.literal("错位异变乱码虚无界面").withStyle(ChatFormatting.OBFUSCATED);
 	}
 
 	/** Ten rapidly changing Unicode glyphs shared by garbled item and entity names. */

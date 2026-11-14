@@ -65,14 +65,20 @@ public class StrangeTreeRenderer extends MobRenderer<StrangeTreeEntity, EntityMo
 			poseStack.popPose();
 			return;
 		}
-		// 旧版空快照或玩家后来占据原位时，世界里可能已没有树干。
-		// 不凭空改地形；显示完整实体，避免只剩根的视觉残缺。
-		boolean blockBody = false;
-		for (int dy = 0; dy <= 4; dy++) {
-			if (entity.level().getBlockState(entity.blockPosition().above(dy)).is(
-					net.mcreator.mcanomalyarchives.init.McanomalyarchivesModBlocks.STRANGETREELOG.get())) {
-				blockBody = true;
-				break;
+		// Only use the root-only model when the entire block trunk and crown survive.
+		boolean blockBody = true;
+		for (int dy = 0; dy < 5; dy++) {
+			blockBody &= entity.level().getBlockState(entity.blockPosition().above(dy)).is(
+					net.mcreator.mcanomalyarchives.init.McanomalyarchivesModBlocks.STRANGETREELOG.get());
+		}
+		for (int dy = 3; dy <= 5; dy++) {
+			for (int dx = -2; dx <= 2; dx++) {
+				for (int dz = -2; dz <= 2; dz++) {
+					boolean crown = dy == 5 ? Math.abs(dx) + Math.abs(dz) <= 1
+							: (dx != 0 || dz != 0) && (dy == 3 || Math.abs(dx) + Math.abs(dz) < 4);
+					if (crown) blockBody &= entity.level().getBlockState(entity.blockPosition().offset(dx, dy, dz)).is(
+							net.mcreator.mcanomalyarchives.init.McanomalyarchivesModBlocks.STRANGETREELEAVES.get());
+				}
 			}
 		}
 		this.model = blockBody ? this.footModel : this.treeModel;

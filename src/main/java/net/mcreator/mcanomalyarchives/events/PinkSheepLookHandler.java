@@ -22,37 +22,28 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 
-/**
- * UO-012 幸运粉羊 · 观察者效应 / 目击确认状态机。
- *
- * 规则：
- * - 羊被注视时维持存在；无任何注视者超 UNWATCHED_TICKS → 消散转移到 ≥15 格外。
- * - 玩家连续凝视满 BLINK_TICKS → 眨眼包 + 羊转移（"眨眼瞬间消失"）。
- * - 目击确认（注视 ≥ SIGHT_TICKS）→ encounterCallback（Phase B 发幸运），同 encounter 一次，
- *   羊转移后重置（新羊新 id 自然重置）。
- *
- * 设计：以羊为键维护每个"玩家→凝视 tick"；被看得最久的那只羊推进状态机。
- * 简化且正确：同一时刻只处理"正被看"的羊（lookHandler 按需扫描玩家周围）。
- */
+/** Direct observation is settled after every player; only the absence of all observers allows relocation. */
 public class PinkSheepLookHandler {
 
 	public static final double LOOK_RANGE = 24.0;
 	public static final double LOOK_ANGLE_DOT = 0.966;   // ~15°
-	public static final int UNWATCHED_TICKS = 120;        // 移开视线 6s 才消散
-	public static final int BLINK_TICKS = 900;            // 凝视 45s → 眨眼（久一点）
-	public static final int SIGHT_TICKS = 40;             // 目击确认 2s
+	public static final int BLINK_TICKS = 900;
+	public static final int SIGHT_TICKS = 40;
 
 	/** 目击确认回调（Phase B 注册）：参数 (watcher, sheep) */
 	public static BiConsumer<ServerPlayer, PinkSheepEntity> encounterCallback = (p, s) -> {};
 
-	/** 玩家当前凝视的羊（以实体对象为键，identity 语义） */
-	private static final java.util.Map<UUID, PinkSheepEntity> lookingAtSheep = new java.util.concurrent.ConcurrentHashMap<>();
-	/** 玩家对当前羊的累计凝视 tick */
-	private static final java.util.Map<UUID, Integer> lookTicks = new java.util.concurrent.ConcurrentHashMap<>();
-	/** 该羊本 encounter 是否已发幸运（identity 集合，羊对象转移/重生后自然失效） */
-	private static final Set<PinkSheepEntity> encounterGranted = java.util.concurrent.ConcurrentHashMap.newKeySet();
-	/** 本 tick 被注视过的羊（结算 watched） */
-	private static final Set<PinkSheepEntity> watchedThisTick = java.util.concurrent.ConcurrentHashMap.newKeySet();
+	private static final net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepObservation observation =
+			new net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepObservation();
+	private static final java.util.Map<UUID, Long> heldSince = new java.util.HashMap<>();
+	private static final java.util.Map<UUID, Long> sharedBlinkAt = new java.util.HashMap<>();
+	private static final java.util.Map<UUID, Set<UUID>> blinkWitnesses = new java.util.HashMap<>();
+	public static void onSheepTeleported(PinkSheepEntity sheep) {
+		observation.resetSheep(sheep.getUUID());
+		heldSince.remove(sheep.getUUID());
+		sharedBlinkAt.remove(sheep.getUUID());
+	}
+
 	/** 当前世界活跃的粉羊（唯一性下数量极少；Join 加入、死亡/移除清理） */
 	private static final Set<PinkSheepEntity> activeSheep = java.util.concurrent.ConcurrentHashMap.newKeySet();
 
@@ -63,8 +54,7 @@ public class PinkSheepLookHandler {
 	@SubscribeEvent
 	public static void onPlayerQuit(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent event) {
 		if (event.getEntity() != null) {
-			lookingAtSheep.remove(event.getEntity().getUUID());
-			lookTicks.remove(event.getEntity().getUUID());
+			observation.forgetPlayer(event.getEntity().getUUID());
 		}
 	}
 
@@ -95,13 +85,7 @@ public class PinkSheepLookHandler {
 	public static void onSheepLeave(net.neoforged.neoforge.event.entity.EntityLeaveLevelEvent event) {
 		if (event.getEntity() instanceof PinkSheepEntity sheep) {
 			activeSheep.remove(sheep);
-			encounterGranted.remove(sheep);
-			watchedThisTick.remove(sheep);
-			lookingAtSheep.entrySet().removeIf(entry -> {
-				if (entry.getValue() != sheep) return false;
-				lookTicks.remove(entry.getKey());
-				return true;
-			});
+			onSheepTeleported(sheep);
 			PinkSheepMechanics.forget(sheep);
 		}
 	}
@@ -111,21 +95,26 @@ public class PinkSheepLookHandler {
 		ServerLevel level = event.getServer().overworld();
 		if (level == null)
 			return;
-		if (!PinkSheepGameRules.enabled(event.getServer()))
+		if (!PinkSheepGameRules.enabled(event.getServer())) {
+			observation.clear();
+			heldSince.clear();
+			sharedBlinkAt.clear();
 			return;
+		}
+		observation.beginTick();
+		blinkWitnesses.clear();
 		for (ServerPlayer player : level.getServer().getPlayerList().getPlayers()) {
 			if (player.serverLevel() == level) {
 				tickPlayer(player, level);
 			} else {
-				lookingAtSheep.remove(player.getUUID());
-				lookTicks.remove(player.getUUID());
+				observation.forgetPlayer(player.getUUID());
 			}
 		}
 		// 结算：本 tick 被看的羊保持存在；任何未被注视的羊 → 立即消失（观察者效应强规则）。
 		// 同时跳过"附近有创造/旁观玩家"的羊（当作普通羊）。
 		activeSheep.removeIf(s -> !s.isAlive() || s.isRemoved());
 		for (PinkSheepEntity sheep : activeSheep) {
-			if (!sheep.isAlive())
+			if (!sheep.isAlive() || sheep.level() != level)
 				continue;
 			// 创造/旁观玩家 32 格内 → 普通羊
 			boolean creativeNearby = false;
@@ -139,80 +128,73 @@ public class PinkSheepLookHandler {
 			}
 			if (creativeNearby)
 				continue;
-			boolean watched = watchedThisTick.contains(sheep) || isBeingWatched(sheep);
+			long now = level.getGameTime();
+			UUID sheepId = sheep.getUUID();
+			boolean watched = observation.watched(sheepId);
+			if (watched) {
+				heldSince.putIfAbsent(sheepId, now);
+				if (now >= sharedBlinkAt.getOrDefault(sheepId, Long.MAX_VALUE)) {
+					for (UUID watcher : observation.observers(sheepId)) {
+						ServerPlayer observer = level.getServer().getPlayerList().getPlayer(watcher);
+						if (observer != null) PacketDistributor.sendToPlayer(observer, new PlayerBlinkPacket());
+						blinkWitnesses.computeIfAbsent(sheepId, k -> new HashSet<>()).add(watcher);
+					}
+					observation.closeAllEyes(sheepId, now);
+					watched = false;
+				} else if (now - heldSince.get(sheepId) >= 3600 && now % 20 == 0
+						&& !sharedBlinkAt.containsKey(sheepId) && sheep.getRandom().nextInt(120) == 0) {
+					sharedBlinkAt.put(sheepId, now + 40);
+					for (UUID watcher : observation.observers(sheepId)) {
+						ServerPlayer observer = level.getServer().getPlayerList().getPlayer(watcher);
+						if (observer != null) observer.displayClientMessage(net.minecraft.network.chat.Component.translatable(
+								"message.mcanomalyarchives.sheep_tired_eyes"), true);
+					}
+				}
+			}
 			if (watched) {
 				PinkSheepMechanics.setWatched(sheep, true);
 				PinkSheepMechanics.markWatchedOnce(sheep); // 被注视过 → 之后严格观察者效应
 			} else {
+				heldSince.remove(sheepId);
+				sharedBlinkAt.remove(sheepId);
 				PinkSheepMechanics.setWatched(sheep, false);
 				// 无人注视：游荡/宽限期不消失；已"被看过"的羊则立即消失转移
 				if (!PinkSheepMechanics.shouldPersistWithoutWatcher(sheep)) {
+					for (UUID watcher : blinkWitnesses.getOrDefault(sheepId, Set.of())) {
+						ServerPlayer observer = level.getServer().getPlayerList().getPlayer(watcher);
+						if (observer != null) PinkSheepAdvancements.grantBlink(observer);
+					}
 					PinkSheepMechanics.teleportAway(sheep);
 				}
 			}
 		}
-		watchedThisTick.clear();
 	}
 
 	private static void tickPlayer(ServerPlayer player, ServerLevel level) {
-		// 只对生存玩家生效：创造/旁观玩家视为"不存在于观察者效应中"
-		if (player.gameMode.isCreative() || player.isSpectator()) {
-			lookingAtSheep.remove(player.getUUID());
-			lookTicks.remove(player.getUUID());
+		if (!player.isAlive() || player.gameMode.isCreative() || player.isSpectator()) {
+			observation.forgetPlayer(player.getUUID());
 			return;
 		}
-		// 找玩家周围 24 格内所有粉羊
-		AABB box = player.getBoundingBox().inflate(LOOK_RANGE);
-		java.util.List<PinkSheepEntity> nearby = level.getEntitiesOfClass(PinkSheepEntity.class, box);
-		PinkSheepEntity target = null;
-		for (PinkSheepEntity sheep : nearby) {
-			if (isPlayerLookingAt(player, sheep)) {
-				target = sheep;
-				break;
-			}
-		}
-
-		PinkSheepEntity prev = lookingAtSheep.get(player.getUUID());
-		if (target != null) {
-			lookingAtSheep.put(player.getUUID(), target);
-			// 换目标则重置计时
-			if (prev != target) {
-				lookTicks.put(player.getUUID(), 0);
-			}
-			int ticks = lookTicks.merge(player.getUUID(), 1, Integer::sum);
-
-			// 目击确认 → 发幸运（每 encounter 一次）
-			if (!encounterGranted.contains(target) && ticks >= SIGHT_TICKS) {
-				encounterGranted.add(target);
-				encounterCallback.accept(player, target);
-			}
-			// 凝视满 → 眨眼转移
-			if (ticks >= BLINK_TICKS) {
-				PacketDistributor.sendToPlayer(player, new PlayerBlinkPacket());
-				PinkSheepAdvancements.grantBlink(player); // 成就：眨眼之间
-				lookingAtSheep.remove(player.getUUID());
-				lookTicks.remove(player.getUUID());
-				encounterGranted.remove(target);
-				PinkSheepMechanics.setWatched(target, false);
-				PinkSheepMechanics.teleportAway(target);
-			} else {
-				watchedThisTick.add(target);
-			}
-		} else {
-			// 没在看任何羊
-			lookingAtSheep.remove(player.getUUID());
-			lookTicks.remove(player.getUUID());
+		PinkSheepEntity target = level.getEntitiesOfClass(PinkSheepEntity.class,
+				player.getBoundingBox().inflate(LOOK_RANGE), s -> s.isAlive() && isPlayerLookingAt(player, s))
+				.stream().min(java.util.Comparator.comparingDouble(player::distanceToSqr)).orElse(null);
+		var result = observation.observe(player.getUUID(), target == null ? null : target.getUUID(),
+				level.getGameTime(), BLINK_TICKS + Math.floorMod(player.getUUID().hashCode(), 201));
+		if (result == net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepObservation.Result.FIRST_SIGHT)
+			encounterCallback.accept(player, target);
+		if (result == net.mcreator.mcanomalyarchives.anomaly.pinksheep.PinkSheepObservation.Result.BLINK) {
+			PacketDistributor.sendToPlayer(player, new PlayerBlinkPacket());
+			blinkWitnesses.computeIfAbsent(target.getUUID(), k -> new HashSet<>()).add(player.getUUID());
 		}
 	}
 
-	/** 羊是否正被某玩家注视（供实体判断维持） */
 	public static boolean isBeingWatched(PinkSheepEntity sheep) {
-		return lookingAtSheep.containsValue(sheep);
+		return observation.watched(sheep.getUUID());
 	}
 
 	/** 玩家视线是否朝向羊（角度 + 视线） */
 	public static boolean isPlayerLookingAt(ServerPlayer player, PinkSheepEntity sheep) {
-		if (player.level() != sheep.level()) return false;
+		if (player.level() != sheep.level() || player.distanceToSqr(sheep) > LOOK_RANGE * LOOK_RANGE) return false;
 		Vec3 eye = player.getEyePosition(1.0F);
 		Vec3 center = sheep.position().add(0, sheep.getBbHeight() * 0.5, 0);
 		Vec3 toSheep = center.subtract(eye).normalize();
@@ -223,10 +205,10 @@ public class PinkSheepLookHandler {
 
 	@SubscribeEvent
 	public static void onStopped(net.neoforged.neoforge.event.server.ServerStoppedEvent event) {
-		lookingAtSheep.clear();
-		lookTicks.clear();
-		encounterGranted.clear();
-		watchedThisTick.clear();
+		observation.clear();
+		heldSince.clear();
+		sharedBlinkAt.clear();
 		activeSheep.clear();
+		blinkWitnesses.clear();
 	}
 }

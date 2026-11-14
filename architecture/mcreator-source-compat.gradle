@@ -35,6 +35,21 @@ abstract class RepairMcreatorGeneratedSources extends DefaultTask {
     @TaskAction
     void repair() {
         File workspace = workspaceDirectory.get().asFile
+        // MCreator can regenerate language_map from its open editor and drop handwritten keys.
+        // Repair resources before processResources takes its input snapshot, without depending on Python.
+        ['zh_cn', 'en_us'].each { language ->
+            File baseline = new File(workspace, "tools/mcreator-guard/canonical/${language}.extra.txt")
+            File resource = new File(workspace, "src/main/resources/assets/mcanomalyarchives/lang/${language}.json")
+            Map additions = new JsonSlurper().parseText('{' + baseline.getText('UTF-8').trim().replaceFirst(',\\s*$', '') + '}')
+            Map current = new JsonSlurper().parse(resource, 'UTF-8')
+            if (additions.any { key, value -> current[key] != value } || resource.getText('UTF-8').contains('\\u')) {
+                current.putAll(additions)
+                def generator = new groovy.json.JsonGenerator.Options().disableUnicodeEscaping().build()
+                String output = '{\n' + current.collect { key, value -> '  ' + generator.toJson(key) + ': ' + generator.toJson(value) }.join(',\n') + '\n}\n'
+                resource.setText(output, 'UTF-8')
+                logger.lifecycle("Restored handwritten ${language} translations after MCreator regeneration.")
+            }
+        }
         File importManifest = new File(workspace, 'architecture/mcreator-imports.json')
         Map<String, List<String>> importRepairs = (Map<String, List<String>>) new JsonSlurper().parse(importManifest)
         importRepairs.each { relativePath, expectedImports ->
@@ -81,3 +96,4 @@ def sourceRepair = tasks.register('repairMcreatorGeneratedSources', RepairMcreat
     animationSource.set(layout.projectDirectory.file('src/main/java/net/mcreator/mcanomalyarchives/network/PlayPlayerAnimationMessage.java'))
 }
 tasks.named('compileJava').configure { dependsOn(sourceRepair) }
+tasks.named('processResources').configure { dependsOn(sourceRepair) }

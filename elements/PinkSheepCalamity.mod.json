@@ -2,8 +2,8 @@
   "_fv": 85,
   "_type": "achievement",
   "definition": {
-    "achievementName": "Meteor Greeting",
-    "achievementDescription": "Provoke the pink sheep into its highest calamity",
+    "achievementName": "奇迹与你",
+    "achievementDescription": "触发致命灾厄",
     "achievementIcon": {
       "value": "Items.FIRE_CHARGE"
     },

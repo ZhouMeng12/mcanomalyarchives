@@ -2,8 +2,8 @@
   "_fv": 85,
   "_type": "achievement",
   "definition": {
-    "achievementName": "So beautiful",
-    "achievementDescription": "Watch the flower",
+    "achievementName": "多么美丽！",
+    "achievementDescription": "观赏花朵",
     "achievementIcon": {
       "value": "CUSTOM:Hearticon"
     },

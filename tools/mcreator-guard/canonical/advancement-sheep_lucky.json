@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:pink_wool"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "title": {
+      "translate": "advancements.sheep_lucky.title"
+    },
+    "description": {
+      "translate": "advancements.sheep_lucky.descr"
+    },
+    "frame": "task",
+    "hidden": false
+  },
+  "criteria": {
+    "sheep_lucky_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "mcanomalyarchives:pink_sheep_sighting"
+}

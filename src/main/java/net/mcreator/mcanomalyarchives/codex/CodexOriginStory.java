@@ -50,8 +50,17 @@ public final class CodexOriginStory {
 
 	/** 是否已经拿过见闻录 */
 	public static boolean hasReceived(ServerPlayer player) {
-		return player.getPersistentData().getBoolean(TAG_GIVEN);
+		if (player.getPersistentData().getBoolean(TAG_GIVEN)) return true;
+        if (player.getInventory().contains(new ItemStack(McanomalyarchivesModItems.ANOMALY_CODEX.get()))) {
+            player.getPersistentData().putBoolean(TAG_GIVEN, true);
+            return true;
+        }
+        return false;
 	}
+
+    public static void copyReceived(ServerPlayer from, ServerPlayer to) {
+        to.getPersistentData().putBoolean(TAG_GIVEN, hasReceived(from));
+    }
 
 	/** 记录"已经拿过"（由剧情脚本的 [give_codex] 动作经 StoryPlayer 调用） */
 	public static void markReceived(ServerPlayer player) {

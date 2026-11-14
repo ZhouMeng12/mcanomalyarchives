@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:barrier"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "title": {
+      "translate": "advancements.garbled_infect.title"
+    },
+    "description": {
+      "translate": "advancements.garbled_infect.descr"
+    },
+    "frame": "task",
+    "hidden": false
+  },
+  "criteria": {
+    "garbled_infect_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "mcanomalyarchives:garbled_get"
+}

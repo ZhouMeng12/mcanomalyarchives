@@ -61,6 +61,10 @@ public final class ItemNaming {
 		}
 		out.setCount(1);
 		applyDurability(source, out);
+        if (source.is(net.minecraft.world.item.Items.WOODEN_SHOVEL) && out.is(net.minecraft.world.item.Items.NETHERITE_PICKAXE)) {
+            out.set(DataComponents.MAX_DAMAGE, net.mcreator.mcanomalyarchives.anomaly.nametag.NamedMaterialRules.TOOL_USES);
+            out.set(DataComponents.DAMAGE, 0);
+        }
 		NamedState.applyConverted(out, name, rawName, BuiltInRegistries.ITEM.getKey(source.getItem()));
 		return out;
 	}

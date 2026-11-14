@@ -2,8 +2,8 @@
   "_fv": 85,
   "_type": "achievement",
   "definition": {
-    "achievementName": "Arrive at the garden",
-    "achievementDescription": "A beautiful garden",
+    "achievementName": "到达花园",
+    "achievementDescription": "一个美丽的花园",
     "achievementIcon": {
       "value": "CUSTOM:CornPoppy"
     },
@@ -17,7 +17,7 @@
     "rewardXP": 0,
     "achievementType": "task",
     "parent": {
-      "value": "CUSTOM:Welcome"
+      "value": "CUSTOM:ArchiveCodexReceived"
     },
     "triggerxml": "<xml xmlns=\"https://developers.google.com/blockly/xml\"><block type=\"advancement_trigger\" deletable=\"false\" x=\"40\" y=\"80\"><next><block type=\"custom_trigger\"></block></next></block></xml>"
   }

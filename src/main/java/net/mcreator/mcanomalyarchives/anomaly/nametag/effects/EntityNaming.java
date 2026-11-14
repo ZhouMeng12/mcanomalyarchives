@@ -208,17 +208,7 @@ public final class EntityNaming {
 
 	/** 「土豆」：立刻丧失活性 → 掉落发芽的块茎 → 原地长出嫩芽（正片开场事故）。 */
 	public static void toPotato(ServerLevel level, LivingEntity target) {
-		BlockPos pos = target.blockPosition();
-		target.discard();
-		ItemStack drop = new ItemStack(Items.POTATO, 1 + level.random.nextInt(3));
-		ItemEntity item = new ItemEntity(level, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, drop);
-		level.addFreshEntity(item);
-		BlockPos soil = pos.below();
-		if (level.getBlockState(soil).is(Blocks.GRASS_BLOCK) || level.getBlockState(soil).is(Blocks.DIRT)
-				|| level.getBlockState(soil).is(Blocks.FARMLAND)) {
-			level.setBlockAndUpdate(soil.above(),
-					Blocks.POTATOES.defaultBlockState().setValue(net.minecraft.world.level.block.CropBlock.AGE, 7));
-		}
+        net.mcreator.mcanomalyarchives.anomaly.nametag.PotatoTransformation.start(level, target);
 	}
 
 	/** 「无」：认知性抹除——目标消失、无掉落、无音效、不留任何记录。 */

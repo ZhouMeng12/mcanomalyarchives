@@ -27,6 +27,7 @@ public final class Uo002MisplacedBlock extends Block {
 		if (neighbor.isAir() || neighbor.hasBlockEntity() || neighbor.getDestroySpeed(level, target) < 0.0F
 				|| !neighbor.getFluidState().isEmpty() || neighbor.getBlock() instanceof FallingBlock
 				|| neighbor.is(this)) return;
-		level.setBlock(target, defaultBlockState(), Block.UPDATE_ALL);
+		if (level.setBlock(target, defaultBlockState(), Block.UPDATE_ALL))
+            net.mcreator.mcanomalyarchives.codex.ArchiveAdvancements.blockInfected(level, target);
 	}
 }

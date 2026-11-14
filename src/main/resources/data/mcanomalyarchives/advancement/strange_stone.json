@@ -30,5 +30,5 @@
       }
     }
   },
-  "parent": "mcanomalyarchives:welcome"
+  "parent": "mcanomalyarchives:codex_received"
 }

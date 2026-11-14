@@ -1,0 +1,4 @@
+{
+  "targets": ["rewind_swap"],
+  "passes": [{"name": "mcanomalyarchives:rewind", "intarget": "minecraft:main", "outtarget": "rewind_swap"}]
+}

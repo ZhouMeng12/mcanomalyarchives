@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:ender_eye"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "title": {
+      "translate": "advancements.purple_stalker.title"
+    },
+    "description": {
+      "translate": "advancements.purple_stalker.descr"
+    },
+    "frame": "goal",
+    "hidden": true
+  },
+  "criteria": {
+    "purple_stalker_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "mcanomalyarchives:purple_arrival"
+}

@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "id": "minecraft:name_tag"
+    },
+    "show_toast": true,
+    "announce_to_chat": true,
+    "title": {
+      "translate": "advancements.name_compress.title"
+    },
+    "description": {
+      "translate": "advancements.name_compress.descr"
+    },
+    "frame": "goal",
+    "hidden": true
+  },
+  "criteria": {
+    "name_compress_0": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "parent": "mcanomalyarchives:name_first"
+}

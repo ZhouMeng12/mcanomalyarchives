@@ -10,7 +10,7 @@ public final class StrangeTreeState {
 	public static final int BURROW_TICKS = 60;
 	public static final int EMERGE_TICKS = 30;
 	public static final int SWING_TICKS = 40;
-	public static final int KILL_TICK = 21;
+	public static final int KILL_TICK = 23;
 	public static final int CHASE_INTERVAL = 30;
 	public static final int IDLE_TICKS = 90 * 20;
 	public static final int MAX_JOURNAL_BLOCKS = 7 * 9 * 9;

@@ -192,10 +192,6 @@ public final class PinkSheepCataclysms {
 			Entity entity = blast.level().getEntities().get(blast.crystal());
 			if (entity instanceof EndCrystal crystal && !crystal.isRemoved()) {
 				crystal.hurt(blast.level().damageSources().generic(), 1.0F); // 原版引爆路径
-			} else {
-				// 水晶被提前清掉了 → 原地补一发同级爆炸，别让"说好的灾厄"落空
-				blast.level().explode(null, blast.x(), blast.y(), blast.z(), 6.0F, true,
-						Level.ExplosionInteraction.TNT);
 			}
 		}
 	}

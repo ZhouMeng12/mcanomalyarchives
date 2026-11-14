@@ -69,9 +69,13 @@ public class McanomalyarchivesMod {
 		McanomalyarchivesModFluids.REGISTRY.register(modEventBus);
 		McanomalyarchivesModFluidTypes.REGISTRY.register(modEventBus);
 		// Start of user code block mod init
+		net.mcreator.mcanomalyarchives.init.NamedMaterialBlocks.BLOCKS.register(modEventBus);
+		net.mcreator.mcanomalyarchives.init.NamedMaterialBlocks.ITEMS.register(modEventBus);
+		net.mcreator.mcanomalyarchives.init.UO007Blocks.REGISTRY.register(modEventBus);
 		McanomalyarchivesModAttachments.REGISTRY.register(modEventBus);
 		McanomalyarchivesModDataComponents.REGISTRY.register(modEventBus);
 		net.mcreator.mcanomalyarchives.init.UO007Items.REGISTRY.register(modEventBus);
+		net.mcreator.mcanomalyarchives.init.UO007Entities.REGISTRY.register(modEventBus);
 		// 注册 AnbulaEntity 的 ITEM_HANDLER capability（供 TACZ reload 使用）
 		modEventBus.addListener((RegisterCapabilitiesEvent event) -> {
 			event.registerEntity(Capabilities.ItemHandler.ENTITY, McanomalyarchivesModEntities.ANBULA.get(), (entity, ctx) -> entity instanceof AnbulaEntity a ? a.getAmmoHandler() : null);

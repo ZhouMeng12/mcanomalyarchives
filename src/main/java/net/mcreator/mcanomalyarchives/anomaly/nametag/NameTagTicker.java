@@ -59,6 +59,7 @@ public final class NameTagTicker {
 		if (living.level().isClientSide()) {
 			return;
 		}
+        if (living.level() instanceof ServerLevel potatoLevel && PotatoTransformation.tick(potatoLevel, living)) return;
 		if (living.getPersistentData().getBoolean("McanomalyNameTagDiamondPickaxe")
 				&& living.level() instanceof ServerLevel miningLevel
 				&& living.tickCount % STRIDE == 0
@@ -245,7 +246,8 @@ public final class NameTagTicker {
 
 	/** 变方块这一支的收尾（实体/物品那两支都在命名瞬间就完成了，不走这里）。 */
 	private static void complete(ServerLevel level, LivingEntity living, ResolvedName target) {
-		EntityNaming.completeBlockConversion(level, living, target);
+		net.mcreator.mcanomalyarchives.codex.ArchiveAdvancements.witness(living, "name_absorb");
+        EntityNaming.completeBlockConversion(level, living, target);
 	}
 
 	// ===== 具体动作 =====

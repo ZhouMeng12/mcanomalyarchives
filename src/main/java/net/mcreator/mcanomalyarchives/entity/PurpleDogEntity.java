@@ -66,13 +66,14 @@ public class PurpleDogEntity extends PathfinderMob {
 	}
 
 	public void setPerformMode(@Nullable UUID targetUUID) {
+		getPersistentData().putBoolean("PurpleTransientActor", targetUUID != null);
 		this.entityData.set(PERFORM_MODE, targetUUID != null);
 		this.performTargetUUID = targetUUID;
 		if (targetUUID != null) {
 			// 禁用AI，防止LookControl覆盖朝向
 			this.setNoAi(true);
-			this.goalSelector.getAvailableGoals().forEach(g -> this.goalSelector.removeGoal(g));
-			this.targetSelector.getAvailableGoals().forEach(g -> this.targetSelector.removeGoal(g));
+			java.util.List.copyOf(this.goalSelector.getAvailableGoals()).forEach(g -> this.goalSelector.removeGoal(g));
+			java.util.List.copyOf(this.targetSelector.getAvailableGoals()).forEach(g -> this.targetSelector.removeGoal(g));
 			this.getNavigation().stop();
 			this.setDeltaMovement(0, this.getDeltaMovement().y, 0);
 		} else {

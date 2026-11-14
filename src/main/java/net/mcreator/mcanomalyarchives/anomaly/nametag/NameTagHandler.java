@@ -188,6 +188,7 @@ public final class NameTagHandler {
 				consume(player, held);
 			}
 			case EARTH -> {
+				if (net.mcreator.mcanomalyarchives.anomaly.earth.EarthService.start(player, living, raw)) consume(player, held);
 			}
 			case GARBAGE -> {
 				net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "name_garbled");
@@ -333,7 +334,13 @@ public final class NameTagHandler {
 					event.setCanceled(true);
 					return;
 				}
-				// 名字得有"物品形态"才谈得上转换（水/岩浆/火这类没有物品形态的方块不行）
+                if (left.is(Items.COBBLESTONE) && resolved.kind() == ResolvedName.Kind.BLOCK
+                        && resolved.id().equals(net.minecraft.resources.ResourceLocation.withDefaultNamespace("water"))) {
+                    output = new ItemStack(net.mcreator.mcanomalyarchives.init.NamedMaterialBlocks.LIQUID_COBBLESTONE_ITEM.get());
+                    NamedState.applyConverted(output, resolved, raw, net.minecraft.resources.ResourceLocation.withDefaultNamespace("cobblestone"));
+                    break;
+                }
+				// Other fluid names still require an explicitly supported material conversion.
 				if (MaterialUnits.itemFormOf(resolved).isEmpty()) {
 					event.setCanceled(true);
 					return;

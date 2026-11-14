@@ -11,7 +11,7 @@ import java.util.UUID;
  * 由服务器线程调用；生产与测试使用同一状态转换和一次性结算规则。
  */
 public final class PurpleStorySessions {
-	public enum Stage { QUESTION, REVENGE, TRANSITION, ANIMAL, PETTING, FINAL, CLOSED }
+	public enum Stage { QUESTION, REVENGE, TRANSITION, ANIMAL, PETTING, FINAL, EXECUTION, CLOSED }
 	public enum TransitionStep { NONE, REMOVE_OLD, SPAWN, OPEN }
 	public enum Outcome { REJECTED, CANCELLED, KILL_PLAYER, ASSIMILATED, REWARDED }
 
@@ -70,6 +70,7 @@ public final class PurpleStorySessions {
 	public static final class Session {
 		/** 原客户端至少等待 15 tick，再挥臂 45 tick；移动所需时间不计入下限。 */
 		public static final int MIN_PETTING_TICKS = 60;
+		public static final int MAX_PETTING_TICKS = 200;
 		private final UUID player;
 		private final String dimension;
 		private Actor purple;
@@ -78,6 +79,8 @@ public final class PurpleStorySessions {
 		private int transitionTicks;
 		private boolean replacementBound;
 		private long pettingStarted;
+		private boolean preview;
+		private PurpleExecutionSequence execution;
 
 		private Session(UUID player, String dimension, Actor purple, Actor dog, Stage stage) {
 			this.player = player;
@@ -93,6 +96,9 @@ public final class PurpleStorySessions {
 		public Actor dog() { return dog; }
 		public int dogId() { return dog == null ? 0 : dog.id(); }
 		public Stage stage() { return stage; }
+		public boolean preview() { return preview; }
+		public void markPreview() { preview = true; }
+		public PurpleExecutionSequence execution() { return execution; }
 
 		public boolean advanceToPhase2(int purpleId) {
 			if (stage != Stage.QUESTION || purpleId != purple.id()) return false;
@@ -144,28 +150,37 @@ public final class PurpleStorySessions {
 
 		public boolean completePetting(int purpleId, int dogId, long tick) {
 			if (stage != Stage.PETTING || !matches(purpleId, dogId)
-					|| tick - pettingStarted < MIN_PETTING_TICKS) return false;
+					|| tick - pettingStarted < MIN_PETTING_TICKS || pettingExpired(tick)) return false;
 			stage = Stage.FINAL;
 			return true;
+		}
+
+		public boolean pettingExpired(long tick) {
+			return stage == Stage.PETTING && tick - pettingStarted >= MAX_PETTING_TICKS;
+		}
+
+		public boolean ownsActors(int purpleId, int dogId) {
+			return stage != Stage.CLOSED && matches(purpleId, dogId);
 		}
 
 		public Outcome claimReward() {
 			if (stage != Stage.FINAL) return Outcome.REJECTED;
 			stage = Stage.CLOSED;
-			return Outcome.REWARDED;
+			return preview ? Outcome.CANCELLED : Outcome.REWARDED;
 		}
 
 		public Outcome finish(int purpleId, int dogId, boolean kill, boolean killPlayer) {
 			if (!matches(purpleId, dogId)) return Outcome.REJECTED;
 			if (kill || killPlayer) {
-				// 只有第四阶段“丑陋”选项同时杀死玩家与紫怪；不接受任意客户端布尔组合。
+				// 只有第四阶段“丑陋”选项启动处决；不接受任意客户端布尔组合。
 				if (stage != Stage.ANIMAL || !kill || !killPlayer) return Outcome.REJECTED;
-				stage = Stage.CLOSED;
+				stage = Stage.EXECUTION;
+				execution = new PurpleExecutionSequence();
 				return Outcome.KILL_PLAYER;
 			}
 			if (stage == Stage.FINAL) {
 				stage = Stage.CLOSED;
-				return Outcome.ASSIMILATED;
+				return preview ? Outcome.CANCELLED : Outcome.ASSIMILATED;
 			}
 			if (stage == Stage.QUESTION || stage == Stage.REVENGE || stage == Stage.ANIMAL) {
 				stage = Stage.CLOSED;
@@ -179,6 +194,7 @@ public final class PurpleStorySessions {
 		}
 
 		private void cancel() {
+			if (execution != null) execution.cancel();
 			stage = Stage.CLOSED;
 		}
 	}

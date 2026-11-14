@@ -1,0 +1,6 @@
+{
+    "parent": "mcanomalyarchives:item/negative_bow",
+    "textures": {
+        "layer0": "mcanomalyarchives:item/negative_bow_pulling_0"
+    }
+}

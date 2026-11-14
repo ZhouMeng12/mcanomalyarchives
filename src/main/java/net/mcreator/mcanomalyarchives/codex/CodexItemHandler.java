@@ -31,6 +31,7 @@ public final class CodexItemHandler {
 			return;
 		event.setCanceled(true);
 		// 服务端先读权威状态，再连同"打开界面"的请求一起发给客户端
-		CodexNotifier.syncTo(player, true);
+		CodexOriginStory.hasReceived(player);
+        CodexNotifier.syncTo(player, true);
 	}
 }

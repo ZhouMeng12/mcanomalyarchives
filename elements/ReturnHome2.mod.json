@@ -2,8 +2,8 @@
   "_fv": 85,
   "_type": "achievement",
   "definition": {
-    "achievementName": "Return Home.",
-    "achievementDescription": "Welcome Home.",
+    "achievementName": "归乡。",
+    "achievementDescription": "欢迎回家。",
     "achievementIcon": {
       "value": "CUSTOM:CloudStone"
     },
