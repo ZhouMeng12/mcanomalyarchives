@@ -19,6 +19,8 @@
         "LevelRendererMixin",
         "NamedItemAppearanceMixin",
         "NamedTransformRenderMixin",
-        "PlayerSlowSwingMixin"
+        "PlayerSlowSwingMixin",
+        "PurplePlayerBodyMixin",
+        "PurplePlayerHandMixin"
     ]
 }

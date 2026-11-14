@@ -36,6 +36,41 @@ class PurpleStorySessionsTest {
 	}
 
 	@Test
+	void debugPreviewCannotGrantRewardOrPermanentAssimilation() {
+		Session reward = finale();
+		reward.markPreview();
+		assertEquals(Outcome.CANCELLED, reward.claimReward());
+		sessions.close(player);
+		Session decline = finale();
+		decline.markPreview();
+		assertEquals(Outcome.CANCELLED, decline.finish(20, 21, false, false));
+	}
+
+	@Test
+	void executionRejectsOtherActionsAndCancellationPreventsItsPendingHit() {
+		Session s = animal();
+		assertEquals(Outcome.KILL_PLAYER, s.finish(20, 21, true, true));
+		assertEquals(Stage.EXECUTION, s.stage());
+		assertFalse(s.startPetting(20, 21, 0));
+		assertEquals(Outcome.REJECTED, s.claimReward());
+		for (int i = 0; i < 21; i++) assertEquals(PurpleExecutionSequence.Step.NONE, s.execution().tick());
+		sessions.close(player);
+		assertEquals(PurpleExecutionSequence.Step.NONE, s.execution().tick());
+	}
+
+	@Test
+	void expiredPettingCannotRaceTimeoutToDropItemsOrClaimReward() {
+		Session session = animal();
+		assertTrue(session.startPetting(20, 21, 100));
+		assertFalse(session.pettingExpired(299));
+		assertTrue(session.pettingExpired(300));
+		assertFalse(session.completePetting(20, 21, 300));
+		assertEquals(Outcome.REJECTED, session.claimReward());
+		sessions.close(player);
+		assertFalse(session.ownsActors(20, 21));
+	}
+
+	@Test
 	void normalStoryFollowsAllStagesAndSettlesRewardOnce() {
 		Session session = question();
 		assertTrue(session.advanceToPhase2(10));
