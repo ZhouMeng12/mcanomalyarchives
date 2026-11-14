@@ -1138,9 +1138,9 @@
       "kind": "contains",
       "why": "紫怪请求与客户端演出必须单向注册，不允许旧客户端使用不同的会话协议",
       "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurpleStoryNetworking.java",
-      "fixHint": "恢复全部七个服务端请求、三个客户端通知及 purple-story-2 协议版本",
+      "fixHint": "恢复 purple-story-3 的单向注册、取消请求和同化同步",
       "mustContain": [
-        "event.registrar(\"purple-story-2\")",
+        "event.registrar(\"purple-story-3\")",
         "playToServer(AdvanceToPhase2Packet.TYPE",
         "playToServer(TransitionToPhase2Packet.TYPE",
         "playToServer(AdvanceToPhase4Packet.TYPE",
@@ -1150,7 +1150,9 @@
         "playToServer(RemovePurpleMonsterPacket.TYPE",
         "playToClient(OpenPurpleGuiPacket.TYPE",
         "playToClient(StartPettingClientPacket.TYPE",
-        "playToClient(PurpleStoryEndedPacket.TYPE"
+        "playToClient(PurpleStoryEndedPacket.TYPE",
+        "CancelPurpleStoryPacket.TYPE",
+        "PurpleAssimilationPacket.TYPE"
       ]
     },
     {
@@ -1878,7 +1880,7 @@
       "canonical": "observations-PurpleMonsterEntity.java",
       "expectAll": [
         "PurpleEncounterEffects.watched(this, stalkerSeenTicks)",
-        "visibleToPlayer && lookVec.dot(toStalker)",
+        "PurpleStalkerWorld.visible(world, viewer, getEyePosition())",
         "CodexObservations.record(sp, \"purple_stalker\")"
       ]
     },
@@ -2131,6 +2133,59 @@
       "mustContain": [
         "onlyForConfigurations('neoForgeConfigOnly')",
         "url = layout.projectDirectory.dir('tools/offline-maven')"
+      ]
+    },
+    {
+      "id": "purple-encounter-upgrade-files",
+      "kind": "exists",
+      "why": "紫怪遭遇升级的状态机、世界查询和客户端表现不能丢失",
+      "fixHint": "恢复紫怪升级模块与测试",
+      "exists": [
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurplePettingProgress.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurpleStalkerObservation.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurpleStalkerWorld.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurpleExecutionSequence.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/purple/PurpleAssimilationClient.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/purple/PurpleExecutionRenderer.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/client/purple/PurpleExecutionCamera.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/network/CancelPurpleStoryPacket.java",
+        "src/main/java/net/mcreator/mcanomalyarchives/network/PurpleAssimilationPacket.java"
+      ]
+    },
+    {
+      "id": "purple-player-mixins",
+      "kind": "contains",
+      "path": "src/main/resources/mcanomalyarchives.mixins.json",
+      "why": "第一与第三人称同化外观需要渲染接线",
+      "fixHint": "恢复紫怪玩家渲染 mixin 注册",
+      "mustContain": [
+        "PurplePlayerBodyMixin",
+        "PurplePlayerHandMixin"
+      ]
+    },
+    {
+      "id": "purple-upgrade-lifecycle",
+      "kind": "contains",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/anomaly/purple/PurpleStoryModule.java",
+      "why": "防止演出卡住、重复结算和卸载演员残留",
+      "fixHint": "恢复会话时限、处决时间轴和临时演员清理",
+      "mustContain": [
+        "session.pettingExpired(server.getTickCount())",
+        "session.execution().tick()",
+        "event.loadedFromDisk()",
+        "PurpleTransientActor",
+        "pettingRoute(player, entity)",
+        "syncAppearance(player);"
+      ]
+    },
+    {
+      "id": "purple-dog-transient",
+      "kind": "contains",
+      "path": "src/main/java/net/mcreator/mcanomalyarchives/entity/PurpleDogEntity.java",
+      "why": "重载的剧情紫狗不能变成无归属普通实体",
+      "fixHint": "恢复临时演员标记",
+      "mustContain": [
+        "putBoolean(\"PurpleTransientActor\", targetUUID != null)"
       ]
     }
   ]

@@ -32,6 +32,7 @@ public class McanomalyarchivesModAttachments {
         REGISTRY.register("purple_assimilation_completed", () ->
             AttachmentType.builder(() -> false)
                 .serialize(Codec.BOOL)
+                .copyOnDeath()
                 .build()
         );
 
@@ -40,8 +41,13 @@ public class McanomalyarchivesModAttachments {
         REGISTRY.register("purple_stalker_sightings", () ->
             AttachmentType.builder(() -> 0)
                 .serialize(Codec.INT)
+                .copyOnDeath()
                 .build()
         );
+
+    public static final Supplier<AttachmentType<Long>> PURPLE_STALKER_NEXT =
+        REGISTRY.register("purple_stalker_next", () -> AttachmentType.builder(() -> 0L)
+            .serialize(Codec.LONG).copyOnDeath().build());
 
     // Boss 战触发冷却时间戳（gameTime），0 表示无冷却
     public static final Supplier<AttachmentType<Long>> PURPLE_BOSS_FIGHT_COOLDOWN =

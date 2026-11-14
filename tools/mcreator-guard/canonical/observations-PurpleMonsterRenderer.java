@@ -42,6 +42,7 @@ public class PurpleMonsterRenderer extends HumanoidMobRenderer<PurpleMonsterEnti
 		} else {
 			super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
 		}
+		net.mcreator.mcanomalyarchives.client.purple.PurpleExecutionRenderer.render(entity, partialTicks, poseStack, buffer, packedLight);
 	}
 
 	// ===== 内部类 =====

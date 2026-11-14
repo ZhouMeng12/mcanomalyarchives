@@ -58,20 +58,35 @@ public final class PurpleStoryModule {
 	}
 
 	public static boolean startNatural(ServerPlayer player) {
+		if (player.getData(McanomalyarchivesModAttachments.PURPLE_ASSIMILATION_COMPLETED)
+				|| net.mcreator.mcanomalyarchives.event.PurpleStalkerHandler.hasActiveEncounter()) return false;
 		boolean started = start(player, 1);
 		if (started) net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "purple_arrival");
 		return started;
 	}
 
+	public static boolean hasAnyActive() {
+		return sessions != null && !sessions.active().isEmpty();
+	}
+
+	public static void cancel(ServerPlayer player, int purpleId, int dogId) {
+		Session session = authorized(player);
+		if (session != null && session.stage() != Stage.EXECUTION && session.ownsActors(purpleId, dogId))
+			abort(player.getUUID(), true);
+	}
+
 	/** 只从已校验权限的 /purplegui 命令调用。第五阶段仍是无奖励的界面预览。 */
 	public static boolean startDebug(ServerPlayer player, int phase) {
 		if (!isCurrent(player) || !player.hasPermissions(2) || phase < 1 || phase > 5) return false;
+		net.mcreator.mcanomalyarchives.event.PurpleStalkerHandler.dismissActive();
 		abort(player.getUUID(), true);
 		if (phase == 5) {
 			PacketDistributor.sendToPlayer(player, new OpenPurpleGuiPacket(0, 5, 0));
 			return true;
 		}
-		return start(player, phase);
+		boolean started = start(player, phase);
+		if (started) sessions.get(player.getUUID()).markPreview();
+		return started;
 	}
 
 	private static boolean start(ServerPlayer player, int phase) {
@@ -92,6 +107,7 @@ public final class PurpleStoryModule {
 		PurpleMonsterEntity purple = purple(session);
 		net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "purple_change");
 		purple.setTextureVariant(1); // 原客户端只改本地贴图，现在同步服务器权威表现。
+		syncAppearance(player);
 		PacketDistributor.sendToPlayer(player, new OpenPurpleGuiPacket(purpleId, 2, 0));
 	}
 
@@ -102,7 +118,13 @@ public final class PurpleStoryModule {
 
 	public static void startPetting(ServerPlayer player, int purpleId, int dogId) {
 		Session session = authorized(player);
+		if (session != null && session.stage() == Stage.ANIMAL
+				&& !pettingRoute(player, findActor(session, session.dog()))) {
+			abort(player.getUUID(), true);
+			return;
+		}
 		if (session == null || !session.startPetting(purpleId, dogId, server.getTickCount())) return;
+		syncAppearance(player);
 		PacketDistributor.sendToPlayer(player, new StartPettingClientPacket(purpleId, dogId,
 				player.getX(), player.getY(), player.getZ()));
 	}
@@ -137,24 +159,25 @@ public final class PurpleStoryModule {
 	private static void settle(ServerPlayer player, Session session, Outcome outcome) {
 		if (outcome == Outcome.REJECTED) return;
 		PurpleMonsterEntity purple = purple(session);
+		if (outcome == Outcome.KILL_PLAYER) {
+			purple.setExecution(player.getId(), 0);
+			return;
+		}
 		// 先消耗会话，再执行物品/死亡等可触发其他事件的效果，重复包和重入均不能再结算。
 		sessions.close(player.getUUID());
 		try {
-			if (outcome == Outcome.ASSIMILATED || outcome == Outcome.REWARDED) {
+			if (!session.preview() && (outcome == Outcome.ASSIMILATED || outcome == Outcome.REWARDED)) {
 				net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "purple_assimilation");
 				player.setData(McanomalyarchivesModAttachments.PURPLE_ASSIMILATION_COMPLETED, true);
 			}
-			if (outcome == Outcome.REWARDED) {
+			if (!session.preview() && outcome == Outcome.REWARDED) {
 				net.mcreator.mcanomalyarchives.codex.CodexObservations.record(player, "purple_reward");
 				ItemStack reward = new ItemStack(McanomalyarchivesModItems.PURPLEHAND.get());
 				if (!player.getInventory().add(reward)) player.drop(reward, false);
 			}
-			if (outcome == Outcome.KILL_PLAYER) {
-				player.hurt(player.serverLevel().damageSources().mobAttack(purple), Float.MAX_VALUE);
-				purple.kill();
-			}
 		} finally {
 			discardActors(session);
+			syncAppearance(player);
 			notifyEnded(player);
 		}
 	}
@@ -180,7 +203,10 @@ public final class PurpleStoryModule {
 	}
 
 	private static boolean valid(ServerPlayer player, Session session) {
-		if (!player.isAlive() || player.isRemoved() || !dimension(player.serverLevel()).equals(session.dimension())) return false;
+		boolean withdrawing = session.stage() == Stage.EXECUTION && session.execution().hit();
+		if ((!player.isAlive() && !withdrawing) || player.isRemoved() || player.isSpectator() || (player.isCreative() && !session.preview())
+				|| session.pettingExpired(server.getTickCount())
+				|| !dimension(player.serverLevel()).equals(session.dimension())) return false;
 		if (session.actorsTemporarilyAbsent()) return true;
 		PurpleMonsterEntity purple = purple(session);
 		if (purple == null || !purple.isAlive() || !purple.isPerformMode()
@@ -202,6 +228,18 @@ public final class PurpleStoryModule {
 			ServerPlayer player = server.getPlayerList().getPlayer(session.player());
 			if (player == null || !valid(player, session)) {
 				abort(session.player(), player != null);
+				continue;
+			}
+			if (session.stage() == Stage.EXECUTION) {
+				PurpleMonsterEntity actor = purple(session);
+				var step = session.execution().tick();
+				actor.setExecution(player.getId(), session.execution().ticks());
+				if (step == PurpleExecutionSequence.Step.HIT) {
+					if (!player.hasLineOfSight(actor)) { abort(session.player(), true); continue; }
+					if (!session.preview()) player.hurt(player.serverLevel().damageSources().mobAttack(actor), 1000f);
+					player.serverLevel().playSound(null, actor.blockPosition(), net.minecraft.sounds.SoundEvents.TRIDENT_HIT,
+							net.minecraft.sounds.SoundSource.HOSTILE, .8f, .65f);
+				} else if (step == PurpleExecutionSequence.Step.END) abort(session.player(), true);
 				continue;
 			}
 			switch (session.tickTransition()) {
@@ -230,6 +268,12 @@ public final class PurpleStoryModule {
 		}
 	}
 
+	@SubscribeEvent public static void onActorLoad(net.neoforged.neoforge.event.entity.EntityJoinLevelEvent event) {
+		if (!event.getLevel().isClientSide() && event.loadedFromDisk()
+				&& (event.getEntity() instanceof PurpleMonsterEntity || event.getEntity() instanceof PurpleDogEntity)
+				&& event.getEntity().getPersistentData().getBoolean("PurpleTransientActor")) event.setCanceled(true);
+	}
+
 	@SubscribeEvent
 	public static void onClone(PlayerEvent.Clone event) {
 		if (event.getEntity() instanceof ServerPlayer player && belongsToServer(player)) {
@@ -240,6 +284,8 @@ public final class PurpleStoryModule {
 	@SubscribeEvent
 	public static void onDeath(LivingDeathEvent event) {
 		if (event.getEntity() instanceof ServerPlayer player && belongsToServer(player)) {
+			Session session = sessions == null ? null : sessions.get(player.getUUID());
+			if (session != null && session.stage() == Stage.EXECUTION && session.execution().hit()) return;
 			abort(player.getUUID(), true);
 		}
 	}
@@ -248,6 +294,7 @@ public final class PurpleStoryModule {
 	public static void onChangedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
 		if (event.getEntity() instanceof ServerPlayer player && belongsToServer(player)) {
 			abort(player.getUUID(), true);
+			syncAppearance(player);
 		}
 	}
 
@@ -267,6 +314,7 @@ public final class PurpleStoryModule {
 		if (session == null) return;
 		discardActors(session);
 		ServerPlayer player = server.getPlayerList().getPlayer(owner);
+		if (player != null) syncAppearance(player);
 		if (notify && player != null) notifyEnded(player);
 	}
 
@@ -278,6 +326,36 @@ public final class PurpleStoryModule {
 
 	private static void notifyEnded(ServerPlayer player) {
 		PacketDistributor.sendToPlayer(player, new PurpleStoryEndedPacket());
+	}
+
+	private static int appearance(ServerPlayer player) {
+		if (player.getData(McanomalyarchivesModAttachments.PURPLE_ASSIMILATION_COMPLETED)) return 3;
+		Session session = sessions == null ? null : sessions.get(player.getUUID());
+		if (session == null) return 0;
+		return switch (session.stage()) {
+			case PETTING, FINAL -> 2;
+			case REVENGE, TRANSITION, ANIMAL -> 1;
+			default -> 0;
+		};
+	}
+
+	private static void syncAppearance(ServerPlayer player) {
+		PacketDistributor.sendToPlayersTrackingEntityAndSelf(player,
+				new net.mcreator.mcanomalyarchives.network.PurpleAssimilationPacket(player.getUUID(), appearance(player)));
+	}
+
+	@SubscribeEvent public static void onTracking(PlayerEvent.StartTracking event) {
+		if (event.getEntity() instanceof ServerPlayer viewer && event.getTarget() instanceof ServerPlayer subject)
+			PacketDistributor.sendToPlayer(viewer, new net.mcreator.mcanomalyarchives.network.PurpleAssimilationPacket(
+					subject.getUUID(), appearance(subject)));
+	}
+
+	@SubscribeEvent public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
+		if (event.getEntity() instanceof ServerPlayer player) syncAppearance(player);
+	}
+
+	@SubscribeEvent public static void onRespawn(PlayerEvent.PlayerRespawnEvent event) {
+		if (event.getEntity() instanceof ServerPlayer player) syncAppearance(player);
 	}
 
 	private static String dimension(ServerLevel level) {
@@ -347,6 +425,26 @@ public final class PurpleStoryModule {
 		return new Actors(purple, dog);
 	}
 
+	/** The client walks on a straight horizontal path; reject steps, pits and blocked return routes. */
+	private static boolean pettingRoute(ServerPlayer player, Entity dog) {
+		if (dog == null || Math.abs(dog.getY() - player.getY()) > .5) return false;
+		var delta = dog.position().subtract(player.position()).multiply(1, 0, 1);
+		double length = delta.length();
+		if (length > 4) return false;
+		var travel = delta.normalize().scale(Math.max(0, length - 1.35));
+		int steps = Math.max(1, (int)Math.ceil(travel.length() * 8));
+		var level = player.serverLevel();
+		for (int i = 0; i <= steps; i++) {
+			var box = player.getBoundingBox().move(travel.scale(i / (double)steps));
+			for (var p : net.minecraft.core.BlockPos.betweenClosed(
+					net.minecraft.core.BlockPos.containing(box.minX, box.minY - .1, box.minZ),
+					net.minecraft.core.BlockPos.containing(box.maxX, box.maxY, box.maxZ)))
+				if (!level.hasChunkAt(p) || !level.getFluidState(p).isEmpty()) return false;
+			if (!level.noCollision(player, box) || level.noCollision(player, box.move(0, -.1, 0))) return false;
+		}
+		return true;
+	}
+
 	private static boolean place(Entity entity, ServerPlayer player, double x, double z) {
 		var level = player.serverLevel();
 		boolean found = false;
@@ -355,9 +453,14 @@ public final class PurpleStoryModule {
 			for (int dy : new int[] {0, 1, -1}) {
 				entity.setPos(x + offset[0], player.getY() + dy, z + offset[1]);
 				var feet = entity.blockPosition();
-				if (level.hasChunkAt(feet) && level.noCollision(entity, entity.getBoundingBox())
+				var box = entity.getBoundingBox();
+				if (level.hasChunksAt(net.minecraft.core.BlockPos.containing(box.minX, box.minY - .1, box.minZ),
+						net.minecraft.core.BlockPos.containing(box.maxX, box.maxY, box.maxZ))
+						&& level.noCollision(entity, entity.getBoundingBox())
 						&& level.getFluidState(feet).isEmpty()
-						&& !level.noCollision(entity, entity.getBoundingBox().move(0, -.1, 0))) {
+						&& !level.noCollision(entity, entity.getBoundingBox().move(0, -.1, 0))
+						&& player.hasLineOfSight(entity)
+						&& (!(entity instanceof PurpleDogEntity) || pettingRoute(player, entity))) {
 					found = true;
 					break outer;
 				}
